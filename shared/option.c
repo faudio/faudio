@@ -119,13 +119,13 @@ fa_ptr_t fa_option_integral(char *x)
 {
     int r;
     sscanf(x, "%i", &r);
-    return i32(r);
+    return fa_i32(r);
 }
 fa_ptr_t fa_option_floating(char *x)
 {
     double r;
     sscanf(x, "%lf", &r);
-    return f64(r);
+    return fa_f64(r);
 }
 fa_ptr_t fa_option_string(char *x)
 {

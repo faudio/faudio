@@ -49,9 +49,9 @@ void helper_function(fa_string_t path)
             fa_thread_sleep(kRecTime * 1000);
         }
 
-        fa_buffer_set_meta(buf, fa_string("channels"),    i32(2));
+        fa_buffer_set_meta(buf, fa_string("channels"),    fa_i32(2));
         fa_buffer_set_meta(buf, fa_string("generator"),   fa_string("faudio"));
-        fa_buffer_set_meta(buf, fa_string("sample-rate"), f64(44100));
+        fa_buffer_set_meta(buf, fa_string("sample-rate"), fa_f64(44100));
         fa_buffer_write_audio(path, buf);
         fa_audio_end_session(s);
     }

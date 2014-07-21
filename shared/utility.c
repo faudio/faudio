@@ -46,9 +46,9 @@ fa_list_t fa_version()
 {
     return list(
                fa_string(version_g.pre),
-               i16(version_g.x),
-               i16(version_g.y),
-               i16(version_g.z),
+               fa_i16(version_g.x),
+               fa_i16(version_g.y),
+               fa_i16(version_g.z),
                fa_string(version_g.suff));
 }
 
@@ -138,10 +138,10 @@ void fa_terminate()
         fa_device_terminate();
 
         fa_log_info(fa_string_dappend(fa_string("Total bytes allocated: "),
-                                      fa_string_show(i32(gBytesAlloc))));
+                                      fa_string_show(fa_i32(gBytesAlloc))));
 
         fa_log_info(fa_string_dappend(fa_string("Regions leaked: "),
-                                      fa_string_show(i32(gRegionCount))));
+                                      fa_string_show(fa_i32(gRegionCount))));
 
         fa_log_info(fa_string("Terminated faudio"));
     } else {

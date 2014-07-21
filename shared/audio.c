@@ -718,11 +718,11 @@ fa_pair_t fa_audio_recommended_latency(fa_audio_device_t device)
 {
     const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
     return fa_pair_create(fa_pair_create(
-                              f64(info->defaultLowInputLatency),
-                              f64(info->defaultHighInputLatency)
+                              fa_f64(info->defaultLowInputLatency),
+                              fa_f64(info->defaultHighInputLatency)
                           ), fa_pair_create(
-                              f64(info->defaultLowOutputLatency),
-                              f64(info->defaultHighOutputLatency)
+                              fa_f64(info->defaultLowOutputLatency),
+                              fa_f64(info->defaultHighOutputLatency)
                           ));
 }
 

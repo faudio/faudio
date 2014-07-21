@@ -129,21 +129,21 @@ void fa_dlog_info(fa_string_t);
 #define fa_fail(s)             fa_log_error(s)
 // #define fa_log_error(e)        fa_error_log(NULL,e)
 
-#define tb                  fa_to_bool
-#define ti8                 fa_to_int8
-#define ti16                fa_to_int16
-#define ti32                fa_to_int32
-#define ti64                fa_to_int64
-#define tf32                fa_to_double
-#define tf64                fa_to_double
-#define fb                  fa_from_bool
+#define fa_tb                  fa_to_bool
+#define fa_ti8                 fa_to_int8
+#define fa_ti16                fa_to_int16
+#define fa_ti32                fa_to_int32
+#define fa_ti64                fa_to_int64
+#define fa_tf32                fa_to_double
+#define fa_tf64                fa_to_double
+#define fa_fb                  fa_from_bool
 // #define b                   fa_from_bool
-#define i8                  fa_from_int8
-#define i16                 fa_from_int16
-#define i32                 fa_from_int32
-#define i64                 fa_from_int64
-#define f32                 fa_from_double
-#define f64                 fa_from_double
+#define fa_i8                  fa_from_int8
+#define fa_i16                 fa_from_int16
+#define fa_i32                 fa_from_int32
+#define fa_i64                 fa_from_int64
+#define fa_f32                 fa_from_double
+#define fa_f64                 fa_from_double
 
 #define fa_mark_used(X) X = *(&X)
 

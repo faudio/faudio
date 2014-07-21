@@ -60,9 +60,9 @@ void run_sines(fa_map_t opts)
 
   fa_with_session_(session) {
     fa_with_default_out(session, output) {
-      fa_audio_set_parameter(fa_string("sample-rate"), f64(sample_rate), session);
-      fa_audio_set_parameter(fa_string("vector-size"), i32(vector_size), session);
-      fa_audio_set_parameter(fa_string("latency"),   f64(latency),   session);
+      fa_audio_set_parameter(fa_string("sample-rate"), fa_f64(sample_rate), session);
+      fa_audio_set_parameter(fa_string("vector-size"), fa_i32(vector_size), session);
+      fa_audio_set_parameter(fa_string("latency"),   fa_f64(latency),   session);
       fa_open_stereo_out(stream, output, list(sines, sines)) {
         if (duration < 0) {
           while (1) {

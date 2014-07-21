@@ -440,10 +440,10 @@ fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
         return fa_string((char *) json_value_get_string(a));
 
     case JSONNumber:
-        return i32(json_value_get_number(a));
+        return fa_i32(json_value_get_number(a));
 
     case JSONBoolean:
-        return fb(json_value_get_boolean(a));
+        return fa_fb(json_value_get_boolean(a));
 
     case JSONArray: {
         JSON_Array *ar  = json_value_get_array(a);

@@ -90,7 +90,7 @@ int main(int argc, char const *argv[])
 
         fa_with_session_(session) {
             fa_with_default_devices(input, output, session) {
-                fa_audio_set_parameter(fa_string("sample-rate"), f64(44100), session);
+                fa_audio_set_parameter(fa_string("sample-rate"), fa_f64(44100), session);
                 fa_audio_stream_t stream;
 
                 if (fa_check(stream = fa_audio_open_output(input, output, list(left, right)))) {

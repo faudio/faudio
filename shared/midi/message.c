@@ -125,7 +125,7 @@ fa_midi_message_channel_t fa_midi_message_channel(fa_midi_message_t midi_message
 fa_pair_t fa_midi_message_simple_data(fa_midi_message_t midi_message)
 {
     assert(is_simple(midi_message) && "Not a simple message");
-    return fa_pair_create(i8(midi_message->data.simple[1]), i8(midi_message->data.simple[2]));
+    return fa_pair_create(fa_i8(midi_message->data.simple[1]), fa_i8(midi_message->data.simple[2]));
 }
 
 fa_buffer_t fa_midi_message_sysex_data(fa_midi_message_t midi_message)

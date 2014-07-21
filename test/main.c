@@ -29,14 +29,14 @@ void test_types()
 {
     test_section("Types");
 
-    assert(fa_is_int8(i8(123)));
-    assert(fa_is_int16(i16(1238)));
-    assert(fa_is_int32(i32(1238712)));
-    assert(fa_is_int64(i64(1238712)));
+    assert(fa_is_int8(fa_i8(123)));
+    assert(fa_is_int16(fa_i16(1238)));
+    assert(fa_is_int32(fa_i32(1238712)));
+    assert(fa_is_int64(fa_i64(1238712)));
 
-    // assert(fa_is_float(f32(1238712)));
-    assert(fa_is_double(f64(1238712)));
-    assert(fa_is_bool(fb(true)));
+    // assert(fa_is_float(fa_f32(1238712)));
+    assert(fa_is_double(fa_f64(1238712)));
+    assert(fa_is_bool(fa_fb(true)));
 
     assert(fa_is_ref(NULL));
 }
@@ -45,36 +45,36 @@ void test_value_references()
 {
     test_section("Value references");
     // FIXME leaks
-
-    printf("bool:       %s\n", fa_type_str(fb(true)));
-    assert(tb(fb(true)) == true);
-    assert(tb(fb(false)) == false);
-
-    printf("int8:       %s\n", fa_type_str(i8(62)));
-    assert(ti8(i8('h')) == 'h');
-    assert(ti8(i8(121)) == 121);
-    assert(ti8(i8(-42)) == -42);
-
-    printf("int16:      %s\n", fa_type_str(i16(12372)));
-    printf("int16:      %d\n", ti16(i16(1267)));
-    assert(ti16(i16(1267)) == 1267);
-    assert(ti16(i16(-8712)) == -8712);
-
-    printf("int32:      %s\n", fa_type_str(i32(12372)));
-    printf("int32:      %d\n", ti32(i32(1267)));
-    assert(ti32(i32(2147483646)) == 2147483646);
-    assert(ti32(i32(-343646748)) == -343646748);
-
-    printf("int64:      %s\n", fa_type_str(i64(12372)));
-    printf("int64:      %lli\n", ti64(i64(9223372036854775807ll)));
-    assert(ti64(i64(4872837827878787871ll)) == 4872837827878787871ll);
-    assert(ti64(i64(-6888881236767676711ll)) == -6888881236767676711ll);
-
-    printf("double:     %s\n", fa_type_str(f64(12372)));
-    printf("double:     %f\n", tf64(f64(3.141592653589793)));
+    
+    printf("bool:       %s\n", fa_type_str(fa_fb(true)));
+    assert(fa_tb(fa_fb(true)) == true);
+    assert(fa_tb(fa_fb(false)) == false);
+    
+    printf("int8:       %s\n", fa_type_str(fa_i8(62)));
+    assert(fa_ti8(fa_i8('h')) == 'h');
+    assert(fa_ti8(fa_i8(121)) == 121);
+    assert(fa_ti8(fa_i8(-42)) == -42);
+    
+    printf("int16:      %s\n", fa_type_str(fa_i16(12372)));
+    printf("int16:      %d\n", fa_ti16(fa_i16(1267)));
+    assert(fa_ti16(fa_i16(1267)) == 1267);
+    assert(fa_ti16(fa_i16(-8712)) == -8712);
+    
+    printf("int32:      %s\n", fa_type_str(fa_i32(12372)));
+    printf("int32:      %d\n", fa_ti32(fa_i32(1267)));
+    assert(fa_ti32(fa_i32(2147483646)) == 2147483646);
+    assert(fa_ti32(fa_i32(-343646748)) == -343646748);
+    
+    printf("int64:      %s\n", fa_type_str(fa_i64(12372)));
+    printf("int64:      %lli\n", fa_ti64(fa_i64(9223372036854775807ll)));
+    assert(fa_ti64(fa_i64(4872837827878787871ll)) == 4872837827878787871ll);
+    assert(fa_ti64(fa_i64(-6888881236767676711ll)) == -6888881236767676711ll);
+    
+    printf("double:     %s\n", fa_type_str(fa_f64(12372)));
+    printf("double:     %f\n", fa_tf64(fa_f64(3.141592653589793)));
     // Does not work on Windows
-    //assert(tf64(f64(3.141592653589793D)) == 3.141592653589793D);
-    //assert(tf64(f64(-1.4142135623730951D)) == -1.4142135623730951D);
+    //assert(fa_tf64(fa_f64(3.141592653589793D)) == 3.141592653589793D);
+    //assert(fa_tf64(fa_f64(-1.4142135623730951D)) == -1.4142135623730951D);     
 }
 
 
@@ -85,29 +85,29 @@ void test_generic_functions()
     test_section("Generic functions");
     // TODO leaks
 
-    printf("2 * 3.2                      ==> %f\n",   tf64(fa_multiply(f64(2), f64(3.2))));
-    printf("1 / 3                        ==> %f\n",   tf64(fa_divide(f64(1), f64(3))));
-    printf("1 + 1.5                      ==> %f\n",   tf64(fa_add(f64(1), f64(1.5))));
-
-    printf("32                  + 1      ==> %i\n",   ti8(fa_add(i8(32), i8(1))));
-    printf("5123                + 1      ==> %i\n",   ti16(fa_add(i16(5123), i16(1))));
-    printf("2147483646          + 1      ==> %i\n",   ti32(fa_add(i32(2147483646), i32(1))));
-    printf("4872837827878787871 + 1      ==> %lli\n", ti64(fa_add(i64(4872837827878787871ll), i64(1))));
-    printf("32                  - 1      ==> %i\n",   ti8(fa_subtract(i8(32), i8(1))));
-    printf("5123                - 1      ==> %i\n",   ti16(fa_subtract(i16(5123), i16(1))));
-    printf("2147483646          - 1      ==> %i\n",   ti32(fa_subtract(i32(2147483646), i32(1))));
-    printf("4872837827878787871 - 1      ==> %lli\n", ti64(fa_subtract(i64(4872837827878787871ll), i64(1))));
-    printf("3                   / 2      ==> %i\n",   ti8(fa_divide(i8(33), i8(2))));
-    printf("3333                / 2      ==> %i\n",   ti16(fa_divide(i16(3333), i16(2))));
-    printf("3333333333          / 2      ==> %i\n",   ti32(fa_divide(i32(3333333333l), i32(2))));
-    printf("3333333333333333333 / 2      ==> %lli\n", ti64(fa_divide(i64(3333333333333333333ll), i64(2))));
-    printf("3                   / 1      ==> %i\n",   ti8(fa_divide(i8(32), i8(1))));
-
-    printf("true == false                ==> %s\n", (fa_equal(fb(true), fb(true))) ? "true" : false);
-    printf("32   == 32                   ==> %s\n", (fa_equal(i8(32), i8(32))) ? "true" : false);
-    printf("5123 == 5123                 ==> %s\n", (fa_equal(i16(5123), i16(5123))) ? "true" : false);
-
-
+    printf("2 * 3.2                      ==> %f\n",   fa_tf64(fa_multiply(fa_f64(2), fa_f64(3.2))));
+    printf("1 / 3                        ==> %f\n",   fa_tf64(fa_divide(fa_f64(1), fa_f64(3))));
+    printf("1 + 1.5                      ==> %f\n",   fa_tf64(fa_add(fa_f64(1), fa_f64(1.5))));
+    
+    printf("32                  + 1      ==> %i\n",   fa_ti8(fa_add(fa_i8(32), fa_i8(1))));
+    printf("5123                + 1      ==> %i\n",   fa_ti16(fa_add(fa_i16(5123), fa_i16(1))));
+    printf("2147483646          + 1      ==> %i\n",   fa_ti32(fa_add(fa_i32(2147483646), fa_i32(1))));
+    printf("4872837827878787871 + 1      ==> %lli\n", fa_ti64(fa_add(fa_i64(4872837827878787871ll), fa_i64(1))));
+    printf("32                  - 1      ==> %i\n",   fa_ti8(fa_subtract(fa_i8(32), fa_i8(1))));
+    printf("5123                - 1      ==> %i\n",   fa_ti16(fa_subtract(fa_i16(5123), fa_i16(1))));
+    printf("2147483646          - 1      ==> %i\n",   fa_ti32(fa_subtract(fa_i32(2147483646), fa_i32(1))));
+    printf("4872837827878787871 - 1      ==> %lli\n", fa_ti64(fa_subtract(fa_i64(4872837827878787871ll), fa_i64(1))));
+    printf("3                   / 2      ==> %i\n",   fa_ti8(fa_divide(fa_i8(33), fa_i8(2))));
+    printf("3333                / 2      ==> %i\n",   fa_ti16(fa_divide(fa_i16(3333), fa_i16(2))));
+    printf("3333333333          / 2      ==> %i\n",   fa_ti32(fa_divide(fa_i32(3333333333l), fa_i32(2))));
+    printf("3333333333333333333 / 2      ==> %lli\n", fa_ti64(fa_divide(fa_i64(3333333333333333333ll), fa_i64(2))));
+    printf("3                   / 1      ==> %i\n",   fa_ti8(fa_divide(fa_i8(32), fa_i8(1))));
+    
+    printf("true == false                ==> %s\n", (fa_equal(fa_fb(true), fa_fb(true))) ? "true" : false);
+    printf("32   == 32                   ==> %s\n", (fa_equal(fa_i8(32), fa_i8(32))) ? "true" : false);
+    printf("5123 == 5123                 ==> %s\n", (fa_equal(fa_i16(5123), fa_i16(5123))) ? "true" : false);
+    
+       
 }
 
 
@@ -193,14 +193,14 @@ void test_show()
 {
     test_section("Show");
     fa_print("\n", NULL);
-    fa_dprint("%s\n", fb(0));
-    fa_dprint("%s\n", i8(129));
-    fa_dprint("%s\n", i16(129));
-    fa_dprint("%s\n", i32(64000));
-    fa_dprint("%s\n", f64(3.1415));
+    fa_dprint("%s\n", fa_fb(0));
+    fa_dprint("%s\n", fa_i8(129));
+    fa_dprint("%s\n", fa_i16(129));
+    fa_dprint("%s\n", fa_i32(64000));
+    fa_dprint("%s\n", fa_f64(3.1415));
     fa_dprint("%s\n", fa_empty());
-    fa_dprint("%s\n", list(i8(1)));
-    fa_dprint("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), fb(true))));
+    fa_dprint("%s\n", list(fa_i8(1)));
+    fa_dprint("%s\n", list(fa_i8(1), fa_i8(2), list(fa_i8(1), fa_i8(2), fa_fb(true))));
     fa_dprint("%s\n", list(
                   fa_pair_create(fa_string("hans"), fa_string("höglund")),
                   fa_pair_create(fa_string("lisa"), fa_string("streich")),
@@ -213,10 +213,10 @@ void test_show()
 void test_compare()
 {
     test_section("Comparison");
-    fa_dprint("\"abc\" <  \"abd\"               ==> %s\n", fb(fa_less_than(fa_string("abc"), fa_string("abd"))));
-    fa_dprint("\"abc\" <= \"abd\"               ==> %s\n", fb(fa_less_than_equal(fa_string("abc"), fa_string("abd"))));
-    fa_dprint("\"abc\" >  \"abd\"               ==> %s\n", fb(fa_greater_than(fa_string("abc"), fa_string("abd"))));
-    fa_dprint("\"abc\" >= \"abd\"               ==> %s\n", fb(fa_less_than_equal(fa_string("abc"), fa_string("abd"))));
+    fa_dprint("\"abc\" <  \"abd\"               ==> %s\n", fa_fb(fa_less_than(fa_string("abc"), fa_string("abd"))));
+    fa_dprint("\"abc\" <= \"abd\"               ==> %s\n", fa_fb(fa_less_than_equal(fa_string("abc"), fa_string("abd"))));
+    fa_dprint("\"abc\" >  \"abd\"               ==> %s\n", fa_fb(fa_greater_than(fa_string("abc"), fa_string("abd"))));
+    fa_dprint("\"abc\" >= \"abd\"               ==> %s\n", fa_fb(fa_less_than_equal(fa_string("abc"), fa_string("abd"))));
 }
 
 
@@ -225,11 +225,11 @@ void test_compare()
 void test_rational()
 {
     test_section("Rational numbers");
-    fa_dprint("1/3 <  1/2                   ==> %s\n", fb(fa_less_than(fa_ratio(1, 3), fa_ratio(1, 2))));
-    fa_dprint("1/3 >  1/2                   ==> %s\n", fb(fa_greater_than(fa_ratio(1, 3), fa_ratio(1, 2))));
-    fa_dprint("1/3 == 2/6                   ==> %s\n", fb(fa_equal(fa_ratio(1, 3), fa_ratio(2, 6))));
-    fa_dprint("1/3 == 254/762               ==> %s\n", fb(fa_equal(fa_ratio(1, 3), fa_ratio(254, 762))));
-    fa_dprint("1/3 <= 7/8                   ==> %s\n", fb(fa_equal(fa_ratio(1, 3), fa_ratio(254, 762))));
+    fa_dprint("1/3 <  1/2                   ==> %s\n", fa_fb(fa_less_than(fa_ratio(1, 3), fa_ratio(1, 2))));
+    fa_dprint("1/3 >  1/2                   ==> %s\n", fa_fb(fa_greater_than(fa_ratio(1, 3), fa_ratio(1, 2))));
+    fa_dprint("1/3 == 2/6                   ==> %s\n", fa_fb(fa_equal(fa_ratio(1, 3), fa_ratio(2, 6))));
+    fa_dprint("1/3 == 254/762               ==> %s\n", fa_fb(fa_equal(fa_ratio(1, 3), fa_ratio(254, 762))));
+    fa_dprint("1/3 <= 7/8                   ==> %s\n", fa_fb(fa_equal(fa_ratio(1, 3), fa_ratio(254, 762))));
 }
 
 
@@ -255,7 +255,7 @@ void test_buffer()
         }
 
         fa_print("b                            ==> %s\n", b);
-        fa_print("size(b)                      ==> %s\n", i32(fa_buffer_size(b)));
+        fa_print("size(b)                      ==> %s\n", fa_i32(fa_buffer_size(b)));
         fa_destroy(b);
     }
 
@@ -275,7 +275,7 @@ void test_buffer()
         }
 
         fa_print("b                            ==> %s\n", b);
-        fa_print("size(b)                      ==> %s\n", i32(fa_buffer_size(b)));
+        fa_print("size(b)                      ==> %s\n", fa_i32(fa_buffer_size(b)));
         fa_destroy(b);
     }
 }
@@ -321,7 +321,7 @@ void test_time()
 //         // fa_print("cpu()                        ==> %s\n", fa_time_from_cpu(fa_time_cpu()));
 //
 //         fa_print("time(systemClock)            ==> %s\n", fa_time_time(system_clock));
-//         fa_print("ticks(systemClock)           ==> %s\n", i64(fa_time_ticks(system_clock)));
+//         fa_print("ticks(systemClock)           ==> %s\n", fa_i64(fa_time_ticks(system_clock)));
 //
 //         fa_thread_sleep(50);
 //     }
@@ -357,42 +357,42 @@ void test_midi_message()
 // {
 //     test_section("Types");
 //
-//     fa_dprint("type(i8)                  ==> %s\n", type(i8));
-//     // fa_dprint("size_of(1024,type(i8))    ==> %s\n", i32(fa_type_size_of(1024, type(i8))));
-//     // fa_dprint("align_of(1024,type(i8))   ==> %s\n", i32(fa_type_align_of(type(i8))));
+//     fa_dprint("type(fa_i8)                  ==> %s\n", type(fa_i8));
+//     // fa_dprint("size_of(1024,type(fa_i8))    ==> %s\n", fa_i32(fa_type_size_of(1024, type(fa_i8))));
+//     // fa_dprint("align_of(1024,type(fa_i8))   ==> %s\n", fa_i32(fa_type_align_of(type(fa_i8))));
 //     printf("\n");
 //
-//     // fa_dprint("type(f64)                 ==> %s\n", type(f64));
-//     // fa_dprint("size_of(1024,type(f64))   ==> %s\n", i32(fa_type_size_of(1024, type(f64))));
-//     // fa_dprint("align_of(1024,type(f64))  ==> %s\n", i32(fa_type_align_of(type(f64))));
+//     // fa_dprint("type(fa_f64)                 ==> %s\n", type(fa_f64));
+//     // fa_dprint("size_of(1024,type(fa_f64))   ==> %s\n", fa_i32(fa_type_size_of(1024, type(fa_f64))));
+//     // fa_dprint("align_of(1024,type(fa_f64))  ==> %s\n", fa_i32(fa_type_align_of(type(fa_f64))));
 //     // printf("\n");
 //     //
-//     // fa_type_t t = type_pair(type(i8), type(f64));
+//     // fa_type_t t = type_pair(type(fa_i8), type(fa_f64));
 //     // fa_dprint("t                            ==> %s\n", t);
-//     // fa_dprint("size_of(1024,t)              ==> %s\n", i32(fa_type_size_of(1024, t)));
-//     // fa_dprint("align_of(1024,t)             ==> %s\n", i32(fa_type_align_of(t)));
+//     // fa_dprint("size_of(1024,t)              ==> %s\n", fa_i32(fa_type_size_of(1024, t)));
+//     // fa_dprint("align_of(1024,t)             ==> %s\n", fa_i32(fa_type_align_of(t)));
 //     // printf("\n");
 //     //
-//     // fa_type_t u = type_pair(type_vector(type(i8), 10), type(f64));
+//     // fa_type_t u = type_pair(type_vector(type(fa_i8), 10), type(fa_f64));
 //     // fa_dprint("u                            ==> %s\n", u);
-//     // fa_dprint("size_of(1024,u)              ==> %s\n", i32(fa_type_size_of(1024, u)));
-//     // fa_dprint("align_of(1024,u)             ==> %s\n", i32(fa_type_align_of(u)));
+//     // fa_dprint("size_of(1024,u)              ==> %s\n", fa_i32(fa_type_size_of(1024, u)));
+//     // fa_dprint("align_of(1024,u)             ==> %s\n", fa_i32(fa_type_align_of(u)));
 //     // printf("\n");
 //     //
-//     // fa_type_t u2 = type_pair(type_frame(type(i8)), type(f64));
+//     // fa_type_t u2 = type_pair(type_frame(type(fa_i8)), type(fa_f64));
 //     // fa_dprint("u2                           ==> %s\n", u2);
-//     // fa_dprint("size_of(1024,u2)             ==> %s\n", i32(fa_type_size_of(1024, u2)));
-//     // fa_dprint("align_of(1024,u2)            ==> %s\n", i32(fa_type_align_of(u2)));
+//     // fa_dprint("size_of(1024,u2)             ==> %s\n", fa_i32(fa_type_size_of(1024, u2)));
+//     // fa_dprint("align_of(1024,u2)            ==> %s\n", fa_i32(fa_type_align_of(u2)));
 //     // printf("\n");
 //
-//     fa_type_t v = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-//                                              type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-//                                                        type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-//                                                                type(i8))))))))));
+//     fa_type_t v = type_pair(type(fa_i8), type_pair(type(fa_i8), type_pair(type(fa_i8),
+//                                              type_pair(type(fa_i8), type_pair(type(fa_i8), type_pair(type(fa_i8),
+//                                                        type_pair(type(fa_i8), type_pair(type(fa_i8), type_pair(type(fa_i8),
+//                                                                type(fa_i8))))))))));
 //
 //     fa_print("v                            ==> %s\n", v);
-//     // fa_dprint("size_of(1024,v)              ==> %s\n", i32(fa_type_size_of(1024, v)));
-//     // fa_dprint("align_of(1024,v)             ==> %s\n", i32(fa_type_align_of(v)));
+//     // fa_dprint("size_of(1024,v)              ==> %s\n", fa_i32(fa_type_size_of(1024, v)));
+//     // fa_dprint("align_of(1024,v)             ==> %s\n", fa_i32(fa_type_align_of(v)));
 //     fa_destroy(v);
 //     printf("\n");
 // }
@@ -448,12 +448,12 @@ fa_ptr_t test_atomic_queue_reader(fa_ptr_t x)
     fa_ptr_t                  v;
 
     while (true) {
-        if (!tb(fa_atomic_get(a))) {
+        if (!fa_tb(fa_atomic_get(a))) {
             return v;
         }
 
         if ((v = fa_atomic_queue_read(q))) {
-            printf("         |- %5d    \n", ti32(v));
+            printf("         |- %5d    \n", fa_ti32(v));
         }
 
         fa_thread_sleep(rand() % 100);
@@ -467,7 +467,7 @@ void test_atomic_queue_(int iter, long sleepTime)
         fa_atomic_queue_t q = fa_atomic_queue_create();
 
         struct test_atomic_queue_reader_args args = { q, fa_atomic() };
-        fa_atomic_set(args.active, fb(true));
+        fa_atomic_set(args.active, fa_fb(true));
 
         fa_thread_t t = fa_thread_create(test_atomic_queue_reader, &args);
 
@@ -475,12 +475,12 @@ void test_atomic_queue_(int iter, long sleepTime)
 
         for (int i = 0; i < iter; ++i) {
             fa_thread_sleep(rand() % 100);
-            fa_atomic_queue_write(q, i32(i));
+            fa_atomic_queue_write(q, fa_i32(i));
             printf("  %5d -|  \n", i);
         }
 
         fa_thread_sleep(sleepTime);
-        fa_atomic_set(args.active, fb(false));
+        fa_atomic_set(args.active, fa_fb(false));
         fa_thread_join(t); // TODO how to kill?
         fa_destroy(q);
     }
@@ -509,12 +509,12 @@ fa_ptr_t test_atomic_stack_reader(fa_ptr_t x)
     fa_ptr_t                  v;
 
     while (true) {
-        if (!tb(fa_atomic_get(a))) {
+        if (!fa_tb(fa_atomic_get(a))) {
             return v;
         }
 
         if ((v = fa_atomic_stack_read(q))) {
-            printf("         |- %5d    \n", ti32(v));
+            printf("         |- %5d    \n", fa_ti32(v));
         }
 
         srand(time(NULL));
@@ -529,7 +529,7 @@ void test_atomic_stack_(int iter, long sleepTime)
         fa_atomic_stack_t q = fa_atomic_stack_create();
 
         struct test_atomic_stack_reader_args args = { q, fa_atomic() };
-        fa_atomic_set(args.active, fb(true));
+        fa_atomic_set(args.active, fa_fb(true));
 
         fa_thread_t t = fa_thread_create(test_atomic_stack_reader, &args);
 
@@ -540,12 +540,12 @@ void test_atomic_stack_(int iter, long sleepTime)
                 fa_thread_sleep(rand() % 100);
             }
 
-            fa_atomic_stack_write(q, i32(i));
+            fa_atomic_stack_write(q, fa_i32(i));
             printf("  %5d -|  \n", i);
         }
 
         fa_thread_sleep(sleepTime);
-        fa_atomic_set(args.active, fb(false));
+        fa_atomic_set(args.active, fa_fb(false));
         fa_thread_join(t);
         fa_destroy(q);
     }
@@ -577,7 +577,7 @@ fa_ptr_t ring_buffer_reader(fa_ptr_t x)
     fa_thread_sleep(1000);
 
     while (true) {
-        if (!tb(fa_atomic_get(a))) {
+        if (!fa_tb(fa_atomic_get(a))) {
             return NULL;
         }
 
@@ -597,7 +597,7 @@ void test_atomic_ring_buffer_(int iter, long sleepTime)
         fa_atomic_ring_buffer_t q = fa_atomic_ring_buffer_create(1024);
 
         struct test_atomic_ring_buffer_reader_args args = { q, fa_atomic() };
-        fa_atomic_set(args.active, fb(true));
+        fa_atomic_set(args.active, fa_fb(true));
 
         fa_thread_t t = fa_thread_create(ring_buffer_reader, &args);
 
@@ -613,7 +613,7 @@ void test_atomic_ring_buffer_(int iter, long sleepTime)
         }
 
         fa_thread_sleep(sleepTime);
-        fa_atomic_set(args.active, fb(false));
+        fa_atomic_set(args.active, fa_fb(false));
         fa_thread_join(t);
         fa_destroy(q);
     }
@@ -699,18 +699,18 @@ void test_for_each()
     fa_let(x, 33) {
         fa_let(y, 1)
         fa_let(z, x + y)
-        fa_print("%s\n", i32(z));
+        fa_print("%s\n", fa_i32(z));
     }
 
     printf("\n");
-    fa_with(list, list(i32(1), i32(2), i32(3), i32(4)), fa_destroy(list)) {
+    fa_with(list, list(fa_i32(1), fa_i32(2), fa_i32(3), fa_i32(4)), fa_destroy(list)) {
         fa_for_each(x, list) {
             fa_print(">    %s\n", x);
         }
     }
 
     printf("\n");
-    fa_with(set, set(i32(1), i32(1), i32(2), i32(1)), fa_destroy(set)) {
+    fa_with(set, set(fa_i32(1), fa_i32(1), fa_i32(2), fa_i32(1)), fa_destroy(set)) {
         fa_for_each(x, fa_set_to_list(set)) {
             fa_print(">    %s\n", x);
         }
@@ -719,8 +719,8 @@ void test_for_each()
     printf("\n");
 
     fa_with(map, map(
-                fa_string("foo"), i16(1),
-                fa_string("bar"), list(i16(1), i16(2), i16(3))),
+                fa_string("foo"), fa_i16(1),
+                fa_string("bar"), list(fa_i16(1), fa_i16(2), fa_i16(3))),
             fa_destroy(map)) {
         fa_for_each(x, fa_map_to_list(map)) {
             fa_print(">    %s\n", x);
@@ -734,22 +734,22 @@ void test_for_each()
 
 bool test_list_is_even16(fa_ptr_t data, fa_ptr_t p)
 {
-    return ti16(p) % 2 == 0;
+    return fa_ti16(p) % 2 == 0;
 }
 
 bool test_list_is_odd16(fa_ptr_t data, fa_ptr_t p)
 {
-    return ti16(p) % 2 != 0;
+    return fa_ti16(p) % 2 != 0;
 }
 
 fa_ptr_t times2(fa_ptr_t data, fa_ptr_t p)
 {
-    return i16(2 * ti16(p));
+    return fa_i16(2 * fa_ti16(p));
 }
 
 fa_ptr_t times10(fa_ptr_t data, fa_ptr_t p)
 {
-    return i16(10 * ti16(p));
+    return fa_i16(10 * fa_ti16(p));
 }
 
 // x = [x,x]
@@ -772,8 +772,8 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3));
-        fa_list_t bs = fa_list_cons(i16(0), as);
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3));
+        fa_list_t bs = fa_list_cons(fa_i16(0), as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("cons(0,as)                   ==> %s\n", bs);
@@ -784,7 +784,7 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3));
         fa_list_t bs = fa_list_append(as, as);
 
         fa_print("as                           ==> %s\n", as);
@@ -796,7 +796,7 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3));
         fa_list_t bs = fa_list_copy(as);
         fa_print("as                           ==> %s\n", as);
         fa_print("copy(as)                     ==> %s\n", bs);
@@ -806,7 +806,7 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3));
         fa_list_t bs = fa_list_init(as);
 
         fa_print("as                           ==> %s\n", as);
@@ -818,7 +818,7 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3));
         fa_ptr_t v = fa_list_last(as);
 
         fa_print("as                           ==> %s\n", as);
@@ -830,17 +830,17 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3));
 
         fa_print("as                           ==> %s\n", as);
-        fa_print("length(as)                   ==> %s\n", i16(fa_list_length(as)));
+        fa_print("length(as)                   ==> %s\n", fa_i16(fa_list_length(as)));
 
         fa_destroy(as);
     }
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
         fa_list_t bs = fa_list_reverse(as);
 
         fa_print("as                           ==> %s\n", as);
@@ -853,10 +853,10 @@ void test_list()
     {
         printf("\n");
 
-        // fa_list_t as = list(i16(1), i16(-2), i16(0), i16(4), i16(123));
+        // fa_list_t as = list(fa_i16(1), fa_i16(-2), fa_i16(0), fa_i16(4), fa_i16(123));
         fa_list_t as = fa_list_enumerate(0, 10);
         as = fa_list_reverse(as);
-        as = fa_list_dmap(apply1, i32, as);
+        as = fa_list_dmap(apply1, fa_i32, as);
 
         fa_list_t bs = fa_list_sort(as);
 
@@ -870,7 +870,7 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
         fa_list_t bs = fa_list_take(3, as);
 
         fa_print("as                           ==> %s\n", as);
@@ -882,7 +882,7 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
         fa_list_t bs = fa_list_drop(3, as);
 
         fa_print("as                           ==> %s\n", as);
@@ -894,7 +894,7 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
         fa_ptr_t v = fa_list_index(1, as);
 
         fa_print("as                           ==> %s\n", as);
@@ -906,7 +906,7 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
         fa_list_t bs = fa_list_range(1, 3, as);
 
         fa_print("as                           ==> %s\n", as);
@@ -918,7 +918,7 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
         fa_list_t bs = fa_list_remove_range(1, 3, as);
 
         fa_print("as                           ==> %s\n", as);
@@ -931,8 +931,8 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        fa_list_t xs = list(i16(0), i16(0));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
+        fa_list_t xs = list(fa_i16(0), fa_i16(0));
         fa_list_t bs = fa_list_insert_range(2, xs, as);
 
         fa_print("as                           ==> %s\n", as);
@@ -945,8 +945,8 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        fa_list_t bs = fa_list_insert(2, i16(0), as);
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
+        fa_list_t bs = fa_list_insert(2, fa_i16(0), as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("insert(2,0,as)               ==> %s\n", bs);
@@ -957,8 +957,8 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        fa_list_t bs = fa_list_insert(0, i16(0), as);
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
+        fa_list_t bs = fa_list_insert(0, fa_i16(0), as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("insert(0,1,as)               ==> %s\n", bs);
@@ -969,7 +969,7 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t as = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
         fa_list_t bs = fa_list_remove(2, as);
 
         fa_print("as                           ==> %s\n", as);
@@ -986,22 +986,22 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t as = list(i16(1), i16(3), i16(5));
+        fa_list_t as = list(fa_i16(1), fa_i16(3), fa_i16(5));
 
         fa_print("as                           ==> %s\n", as);
-        fa_print("indexOf(0,as)                ==> %s\n", i16(fa_list_index_of(i16(0), as)));
-        fa_print("indexOf(1,as)                ==> %s\n", i16(fa_list_index_of(i16(1), as)));
-        fa_print("indexOf(2,as)                ==> %s\n", i16(fa_list_index_of(i16(2), as)));
-        fa_print("indexOf(3,as)                ==> %s\n", i16(fa_list_index_of(i16(3), as)));
-        fa_print("indexOf(4,as)                ==> %s\n", i16(fa_list_index_of(i16(4), as)));
-        fa_print("indexOf(5,as)                ==> %s\n", i16(fa_list_index_of(i16(5), as)));
+        fa_print("indexOf(0,as)                ==> %s\n", fa_i16(fa_list_index_of(fa_i16(0), as)));
+        fa_print("indexOf(1,as)                ==> %s\n", fa_i16(fa_list_index_of(fa_i16(1), as)));
+        fa_print("indexOf(2,as)                ==> %s\n", fa_i16(fa_list_index_of(fa_i16(2), as)));
+        fa_print("indexOf(3,as)                ==> %s\n", fa_i16(fa_list_index_of(fa_i16(3), as)));
+        fa_print("indexOf(4,as)                ==> %s\n", fa_i16(fa_list_index_of(fa_i16(4), as)));
+        fa_print("indexOf(5,as)                ==> %s\n", fa_i16(fa_list_index_of(fa_i16(5), as)));
 
         fa_destroy(as);
     }
     {
         printf("\n");
 
-        fa_list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t xs = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
         fa_list_t ys = fa_list_filter(test_list_is_odd16, 0, xs);
 
         fa_print("xs                           ==> %s\n", xs);
@@ -1014,7 +1014,7 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t xs = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
         fa_list_t ys = fa_list_map(times10, 0, xs);
 
         fa_print("xs                           ==> %s\n", xs);
@@ -1027,8 +1027,8 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        fa_list_t ys = list(i16(66), i16(77));
+        fa_list_t xs = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
+        fa_list_t ys = list(fa_i16(66), fa_i16(77));
         fa_list_t zss = list(xs, ys, xs);
 
         fa_print("[xs,ys]                      ==> %s\n", zss);
@@ -1042,7 +1042,7 @@ void test_list()
     {
         printf("\n");
 
-        fa_list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t xs = list(fa_i16(1), fa_i16(2), fa_i16(3), fa_i16(4), fa_i16(5));
         fa_list_t ys = fa_list_join_map(dup_list, 0, xs);
 
         fa_print("xs                           ==> %s\n", xs);
@@ -1061,7 +1061,7 @@ void test_list()
         xs = fa_list_dreverse(xs);
         // fa_print("reverse(xs)                  ==> %s\n", xs);
 
-        xs = fa_list_dmap(apply1, i16, xs);
+        xs = fa_list_dmap(apply1, fa_i16, xs);
         // fa_print("xs                           ==> %s\n", xs);
 
         xs = fa_list_dfilter(test_list_is_odd16, 0, xs);
@@ -1076,10 +1076,10 @@ void test_list()
         printf("\n");
 
         fa_list_t xs = fa_list_enumerate(0, 12);
-        xs = fa_list_dmap(apply1, i8, xs);
+        xs = fa_list_dmap(apply1, fa_i8, xs);
 
         fa_print("xs                           ==> %s\n", xs);
-        fa_ptr_t sum = fa_list_dfold_left(apply2, fa_add, i8(0), xs);
+        fa_ptr_t sum = fa_list_dfold_left(apply2, fa_add, fa_i8(0), xs);
         fa_print("sum(xs)                      ==> %s\n", sum);
     }
 }
@@ -1093,23 +1093,23 @@ void test_set()
     {
         printf("\n");
 
-        fa_set_t a = set(i16(1), i16(3), i16(2));
+        fa_set_t a = set(fa_i16(1), fa_i16(3), fa_i16(2));
 
-        a = fa_set_dadd(i16(1), a);
-        a = fa_set_dadd(i16(5), a);
-        a = fa_set_dadd(i16(3), a);
-        a = fa_set_dremove(i16(3), a);
+        a = fa_set_dadd(fa_i16(1), a);
+        a = fa_set_dadd(fa_i16(5), a);
+        a = fa_set_dadd(fa_i16(3), a);
+        a = fa_set_dremove(fa_i16(3), a);
 
         fa_print("a                            ==> %s\n", a);
-        fa_print("size(a)                      ==> %s\n", i16(fa_set_size(a)));
+        fa_print("size(a)                      ==> %s\n", fa_i16(fa_set_size(a)));
         fa_destroy(a);
     }
 
     {
         printf("\n");
 
-        fa_set_t a = set(i16(1), i16(2), i16(3));
-        fa_set_t b = set(i16(3), i16(4));
+        fa_set_t a = set(fa_i16(1), fa_i16(2), fa_i16(3));
+        fa_set_t b = set(fa_i16(3), fa_i16(4));
 
         fa_print("a                            ==> %s\n", a);
         fa_print("b                            ==> %s\n", b);
@@ -1122,8 +1122,8 @@ void test_set()
     {
         printf("\n");
 
-        fa_set_t a = set(i16(1), i16(2), i16(3));
-        fa_set_t b = set(i16(3), i16(4));
+        fa_set_t a = set(fa_i16(1), fa_i16(2), fa_i16(3));
+        fa_set_t b = set(fa_i16(3), fa_i16(4));
 
         fa_print("a                            ==> %s\n", a);
         fa_print("b                            ==> %s\n", b);
@@ -1136,8 +1136,8 @@ void test_set()
     {
         printf("\n");
 
-        fa_set_t a = set(i16(1), i16(2), i16(3));
-        fa_set_t b = set(i16(3), i16(4));
+        fa_set_t a = set(fa_i16(1), fa_i16(2), fa_i16(3));
+        fa_set_t b = set(fa_i16(3), fa_i16(4));
 
         fa_print("a                            ==> %s\n", a);
         fa_print("b                            ==> %s\n", b);
@@ -1152,7 +1152,7 @@ void test_set()
 
         fa_set_t a = set(fa_string("foo"), fa_string("bar"));
         fa_set_t b = set(fa_string("hi"), fa_string("ho"));
-        fa_set_t c = set(i16(0), i16(1));
+        fa_set_t c = set(fa_i16(0), fa_i16(1));
 
         fa_print("a                            ==> %s\n", a);
         fa_print("b                            ==> %s\n", b);
@@ -1181,20 +1181,20 @@ void test_map()
 
         a = fa_map_dadd(fa_string("name"), fa_string("Hans"), a);
         a = fa_map_dset(fa_string("name"), fa_string("Sven"), a);
-        a = fa_map_dset(fa_string("age"), i16(22), a);
-        a = fa_map_dset(fa_string("age"), i16(22), a);
+        a = fa_map_dset(fa_string("age"), fa_i16(22), a);
+        a = fa_map_dset(fa_string("age"), fa_i16(22), a);
 
         // a = fa_map_dremove(fa_string("age"), a);
-        // a = fa_map_dadd(fa_string("age"), i16(25), a);
+        // a = fa_map_dadd(fa_string("age"), fa_i16(25), a);
         a = fa_map_dset(fa_string("skills"), list(fa_string("programming"), fa_string("composition")), a);
 
-        // a = fa_map_dadd(fa_string("happy"), fb(true), a);
-        // a = fa_map_dadd(fa_string("pair"), pair(fb(true), f64(3.1415)), a);
+        // a = fa_map_dadd(fa_string("happy"), fa_fb(true), a);
+        // a = fa_map_dadd(fa_string("pair"), pair(fa_fb(true), fa_f64(3.1415)), a);
         // a = fa_map_dadd(fa_string("ratio"), fa_ratio(1, 3), a);
         // a = fa_map_dadd(fa_string("ratio2"), fa_multiply(fa_ratio(4, 4444), fa_ratio(1, 2)), a);
 
         fa_print("a                            ==> %s\n", a);
-        fa_print("size(a)                      ==> %s\n", i16(fa_map_size(a)));
+        fa_print("size(a)                      ==> %s\n", fa_i16(fa_map_size(a)));
 
         fa_print("a.name                       ==> %s\n", fa_map_get(fa_string("name"), a));
         fa_print("a.age                        ==> %s\n", fa_map_get(fa_string("age"), a));
@@ -1272,18 +1272,18 @@ void test_json(fa_string_t path)
     fa_puts(json2);
 
     fa_puts(fa_string_to_json(
-                fa_pair_create(i32(1), i32(2))));
+                fa_pair_create(fa_i32(1), fa_i32(2))));
 
     fa_puts(fa_string_to_json(
-                list(fa_pair_create(i32(1), i32(2)), fa_pair_create(i32(3), i32(4)))));
+                list(fa_pair_create(fa_i32(1), fa_i32(2)), fa_pair_create(fa_i32(3), fa_i32(4)))));
 
     fa_puts(fa_string_to_json(
-                set(fa_pair_create(i32(1), i32(2)), fa_pair_create(i32(1), i32(2)))));
+                set(fa_pair_create(fa_i32(1), fa_i32(2)), fa_pair_create(fa_i32(1), fa_i32(2)))));
 
     fa_puts(fa_string_to_json(
                 map(
-                    fa_string("foo"), i32(1),
-                    fa_string("bar"), list(i32(1), i32(2), i32(3)))));
+                    fa_string("foo"), fa_i32(1),
+                    fa_string("bar"), list(fa_i32(1), fa_i32(2), fa_i32(3)))));
 
 }
 
@@ -1302,17 +1302,17 @@ void test_json(fa_string_t path)
 //                     fa_string("pitches"), list(fa_ratio(60, 1), fa_ratio(62, 1))
 //                 );
 //
-//     fa_message_send((fa_receiver_t) disp, i16(1), val);
-//     fa_message_send((fa_receiver_t) disp, i16(2), fa_string("World!"));
-//     fa_message_send((fa_receiver_t) disp, i16(2), fa_string("World!"));
-//     fa_message_send((fa_receiver_t) disp, i16(2), fa_string("World!"));
-//     fa_message_send((fa_receiver_t) disp, i16(2), fa_string("World!"));
+//     fa_message_send((fa_receiver_t) disp, fa_i16(1), val);
+//     fa_message_send((fa_receiver_t) disp, fa_i16(2), fa_string("World!"));
+//     fa_message_send((fa_receiver_t) disp, fa_i16(2), fa_string("World!"));
+//     fa_message_send((fa_receiver_t) disp, fa_i16(2), fa_string("World!"));
+//     fa_message_send((fa_receiver_t) disp, fa_i16(2), fa_string("World!"));
 //
 //     fa_list_t msgs = fa_list_empty();
 //
 //     while (true) {
 //         fa_message_sync((fa_sender_t) disp);
-//         msgs = fa_message_receive((fa_sender_t) disp, i16(1));
+//         msgs = fa_message_receive((fa_sender_t) disp, fa_i16(1));
 //
 //         if (fa_list_is_empty(msgs)) {
 //             break;
@@ -1334,10 +1334,10 @@ void test_json(fa_string_t path)
 //     fa_message_fa_sender_t s =
 //         fa_system_event_receive(
 //             list(
-//                 // i16(mouse_move_event)
-//                 // i16(mouse_down_event)
-//                 i16(key_down_event),
-//                 i16(key_up_event)
+//                 // fa_i16(mouse_move_event)
+//                 // fa_i16(mouse_down_event)
+//                 fa_i16(key_down_event),
+//                 fa_i16(key_up_event)
 //
 //             ));
 //     fa_message_fa_receiver_t r =
@@ -1345,9 +1345,9 @@ void test_json(fa_string_t path)
 //
 //     for (int i = 0; i < 100000; ++i) {
 //         fa_message_sync(s);
-//         fa_for_each(x, fa_message_receive(s, i16(0))) {
+//         fa_for_each(x, fa_message_receive(s, fa_i16(0))) {
 //             // fa_print("    Received: %s\n", x);
-//             fa_message_send(r, i16(0), x);
+//             fa_message_send(r, fa_i16(0), x);
 //         }
 //         fa_thread_sleep(5);
 //     }
@@ -1392,7 +1392,7 @@ void test_json(fa_string_t path)
 //         // fa_event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(fa_string("flux"))));
 //         // fa_event_t y2 = switch_event(ku, switch_event(kd,never(),mm), merge_event(delay_event(seconds(3),b),md));
 //         // fa_event_t y2 = switch_event(kd,mm,merge_event(md,mu));
-//         // fa_event_t y2 = fa_event_filter(fa_less_than, f64(500), mouseX);
+//         // fa_event_t y2 = fa_event_filter(fa_less_than, fa_f64(500), mouseX);
 //         fa_event_t y2 = mm;
 //         // fa_print("The event: %s\n", mouseX);
 //         fa_event_t z  = fa_system_event_write_std(y2);
@@ -1420,7 +1420,7 @@ void test_scheduler()
 
 // fa_ptr_t add1234(fa_ptr_t c, fa_ptr_t x)
 // {
-// return i8(ti8(x) + 1234);
+// return fa_i8(fa_ti8(x) + 1234);
 // }
 //
 // void test_processor_graphs(fa_string_t path)
@@ -1430,19 +1430,19 @@ void test_scheduler()
 //     inform(fa_string_append(fa_string("Writing "), path));
 //
 //     processor_t p, q, chain, rchain;
-//     p = unary(type(i8), type(i8), add1234, NULL);
+//     p = unary(type(fa_i8), type(fa_i8), add1234, NULL);
 //     chain = seq(p, seq(p, seq(p, seq(p, seq(p, p)))));
 //     rchain = seq(seq(seq(seq(p, p), p), p), p);
 //     q =
-//         seq(split(type(i8)),
+//         seq(split(type(fa_i8)),
 //
 //             par(
 //                 seq(seq(seq(p, p), p), p),
 //
 //                 seq(
-//                     split(type(i8)),
-//                     par(seq(split(type(i8)), par(chain, seq(split(type(i8)), par(chain, chain)))),
-//                         seq(split(type(i8)), par(p, seq(p, p))))
+//                     split(type(fa_i8)),
+//                     par(seq(split(type(fa_i8)), par(chain, seq(split(type(fa_i8)), par(chain, chain)))),
+//                         seq(split(type(fa_i8)), par(p, seq(p, p))))
 //                 )
 //
 //             )
@@ -1594,7 +1594,7 @@ void test_regex()
 
     fa_print("exp                          ==> %s\n", fa_string(exp));
     fa_print("str                          ==> %s\n", fa_string(str));
-    fa_print("matches(exp,str)             ==> %s\n", fb(fa_string_matches(fa_string(exp), fa_string(str))));
+    fa_print("matches(exp,str)             ==> %s\n", fa_fb(fa_string_matches(fa_string(exp), fa_string(str))));
 }
 
 // --------------------------------------------------------------------------------
@@ -1608,7 +1608,7 @@ void test_regex()
 //     // processor_t proc;
 //
 //     // Processor to use
-//     // proc    = fa_processor_identity(type_pair(type_frame(type(f32)), type_frame(type(f32))));
+//     // proc    = fa_processor_identity(type_pair(type_frame(type(fa_f32)), type_frame(type(fa_f32))));
 //     proc = NULL;
 //
 //     // Open streams
@@ -1667,7 +1667,7 @@ void test_audio_stream()
     // processor_t     proc1, proc2;
 
     // Processor to use
-    // proc1    = id(type_pair(type_frame(type(f32)), type_frame(type(f32))));
+    // proc1    = id(type_pair(type_frame(type(fa_f32)), type_frame(type(fa_f32))));
     // proc2    = seq(proc1, proc1);
 
     // Begin session
@@ -1711,8 +1711,8 @@ void print_midi_devices(fa_midi_session_t session)
     fa_print("    Listing midi devices: \n", NULL);
     fa_for_each(x, fa_midi_all(session)) {
         fa_print("        Device: %s\n", x);
-        fa_print("            Input:  %s\n", fb(fa_midi_has_input(x)));
-        fa_print("            Output: %s\n", fb(fa_midi_has_output(x)));
+        fa_print("            Input:  %s\n", fa_fb(fa_midi_has_input(x)));
+        fa_print("            Output: %s\n", fa_fb(fa_midi_has_output(x)));
     }
     fa_print("    Default input is : %s\n", fa_midi_default_input(session));
     fa_print("    Default output is : %s\n", fa_midi_default_output(session));
@@ -1722,27 +1722,27 @@ void print_midi_devices(fa_midi_session_t session)
 fa_ptr_t to_note_on(fa_ptr_t occ)
 {
     // fa_print("%s\n", occ);
-    int16_t kc = ti16(fa_list_head(occ));
+    int16_t kc = fa_ti16(fa_list_head(occ));
     return fa_midi_message(0x90, 48 + kc, 120);
 }
 
 fa_ptr_t to_note_off(fa_ptr_t occ)
 {
     // fa_print("%s\n", occ);
-    int16_t kc = ti16(fa_list_head(occ));
+    int16_t kc = fa_ti16(fa_list_head(occ));
     return fa_midi_message(0x80, 48 + kc, 120);
 }
 
 fa_ptr_t to_control(fa_ptr_t occ)
 {
     // fa_print("%s\n", occ);
-    double x = tf64(fa_pair_first(occ));
+    double x = fa_tf64(fa_pair_first(occ));
     return fa_midi_message(0xb0, 7, x / 1900 * 127);
 }
 fa_ptr_t to_control2(fa_ptr_t occ)
 {
     // fa_print("%s\n", occ);
-    double y = tf64(fa_pair_second(occ));
+    double y = fa_tf64(fa_pair_second(occ));
     return fa_midi_message(0xb0, 1, y / 1200 * 127);
 }
 
@@ -1811,8 +1811,8 @@ void test_midi_stream()
 
     // fa_event_t notes2 = fa_event_before(later(seconds(3),0), notes);
 
-    // fa_event_t notes   = fa_event_receive((fa_sender_t) in_stream, i32(0));
-    // fa_event_t sender  = fa_event_send((fa_receiver_t) out_stream, i32(0), notes);
+    // fa_event_t notes   = fa_event_receive((fa_sender_t) in_stream, fa_i32(0));
+    // fa_event_t sender  = fa_event_send((fa_receiver_t) out_stream, fa_i32(0), notes);
     // fa_event_t sender2 = fa_system_event_write_std(notes);
 
     // fa_scheduler_t sched = fa_scheduler_create(fa_time_get_system_prec_clock());
@@ -1865,7 +1865,7 @@ cleanup:
 // }
 // fa_ptr_t signal_succ(fa_ptr_t data, fa_ptr_t value)
 // {
-//     return fa_add(value, i16(1));
+//     return fa_add(value, fa_i16(1));
 // }
 // #define ap fa_signal_apply
 // #define ap2(f,x,y) ap(ap(f,x),y)
@@ -1874,8 +1874,8 @@ cleanup:
 // {
 //     test_section("Signals");
 //
-//     // fa_signal_t s = fa_signal_constant(i16(1));
-//     // fa_signal_t p = fa_signal_constant(i16(10));
+//     // fa_signal_t s = fa_signal_constant(fa_i16(1));
+//     // fa_signal_t p = fa_signal_constant(fa_i16(10));
 //     // fa_signal_t t = fa_signal_apply(fa_signal_identity(), s);
 //
 //     // fa_signal_t add  = fa_signal_add();

@@ -684,7 +684,7 @@ fa_list_t fa_list_enumerate(int m, int n)
     begin_node(node, next);
 
     for (int i = 0; i < n; ++i) {
-        append_node(next, m + i32(i));
+        append_node(next, m + fa_i32(i));
     }
 
     return new_list(node);

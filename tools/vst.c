@@ -33,8 +33,8 @@ void run_vst()
         fa_audio_device_t o  = fa_audio_default_output(s);
         fa_list_t out           = fa_signal_vst(fa_string("dls"), PATH, fa_empty());
 
-        fa_audio_set_parameter(fa_string("sample-rate"), f32(48000), s);
-        fa_audio_set_parameter(fa_string("vector-size"), i32(1024), s);
+        fa_audio_set_parameter(fa_string("sample-rate"), fa_f32(48000), s);
+        fa_audio_set_parameter(fa_string("vector-size"), fa_i32(1024), s);
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
         if (fa_check(st)) {

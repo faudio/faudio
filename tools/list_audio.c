@@ -20,10 +20,10 @@ void print_device(fa_audio_device_t x)
 {
     fa_print("Name: %s\n", fa_audio_name(x));
     // fa_print("Name length: %d\n", fa_string_length(fa_audio_name(x)));
-    fa_print("In:   %s\n", i16(fa_audio_input_channels(x)));
-    fa_print("Out:  %s\n", i16(fa_audio_output_channels(x)));
+    fa_print("In:   %s\n", fa_i16(fa_audio_input_channels(x)));
+    fa_print("Out:  %s\n", fa_i16(fa_audio_output_channels(x)));
     fa_print("Host: %s\n", fa_audio_host_name(x));
-    fa_print("Rate: %s\n", f64(fa_audio_default_sample_rate(x)));
+    fa_print("Rate: %s\n", fa_f64(fa_audio_default_sample_rate(x)));
     fa_print_ln(fa_string(""));
 }
 

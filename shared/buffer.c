@@ -258,8 +258,8 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
         }
 
         // Meta-data
-        fa_buffer_set_meta(buffer, fa_string("sample-rate"), f32(info.samplerate));
-        fa_buffer_set_meta(buffer, fa_string("channels"), i32(info.channels));
+        fa_buffer_set_meta(buffer, fa_string("sample-rate"), fa_f32(info.samplerate));
+        fa_buffer_set_meta(buffer, fa_string("channels"), fa_i32(info.channels));
         {
             char *str = (char *) sf_get_string(file, SF_STR_TITLE);
             fa_buffer_set_meta(buffer, fa_string("title"), fa_string(str ? str : ""));

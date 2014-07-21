@@ -8,7 +8,7 @@
 /*
     This program does ...
 
-    SCL_SESSION=1d6581ea210d2c66bfab1fdcdec94f03465058176fbe1baca5254d9902c6cec1
+    SCL_SESSION=1d6581ea210d2c66bfab1fdcdec94f03465058176fa_fbe1baca5254d9902c6cec1
     curl -v -X POST "Accept: application/scld" \
         --cookie "session_id=$SCL_SESSION" \
         --data-binary @test/test.ogg \

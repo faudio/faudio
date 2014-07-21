@@ -302,9 +302,9 @@ fa_string_t ratio_show(fa_ptr_t a)
     fa_ratio_t b = a;
     fa_string_t s = fa_string("");
 
-    s = fa_string_dappend(s, fa_string_show(i32(b->num)));
+    s = fa_string_dappend(s, fa_string_show(fa_i32(b->num)));
     s = fa_string_dappend(s, fa_string("/"));
-    s = fa_string_dappend(s, fa_string_show(i32(b->denom)));
+    s = fa_string_dappend(s, fa_string_show(fa_i32(b->denom)));
 
     fa_destroy(b);
     return s;

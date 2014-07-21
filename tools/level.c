@@ -52,7 +52,7 @@ static fa_ptr_t    out_value;
 fa_ptr_t before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     out_name  = fa_string("foo");
-    out_value = i32(1);
+    out_value = fa_i32(1);
     return x;
 }
 fa_ptr_t after_(fa_ptr_t x, int count, fa_signal_state_t *state)
@@ -90,7 +90,7 @@ fa_ptr_t send_(fa_ptr_t x, fa_signal_message_callback_t cb, fa_ptr_t data)
     // All create/destroy should happen in the setup phase
     if (should_send) {
         should_send = false;
-        cb(data, out_name, f32(values[0]));
+        cb(data, out_name, fa_f32(values[0]));
     }
 
     return x;

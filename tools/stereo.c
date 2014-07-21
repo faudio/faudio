@@ -36,9 +36,9 @@ void play_impulses(fa_map_t opts)
 
   {
     fa_audio_session_t s = fa_audio_begin_session();
-    fa_audio_set_parameter(fa_string("sample-rate"), f64(sample_rate), s);
-    fa_audio_set_parameter(fa_string("vector-size"), i32(vector_size), s);
-    fa_audio_set_parameter(fa_string("latency"),   f64(latency),   s);
+    fa_audio_set_parameter(fa_string("sample-rate"), fa_f64(sample_rate), s);
+    fa_audio_set_parameter(fa_string("vector-size"), fa_i32(vector_size), s);
+    fa_audio_set_parameter(fa_string("latency"),   fa_f64(latency),   s);
 
     fa_audio_device_t o  = fa_audio_default_output(s);
     fa_audio_stream_t st = fa_audio_open_stream(NULL, o, just, list(left, right));

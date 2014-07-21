@@ -20,8 +20,8 @@ void print_device(fa_midi_device_t x)
 {
     fa_print("Name: %s\n", fa_string_to_string(fa_midi_name(x)));
     fa_print("Host: %s\n", fa_string_to_string(fa_midi_host_name(x)));
-    fa_print("In:   %s\n", fb(fa_midi_has_input(x)));
-    fa_print("Out:  %s\n", fb(fa_midi_has_output(x)));
+    fa_print("In:   %s\n", fa_fb(fa_midi_has_input(x)));
+    fa_print("Out:  %s\n", fa_fb(fa_midi_has_output(x)));
     fa_print_ln(fa_string(""));
 }
 
