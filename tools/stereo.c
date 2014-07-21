@@ -35,20 +35,20 @@ void play_impulses(map_t opts)
   // right = fa_signal_delay(22050, fa_signal_impulses(44100));
 
   {
-  fa_audio_session_t s = fa_audio_begin_session();
-  fa_audio_set_parameter(fa_string("sample-rate"), f64(sample_rate), s);
-  fa_audio_set_parameter(fa_string("vector-size"), i32(vector_size), s);
-  fa_audio_set_parameter(fa_string("latency"),   f64(latency),   s);
+    fa_audio_session_t s = fa_audio_begin_session();
+    fa_audio_set_parameter(fa_string("sample-rate"), f64(sample_rate), s);
+    fa_audio_set_parameter(fa_string("vector-size"), i32(vector_size), s);
+    fa_audio_set_parameter(fa_string("latency"),   f64(latency),   s);
 
-  fa_audio_device_t o  = fa_audio_default_output(s);
-  fa_audio_stream_t st = fa_audio_open_stream(NULL, o, just, list(left, right));
+    fa_audio_device_t o  = fa_audio_default_output(s);
+    fa_audio_stream_t st = fa_audio_open_stream(NULL, o, just, list(left, right));
 
-  if (fa_check(st)) {
+    if (fa_check(st)) {
       fa_error_log(st, NULL);
-  }
+    }
 
-  fa_thread_sleep(duration);
-  fa_audio_end_session(s);
+    fa_thread_sleep(duration);
+    fa_audio_end_session(s);
   }
 }
 
