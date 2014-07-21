@@ -17,7 +17,7 @@ ptr_t status_callback(ptr_t session)
 static double freq = 440;
 fa_list_t _sine(fa_ptr_t _, fa_list_t inputs)
 {
-    fa_signal_t x = fa_multiply(fa_signal_sin(fa_signal_line(freq *= 1.2)), constant(0.1));
+    fa_signal_t x = fa_multiply(fa_signal_sin(fa_signal_line(freq *= 1.2)), fa_constant(0.1));
     return list(x, x);
 }
 

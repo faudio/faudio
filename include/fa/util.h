@@ -100,13 +100,13 @@
 #define fa_milliseconds(s)     fa_time_create(0,0,0,fa_ratio(s,1000))
 #define fa_microseconds(s)     fa_time_create(0,0,0,fa_ratio(s,1000000))
 
-#define stime               fa_signal_time
-#define srandom             fa_signal_random
-#define constant            fa_signal_constant
-#define impulse            fa_signal_impulse
-#define line                fa_signal_line
-#define delay               fa_signal_delay
-#define loop                fa_signal_loop
+// #define stime               fa_signal_time
+// #define srandom             fa_signal_random
+#define fa_constant            fa_signal_constant
+#define fa_impulse            fa_signal_impulse
+#define fa_line                fa_signal_line
+#define fa_delay               fa_signal_delay
+#define fa_loop                fa_signal_loop
 
 #define empty               fa_list_empty
 #define cons                fa_list_cons

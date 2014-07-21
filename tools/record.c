@@ -30,8 +30,8 @@ void helper_function(string_t path)
             signal_t x = fa_signal_record(buf, j, fa_signal_input(kInputOffset));
             signals = list(x);
         } else {
-            signal_t li = fa_add(fa_multiply(j, constant(2)), constant(0));
-            signal_t ri = fa_add(fa_multiply(j, constant(2)), constant(1));
+            signal_t li = fa_add(fa_multiply(j, fa_constant(2)), fa_constant(0));
+            signal_t ri = fa_add(fa_multiply(j, fa_constant(2)), fa_constant(1));
             signal_t x = fa_signal_input(kInputOffset + 0);
 
             signal_t l = fa_signal_record(buf, li, x);

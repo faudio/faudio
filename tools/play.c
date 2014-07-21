@@ -18,8 +18,8 @@ void helper_function(string_t path)
         }
 
         signal_t j  = fa_signal_counter();
-        signal_t li = fa_add(fa_multiply(j, constant(2)), constant(0));
-        signal_t ri = fa_add(fa_multiply(j, constant(2)), constant(1));
+        signal_t li = fa_add(fa_multiply(j, fa_constant(2)), fa_constant(0));
+        signal_t ri = fa_add(fa_multiply(j, fa_constant(2)), fa_constant(1));
 
         signal_t l = fa_signal_play(buf, li);
         signal_t r = fa_signal_play(buf, ri);

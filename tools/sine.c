@@ -32,7 +32,7 @@ void run_sines(map_t opts)
     const int    vector_size     = fa_map_get_int32(fa_string("vector-size"),     opts);
     const double latency         = fa_map_get_double(fa_string("latency"),        opts);
 
-    signal_t sines = constant(0);
+    signal_t sines = fa_constant(0);
 
     {
         double f = frequency;
@@ -46,7 +46,7 @@ void run_sines(map_t opts)
                 of nodes by using a balanced tree.
             */
 
-            sines = fa_add(fa_multiply(fa_signal_sin(fa_signal_line(f)), constant(x)), sines);
+            sines = fa_add(fa_multiply(fa_signal_sin(fa_signal_line(f)), fa_constant(x)), sines);
             f *= 1.12;
             x *= 0.84;
         }

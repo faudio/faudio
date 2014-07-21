@@ -70,8 +70,8 @@ list_t _signal(ptr_t x, list_t xs)
 
     fa_unpair(synth, synth1, synth2) {
         return list(
-                   fa_multiply(constant(0), fa_add(constant(0), synth2)),
-                   fa_multiply(constant(0), fa_signal_record_external(fa_string("foo"), synth1)));
+                   fa_multiply(fa_constant(0), fa_add(fa_constant(0), synth2)),
+                   fa_multiply(fa_constant(0), fa_signal_record_external(fa_string("foo"), synth1)));
     }
 
     assert(false);

@@ -32,10 +32,10 @@ signal_t slope_(signal_t curr, signal_t prev)
         fa_signal_max(
             fa_signal_add(
                 fa_signal_multiply(
-                    constant(0.999),
+                    fa_constant(0.999),
                     prev),
                 fa_signal_multiply(
-                    constant(0.001),
+                    fa_constant(0.001),
                     curr)
             ),
             curr);
