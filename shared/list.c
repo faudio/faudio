@@ -20,11 +20,15 @@
     * Below that is straightforward immutable, singly-linked node sequence
 
     * For memory management we use structural sharing with one reference
-      count per node.
+      count per node:
 
         - Copying a list is O(1)
 
-        - Overhead in destructive operations.
+        - Lists are still single-ownership, but destroying
+          may not necessarily lead to its nodes being destroyed as they might
+          be shared by other lists.
+       
+       - Destroying a list does not destroy its contents (as with all containters)
  */
 
 struct node {

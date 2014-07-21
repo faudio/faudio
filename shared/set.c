@@ -23,7 +23,7 @@
 
         - Requires the operations defined below
 
-        - We use lists until we have proper intmaps
+        - We currently use ordinary lists
 
         - We really want fast size, insert, remove, indexOf
  */
