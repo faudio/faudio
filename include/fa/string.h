@@ -107,14 +107,17 @@ fa_string_t fa_string_repeat(int int_, fa_char16_t char16);
 */
 fa_string_t fa_string_copy(fa_string_t string);
 
-/** Append the given strings.
+/** Append the given strings, which are both copied.
 
     The returned string should be destroyed by the caller.
 */
 fa_string_t fa_string_append(fa_string_t string,
                              fa_string_t string_);
 
+/** Append the given strings, which are both destroyed.
 
+    The returned string should be destroyed by the caller.
+*/
 fa_string_t fa_string_dappend(fa_string_t string,
                               fa_string_t string_);
 

@@ -10,30 +10,30 @@
 /** @addtogroup FaOption
  
 
-An option parser.
+    Provides a basic option parser.
     
-Example:
+    ## Example
 
-~~~
-fa_option_t options[] = {
-    { "h", "help",            "Show help info",             fa_option_parse_string },
-    { "x", "value-with-def",  "Show help info",             fa_option_parse_int    },
-    { "n", "number-of-cores", "Number of cores\n                                   "
-                              "Very interesting parameter", fa_option_parse_int    }
-};
+    ~~~
+    fa_option_t options[] = {
+        { "h", "help",            "Show help info",             fa_option_parse_string },
+        { "x", "value-with-def",  "Show help info",             fa_option_parse_int    },
+        { "n", "number-of-cores", "Number of cores\n                                   "
+                                  "Very interesting parameter", fa_option_parse_int    }
+    };
 
-int main(int argc, char const *argv[])
-{
-    fa_option_show_all(options, "Usage: fa_options\n"
-                                "       fa_options [FILES]\n");
-                
-    fa_unpair(fa_option_parse_all(options, argc, (char**) argv), options, arguments) 
+    int main(int argc, char const *argv[])
     {
-        fa_print_ln(options);   // {"foo": 1, "bar": 2}
-        fa_print_ln(arguments); // [1,2,3]
+        fa_option_show_all(options, "Usage: fa_options\n"
+                                    "       fa_options [FILES]\n");
+                
+        fa_unpair(fa_option_parse_all(options, argc, (char**) argv), options, arguments) 
+        {
+            fa_print_ln(options);   // {"foo": 1, "bar": 2}
+            fa_print_ln(arguments); // [1,2,3]
+        }
     }
-}
-~~~    
+    ~~~    
     
  
     @defgroup Fa Fa

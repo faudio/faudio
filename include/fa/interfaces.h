@@ -3,8 +3,9 @@
 #define _FA_INTERFACES
 
 /*
-    Ideally, Modulo would generate interface identifiers for us.
-    Until that day we declare all in this enum to keep them unique.
+    Ideally, Modulo would know about interfaces and generate unique identifiers for us.
+
+    Until that day we declare them all in this file.
  */
 enum fa_interfaces {
     fa_copy_i,
