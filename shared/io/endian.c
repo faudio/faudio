@@ -58,7 +58,7 @@ void deendian(buffer_t x)
     char  *raw  = fa_buffer_unsafe_address(x);
 
     if (size % 8 != 0) {
-        warn(string("Endian filter requires buffer length to be a multiple of 8"));
+        warn(fa_string("Endian filter requires buffer length to be a multiple of 8"));
     } else {
         for (size_t i = 0; i < size; i += 8) {
             char temp[8];

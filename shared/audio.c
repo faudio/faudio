@@ -316,9 +316,9 @@ void fa_audio_initialize()
     current_session = NULL;
 
     if (kVectorMode) {
-        inform(string("    Using vector processing"));
+        inform(fa_string("    Using vector processing"));
     } else {
-        inform(string("    Using single-step processing"));
+        inform(fa_string("    Using single-step processing"));
     }
 }
 
@@ -338,17 +338,17 @@ session_t fa_audio_begin_session()
         assert(false && "Module not initalized");
     }
 
-    inform(string("Initializing real-time audio session"));
+    inform(fa_string("Initializing real-time audio session"));
 
     session_t session;
     fa_with_lock(pa_mutex) {
         if (pa_status) {
-            session = (session_t) audio_device_error(string("Overlapping real-time audio sessions"));
+            session = (session_t) audio_device_error(fa_string("Overlapping real-time audio sessions"));
         } else {
-            inform(string("    Starting up PortAudio"));
+            inform(fa_string("    Starting up PortAudio"));
             Pa_Initialize();
             pa_status = true;
-            inform(string("    Done starting PortAudio"));
+            inform(fa_string("    Done starting PortAudio"));
 
             session = new_session();
             session_init_devices(session);
@@ -360,7 +360,7 @@ session_t fa_audio_begin_session()
     session->status_closure = fa_pair_create(_status_callback, session);
     add_audio_status_listener(session->status_closure);
 
-    inform(string("Done initializing session"));
+    inform(fa_string("Done initializing session"));
     return session;
 }
 
@@ -370,11 +370,11 @@ void fa_audio_end_session(session_t session)
         assert(false && "Module not initalized");
     }
 
-    inform(string("Terminating real-time audio session"));
+    inform(fa_string("Terminating real-time audio session"));
 
-    inform(string("   Unregistering hot-plug callbacks"));
+    inform(fa_string("   Unregistering hot-plug callbacks"));
     remove_audio_status_listener(session->status_closure);
-    inform(string("   Finished unregistering hot-plug callbacks"));
+    inform(fa_string("   Finished unregistering hot-plug callbacks"));
 
     fa_with_lock(pa_mutex) {
         fa_for_each(stream, session->streams) {
@@ -391,7 +391,7 @@ void fa_audio_end_session(session_t session)
         current_session = NULL;
     }
 
-    inform(string("Finished terminating session"));
+    inform(fa_string("Finished terminating session"));
     delete_session(session);
 }
 
@@ -416,7 +416,7 @@ void fa_audio_set_parameter(string_t name,
                             ptr_t value,
                             session_t session)
 {
-    if (fa_equal(name, string("sample-rate"))) {
+    if (fa_equal(name, fa_string("sample-rate"))) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -433,14 +433,14 @@ void fa_audio_set_parameter(string_t name,
             break;
 
         default:
-            warn(string("Wrong type"));
+            warn(fa_string("Wrong type"));
             return;
         }
 
         session->parameters.sample_rate = x;
     }
 
-    if (fa_equal(name, string("scheduler-interval"))) {
+    if (fa_equal(name, fa_string("scheduler-interval"))) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -457,14 +457,14 @@ void fa_audio_set_parameter(string_t name,
             break;
 
         default:
-            warn(string("Wrong type"));
+            warn(fa_string("Wrong type"));
             return;
         }
 
         session->parameters.scheduler_interval = x;
     }
 
-    if (fa_equal(name, string("latency"))) {
+    if (fa_equal(name, fa_string("latency"))) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -481,7 +481,7 @@ void fa_audio_set_parameter(string_t name,
             break;
 
         default:
-            warn(string("Wrong type"));
+            warn(fa_string("Wrong type"));
             return;
         }
 
@@ -489,7 +489,7 @@ void fa_audio_set_parameter(string_t name,
         session->parameters.latency[1] = x;
     }
 
-    if (fa_equal(name, string("input-latency"))) {
+    if (fa_equal(name, fa_string("input-latency"))) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -506,14 +506,14 @@ void fa_audio_set_parameter(string_t name,
             break;
 
         default:
-            warn(string("Wrong type"));
+            warn(fa_string("Wrong type"));
             return;
         }
 
         session->parameters.latency[0] = x;
     }
 
-    if (fa_equal(name, string("output-latency"))) {
+    if (fa_equal(name, fa_string("output-latency"))) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -530,14 +530,14 @@ void fa_audio_set_parameter(string_t name,
             break;
 
         default:
-            warn(string("Wrong type"));
+            warn(fa_string("Wrong type"));
             return;
         }
 
         session->parameters.latency[1] = x;
     }
 
-    if (fa_equal(name, string("vector-size"))) {
+    if (fa_equal(name, fa_string("vector-size"))) {
         int x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -554,7 +554,7 @@ void fa_audio_set_parameter(string_t name,
             break;
 
         default:
-            warn(string("Wrong type"));
+            warn(fa_string("Wrong type"));
             return;
         }
 
@@ -565,7 +565,7 @@ void fa_audio_set_parameter(string_t name,
         }
     }
 
-    if (fa_equal(name, string("exclusive"))) {
+    if (fa_equal(name, fa_string("exclusive"))) {
         bool x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -582,7 +582,7 @@ void fa_audio_set_parameter(string_t name,
             break;
 
         default:
-            warn(string("Wrong type"));
+            warn(fa_string("Wrong type"));
             return;
         }
 
@@ -614,11 +614,11 @@ fa_list_t fa_audio_all(session_t session)
 
 #define fail_if_no_input(type) \
     if (!session->def_input) { \
-        return (type) audio_device_error(string("No input device available")); \
+        return (type) audio_device_error(fa_string("No input device available")); \
     }
 #define fail_if_no_output(type) \
     if (!session->def_output) { \
-        return (type) audio_device_error(string("No output device available")); \
+        return (type) audio_device_error(fa_string("No output device available")); \
     }
 
 fa_pair_t fa_audio_default(session_t session)
@@ -657,12 +657,12 @@ fa_string_t fa_audio_host_name(device_t device)
 
 fa_string_t fa_audio_full_name(device_t device)
 {
-    string_t str = string("");
+    string_t str = fa_string("");
     fa_write_string(str, fa_audio_host_name(device));
-    fa_write_string(str, string(" "));
+    fa_write_string(str, fa_string(" "));
     fa_write_string(str, fa_string_format_integral("[%d/", fa_audio_input_channels(device)));
     fa_write_string(str, fa_string_format_integral("%d]", fa_audio_output_channels(device)));
-    fa_write_string(str, string(" "));
+    fa_write_string(str, fa_string(" "));
     fa_write_string(str, fa_audio_name(device));
     return str;
 }
@@ -733,13 +733,13 @@ fa_pair_t fa_audio_recommended_latency(fa_audio_device_t device)
 inline static
 string_t show_range(pair_t x)
 {
-    string_t str = string("");
+    string_t str = fa_string("");
     fa_unpair(x, a, b) {
-        fa_write_string(str, string("("));
+        fa_write_string(str, fa_string("("));
         fa_write_string(str, fa_string_show(a));
-        fa_write_string(str, string(","));
+        fa_write_string(str, fa_string(","));
         fa_write_string(str, fa_string_show(b));
-        fa_write_string(str, string(")"));
+        fa_write_string(str, fa_string(")"));
     }
     return str;
 }
@@ -759,17 +759,17 @@ static bool is_wasapi_device(device_t device)
 inline static
 void print_audio_info(device_t input, device_t output)
 {
-    inform(string("Opening real-time audio stream"));
-    inform(string_dappend(string("    Input: "), input ? fa_audio_full_name(input) : string("N/A")));
+    inform(fa_string("Opening real-time audio stream"));
+    inform(string_dappend(fa_string("    Input: "), input ? fa_audio_full_name(input) : fa_string("N/A")));
 
     if (input) {
-        inform(string_dappend(string("        Default Latency: "), show_range(fa_pair_first(fa_audio_recommended_latency(input)))));
+        inform(string_dappend(fa_string("        Default Latency: "), show_range(fa_pair_first(fa_audio_recommended_latency(input)))));
     }
 
-    inform(string_dappend(string("    Output: "), output ? fa_audio_full_name(output) : string("N/A")));
+    inform(string_dappend(fa_string("    Output: "), output ? fa_audio_full_name(output) : fa_string("N/A")));
 
     if (output) {
-        inform(string_dappend(string("        Default Latency: "), show_range(fa_pair_first(fa_audio_recommended_latency(output)))));
+        inform(string_dappend(fa_string("        Default Latency: "), show_range(fa_pair_first(fa_audio_recommended_latency(output)))));
     }
 
     fa_let(session, input ? input->session : output->session) {
@@ -779,7 +779,7 @@ void print_audio_info(device_t input, device_t output)
         inform(fa_string_format_integral("    Vector Size:    %d",  session->parameters.vector_size));
 
         if (is_wasapi_device(input) || is_wasapi_device(output)) {
-            inform(fa_string_dappend(string("    Exclusive Mode: "),  string(session->parameters.exclusive ? "Yes" : "No")));
+            inform(fa_string_dappend(fa_string("    Exclusive Mode: "),  fa_string(session->parameters.exclusive ? "Yes" : "No")));
         }
     }
 }
@@ -787,7 +787,7 @@ void print_audio_info(device_t input, device_t output)
 inline static
 void print_signal_tree(ptr_t x)
 {
-    inform(string_dappend(string("    Signal Tree: \n"), fa_string_show(x)));
+    inform(string_dappend(fa_string("    Signal Tree: \n"), fa_string_show(x)));
 }
 
 inline static
@@ -797,7 +797,7 @@ list_t apply_processor(proc_t proc, ptr_t proc_data, list_t inputs)
         return proc(proc_data, inputs);
     } else {
         // TODO check number of channels is < kMaxSignals
-        warn(string("Audio.openStream: Assuming stereo output"));
+        warn(fa_string("Audio.openStream: Assuming stereo output"));
         return list(fa_signal_constant(0), fa_signal_constant(0));
     }
 }
@@ -812,12 +812,12 @@ stream_t fa_audio_open_stream(device_t input,
 
     if (!input && !output) {
         return (stream_t) audio_device_error_with(
-                   string("Can not open a stream with no devices"), 0);
+                   fa_string("Can not open a stream with no devices"), 0);
     }
 
     if (input && output && (input->session != output->session)) {
         return (stream_t) audio_device_error_with(
-                   string("Can not open a stream on devices from different sessions"), 0);
+                   fa_string("Can not open a stream on devices from different sessions"), 0);
     }
 
     unsigned long   buffer_size = (input ? input : output)->session->parameters.vector_size;
@@ -890,14 +890,14 @@ stream_t fa_audio_open_stream(device_t input,
 
         if (status != paNoError) {
             after_failed_processing(stream);
-            return (stream_t) audio_device_error_with(string("Could not start stream"), status);
+            return (stream_t) audio_device_error_with(fa_string("Could not start stream"), status);
         }
 
         status = Pa_SetStreamFinishedCallback(stream->native, native_finished_callback);
 
         if (status != paNoError) {
             after_failed_processing(stream);
-            return (stream_t) audio_device_error_with(string("Could not start stream"), status);
+            return (stream_t) audio_device_error_with(fa_string("Could not start stream"), status);
         }
     }
     {
@@ -911,7 +911,7 @@ stream_t fa_audio_open_stream(device_t input,
         if (status != paNoError) {
             // TODO is finished callback invoked here
             // after_failed_processing(stream);
-            return (stream_t) audio_device_error_with(string("Could not start stream"), status);
+            return (stream_t) audio_device_error_with(fa_string("Could not start stream"), status);
         }
     }
     {
@@ -933,7 +933,7 @@ stream_t fa_audio_open_stream(device_t input,
 
 void fa_audio_close_stream(stream_t stream)
 {
-    inform(string("Closing real-time audio stream"));
+    inform(fa_string("Closing real-time audio stream"));
     // inform(fa_string_format_integral("  Stream: %p \n", (long) stream));
 
     {
@@ -941,31 +941,31 @@ void fa_audio_close_stream(stream_t stream)
         native_stream_t native = stream->native;
 
         if (native) {
-            inform(string("    Closing native stream"));
+            inform(fa_string("    Closing native stream"));
             stream->native = NULL;
 
             PaError error;
 
             if ((error = Pa_StopStream(native)) != paNoError) {
-                warn(string("Could not stop stream: "));
-                warn(string((char *) Pa_GetErrorText(error)));
+                warn(fa_string("Could not stop stream: "));
+                warn(fa_string((char *) Pa_GetErrorText(error)));
             }
 
             if ((error = Pa_CloseStream(native)) != paNoError) {
-                warn(string("Could not close stream"));
-                warn(string((char *) Pa_GetErrorText(error)));
+                warn(fa_string("Could not close stream"));
+                warn(fa_string((char *) Pa_GetErrorText(error)));
             }
 
             // after_processing will be called after this
 
-            inform(string("    Native stream closed"));
-            inform(string("    Stopping stream controller"));
+            inform(fa_string("    Native stream closed"));
+            inform(fa_string("    Stopping stream controller"));
 
             stream->controller.stop = true;
             fa_thread_join(stream->controller.thread);
             // fa_thread_destroy_mutex(stream->controller.mutex);
 
-            inform(string("    Stream controller thread stopped"));
+            inform(fa_string("    Stream controller thread stopped"));
         }
     }
 
@@ -1025,7 +1025,7 @@ void fa_audio_schedule(fa_time_t time,
                        fa_action_t action,
                        fa_audio_stream_t stream)
 {
-    pair_left_t pair = pair_left(time, action);
+    pair_left_t pair = fa_pair_left_create(time, action);
 
     fa_atomic_queue_write(stream->before_controls, pair);
     // fa_with_lock(stream->controller.mutex) {
@@ -1056,7 +1056,7 @@ ptr_t audio_control_thread(ptr_t x)
 {
     stream_t stream = x;
 
-    inform(string("Audio control thread active"));
+    inform(fa_string("Audio control thread active"));
 
     while (true) {
         if (stream->controller.stop) {
@@ -1123,7 +1123,7 @@ ptr_t audio_control_thread(ptr_t x)
         }
     }
 
-    inform(string("Audio control thread finished"));
+    inform(fa_string("Audio control thread finished"));
     return NULL;
 }
 
@@ -1163,7 +1163,7 @@ void before_processing(stream_t stream)
 
 void after_processing(stream_t stream)
 {
-    inform(string("Stream finished normally, destroying external processors."));
+    inform(fa_string("Stream finished normally, destroying external processors."));
     run_custom_procs(custom_proc_after, 0, stream->state);
     run_custom_procs(custom_proc_destroy, 0, stream->state);
 
@@ -1173,7 +1173,7 @@ void after_processing(stream_t stream)
 void after_failed_processing(stream_t stream)
 {         
     // This is ugly: create a temporary state just to enumerate processors
-    inform(string("Streams did not start, destroying external processors."));
+    inform(fa_string("Streams did not start, destroying external processors."));
     session_t session  = stream->input ? stream->input->session : stream->output->session;
     stream->state      = new_state(session->parameters.sample_rate); // FIXME
 
@@ -1314,11 +1314,11 @@ void native_finished_callback(void *data)
     if (stream->state) {
 
         if (stream->pa_flags & paInputOverflow) {
-            warn(string("Input overflow detected"));
+            warn(fa_string("Input overflow detected"));
         }
 
         if (stream->pa_flags & paOutputUnderflow) {
-            warn(string("Output underflow detected"));
+            warn(fa_string("Output underflow detected"));
         }
 
         inform(fa_string_format_integral("Stream flag result (0 = ok): %d", stream->pa_flags));
@@ -1338,9 +1338,9 @@ bool audio_session_equal(ptr_t a, ptr_t b)
 
 fa_string_t audio_session_show(ptr_t a)
 {
-    string_t str = string("<AudioSession ");
+    string_t str = fa_string("<AudioSession ");
     str = string_dappend(str, fa_string_format_integral("%p", (long) a));
-    str = string_dappend(str, string(">"));
+    str = string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -1388,11 +1388,11 @@ fa_string_t audio_device_show(ptr_t a)
 {
     device_t device = (device_t) a;
 
-    string_t str = string("<AudioDevice ");
+    string_t str = fa_string("<AudioDevice ");
     str = string_dappend(str, fa_audio_host_name(device));
-    str = string_dappend(str, string(" "));
+    str = string_dappend(str, fa_string(" "));
     str = string_dappend(str, fa_audio_name(device));
-    str = string_dappend(str, string(">"));
+    str = string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -1425,9 +1425,9 @@ bool audio_stream_equal(ptr_t a, ptr_t b)
 
 fa_string_t audio_stream_show(ptr_t a)
 {
-    string_t str = string("<AudioStream ");
+    string_t str = fa_string("<AudioStream ");
     str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
-    str = string_dappend(str, string(">"));
+    str = string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -1495,21 +1495,21 @@ error_t audio_device_error(string_t msg)
 {
     error_t err = fa_error_create_simple(error,
                                          msg,
-                                         string("Doremir.Device.Audio"));
+                                         fa_string("Doremir.Device.Audio"));
     fa_error_log(NULL, err);
     return err;
 }
 
 error_t audio_device_error_with(string_t msg, int code)
 {
-    string_t pa_error_str = string(code != 0 ? (char *) Pa_GetErrorText(code) : "");
+    string_t pa_error_str = fa_string(code != 0 ? (char *) Pa_GetErrorText(code) : "");
 
     error_t err = fa_error_create_simple(error,
                                          string_dappend(msg,
-                                                        string_dappend(string(": "), pa_error_str)
+                                                        string_dappend(fa_string(": "), pa_error_str)
                                                         // format_integral(" (error code %d)", code)
                                                        ),
-                                         string("Doremir.Device.Audio"));
+                                         fa_string("Doremir.Device.Audio"));
     fa_error_log(NULL, err);
     return err;
 }
@@ -1518,9 +1518,9 @@ void audio_device_fatal(string_t msg, int code)
 {
     fa_log_error_from(
         string_dappend(msg, format_integral(" (error code %d)", code)),
-        string("Doremir.Device.Audio"));
+        fa_string("Doremir.Device.Audio"));
 
-    fa_log_error(string("Terminating Fa"));
+    fa_log_error(fa_string("Terminating Fa"));
     exit(error);
 }
 

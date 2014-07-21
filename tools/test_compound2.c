@@ -79,8 +79,8 @@ void run_test()
         int j = 66;
         int k = 333;
 
-        fa_action_t note1  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 60, 80));
-        fa_action_t note2  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 61, 80));
+        fa_action_t note1  = fa_action_send(fa_string("midi"), fa_midi_message_create_simple(0x99, 60, 80));
+        fa_action_t note2  = fa_action_send(fa_string("midi"), fa_midi_message_create_simple(0x99, 61, 80));
 
         fa_action_t notes1 = fa_action_many(fa_list_join(list(
                                                              list(

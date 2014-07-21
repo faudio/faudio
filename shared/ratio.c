@@ -300,10 +300,10 @@ fa_string_t ratio_show(ptr_t a)
 {
     // ratio_t b = fa_ratio_normalize(a);
     ratio_t b = a;
-    string_t s = string("");
+    string_t s = fa_string("");
 
     s = string_dappend(s, fa_string_show(i32(b->num)));
-    s = string_dappend(s, string("/"));
+    s = string_dappend(s, fa_string("/"));
     s = string_dappend(s, fa_string_show(i32(b->denom)));
 
     fa_destroy(b);

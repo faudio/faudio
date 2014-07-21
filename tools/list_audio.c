@@ -24,7 +24,7 @@ void print_device(audio_device_t x)
     fa_print("Out:  %s\n", i16(fa_audio_output_channels(x)));
     fa_print("Host: %s\n", fa_audio_host_name(x));
     fa_print("Rate: %s\n", f64(fa_audio_default_sample_rate(x)));
-    fa_print_ln(string(""));
+    fa_print_ln(fa_string(""));
 }
 
 fa_audio_session_t print_audio_devices(fa_ptr_t _, audio_session_t session)

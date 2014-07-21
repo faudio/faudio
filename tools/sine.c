@@ -22,15 +22,15 @@ fa_option_t option_declaration[] = {
 
 void run_sines(map_t opts)
 {
-    const int    duration        = fa_map_get_int32(string("duration"),        opts);
+    const int    duration        = fa_map_get_int32(fa_string("duration"),        opts);
 
-    const int    frequency       = fa_map_get_int32(string("frequency"),       opts);
-    const double amplitude       = fa_map_get_double(string("amplitude"),      opts);
-    const int    number_of_nodes = fa_map_get_int32(string("number-of-nodes"), opts);
+    const int    frequency       = fa_map_get_int32(fa_string("frequency"),       opts);
+    const double amplitude       = fa_map_get_double(fa_string("amplitude"),      opts);
+    const int    number_of_nodes = fa_map_get_int32(fa_string("number-of-nodes"), opts);
 
-    const int    sample_rate     = fa_map_get_int32(string("sample-rate"),     opts);
-    const int    vector_size     = fa_map_get_int32(string("vector-size"),     opts);
-    const double latency         = fa_map_get_double(string("latency"),        opts);
+    const int    sample_rate     = fa_map_get_int32(fa_string("sample-rate"),     opts);
+    const int    vector_size     = fa_map_get_int32(fa_string("vector-size"),     opts);
+    const double latency         = fa_map_get_double(fa_string("latency"),        opts);
 
     signal_t sines = constant(0);
 
@@ -54,9 +54,9 @@ void run_sines(map_t opts)
 
     fa_with_session_(session) {
         fa_with_default_out(session, output) {
-            fa_audio_set_parameter(string("sample-rate"), f64(sample_rate), session);
-            fa_audio_set_parameter(string("vector-size"), i32(vector_size), session);
-            fa_audio_set_parameter(string("latency"),     f64(latency),     session);
+            fa_audio_set_parameter(fa_string("sample-rate"), f64(sample_rate), session);
+            fa_audio_set_parameter(fa_string("vector-size"), i32(vector_size), session);
+            fa_audio_set_parameter(fa_string("latency"),     f64(latency),     session);
 
             fa_open_stereo_out(stream, output, list(sines, sines)) {
                 if (duration < 0) {
@@ -79,7 +79,7 @@ int main(int argc, char const *argv[])
             option_declaration,
             argc, argv,
             options, args) {
-            inform(string("Running sine test"));
+            inform(fa_string("Running sine test"));
             run_sines(options);
         }
     }

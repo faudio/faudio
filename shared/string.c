@@ -80,7 +80,7 @@ fa_string_t fa_string_single(fa_char16_t chr)
 
 fa_string_t fa_string_repeat(int times, fa_char16_t chr)
 {
-    string_t s = string("");
+    string_t s = fa_string("");
 
     for (int i = 0; i < times; ++i) {
         fa_write_string(s, fa_string_single(chr));
@@ -437,7 +437,7 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
         return fa_list_empty();
 
     case JSONString:
-        return string((char *) json_value_get_string(a));
+        return fa_string((char *) json_value_get_string(a));
 
     case JSONNumber:
         return i32(json_value_get_number(a));
@@ -476,7 +476,7 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
                 return NULL;
             }
 
-            map = fa_map_dset(string(name), value, map);
+            map = fa_map_dset(fa_string(name), value, map);
         }
 
         return map;
@@ -502,7 +502,7 @@ fa_ptr_t fa_string_from_json(fa_string_t string)
     ptr_t result = unjsonify(json_parse_string(unstring(string)), &ok);
 
     if (!ok) {
-        return (fa_ptr_t) string_error(string("Malformed JSON value."));
+        return (fa_ptr_t) string_error(fa_string("Malformed JSON value."));
     } else {
         return result;
     }
@@ -536,7 +536,7 @@ bool fa_string_matches(fa_string_t expr, fa_string_t string)
 
 string_t fa_string_join_map(unary_t func, ptr_t data, string_t string)
 {
-    string_t result = string("");
+    string_t result = fa_string("");
 
     for (int i = 0; i < string->size; ++i) {
         result = string_dappend(result,
@@ -554,10 +554,10 @@ inline static string_t escape_char(uint16_t c)
 {
     switch (c) {
     case '"':
-        return string("\\\"");
+        return fa_string("\\\"");
 
     case '\\':
-        return string("\\\\");
+        return fa_string("\\\\");
 
     default:
         return fa_string_single(c);
@@ -646,10 +646,10 @@ static bool string_greater_than(fa_ptr_t as, fa_ptr_t bs)
 
 static fa_string_t string_show(fa_ptr_t a)
 {
-    string_t s = string("");
-    s = string_dappend(s, string("\""));
+    string_t s = fa_string("");
+    s = string_dappend(s, fa_string("\""));
     s = string_dappend(s, escape(a));
-    s = string_dappend(s, string("\""));
+    s = string_dappend(s, fa_string("\""));
     return s;
 }
 
@@ -706,14 +706,14 @@ error_t string_error(string_t msg)
 {
     return fa_error_create_simple(error,
                                   msg,
-                                  string("Fa.String"));
+                                  fa_string("Fa.String"));
 }
 
 void string_fatal(char *msg, int error)
 {
     void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
-    fa_log_error_from(string(msg), string("Doremir.String"));
+    fa_log_error_from(fa_string(msg), fa_string("Doremir.String"));
     exit(error);
 }
 

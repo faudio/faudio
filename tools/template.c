@@ -10,7 +10,7 @@
 
 void helper_function()
 {
-    fa_print_ln(string("This is fa_template!"));
+    fa_print_ln(fa_string("This is fa_template!"));
 }
 
 int main(int argc, char const *argv[])

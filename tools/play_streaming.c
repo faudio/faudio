@@ -52,14 +52,14 @@ void request_audio()
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, _write);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, NULL);
 
-        inform(string("Beginning HTTP request"));
+        inform(fa_string("Beginning HTTP request"));
         res = curl_easy_perform(curl);
 
         if (res != CURLE_OK) {
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
         }
 
-        inform(string("Finished HTTP request"));
+        inform(fa_string("Finished HTTP request"));
         curl_easy_cleanup(curl);
     }
 }
@@ -90,7 +90,7 @@ int main(int argc, char const *argv[])
 
         fa_with_session_(session) {
             fa_with_default_devices(input, output, session) {
-                fa_audio_set_parameter(string("sample-rate"), f64(44100), session);
+                fa_audio_set_parameter(fa_string("sample-rate"), f64(44100), session);
                 fa_audio_stream_t stream;
 
                 if (fa_check(stream = fa_audio_open_output(input, output, list(left, right)))) {

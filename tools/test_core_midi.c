@@ -63,14 +63,14 @@ void print_num_devices()
 fa_midi_session_t print_midi_devices_using_fa(fa_ptr_t _, midi_session_t session)
 {
     // fa_print("Listing MIDI devices:\n", 0);
-    // fa_print_ln(string(""));
+    // fa_print_ln(fa_string(""));
 
     fa_for_each(x, fa_midi_all(session)) {
         fa_print("Name: %s\n", fa_string_to_string(fa_midi_name(x)));
         fa_print("Host: %s\n", fa_string_to_string(fa_midi_host_name(x)));
         fa_print("In:   %s\n", fb(fa_midi_has_input(x)));
         fa_print("Out:  %s\n", fb(fa_midi_has_output(x)));
-        fa_print_ln(string(""));
+        fa_print_ln(fa_string(""));
     }
     return session;
 }
@@ -82,7 +82,7 @@ void midi_listener(const MIDINotification *message, void *data)
 
     // UInt32                    sz = message->messageSize;
     if (id == kMIDIMsgSetupChanged) {
-        inform(string("Setup changed!\n"));
+        inform(fa_string("Setup changed!\n"));
         print_num_devices();
         print_devices_with_status();
 
@@ -97,18 +97,18 @@ void midi_listener(const MIDINotification *message, void *data)
 void threaded_assert(int status, char *msg)
 {
     if (!status) {
-        fa_log_error(string(msg));
+        fa_log_error(fa_string(msg));
     }
 }
 
 
 ptr_t run_external_loop(ptr_t _)
 {
-    fa_print_ln(string("Running the external loop"));
+    fa_print_ln(fa_string("Running the external loop"));
     fa_print_ln(fa_string_show(fa_thread_current()));
 
     OSStatus status;
-    CFStringRef name = fa_string_to_native(string("fa_test_core_midi"));
+    CFStringRef name = fa_string_to_native(fa_string("fa_test_core_midi"));
 
     MIDIClientRef client;
     status = MIDIClientCreate(name, midi_listener, NULL, &client);
@@ -122,10 +122,10 @@ ptr_t run_external_loop(ptr_t _)
 
 ptr_t run_internal_loop(ptr_t _)
 {
-    fa_print_ln(string("Running the internal loop"));
+    fa_print_ln(fa_string("Running the internal loop"));
 
     OSStatus status;
-    CFStringRef name = fa_string_to_native(string("fa_test_core_midi"));
+    CFStringRef name = fa_string_to_native(fa_string("fa_test_core_midi"));
 
     while (1) {
         MIDIClientRef client;

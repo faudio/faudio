@@ -44,7 +44,7 @@ fa_ptr_t print_and_echo_midi(ptr_t x, ptr_t timeMessage)
     fa_print("%s\n", msg);
 
     // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
-    fa_midi_schedule_relative(fa_milliseconds(0), fa_action_send(string(""), msg), out_stream);
+    fa_midi_schedule_relative(fa_milliseconds(0), fa_action_send(fa_string(""), msg), out_stream);
 
     fa_destroy(fa_pair_first(timeMessage));
     fa_destroy(timeMessage);
@@ -77,7 +77,7 @@ fa_ptr_t print_and_echo_dls(ptr_t x, ptr_t timeMessage)
     fa_print("%s\n", msg);
 
     // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
-    fa_audio_schedule_relative(fa_milliseconds(0), fa_action_send(string("dls"), msg), out_stream);
+    fa_audio_schedule_relative(fa_milliseconds(0), fa_action_send(fa_string("dls"), msg), out_stream);
     // mark_used(out_stream);
 
     fa_destroy(fa_pair_first(timeMessage));
@@ -121,11 +121,11 @@ void run_midi()
 #ifndef _WIN32
     fa_pair_t synth = fa_signal_dls();
 #else
-    fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
+    fa_pair_t synth = fa_signal_synth(fa_string("C:\\sf.sf2"));
 #endif
     list_t out              = fa_list_map(louder, NULL, fa_pair_to_list(synth));
-    fa_audio_set_parameter(string("sample-rate"), f64(48000), as);
-    fa_audio_set_parameter(string("vector-size"), f64(512), as);
+    fa_audio_set_parameter(fa_string("sample-rate"), f64(48000), as);
+    fa_audio_set_parameter(fa_string("vector-size"), f64(512), as);
     fa_audio_stream_t aost  = fa_audio_open_stream(ai, ao, just, out);
 
     switch (kModeOfEchoing) {
@@ -151,7 +151,7 @@ void run_midi()
 
     while (1) {
         fa_thread_sleep(1000);
-        // fa_audio_schedule_relative(hms(0,0,0), fa_action_send(string("dls"), fa_midi_message_create_simple(0x90, 64 + ((0 % 12) * 3), 90)), aost);
+        // fa_audio_schedule_relative(hms(0,0,0), fa_action_send(fa_string("dls"), fa_midi_message_create_simple(0x90, 64 + ((0 % 12) * 3), 90)), aost);
     }
 
     fa_destroy(ist);

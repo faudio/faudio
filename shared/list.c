@@ -759,20 +759,20 @@ bool list_greater_than(ptr_t list1, ptr_t list2)
 
 fa_string_t list_show(ptr_t list)
 {
-    string_t result  = string("");
+    string_t result  = fa_string("");
     node_t   node = ((list_t) list)->node;
-    result = string_dappend(result, string("["));
+    result = string_dappend(result, fa_string("["));
 
     while (node) {
         result  = string_dappend(result, fa_string_show(node->value));
         node    = node->next;
 
         if (node) {
-            result = string_dappend(result, string(","));
+            result = string_dappend(result, fa_string(","));
         }
     };
 
-    result = string_dappend(result, string("]"));
+    result = string_dappend(result, fa_string("]"));
 
     return result;
 }

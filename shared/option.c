@@ -19,7 +19,7 @@ pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char *l
             ptr_t result  = option.parser((char *) value);
 
             if (result) {
-                return fa_pair_create(string(option.long_name), result);
+                return fa_pair_create(fa_string(option.long_name), result);
             } else {
                 return NULL;
             }
@@ -39,7 +39,7 @@ map_t add_defaults(int optc, opt_t optv[], map_t args)
         ptr_t result = option.parser(option.default_value);
 
         if (result) {
-            args = fa_map_dadd(string(option.long_name), result, args);
+            args = fa_map_dadd(fa_string(option.long_name), result, args);
         }
     }
 
@@ -69,10 +69,10 @@ pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
 
         if (i == argc || elem_type != value) {
             if (prev_elem_type == short_name) {
-                string_t name = string((char *) argv[i - 1] + 1);
+                string_t name = fa_string((char *) argv[i - 1] + 1);
                 args = fa_map_dset(name, fa_from_bool(true), args);
             } else if (prev_elem_type == long_name) {
-                string_t name = string((char *) argv[i - 1] + 2);
+                string_t name = fa_string((char *) argv[i - 1] + 2);
                 args = fa_map_dset(name, fa_from_bool(true), args);
             }
         } else {
@@ -89,7 +89,7 @@ pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
                     args = fa_map_add_entry(result, args);
                 }
             } else {
-                fa_push_back_list(anon_args, string((char *) argv[i]));
+                fa_push_back_list(anon_args, fa_string((char *) argv[i]));
             }
         }
     }
@@ -129,7 +129,7 @@ ptr_t fa_option_floating(char *x)
 }
 ptr_t fa_option_string(char *x)
 {
-    return string(x);
+    return fa_string(x);
 }
 ptr_t fa_option_failure(char *x)
 {

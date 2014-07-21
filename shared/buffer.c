@@ -71,7 +71,7 @@ fa_buffer_t fa_buffer_create(size_t size)
         }
     }
 
-    buffer_warn(string("Buffer created"));
+    buffer_warn(fa_string("Buffer created"));
     return buffer;
 }
 
@@ -92,7 +92,7 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
 
     b->meta = fa_map_empty();
 
-    buffer_warn(string("Buffer wrapped"));
+    buffer_warn(fa_string("Buffer wrapped"));
     return b;
 }
 
@@ -121,7 +121,7 @@ fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer)
         }
     }
 
-    buffer_warn(string("Buffer resized/copied"));
+    buffer_warn(fa_string("Buffer resized/copied"));
 
     copy->data = memcpy(copy->data, buffer->data, size);
     return copy;
@@ -145,7 +145,7 @@ void fa_buffer_destroy(fa_buffer_t buffer)
     // TODO recursive (everything in here is copy)
     fa_destroy(buffer->meta);
 
-    buffer_warn(string("Buffer destroyed"));
+    buffer_warn(fa_string("Buffer destroyed"));
     fa_delete(buffer);
 }
 
@@ -236,10 +236,10 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
         if (sf_error(file)) {
             char err[100];
             snprintf(err, 100, "Could not read audio file '%s'", cpath);
-            return (buffer_t) fa_error_create_simple(error, string(err), string("Doremir.Buffer"));
+            return (buffer_t) fa_error_create_simple(error, fa_string(err), fa_string("Doremir.Buffer"));
         }
 
-        inform(string_append(string("Reading "), path));
+        inform(string_append(fa_string("Reading "), path));
     }
     {
         size_t bufSize  = info.frames * info.channels * sizeof(double);
@@ -258,23 +258,23 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
         }
 
         // Meta-data
-        fa_buffer_set_meta(buffer, string("sample-rate"), f32(info.samplerate));
-        fa_buffer_set_meta(buffer, string("channels"), i32(info.channels));
+        fa_buffer_set_meta(buffer, fa_string("sample-rate"), f32(info.samplerate));
+        fa_buffer_set_meta(buffer, fa_string("channels"), i32(info.channels));
         {
             char *str = (char *) sf_get_string(file, SF_STR_TITLE);
-            fa_buffer_set_meta(buffer, string("title"), string(str ? str : ""));
+            fa_buffer_set_meta(buffer, fa_string("title"), fa_string(str ? str : ""));
         }
         {
             char *str = (char *) sf_get_string(file, SF_STR_SOFTWARE);
-            fa_buffer_set_meta(buffer, string("software"), string(str ? str : ""));
+            fa_buffer_set_meta(buffer, fa_string("software"), fa_string(str ? str : ""));
         }
         {
             char *str = (char *) sf_get_string(file, SF_STR_COPYRIGHT);
-            fa_buffer_set_meta(buffer, string("copyright"), string(str ? str : ""));
+            fa_buffer_set_meta(buffer, fa_string("copyright"), fa_string(str ? str : ""));
         }
 
         if (sf_close(file)) {
-            return (buffer_t) fa_error_create_simple(error, string("Could not close"), string("Doremir.Buffer"));
+            return (buffer_t) fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Buffer"));
         }
     }
 
@@ -304,17 +304,17 @@ ptr_t fa_buffer_write_audio(fa_string_t  path,
         char err[100];
         snprintf(err, 100, "Could not write audio file '%s' (%s)", cpath, sf_strerror(file));
         return (pair_t) fa_error_create_simple(
-                   error, string(err), string("Doremir.Buffer"));
+                   error, fa_string(err), fa_string("Doremir.Buffer"));
     }
 
     sf_count_t written = sf_write_double(file, ptr, size);
 
     if (written != size) {
-        return (pair_t) fa_error_create_simple(error, string("To few bytes written"), string("Doremir.Buffer"));
+        return (pair_t) fa_error_create_simple(error, fa_string("To few bytes written"), fa_string("Doremir.Buffer"));
     }
 
     if (sf_close(file)) {
-        return (pair_t) fa_error_create_simple(error, string("Could not close"), string("Doremir.Buffer"));
+        return (pair_t) fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Buffer"));
     }
 
     return NULL;
@@ -373,21 +373,21 @@ fa_string_t buffer_show(fa_ptr_t a)
     buffer_t buffer = (buffer_t) a;
     bool     more   = fa_buffer_size(buffer) > kMaxPrintSize;
     size_t   length = more ? kMaxPrintSize : fa_buffer_size(buffer);
-    string_t str    = string("<Buffer");
+    string_t str    = fa_string("<Buffer");
 
     for (size_t i = 0; i < length; ++i) {
-        str = string_dappend(str, string(" "));
+        str = string_dappend(str, fa_string(" "));
         str = string_dappend(str, format_integral(
                                  "%02x",
                                  fa_buffer_get(buffer, i)));
     }
 
     if (more) {
-        str = string_dappend(str, string(" "));
-        str = string_dappend(str, string("..."));
+        str = string_dappend(str, fa_string(" "));
+        str = string_dappend(str, fa_string("..."));
     }
 
-    str = string_dappend(str, string(">"));
+    str = string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -417,8 +417,8 @@ void buffer_fatal(char *msg, int error)
 {
     void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
-    fa_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.Buffer"));
-    fa_log_error(string("Terminating Audio Engine"));
+    fa_log_error_from(string_dappend(fa_string(msg), format_integral(" (error code %d)", error)), fa_string("Doremir.Buffer"));
+    fa_log_error(fa_string("Terminating Audio Engine"));
     exit(error);
 }
 

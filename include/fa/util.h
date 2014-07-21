@@ -70,8 +70,9 @@
 #define buffer_result_t     fa_device_buffer_result_t
 
 // #define pair(a,b)           fa_pair_create(a,b)
-#define pair_left(a,b)      fa_pair_left_create(a,b)
-#define string(a)           fa_string_from_utf8(a)
+// #define pair_left(a,b)      fa_pair_left_create(a,b)
+// #define string(a)           fa_string_from_utf8(a)
+#define fa_string(a)           fa_string_from_utf8(a)
 #define string16(a)         fa_string_from_utf16(u##a)
 #define string32(a)         fa_string_from_utf32(U##a)
 #define unstring(a)         fa_string_to_utf8(a)

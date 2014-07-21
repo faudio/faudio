@@ -115,7 +115,7 @@ fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t time)
 fa_string_t fa_time_to_iso(fa_time_t time)
 {
     fa_time_t t = (fa_time_t) time;
-    string_t s = string("P0000-00");
+    string_t s = fa_string("P0000-00");
 
     s = string_dappend(s, format_integral("-%02i", fa_time_days(t)));
     s = string_dappend(s, format_integral("T%02i", fa_time_hours(t)));
@@ -123,7 +123,7 @@ fa_string_t fa_time_to_iso(fa_time_t time)
     s = string_dappend(s, format_integral(":%02i", fa_time_seconds(t)));
 
     // TODO approximate ratio
-    s = string_dappend(s, string(".0000"));
+    s = string_dappend(s, fa_string(".0000"));
 
     return s;
 }
@@ -190,15 +190,15 @@ fa_ptr_t time_absolute(fa_ptr_t a)
 fa_string_t time_show(fa_ptr_t a)
 {
     fa_time_t t = (fa_time_t) a;
-    string_t s = string("<Time");
+    string_t s = fa_string("<Time");
 
     s = string_dappend(s, format_integral(" %02id", fa_time_days(t)));
     s = string_dappend(s, format_integral(" %02ih", fa_time_hours(t)));
     s = string_dappend(s, format_integral(" %02im", fa_time_minutes(t)));
     s = string_dappend(s, format_integral(" %02i+", fa_time_seconds(t)));
     s = string_dappend(s, fa_string_show(fa_time_divisions(t)));
-    s = string_dappend(s, string("s"));
-    s = string_dappend(s, string(">"));
+    s = string_dappend(s, fa_string("s"));
+    s = string_dappend(s, fa_string(">"));
 
     return s;
 }

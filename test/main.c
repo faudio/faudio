@@ -5,7 +5,7 @@
 void test_section(char *str)
 {
     printf("\n\n--------------------\n");
-    fa_log_info(string_dappend(string("Running test: "), string(str)));
+    fa_log_info(string_dappend(fa_string("Running test: "), fa_string(str)));
 }
 
 
@@ -135,7 +135,7 @@ void test_string()
         // char* cs = " 新隶体 "; // length 5
         char *cs = "höglund";
 
-        string_t s = string(cs);
+        string_t s = fa_string(cs);
         printf("len: %i\n", fa_string_length(s));
         fa_print("str: %s\n", s);
 
@@ -146,8 +146,8 @@ void test_string()
     }
 
     {
-        string_t s = string("foo");
-        string_t t = string("bar");
+        string_t s = fa_string("foo");
+        string_t t = fa_string("bar");
         string_t u = string_append(s, t);
         fa_dprint("str: %s\n", s);
         fa_dprint("str: %s\n", t);
@@ -155,8 +155,8 @@ void test_string()
     }
 
     {
-        string_t s = string("foo");
-        string_t t = string("bar");
+        string_t s = fa_string("foo");
+        string_t t = fa_string("bar");
         fa_print("str: %s\n", s);
         fa_print("str: %s\n", t);
         {
@@ -165,7 +165,7 @@ void test_string()
         }
     }
     {
-        string_t s = string("Foo, Bar, Baz");
+        string_t s = fa_string("Foo, Bar, Baz");
         string_t t = fa_string_copy(s);
         fa_dprint("str: %s\n", s);
         fa_dprint("str: %s\n", t);
@@ -173,7 +173,7 @@ void test_string()
 
     /*
         {
-            string_t s = string("FooBarBaz");
+            string_t s = fa_string("FooBarBaz");
             string_t t = fa_string_join_map(apply1, fa_string_single, s);
             fa_dprint("str: %s\n", s);
             fa_dprint("str: %s\n", t);
@@ -181,7 +181,7 @@ void test_string()
     */
 
     {
-        string_t s = string("A double quote: \", A backslash: \\");
+        string_t s = fa_string("A double quote: \", A backslash: \\");
         fa_dprint("str: %s\n", s);
     }
 }
@@ -202,9 +202,9 @@ void test_show()
     fa_dprint("%s\n", list(i8(1)));
     fa_dprint("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), fb(true))));
     fa_dprint("%s\n", list(
-                  fa_pair_create(string("hans"), string("höglund")),
-                  fa_pair_create(string("lisa"), string("streich")),
-                  fa_pair_create(string("mats"), string("erlandsson"))));
+                  fa_pair_create(fa_string("hans"), fa_string("höglund")),
+                  fa_pair_create(fa_string("lisa"), fa_string("streich")),
+                  fa_pair_create(fa_string("mats"), fa_string("erlandsson"))));
 }
 
 
@@ -213,10 +213,10 @@ void test_show()
 void test_compare()
 {
     test_section("Comparison");
-    fa_dprint("\"abc\" <  \"abd\"               ==> %s\n", fb(fa_less_than(string("abc"), string("abd"))));
-    fa_dprint("\"abc\" <= \"abd\"               ==> %s\n", fb(fa_less_than_equal(string("abc"), string("abd"))));
-    fa_dprint("\"abc\" >  \"abd\"               ==> %s\n", fb(fa_greater_than(string("abc"), string("abd"))));
-    fa_dprint("\"abc\" >= \"abd\"               ==> %s\n", fb(fa_less_than_equal(string("abc"), string("abd"))));
+    fa_dprint("\"abc\" <  \"abd\"               ==> %s\n", fb(fa_less_than(fa_string("abc"), fa_string("abd"))));
+    fa_dprint("\"abc\" <= \"abd\"               ==> %s\n", fb(fa_less_than_equal(fa_string("abc"), fa_string("abd"))));
+    fa_dprint("\"abc\" >  \"abd\"               ==> %s\n", fb(fa_greater_than(fa_string("abc"), fa_string("abd"))));
+    fa_dprint("\"abc\" >= \"abd\"               ==> %s\n", fb(fa_less_than_equal(fa_string("abc"), fa_string("abd"))));
 }
 
 
@@ -719,8 +719,8 @@ void test_for_each()
     printf("\n");
 
     fa_with(map, map(
-                string("foo"), i16(1),
-                string("bar"), list(i16(1), i16(2), i16(3))),
+                fa_string("foo"), i16(1),
+                fa_string("bar"), list(i16(1), i16(2), i16(3))),
             fa_destroy(map)) {
         fa_for_each(x, fa_map_to_list(map)) {
             fa_print(">    %s\n", x);
@@ -1150,8 +1150,8 @@ void test_set()
     {
         printf("\n");
 
-        set_t a = set(string("foo"), string("bar"));
-        set_t b = set(string("hi"), string("ho"));
+        set_t a = set(fa_string("foo"), fa_string("bar"));
+        set_t b = set(fa_string("hi"), fa_string("ho"));
         set_t c = set(i16(0), i16(1));
 
         fa_print("a                            ==> %s\n", a);
@@ -1179,28 +1179,28 @@ void test_map()
 
         map_t a = fa_map_empty();
 
-        a = fa_map_dadd(string("name"), string("Hans"), a);
-        a = fa_map_dset(string("name"), string("Sven"), a);
-        a = fa_map_dset(string("age"), i16(22), a);
-        a = fa_map_dset(string("age"), i16(22), a);
+        a = fa_map_dadd(fa_string("name"), fa_string("Hans"), a);
+        a = fa_map_dset(fa_string("name"), fa_string("Sven"), a);
+        a = fa_map_dset(fa_string("age"), i16(22), a);
+        a = fa_map_dset(fa_string("age"), i16(22), a);
 
-        // a = fa_map_dremove(string("age"), a);
-        // a = fa_map_dadd(string("age"), i16(25), a);
-        a = fa_map_dset(string("skills"), list(string("programming"), string("composition")), a);
+        // a = fa_map_dremove(fa_string("age"), a);
+        // a = fa_map_dadd(fa_string("age"), i16(25), a);
+        a = fa_map_dset(fa_string("skills"), list(fa_string("programming"), fa_string("composition")), a);
 
-        // a = fa_map_dadd(string("happy"), fb(true), a);
-        // a = fa_map_dadd(string("pair"), pair(fb(true), f64(3.1415)), a);
-        // a = fa_map_dadd(string("ratio"), ratio(1, 3), a);
-        // a = fa_map_dadd(string("ratio2"), fa_multiply(ratio(4, 4444), ratio(1, 2)), a);
+        // a = fa_map_dadd(fa_string("happy"), fb(true), a);
+        // a = fa_map_dadd(fa_string("pair"), pair(fb(true), f64(3.1415)), a);
+        // a = fa_map_dadd(fa_string("ratio"), ratio(1, 3), a);
+        // a = fa_map_dadd(fa_string("ratio2"), fa_multiply(ratio(4, 4444), ratio(1, 2)), a);
 
         fa_print("a                            ==> %s\n", a);
         fa_print("size(a)                      ==> %s\n", i16(fa_map_size(a)));
 
-        fa_print("a.name                       ==> %s\n", fa_map_get(string("name"), a));
-        fa_print("a.age                        ==> %s\n", fa_map_get(string("age"), a));
-        fa_print("a.skills                     ==> %s\n", fa_map_get(string("skills"), a));
-        fa_print("a.happy                      ==> %s\n", fa_map_get(string("happy"), a));
-        fa_print("a.pair                       ==> %s\n", fa_map_get(string("pair"), a));
+        fa_print("a.name                       ==> %s\n", fa_map_get(fa_string("name"), a));
+        fa_print("a.age                        ==> %s\n", fa_map_get(fa_string("age"), a));
+        fa_print("a.skills                     ==> %s\n", fa_map_get(fa_string("skills"), a));
+        fa_print("a.happy                      ==> %s\n", fa_map_get(fa_string("happy"), a));
+        fa_print("a.pair                       ==> %s\n", fa_map_get(fa_string("pair"), a));
 
         fa_destroy(a);
     }
@@ -1216,19 +1216,19 @@ void test_map()
 //         graph_t a = fa_graph_empty();
 //
 //
-//         a = fa_graph_insert(string("foo"), a);
-//         a = fa_graph_connect(string("foo"), string("foo"), string("(1)"), a);
+//         a = fa_graph_insert(fa_string("foo"), a);
+//         a = fa_graph_connect(fa_string("foo"), fa_string("foo"), fa_string("(1)"), a);
 //
-//         // a = fa_graph_insert(pair(string("a"), string("b")), a);
+//         // a = fa_graph_insert(pair(fa_string("a"), fa_string("b")), a);
 //         // a = fa_graph_connect(
-//         //     pair(string("a"), string("b")),
-//         //     pair(string("a"), string("b")),
-//         //     string("(1)"), a);
+//         //     pair(fa_string("a"), fa_string("b")),
+//         //     pair(fa_string("a"), fa_string("b")),
+//         //     fa_string("(1)"), a);
 //
 //         fa_print("a                            ==> %s\n", a);
 //         fa_system_directory_write_file(path, fa_graph_to_dot(
-//                                                 string("#include \"doc/graphs/header.dot\""),
-//                                                 string(""),
+//                                                 fa_string("#include \"doc/graphs/header.dot\""),
+//                                                 fa_string(""),
 //                                                 a));
 //     }
 // }
@@ -1282,8 +1282,8 @@ void test_json(string_t path)
 
     fa_puts(fa_string_to_json(
                 map(
-                    string("foo"), i32(1),
-                    string("bar"), list(i32(1), i32(2), i32(3)))));
+                    fa_string("foo"), i32(1),
+                    fa_string("bar"), list(i32(1), i32(2), i32(3)))));
 
 }
 
@@ -1298,15 +1298,15 @@ void test_json(string_t path)
 //     dispatcher_t disp = lockfree_dispatcher();
 //
 //     ptr_t val = map(
-//                     string("lyrics"), list(string("Help"), string("me"), string("if"), string("you"), string("can")),
-//                     string("pitches"), list(ratio(60, 1), ratio(62, 1))
+//                     fa_string("lyrics"), list(fa_string("Help"), fa_string("me"), fa_string("if"), fa_string("you"), fa_string("can")),
+//                     fa_string("pitches"), list(ratio(60, 1), ratio(62, 1))
 //                 );
 //
 //     fa_message_send((receiver_t) disp, i16(1), val);
-//     fa_message_send((receiver_t) disp, i16(2), string("World!"));
-//     fa_message_send((receiver_t) disp, i16(2), string("World!"));
-//     fa_message_send((receiver_t) disp, i16(2), string("World!"));
-//     fa_message_send((receiver_t) disp, i16(2), string("World!"));
+//     fa_message_send((receiver_t) disp, i16(2), fa_string("World!"));
+//     fa_message_send((receiver_t) disp, i16(2), fa_string("World!"));
+//     fa_message_send((receiver_t) disp, i16(2), fa_string("World!"));
+//     fa_message_send((receiver_t) disp, i16(2), fa_string("World!"));
 //
 //     list_t msgs = fa_list_empty();
 //
@@ -1361,8 +1361,8 @@ void test_json(string_t path)
 //     {
 //         // fa_time_t t = seconds(0);
 //
-//         // event_t ha = now(string("höglund"));
-//         // event_t ho = now(string("holmgren"));
+//         // event_t ha = now(fa_string("höglund"));
+//         // event_t ho = now(fa_string("holmgren"));
 //
 //         // event_t a = merge_event(ha,
 //             // delay_event(milliseconds(200*2), merge_event(ha,
@@ -1389,7 +1389,7 @@ void test_json(string_t path)
 //         // event_t mouseX = fa_event_map(apply1, fa_pair_first, mm);
 //         // event_t mouseY = fa_event_map(apply1, fa_pair_second, mm);
 //
-//         // event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(string("flux"))));
+//         // event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(fa_string("flux"))));
 //         // event_t y2 = switch_event(ku, switch_event(kd,never(),mm), merge_event(delay_event(seconds(3),b),md));
 //         // event_t y2 = switch_event(kd,mm,merge_event(md,mu));
 //         // event_t y2 = fa_event_filter(fa_less_than, f64(500), mouseX);
@@ -1427,7 +1427,7 @@ void test_scheduler()
 // {
 //     test_section("Processors");
 //
-//     inform(string_append(string("Writing "), path));
+//     inform(string_append(fa_string("Writing "), path));
 //
 //     processor_t p, q, chain, rchain;
 //     p = unary(type(i8), type(i8), add1234, NULL);
@@ -1550,24 +1550,24 @@ void test_error()
 void test_log()
 {
     test_section("Logging");
-    fa_log_info(string("---------------"));
-    fa_log_info(string("Log test: Do not take these seriously"));
+    fa_log_info(fa_string("---------------"));
+    fa_log_info(fa_string("Log test: Do not take these seriously"));
 
     for (int i = 0; i < 3; ++i) {
 
-        fa_log_info(string("We have a problem"));
-        // fa_log_warning(string("We have a problem"));
-        fa_log_error(string("We have a problem"));
+        fa_log_info(fa_string("We have a problem"));
+        // fa_log_warning(fa_string("We have a problem"));
+        fa_log_error(fa_string("We have a problem"));
 
         fa_log(NULL,
                fa_error_create_simple(
                    error,
-                   string("We have a problem"),
-                   string("Doremir.FooBar")));
+                   fa_string("We have a problem"),
+                   fa_string("Doremir.FooBar")));
         fa_thread_sleep(50);
     }
 
-    fa_log_info(string("---------------"));
+    fa_log_info(fa_string("---------------"));
 }
 
 
@@ -1592,9 +1592,9 @@ void test_regex()
     char exp[] = ".* Hans H.*";
     char str[] = "A Hans Höglund";
 
-    fa_print("exp                          ==> %s\n", string(exp));
-    fa_print("str                          ==> %s\n", string(str));
-    fa_print("matches(exp,str)             ==> %s\n", fb(fa_string_matches(string(exp), string(str))));
+    fa_print("exp                          ==> %s\n", fa_string(exp));
+    fa_print("str                          ==> %s\n", fa_string(str));
+    fa_print("matches(exp,str)             ==> %s\n", fb(fa_string_matches(fa_string(exp), fa_string(str))));
 }
 
 // --------------------------------------------------------------------------------
@@ -1618,13 +1618,13 @@ void test_regex()
 //     // Handle possible errors
 //     if (fa_check(input)) {
 //         log_error((error_t) input);
-//         warn(string("Aborting test due to error"));
+//         warn(fa_string("Aborting test due to error"));
 //         goto cleanup;
 //     }
 //
 //     if (fa_check(output)) {
 //         log_error((error_t) output);
-//         warn(string("Aborting test due to error"));
+//         warn(fa_string("Aborting test due to error"));
 //         goto cleanup;
 //     }
 //
@@ -1633,7 +1633,7 @@ void test_regex()
 //     // Handle possible error
 //     if (fa_check(result)) {
 //         log_error((error_t) result);
-//         warn(string("Aborting test due to error"));
+//         warn(fa_string("Aborting test due to error"));
 //         goto cleanup;
 //     }
 //
@@ -1676,7 +1676,7 @@ void test_audio_stream()
     // Handle possible error
     if (fa_check(session)) {
         log_error((error_t) session);
-        warn(string("Aborting test due to error"));
+        warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
@@ -1689,11 +1689,11 @@ void test_audio_stream()
     // Handle possible error
     if (fa_check(stream)) {
         log_error((error_t) stream);
-        warn(string("Aborting test due to error"));
+        warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
-    fa_audio_add_status_callback(test_audio_stream_status_changed, string("foobar"), session);
+    fa_audio_add_status_callback(test_audio_stream_status_changed, fa_string("foobar"), session);
     fa_thread_sleep(3000);
 
 cleanup:
@@ -1761,7 +1761,7 @@ void test_midi_stream()
     // Handle possible error
     if (fa_check(session)) {
         log_error((error_t) session);
-        warn(string("Aborting test due to error"));
+        warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
@@ -1779,18 +1779,18 @@ void test_midi_stream()
     // Handle possible errors
     if (fa_check(in_stream)) {
         log_error((error_t) in_stream);
-        warn(string("Aborting test due to error"));
+        warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
     if (fa_check(out_stream)) {
         log_error((error_t) out_stream);
-        warn(string("Aborting test due to error"));
+        warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
     // TODO
-    // fa_midi_add_status_callback(test_audio_stream_status_changed, string("foobar"), session);
+    // fa_midi_add_status_callback(test_audio_stream_status_changed, fa_string("foobar"), session);
 
     // event_t notes  =
     //     merge_event(later(divisions(1,10), midi(0x90, 48, 10)),
@@ -1844,11 +1844,11 @@ void test_midi_hotplug()
     // Handle possible error
     if (fa_check(session)) {
         log_error((error_t) session);
-        warn(string("Aborting test due to error"));
+        warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
-    fa_midi_add_status_callback(test_audio_stream_status_changed, string("hello"), session);
+    fa_midi_add_status_callback(test_audio_stream_status_changed, fa_string("hello"), session);
 
     // CFRunLoopRun();
     // fa_thread_sleep(20000);
@@ -1927,7 +1927,7 @@ int main(int argc, char const *argv[])
         }
 
         fa_set_log_std();
-        // fa_set_log_file(string("/Users/hans/Library/Logs/FAAudio.log"));
+        // fa_set_log_file(fa_string("/Users/hans/Library/Logs/FAAudio.log"));
 
         fa_initialize();
 
@@ -1957,9 +1957,9 @@ int main(int argc, char const *argv[])
         add_test(list);
         add_test(set);
         add_test(map);
-        // test_graph(string_dappend(fa_system_directory_current(), string("/test/gen.dot")));
+        // test_graph(string_dappend(fa_system_directory_current(), fa_string("/test/gen.dot")));
         // test_priority_queue(10);
-        // test_json(string_dappend(fa_system_directory_current(), string("/test/example.json")));
+        // test_json(string_dappend(fa_system_directory_current(), fa_string("/test/example.json")));
 
         add_test(log);
         add_test(error);

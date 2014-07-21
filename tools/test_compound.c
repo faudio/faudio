@@ -82,8 +82,8 @@ void run_midi()
 
     {
 
-        fa_action_t note1  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 60, 127));
-        fa_action_t note2  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 65, 127));
+        fa_action_t note1  = fa_action_send(fa_string("midi"), fa_midi_message_create_simple(0x90, 60, 127));
+        fa_action_t note2  = fa_action_send(fa_string("midi"), fa_midi_message_create_simple(0x90, 65, 127));
 
         // fa_action_t notes1 = fa_action_many(list(
         //                                         fa_pair_create(note2, fa_milliseconds(100 + 200 + 100)),
@@ -138,9 +138,9 @@ void run_midi()
     //     float h = 99;
     //     time_t half       = fa_milliseconds(h*2);
     //     time_t interv     = fa_milliseconds(h);
-    //     fa_action_t note  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 60, 90));
+    //     fa_action_t note  = fa_action_send(fa_string("midi"), fa_midi_message_create_simple(0x99, 60, 90));
     //     fa_action_t notes = fa_action_repeat(interv, note);
-    //     fa_action_t off   = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 61, 90));
+    //     fa_action_t off   = fa_action_send(fa_string("midi"), fa_midi_message_create_simple(0x99, 61, 90));
     //     fa_action_t offs  = fa_action_repeat(interv, off);
     //
     //     fa_midi_schedule_relative(seconds(0), notes, st);

@@ -464,7 +464,7 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t *re
                 run_and_resched_action(rest, future, now, resched, function, data);
             } else {
                 // Reschedule
-                fa_push_list(pair_left(future, rest), *resched);
+                fa_push_list(fa_pair_left_create(future, rest), *resched);
             }
         }
 
@@ -541,9 +541,9 @@ string_t action_show(ptr_t a)
 {
     action_t x = (action_t) a;
 
-    string_t str = string("<Action ");
+    string_t str = fa_string("<Action ");
     str = string_dappend(str, fa_string_format_integral(" %p", (long) x));
-    str = string_dappend(str, string(">"));
+    str = string_dappend(str, fa_string(">"));
     return str;
 }
 

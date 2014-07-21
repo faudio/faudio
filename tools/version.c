@@ -15,11 +15,11 @@ int main(int argc, char const *argv[])
         // TODO split version/help
         printf("faudio-%s\n", unstring(
                    string_dappend(fa_version_string(),
-                                  string_dappend(string(""),
+                                  string_dappend(fa_string(""),
 #ifdef FAUDIO_DEBUG
-                                                 string(" (debug build)")))
+                                                 fa_string(" (debug build)")))
 #else
-                                                 string(" (release build)")))
+                                                 fa_string(" (release build)")))
 #endif
 
                ));

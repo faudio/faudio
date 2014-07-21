@@ -47,7 +47,7 @@ fa_audio_session_t print_audio_devices(fa_ptr_t _, fa_audio_session_t session)
         fa_print("Host: %s\n", fa_string_to_string(fa_audio_host_name(x)));
         fa_print("In:   %s\n", fb(fa_audio_has_input(x)));
         fa_print("Out:  %s\n", fb(fa_audio_has_output(x)));
-        fa_print_ln(string(""));
+        fa_print_ln(fa_string(""));
         mark_used(x);
     }
 

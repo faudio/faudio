@@ -162,9 +162,9 @@ fa_ptr_t fa_atomic_queue_read(fa_atomic_queue_t queue)
 
 fa_string_t atomic_queue_show(fa_ptr_t v)
 {
-    string_t s = string("<AtomicQueue ");
+    string_t s = fa_string("<AtomicQueue ");
     s = string_dappend(s, format_integral("%p", (long) v));
-    s = string_dappend(s, string(">"));
+    s = string_dappend(s, fa_string(">"));
     return s;
 }
 

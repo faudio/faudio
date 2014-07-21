@@ -206,19 +206,19 @@ bool midi_message_greater_than(fa_ptr_t a, fa_ptr_t b)
 fa_string_t midi_message_show(fa_ptr_t a)
 {
     fa_midi_message_t midi_message = (fa_midi_message_t) a;
-    string_t s = string("<Midi");
+    string_t s = fa_string("<Midi");
 
     if (!midi_message->is_sysex) {
         s = string_dappend(s, fa_string_format_integral(" %02x", midi_message->data.simple[0]));
         s = string_dappend(s, fa_string_format_integral(" %02x", midi_message->data.simple[1]));
         s = string_dappend(s, fa_string_format_integral(" %02x", midi_message->data.simple[2]));
     } else {
-        s = string_dappend(s, string(" SysEx "));
+        s = string_dappend(s, fa_string(" SysEx "));
         s = string_dappend(s, fa_string_show(midi_message->data.sysex));
-        s = string_dappend(s, string(" "));
+        s = string_dappend(s, fa_string(" "));
     }
 
-    s = string_dappend(s, string(">"));
+    s = string_dappend(s, fa_string(">"));
     return s;
 }
 

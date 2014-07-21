@@ -47,7 +47,7 @@ void fa_terminate2(int x)
             fa_let(ARGS, fa_pair_second(__res__))                         \
                 if (                                                      \
                     (OPTS != (ARGS + 1)) && /* Use variables */           \
-                    fa_map_has_key(string("h"), OPTS)                     \
+                    fa_map_has_key(fa_string("h"), OPTS)                  \
                     )                                                     \
                     fa_option_show_all(OPTIONS, (char *) ARGV[0]);        \
                     else                                                  \

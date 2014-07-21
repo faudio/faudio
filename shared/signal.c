@@ -194,7 +194,7 @@ fa_signal_t fa_signal_lift2(fa_string_t n,
 fa_signal_t fa_signal_loop(fa_signal_unary_signal_t function, fa_ptr_t data)
 {
     if (kVectorMode) {
-        warn(string("Loop not supported in vector mode"));
+        warn(fa_string("Loop not supported in vector mode"));
         assert(false && "Loop not supported in vector mode");
     }
 
@@ -208,7 +208,7 @@ fa_signal_t fa_signal_loop(fa_signal_unary_signal_t function, fa_ptr_t data)
 fa_signal_t fa_signal_delay(int n, fa_signal_t a)
 {
     if (kVectorMode) {
-        warn(string("Delay not supported in vector mode"));
+        warn(fa_string("Delay not supported in vector mode"));
         assert(false && "Delay not supported in vector mode");
     }
 
@@ -407,10 +407,10 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
     switch (signal->tag) {
 
     case time_signal:
-        return fa_pair_create(string("time"), empty());
+        return fa_pair_create(fa_string("time"), empty());
 
     case random_signal:
-        return fa_pair_create(string("random"), empty());
+        return fa_pair_create(fa_string("random"), empty());
 
     case constant_signal: {
         double value = constant_get(signal, value);
@@ -431,18 +431,18 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
     case input_signal:
         return fa_pair_create(
                    concat(
-                       string("input "),
+                       fa_string("input "),
                        fa_string_format_integral("%d", input_get(signal, c))),
                    empty());
 
     case output_signal:
         return fa_pair_create(
                    concat(
-                       string("output "),
+                       fa_string("output "),
                        fa_string_show(fa_from_int32(output_get(signal, c))),
-                       string("[-"),
+                       fa_string("[-"),
                        fa_string_show(fa_from_int32(output_get(signal, n))),
-                       string("]")
+                       fa_string("]")
                    ),
 
                    list(fa_signal_to_tree(output_get(signal, a))));
@@ -460,15 +460,15 @@ string_t draw_tree(pair_t value, string_t indent, bool is_last, string_t result)
     fa_write_string(result, indent);
 
     if (is_last) {
-        fa_write_string(result, string("`- "));
-        fa_write_string(indent, string("   "));
+        fa_write_string(result, fa_string("`- "));
+        fa_write_string(indent, fa_string("   "));
     } else {
-        fa_write_string(result, string("+- "));
-        fa_write_string(indent, string("|  "));
+        fa_write_string(result, fa_string("+- "));
+        fa_write_string(indent, fa_string("|  "));
     }
 
     fa_write_string(result, fa_string_to_string(label));
-    fa_write_string(result, string("\n"));
+    fa_write_string(result, fa_string("\n"));
 
     fa_for_each_last(x, children, last) {
         result = draw_tree(x, indent, last, result);
@@ -478,7 +478,7 @@ string_t draw_tree(pair_t value, string_t indent, bool is_last, string_t result)
 
 string_t fa_signal_draw_tree(fa_pair_t p)
 {
-    return draw_tree(p, string(""), true, string(""));
+    return draw_tree(p, fa_string(""), true, fa_string(""));
 }
 
 
@@ -914,7 +914,7 @@ void custom_procs_receive(state_t state, fa_signal_message_callback_t cb, ptr_t 
 ptr_t run_simple_action(state_t state, action_t action)
 {
     if (fa_action_is_compound(action)) {
-        warn(string_dappend(string("Compound action passed to Signal.runSimpleAction: "), fa_string_show(action)));
+        warn(string_dappend(fa_string("Compound action passed to Signal.runSimpleAction: "), fa_string_show(action)));
         return NULL;
     }
 
@@ -935,7 +935,7 @@ ptr_t run_simple_action(state_t state, action_t action)
         return NULL;
     }
 
-    warn(string_dappend(string("Unknown simple action passed to Signal.runSimpleAction: "), fa_string_show(action)));
+    warn(string_dappend(fa_string("Unknown simple action passed to Signal.runSimpleAction: "), fa_string_show(action)));
     return NULL;
 }
 
@@ -1171,7 +1171,7 @@ inline static double _former(ptr_t _, double x, double y)
 }
 fa_signal_t fa_signal_former(fa_signal_t a, fa_signal_t b)
 {
-    return fa_signal_lift2(string("former"), _former, NULL, a, b);
+    return fa_signal_lift2(fa_string("former"), _former, NULL, a, b);
 }
 
 inline static double _latter(ptr_t _, double x, double y)
@@ -1180,7 +1180,7 @@ inline static double _latter(ptr_t _, double x, double y)
 }
 fa_signal_t fa_signal_latter(fa_signal_t a, fa_signal_t b)
 {
-    return fa_signal_lift2(string("latter"), _latter, NULL, a, b);
+    return fa_signal_lift2(fa_string("latter"), _latter, NULL, a, b);
 }
 
 
@@ -1191,7 +1191,7 @@ inline static double _impulse(ptr_t _, double x)
 }
 fa_signal_t fa_signal_impulse()
 {
-    return fa_signal_lift(string("mkImp"), _impulse, NULL, fa_signal_time());
+    return fa_signal_lift(fa_string("mkImp"), _impulse, NULL, fa_signal_time());
 }
 
 /*
@@ -1217,7 +1217,7 @@ inline static double _impulses(ptr_t n, double x)
 }
 fa_signal_t fa_signal_impulses(int n)
 {
-    return fa_signal_lift(string("mkImps"), _impulses, (ptr_t) n, fa_signal_counter());
+    return fa_signal_lift(fa_string("mkImps"), _impulses, (ptr_t) n, fa_signal_counter());
 }
 
 
@@ -1236,7 +1236,7 @@ inline static double _play(ptr_t buffer, double i)
 }
 fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t i)
 {
-    return fa_signal_lift(string("play"), _play, buffer, i);
+    return fa_signal_lift(fa_string("play"), _play, buffer, i);
 }
 
 inline static double _record(ptr_t buffer, double i, double x)
@@ -1248,7 +1248,7 @@ inline static double _record(ptr_t buffer, double i, double x)
 }
 fa_signal_t fa_signal_record(fa_buffer_t buffer, fa_signal_t i, fa_signal_t x)
 {
-    return fa_signal_lift2(string("record"), _record, buffer, i, x);
+    return fa_signal_lift2(fa_string("record"), _record, buffer, i, x);
 }
 
 static bool play_started = false; // TODO debug
@@ -1266,7 +1266,7 @@ inline static double _play_stream(ptr_t buffer, double _)
         bool res = fa_atomic_ring_buffer_read_double(buffer, &x);
 
         if (!res) {
-            // warn(string("U"));
+            // warn(fa_string("U"));
         }
 
         mark_used(res);
@@ -1277,7 +1277,7 @@ inline static double _play_stream(ptr_t buffer, double _)
 
 fa_signal_t fa_signal_play_stream(fa_atomic_ring_buffer_t buffer)
 {
-    return fa_signal_lift(string("playStream"), _play_stream, buffer, fa_signal_constant(0));
+    return fa_signal_lift(fa_string("playStream"), _play_stream, buffer, fa_signal_constant(0));
 }
 
 fa_signal_t fa_signal_record_stream(fa_atomic_ring_buffer_t buffer, fa_signal_t x)
@@ -1330,7 +1330,7 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
 {
     struct rec_external *ext = (struct rec_external *) x;
 
-    // inform(string("Recorder, comparing names: "));
+    // inform(fa_string("Recorder, comparing names: "));
     // inform(n);
     // inform(ext->name);
 
@@ -1344,7 +1344,7 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
         ext->buffer = msg;
         // ext->bytes_written = 0;
     } else {
-        // warn(fa_string_dappend(string("Unknown message to external recorder: "), fa_copy(ext->name)));
+        // warn(fa_string_dappend(fa_string("Unknown message to external recorder: "), fa_copy(ext->name)));
         // no assert!
     }
 
@@ -1382,7 +1382,7 @@ inline static double _add(ptr_t _, double x, double y)
 }
 fa_signal_t fa_signal_add(fa_signal_t a, fa_signal_t b)
 {
-    return fa_signal_lift2(string("(+)"), _add, NULL, a, b);
+    return fa_signal_lift2(fa_string("(+)"), _add, NULL, a, b);
 }
 
 inline static double _mul(ptr_t _, double x, double y)
@@ -1391,7 +1391,7 @@ inline static double _mul(ptr_t _, double x, double y)
 }
 fa_signal_t fa_signal_multiply(fa_signal_t a, fa_signal_t b)
 {
-    return fa_signal_lift2(string("(*)"), _mul, NULL, a, b);
+    return fa_signal_lift2(fa_string("(*)"), _mul, NULL, a, b);
 }
 
 inline static double _subtract(ptr_t _, double x, double y)
@@ -1400,7 +1400,7 @@ inline static double _subtract(ptr_t _, double x, double y)
 }
 fa_signal_t fa_signal_subtract(fa_signal_t a, fa_signal_t b)
 {
-    return fa_signal_lift2(string("(-)"), _subtract, NULL, a, b);
+    return fa_signal_lift2(fa_string("(-)"), _subtract, NULL, a, b);
 }
 
 inline static double _divide(ptr_t _, double x, double y)
@@ -1409,7 +1409,7 @@ inline static double _divide(ptr_t _, double x, double y)
 }
 fa_signal_t fa_signal_divide(fa_signal_t a, fa_signal_t b)
 {
-    return fa_signal_lift2(string("(/)"), _divide, NULL, a, b);
+    return fa_signal_lift2(fa_string("(/)"), _divide, NULL, a, b);
 }
 
 
@@ -1419,7 +1419,7 @@ inline static double _absolute(ptr_t _, double x)
 }
 fa_signal_t fa_signal_absolute(fa_signal_t a)
 {
-    return fa_signal_lift(string("absolute"), _absolute, NULL, a);
+    return fa_signal_lift(fa_string("absolute"), _absolute, NULL, a);
 }
 
 inline static double _sin(ptr_t _, double x)
@@ -1428,7 +1428,7 @@ inline static double _sin(ptr_t _, double x)
 }
 fa_signal_t fa_signal_sin(fa_signal_t a)
 {
-    return fa_signal_lift(string("sin"), _sin, NULL, a);
+    return fa_signal_lift(fa_string("sin"), _sin, NULL, a);
 }
 
 inline static double _cos(ptr_t _, double x)
@@ -1437,7 +1437,7 @@ inline static double _cos(ptr_t _, double x)
 }
 fa_signal_t fa_signal_cos(fa_signal_t a)
 {
-    return fa_signal_lift(string("cos"), _cos, NULL, a);
+    return fa_signal_lift(fa_string("cos"), _cos, NULL, a);
 }
 
 
@@ -1555,7 +1555,7 @@ inline static double _max(ptr_t _, double x, double y)
 }
 fa_signal_t fa_signal_max(fa_signal_t x, fa_signal_t y)
 {
-    return fa_signal_lift2(string("max"), _max, NULL, x, y);
+    return fa_signal_lift2(fa_string("max"), _max, NULL, x, y);
 }
 
 fa_signal_t fa_signal_fmod(fa_signal_t x, fa_signal_t y)
@@ -1621,10 +1621,10 @@ ptr_t vst_render_(ptr_t x, int count, fa_signal_state_t *state)
     // assert(count == 64); // TODO (also change VST loader)
     
     if (kVectorMode) {
-        fail(string("Vector mode not supported!"));
+        fail(fa_string("Vector mode not supported!"));
         exit(-1);
     } else {
-        // fail(string("Non-Vector mode not supported!"));
+        // fail(fa_string("Non-Vector mode not supported!"));
 
         assert(context->inputs && context->outputs);                 
         silenceChannel(context->inputs, plugin->numInputs, count);
@@ -1648,7 +1648,7 @@ ptr_t vst_render_(ptr_t x, int count, fa_signal_state_t *state)
 
 
 // TODO move
-#define fa_dynamic_is_string(x) (fa_dynamic_get_type(x) == string_type_repr)
+#define fa_dynamic_is_fa_string(x) (fa_dynamic_get_type(x) == string_type_repr)
 #define fa_dynamic_is_bool(x)   (fa_dynamic_get_type(x) == bool_type_repr)
 #define fa_dynamic_is_pair(x)   (fa_dynamic_get_type(x) == pair_type_repr)
 
@@ -1657,12 +1657,12 @@ void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *
 // Used by vst.cc
 void vst_log(const char* msg)
 {
-    // warn(string_dappend(string("Error in VST: "), string((char*) msg)));
+    // warn(string_dappend(fa_string("Error in VST: "), fa_string((char*) msg)));
 }
 
 void vst_log_i(const char* fmt, long n)
 {
-    // warn(string_dappend(string("Error in VST: "), 
+    // warn(string_dappend(fa_string("Error in VST: "), 
         // fa_string_format_integral((char*) fmt, n)
     // ));
 }
@@ -1674,18 +1674,18 @@ ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
     warn(n);
     warn(context->name);
-    warn(fa_equal(n, context->name) ? string("t") : string ("f"));
-    warn(string(""));
+    warn(fa_equal(n, context->name) ? fa_string("t") : fa_string("f"));
+    warn(fa_string(""));
     
     if (fa_equal(n, context->name)) {
         
-        if (fa_dynamic_is_pair(msg) && fa_dynamic_is_string(fa_pair_first(msg)) && fa_equal(fa_pair_first(msg), string("open")))
+        if (fa_dynamic_is_pair(msg) && fa_dynamic_is_fa_string(fa_pair_first(msg)) && fa_equal(fa_pair_first(msg), fa_string("open")))
         {
-            warn(string("Opening VST window..."));
+            warn(fa_string("Opening VST window..."));
             if (fa_pair_second(msg)) {
                 openPlugin(plugin, fa_pair_second(msg));                
             } else {
-                warn(string("Asked to open VST window but handle is NULL, ignoring."));
+                warn(fa_string("Asked to open VST window but handle is NULL, ignoring."));
             }
             return x;
         }
@@ -1693,7 +1693,7 @@ ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
         // Assume this is MIDI message
         // TODO add MIDI messags to dynamic and check this!
         if (!fa_midi_message_is_simple(msg)) {
-            warn(string("Unknown message to DLS"));
+            warn(fa_string("Unknown message to DLS"));
             return x;
         } else {
             int status, data1, data2;
@@ -1763,8 +1763,8 @@ list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
     vst_context* context = fa_malloc(sizeof(vst_context));
     context->plugin = plugin;
     context->name = name;
-    warn(string_append(string("Creating VST plugin\n    Name: "), name));
-    warn(string_append(string("    Path: "), path));
+    warn(string_append(fa_string("Creating VST plugin\n    Name: "), name));
+    warn(string_append(fa_string("    Path: "), path));
     
     context->inputs = malloc(sizeof(ptr_t) * plugin->numInputs);
     context->outputs = malloc(sizeof(ptr_t) * plugin->numOutputs);
@@ -1803,7 +1803,7 @@ void fa_signal_show_vst_gui(fa_string_t string, void* handle)
 
 list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
 {
-    fail(string("VST not supported for this platform yet."));
+    fail(fa_string("VST not supported for this platform yet."));
 }
 
 #endif // _WIN32

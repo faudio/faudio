@@ -36,7 +36,7 @@ static string_t gOutput;
 // {
 //     fa_io_run(
 //         fa_io_apply(
-//             fa_io_read_file(string("test/test.rawMono")),
+//             fa_io_read_file(fa_string("test/test.rawMono")),
 //             // fa_io_create_ogg_encoder()
 //             fa_io_identity()
 //             ),
@@ -44,7 +44,7 @@ static string_t gOutput;
 //         fa_io_coapply(
 //             fa_io_identity(),
 //             // fa_io_create_ogg_encoder(),
-//             fa_io_write_file(string("test.raw"))
+//             fa_io_write_file(fa_string("test.raw"))
 //             )
 //         // fa_io_standard_out()
 //
@@ -60,7 +60,7 @@ list_t _signal(ptr_t x, list_t xs)
     fa_pair_t synth = fa_signal_dls();
 #define kSynthName "dls"
 #else
-    fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
+    fa_pair_t synth = fa_signal_synth(fa_string("C:\\sf.sf2"));
 #define kSynthName "fluid"
 #endif
 
@@ -71,7 +71,7 @@ list_t _signal(ptr_t x, list_t xs)
     fa_unpair(synth, synth1, synth2) {
         return list(
                    fa_multiply(constant(0), fa_add(constant(0), synth2)),
-                   fa_multiply(constant(0), fa_signal_record_external(string("foo"), synth1)));
+                   fa_multiply(constant(0), fa_signal_record_external(fa_string("foo"), synth1)));
     }
 
     assert(false);
@@ -94,16 +94,16 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
 #define kRecOffset 2000
 
     // 10 seconds, 5 notes starting at 1 seconds (1 second between)
-    fa_audio_schedule(fa_milliseconds(kRecOffset + 0),      fa_action_send(string("foo"), rbuffer) , s);
-    fa_audio_schedule(fa_milliseconds(kRecOffset + 0),      fa_action_do(_print, string("Started recording")) , s);
+    fa_audio_schedule(fa_milliseconds(kRecOffset + 0),      fa_action_send(fa_string("foo"), rbuffer) , s);
+    fa_audio_schedule(fa_milliseconds(kRecOffset + 0),      fa_action_do(_print, fa_string("Started recording")) , s);
 
     for (int i = 0; i < 5; ++i) {
-        fa_audio_schedule(fa_milliseconds(kRecOffset + 1000 + (i * 1000)),  fa_action_send(string(kSynthName),
+        fa_audio_schedule(fa_milliseconds(kRecOffset + 1000 + (i * 1000)),  fa_action_send(fa_string(kSynthName),
                           fa_midi_message_create_simple(0x90, 60 + i, 127)) , s);
     }
 
-    fa_audio_schedule(fa_milliseconds(45000 + kRecOffset),  fa_action_send(string("foo"), NULL) , s);
-    fa_audio_schedule(fa_milliseconds(45000 + kRecOffset),  fa_action_do(_print, string("Finished recording")) , s);
+    fa_audio_schedule(fa_milliseconds(45000 + kRecOffset),  fa_action_send(fa_string("foo"), NULL) , s);
+    fa_audio_schedule(fa_milliseconds(45000 + kRecOffset),  fa_action_do(_print, fa_string("Finished recording")) , s);
 
 
     printf("Started listening\n");
@@ -157,13 +157,13 @@ int main(int argc, char const *argv[])
         // fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, args) {
         {
             // mark_used(args);
-            // gVorbis = fa_map_get(string("ogg-vorbis"), opts)  ? fa_to_bool(fa_map_get(string("ogg-vorbis"), opts))  : false;
-            // gEndian = fa_map_get(string("endian"), opts)      ? fa_to_bool(fa_map_get(string("endian"), opts))      : false;
-            // gOutput = fa_map_get(string("output-file"), opts) ? fa_map_get(string("output-file"), opts) : string("test.raw");
+            // gVorbis = fa_map_get(fa_string("ogg-vorbis"), opts)  ? fa_to_bool(fa_map_get(fa_string("ogg-vorbis"), opts))  : false;
+            // gEndian = fa_map_get(fa_string("endian"), opts)      ? fa_to_bool(fa_map_get(fa_string("endian"), opts))      : false;
+            // gOutput = fa_map_get(fa_string("output-file"), opts) ? fa_map_get(fa_string("output-file"), opts) : fa_string("test.raw");
 
             gVorbis = false;
             gEndian = false;
-            gOutput = string("test.raw");
+            gOutput = fa_string("test.raw");
 
             printf("Vorbis=%d, Endian=%d, Output=%s\n", gVorbis, gEndian, unstring(gOutput));
             fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(kRingBufferSize);

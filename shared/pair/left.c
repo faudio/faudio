@@ -112,11 +112,11 @@ bool pair_left_greater_than(fa_ptr_t a, fa_ptr_t b)
 fa_string_t pair_left_show(fa_ptr_t a)
 {
     pair_left_t b = (pair_left_t) a;
-    string_t s = string("~(");
+    string_t s = fa_string("~(");
     s = string_dappend(s, fa_string_show(b->values[0]));
-    s = string_dappend(s, string(","));
+    s = string_dappend(s, fa_string(","));
     s = string_dappend(s, fa_string_show(b->values[1]));
-    s = string_dappend(s, string(")"));
+    s = string_dappend(s, fa_string(")"));
     return s;
 }
 

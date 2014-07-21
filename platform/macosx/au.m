@@ -51,7 +51,7 @@ void destroy_au_context(au_context_t context) {
 
 string_t from_os_status(OSStatus err)
 {                
-    return string((char*) GetMacOSStatusErrorString(err));
+    return fa_string((char*) GetMacOSStatusErrorString(err));
 }
 
 string_t component_name(AudioComponent component)

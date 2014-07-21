@@ -50,9 +50,9 @@ int main(int argc, char const *argv[])
     fa_set_log_tool();
     fa_with_faudio() {
         if (argc < 2) {
-            fa_print_ln(string("Usage: fa_play [file]"));
+            fa_print_ln(fa_string("Usage: fa_play [file]"));
         } else {
-            helper_function(string((fa_string_utf8_t) argv[1]));
+            helper_function(fa_string((fa_string_utf8_t) argv[1]));
         }
     }
 }

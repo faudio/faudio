@@ -15,10 +15,10 @@ void run_dls()
 {
 #ifndef _WIN32
     fa_pair_t synth = fa_signal_dls();
-    string_t name   = string("dls");
+    string_t name   = fa_string("dls");
 #else
-    fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
-    string_t name   = string("fluid");
+    fa_pair_t synth = fa_signal_synth(fa_string("C:\\sf.sf2"));
+    string_t name   = fa_string("fluid");
 #endif
 
     if (RT) {
@@ -80,7 +80,7 @@ void run_dls()
 
                            ),
                            fa_pair_first(fa_signal_dls()),
-                           string("test.wav"));
+                           fa_string("test.wav"));
     }
 
 }

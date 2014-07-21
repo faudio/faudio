@@ -206,9 +206,9 @@ fa_string_t thread_show(ptr_t a)
 {
     thread_t x = (thread_t) a;
 
-    string_t str = string("<Thread ");
+    string_t str = fa_string("<Thread ");
     str = string_dappend(str, fa_string_format_integral(" %p", (long) x->native));
-    str = string_dappend(str, string(">"));
+    str = string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -238,9 +238,9 @@ ptr_t thread_impl(fa_id_t interface)
 
 fa_string_t mutex_show(ptr_t a)
 {
-    string_t str = string("<Mutex ");
+    string_t str = fa_string("<Mutex ");
     str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
-    str = string_dappend(str, string(">"));
+    str = string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -275,7 +275,7 @@ void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
 void fa_thread_fatal(char *msg, int error)
 {
-    fa_log_error_from(string(msg), string("Doremir.Thread"));
+    fa_log_error_from(fa_string(msg), fa_string("Doremir.Thread"));
     exit(error);
 }
 

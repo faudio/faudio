@@ -49,9 +49,9 @@ void helper_function(string_t path)
             fa_thread_sleep(kRecTime * 1000);
         }
 
-        fa_buffer_set_meta(buf, string("channels"),    i32(2));
-        fa_buffer_set_meta(buf, string("generator"),   string("faudio"));
-        fa_buffer_set_meta(buf, string("sample-rate"), f64(44100));
+        fa_buffer_set_meta(buf, fa_string("channels"),    i32(2));
+        fa_buffer_set_meta(buf, fa_string("generator"),   fa_string("faudio"));
+        fa_buffer_set_meta(buf, fa_string("sample-rate"), f64(44100));
         fa_buffer_write_audio(path, buf);
         fa_audio_end_session(s);
     }
@@ -62,9 +62,9 @@ int main(int argc, char const *argv[])
     fa_set_log_tool();
     fa_with_faudio() {
         if (argc < 2) {
-            fa_print_ln(string("Usage: fa_record [file]"));
+            fa_print_ln(fa_string("Usage: fa_record [file]"));
         } else {
-            helper_function(string((fa_string_utf8_t) argv[1]));
+            helper_function(fa_string((fa_string_utf8_t) argv[1]));
         }
     }
 }

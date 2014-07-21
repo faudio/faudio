@@ -277,16 +277,16 @@ bool set_greater_than(fa_ptr_t a, fa_ptr_t b)
 fa_string_t set_show(fa_ptr_t x)
 {
     set_t set = (set_t) x;
-    string_t s  = string("{");
+    string_t s  = fa_string("{");
 
     fa_for_each_last(value, base_to_list(set->elems), last) {
         s = string_dappend(s, fa_string_show(value));
 
         if (!last) {
-            s = string_dappend(s, string(","));
+            s = string_dappend(s, fa_string(","));
         }
     }
-    s = string_dappend(s, string("}"));
+    s = string_dappend(s, fa_string("}"));
     return s;
 }
 

@@ -16,12 +16,12 @@
 
 #define RT 1
 #define kThisPlugOffset 37 // TODO
-// #define PATH string("/Library/Audio/Plug-Ins/VST/Alchemy.vst")
-#define PATH string("/Library/Audio/Plug-Ins/VST/ComboV.vst")
-// #define PATH string("/Library/Audio/Plug-Ins/VST/Elastik 2.vst")
-// #define PATH string("/Library/Audio/Plug-Ins/VST/TAL-U-No-62.vst")
-// #define PATH string("/Library/Audio/Plug-Ins/VST/Melodyne.vst")
-// #define PATH string("/Library/Audio/Plug-Ins/VST/Kontakt 5.vst")
+// #define PATH fa_string("/Library/Audio/Plug-Ins/VST/Alchemy.vst")
+#define PATH fa_string("/Library/Audio/Plug-Ins/VST/ComboV.vst")
+// #define PATH fa_string("/Library/Audio/Plug-Ins/VST/Elastik 2.vst")
+// #define PATH fa_string("/Library/Audio/Plug-Ins/VST/TAL-U-No-62.vst")
+// #define PATH fa_string("/Library/Audio/Plug-Ins/VST/Melodyne.vst")
+// #define PATH fa_string("/Library/Audio/Plug-Ins/VST/Kontakt 5.vst")
 ;
 
 
@@ -31,10 +31,10 @@ void run_vst()
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        list_t out           = fa_signal_vst(string("dls"), PATH, empty());
+        list_t out           = fa_signal_vst(fa_string("dls"), PATH, empty());
 
-        fa_audio_set_parameter(string("sample-rate"), f32(48000), s);
-        fa_audio_set_parameter(string("vector-size"), i32(1024), s);
+        fa_audio_set_parameter(fa_string("sample-rate"), f32(48000), s);
+        fa_audio_set_parameter(fa_string("vector-size"), i32(1024), s);
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
         if (fa_check(st)) {
@@ -42,13 +42,13 @@ void run_vst()
         }
 
 
-        fa_audio_schedule_relative(hms(0, 0, 0), fa_action_send(string("dls"), fa_pair_create(string("open"), NULL)), st);
+        fa_audio_schedule_relative(hms(0, 0, 0), fa_action_send(fa_string("dls"), fa_pair_create(fa_string("open"), NULL)), st);
 
-        fa_audio_schedule_relative(hms(0, 0, 0), fa_action_send(string("dls"),
+        fa_audio_schedule_relative(hms(0, 0, 0), fa_action_send(fa_string("dls"),
             fa_midi_message_create_simple(0xc0, 50, 0)), st);
 
         for (int i = 0; i < 24; ++i) {           
-            fa_action_t chord = fa_action_send(string("dls"), 
+            fa_action_t chord = fa_action_send(fa_string("dls"), 
                 fa_midi_message_create_simple(0x90, 52 + ((i % 12) * 2), 90));
             fa_audio_schedule_relative(hms(0, 0, 0), chord, st);
             fa_thread_sleep(150);
@@ -61,13 +61,13 @@ void run_vst()
         // 
         //     fa_action_t note1  = 
         //         fa_action_many(list(
-        //             fa_pair_create(fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 60, 80)), fa_milliseconds(50)),
-        //             fa_pair_create(fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 60, 0)), fa_milliseconds(3))
+        //             fa_pair_create(fa_action_send(fa_string("midi"), fa_midi_message_create_simple(0x90, 60, 80)), fa_milliseconds(50)),
+        //             fa_pair_create(fa_action_send(fa_string("midi"), fa_midi_message_create_simple(0x90, 60, 0)), fa_milliseconds(3))
         //             ));
         //     fa_action_t note2  = 
         //         fa_action_many(list(
-        //             fa_pair_create(fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 61, 80)), fa_milliseconds(50)),
-        //             fa_pair_create(fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 61, 0)), fa_milliseconds(3))
+        //             fa_pair_create(fa_action_send(fa_string("midi"), fa_midi_message_create_simple(0x90, 61, 80)), fa_milliseconds(50)),
+        //             fa_pair_create(fa_action_send(fa_string("midi"), fa_midi_message_create_simple(0x90, 61, 0)), fa_milliseconds(3))
         //             ));
         // 
         //     fa_action_t notes1 = fa_action_many(fa_list_join(list(

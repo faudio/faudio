@@ -50,7 +50,7 @@ static string_t out_name;
 static ptr_t    out_value;
 ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
 {
-    out_name  = string("foo");
+    out_name  = fa_string("foo");
     out_value = i32(1);
     return x;
 }

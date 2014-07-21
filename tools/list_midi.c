@@ -22,7 +22,7 @@ void print_device(midi_device_t x)
     fa_print("Host: %s\n", fa_string_to_string(fa_midi_host_name(x)));
     fa_print("In:   %s\n", fb(fa_midi_has_input(x)));
     fa_print("Out:  %s\n", fb(fa_midi_has_output(x)));
-    fa_print_ln(string(""));
+    fa_print_ln(fa_string(""));
 }
 
 fa_midi_session_t print_midi_devices(fa_ptr_t _, midi_session_t session)

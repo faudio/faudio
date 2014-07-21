@@ -179,7 +179,7 @@ size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
                     fa_atomic_ring_buffer_remaining(src),
                     fa_atomic_ring_buffer_size(src)
                    );
-            warn(string(msg));
+            warn(fa_string(msg));
         }
 
         return 0;
@@ -204,7 +204,7 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
                     fa_atomic_ring_buffer_remaining(dst),
                     fa_atomic_ring_buffer_size(dst)
                    );
-            warn(string(msg));
+            warn(fa_string(msg));
         }
 
         return 0;
@@ -249,9 +249,9 @@ bool fa_atomic_ring_buffer_write_double(ring_buffer_t buffer, double value)
 
 fa_string_t atomic_ring_buffer_show(fa_ptr_t v)
 {
-    string_t s = string("<RingBuffer ");
+    string_t s = fa_string("<RingBuffer ");
     s = string_dappend(s, format_integral("%p", (long) v));
-    s = string_dappend(s, string(">"));
+    s = string_dappend(s, fa_string(">"));
     return s;
 }
 

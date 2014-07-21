@@ -95,22 +95,22 @@ void fa_error_log(fa_ptr_t context, fa_error_t error)
 fa_string_t fa_error_format(bool colored, fa_error_t a)
 {
     simple_error_t simple = (simple_error_t) a;
-    string_t str = string("");
+    string_t str = fa_string("");
 
     string_t strs[12] = {
-        string("[INFO]    "),
-        string("[WARNING] "),
-        string("[ERROR]   "),
-        string("[MISC]    "),
-        string(""),
-        string(": "),
+        fa_string("[INFO]    "),
+        fa_string("[WARNING] "),
+        fa_string("[ERROR]   "),
+        fa_string("[MISC]    "),
+        fa_string(""),
+        fa_string(": "),
 
-        string("\x1b[32m[INFO]\x1b[0m    "),
-        string("\x1b[33m[WARNING]\x1b[0m "),
-        string("\x1b[31m[ERROR]\x1b[0m   "),
-        string("\x1b[35m[MISC]\x1b[0m    "),
-        string("\x1b[36m"),
-        string(":\x1b[0m ")
+        fa_string("\x1b[32m[INFO]\x1b[0m    "),
+        fa_string("\x1b[33m[WARNING]\x1b[0m "),
+        fa_string("\x1b[31m[ERROR]\x1b[0m   "),
+        fa_string("\x1b[35m[MISC]\x1b[0m    "),
+        fa_string("\x1b[36m"),
+        fa_string(":\x1b[0m ")
     };
 
     switch (simple->severity) {
@@ -179,23 +179,23 @@ fa_string_t simple_error_origin(fa_ptr_t a)
 fa_string_t simple_error_show(fa_ptr_t a)
 {
     simple_error_t simple = (simple_error_t) a;
-    string_t result = string("<");
+    string_t result = fa_string("<");
 
     switch (simple->severity) {
     case info:
-        result = string_dappend(result, string("Info "));
+        result = string_dappend(result, fa_string("Info "));
         break;
 
     case warning:
-        result = string_dappend(result, string("Warning "));
+        result = string_dappend(result, fa_string("Warning "));
         break;
 
     case error:
-        result = string_dappend(result, string("Error "));
+        result = string_dappend(result, fa_string("Error "));
         break;
 
     case misc:
-        result = string_dappend(result, string("Misc "));
+        result = string_dappend(result, fa_string("Misc "));
         break;
 
     default:
@@ -204,11 +204,11 @@ fa_string_t simple_error_show(fa_ptr_t a)
 
     if (fa_string_length(simple->origin) > 0) {
         result = string_dappend(result, fa_copy(simple->origin));
-        result = string_dappend(result, string(": "));
+        result = string_dappend(result, fa_string(": "));
     }
 
     result = string_dappend(result, fa_copy(simple->message));
-    result = string_dappend(result, string(">"));
+    result = string_dappend(result, fa_string(">"));
 
     return result;
 }

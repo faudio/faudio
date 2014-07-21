@@ -73,12 +73,12 @@ void fa_io_push_through(fa_io_filter_t filter, fa_io_sink_t downstream, fa_buffe
 
 void split_filter_destroy(ptr_t x)
 {
-    warn(string("Unimplemented IO destroy"));
+    warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t split_filter_show(ptr_t x)
 {
-    return string("<SplitFilter>");
+    return fa_string("<SplitFilter>");
 }
 
 static inline void _split_pull(fa_ptr_t x, fa_buffer_t buffer)
@@ -115,12 +115,12 @@ FILTER_IMPLEMENTATION(split_filter);
 
 void stdin_filter_destroy(ptr_t x)
 {
-    warn(string("Unimplemented IO destroy"));
+    warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t stdin_filter_show(ptr_t x)
 {
-    return string("<StdInSource>");
+    return fa_string("<StdInSource>");
 }
 
 inline static
@@ -156,12 +156,12 @@ FILTER_IMPLEMENTATION(stdin_filter);
 
 void standardout_filter_destroy(ptr_t x)
 {
-    warn(string("Unimplemented IO destroy"));
+    warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t standardout_filter_show(ptr_t x)
 {
-    return string("<StdOutSink>");
+    return fa_string("<StdOutSink>");
 }
 
 void standardout_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
@@ -185,12 +185,12 @@ FILTER_IMPLEMENTATION(standardout_filter);
 
 void write_filter_destroy(ptr_t x)
 {
-    warn(string("Unimplemented IO destroy"));
+    warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t  write_filter_show(ptr_t x)
 {
-    return string("<StdOutSink>");
+    return fa_string("<StdOutSink>");
 }
 
 void write_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
@@ -198,14 +198,14 @@ void write_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t cal
 }
 void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
-    // inform(string("In write_filter push"));
+    // inform(fa_string("In write_filter push"));
 
     if (buffer) {
         string_t path = /*fa_copy*/(((struct filter_base *) x)->data1);
         FILE *fp = fopen(unstring(path), "ab");
 
         if (!fp) {
-            fail(string_dappend(string("Could not write file: "), path));
+            fail(string_dappend(fa_string("Could not write file: "), path));
             fclose(fp);
         } else {
             fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
@@ -222,23 +222,23 @@ FILTER_IMPLEMENTATION(write_filter);
 
 void read_filter_destroy(ptr_t x)
 {
-    warn(string("Unimplemented IO destroy"));
+    warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t  read_filter_show(ptr_t x)
 {
-    return string("<StdOutSink>");
+    return fa_string("<StdOutSink>");
 }
 
 void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
 {
-    // inform(string("In read_filter push"));
+    // inform(fa_string("In read_filter push"));
 
     string_t path = fa_copy(((struct filter_base *) x)->data1);
     FILE *fp = fopen(unstring(path), "rb");
 
     if (!fp) {
-        fail(string_dappend(string("Could not read file: "), path));
+        fail(string_dappend(fa_string("Could not read file: "), path));
     } else {
         byte_t raw[1024 * 8];
         size_t read;
@@ -265,12 +265,12 @@ FILTER_IMPLEMENTATION(read_filter);
 
 void ref_filter_destroy(ptr_t x)
 {
-    warn(string("Unimplemented IO destroy"));
+    warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t ref_filter_show(ptr_t x)
 {
-    return string("<Ref>");
+    return fa_string("<Ref>");
 }
 
 void ref_filter_pull(fa_ptr_t x, fa_io_source_t _, fa_io_callback_t callback, ptr_t data)
@@ -290,12 +290,12 @@ FILTER_IMPLEMENTATION(ref_filter);
 
 void identity_destroy(ptr_t x)
 {
-    warn(string("Unimplemented IO destroy"));
+    warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t identity_show(ptr_t x)
 {
-    return string("<Ref>");
+    return fa_string("<Ref>");
 }
 
 void identity_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
@@ -314,12 +314,12 @@ FILTER_IMPLEMENTATION(identity);
 
 void composed_filter_destroy(ptr_t x)
 {
-    warn(string("Unimplemented IO destroy"));
+    warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t  composed_filter_show(ptr_t x)
 {
-    return string("<Composed>");
+    return fa_string("<Composed>");
 }
 
 static inline void _composed_pull2(fa_ptr_t x, fa_buffer_t buffer)
@@ -362,12 +362,12 @@ FILTER_IMPLEMENTATION(composed_filter);
 
 void simple_filter_destroy(ptr_t x)
 {
-    warn(string("Unimplemented IO destroy"));
+    warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t simple_filter_show(ptr_t x)
 {
-    return string("<Ref>");
+    return fa_string("<Ref>");
 }
 
 void _simple_filter_pull1(ptr_t y, buffer_t buffer)

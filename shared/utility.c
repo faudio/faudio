@@ -45,11 +45,11 @@ void fa_device_terminate();
 fa_list_t fa_version()
 {
     return list(
-               string(version_g.pre),
+               fa_string(version_g.pre),
                i16(version_g.x),
                i16(version_g.y),
                i16(version_g.z),
-               string(version_g.suff));
+               fa_string(version_g.suff));
 }
 
 fa_string_t fa_version_string()
@@ -62,7 +62,7 @@ fa_string_t fa_version_string()
             version_g.y,
             version_g.z,
             version_g.suff);
-    return string(version);
+    return fa_string(version);
 }
 
 /*
@@ -95,16 +95,16 @@ void fix_stack_size()
 void fa_initialize()
 {
 
-    fa_log_info(string(""));
+    fa_log_info(fa_string(""));
 
     fa_log_info(string_dappend(
-                    string("Initializing faudio "),
+                    fa_string("Initializing faudio "),
                     string_dappend(fa_version_string(),
-                                   string_dappend(string(""),
+                                   string_dappend(fa_string(""),
 #ifdef FAUDIO_DEBUG
-                                                  string(" (debug build)")))
+                                                  fa_string(" (debug build)")))
 #else
-                                                  string(" (release build)")))
+                                                  fa_string(" (release build)")))
 #endif
                 ));
 
@@ -122,7 +122,7 @@ void fa_initialize()
     fa_audio_initialize();
     fa_midi_initialize();
 
-    fa_log_info(string("Done initializing faudio"));
+    fa_log_info(fa_string("Done initializing faudio"));
 
     gBytesAlloc = 0;
     gRegionCount = 0;
@@ -138,15 +138,15 @@ void fa_terminate()
         fa_clock_terminate();
         fa_device_terminate();
 
-        fa_log_info(fa_string_dappend(string("Total bytes allocated: "),
+        fa_log_info(fa_string_dappend(fa_string("Total bytes allocated: "),
                                       fa_string_show(i32(gBytesAlloc))));
 
-        fa_log_info(fa_string_dappend(string("Regions leaked: "),
+        fa_log_info(fa_string_dappend(fa_string("Regions leaked: "),
                                       fa_string_show(i32(gRegionCount))));
 
-        fa_log_info(string("Terminated faudio"));
+        fa_log_info(fa_string("Terminated faudio"));
     } else {
-        fa_log_warning(string("Could not terminate faudio: inconsistent state"));
+        fa_log_warning(fa_string("Could not terminate faudio: inconsistent state"));
     }
 }
 
@@ -262,7 +262,7 @@ void fa_dlog(fa_ptr_t data, fa_error_t e)
 
 void fa_log_info(fa_string_t msg)
 {
-    fa_log_info_from(msg, string(""));
+    fa_log_info_from(msg, fa_string(""));
 }
 
 void fa_dlog_info(fa_string_t msg)
@@ -273,12 +273,12 @@ void fa_dlog_info(fa_string_t msg)
 
 void fa_log_warning(fa_string_t msg)
 {
-    fa_log_warning_from(msg, string(""));
+    fa_log_warning_from(msg, fa_string(""));
 }
 
 void fa_log_error(fa_string_t msg)
 {
-    fa_log_error_from(msg, string(""));
+    fa_log_error_from(msg, fa_string(""));
 }
 
 void fa_log_info_from(fa_string_t msg, fa_string_t origin)
