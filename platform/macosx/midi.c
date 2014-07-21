@@ -828,7 +828,7 @@ void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
 
                 case await_data2:
                     data2 = packet->data[j];
-                    forward_message_to_callbacks(stream, fa_copy(time), midi_message(status, data1, data2));
+                    forward_message_to_callbacks(stream, fa_copy(time), fa_midi_message(status, data1, data2));
                     state = init;
                     continue;
 
@@ -862,7 +862,7 @@ void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
     //
     // } else {
     //     midi_message_t msg;
-    //     msg = midi_message(packet->data[0], packet->data[1], packet->data[2]);
+    //     msg = fa_midi_message(packet->data[0], packet->data[1], packet->data[2]);
     //     forward_message_to_callbacks(stream, time, msg);
     // }
     //
