@@ -13,6 +13,7 @@
 #define RT 1
 #define kThisPlugOffset 32 // TODO
 #define kInputOffset 8 // FIXME
+#define kBarsInMeter 40
 
 int processed = 0;
 static bool should_send = false;
@@ -126,10 +127,10 @@ double amp2db(double x)
 ptr_t _message_out(ptr_t x, ptr_t name, ptr_t value)
 {
     // fa_print("Receieved 2: %s\n", fa_pair_create(name, value));
-    int bars = (int)(((amp2db(fa_peek_double(value)) + 20) / 20) * 15);
+    int bars = (int)(((amp2db(fa_peek_double(value)) + 20) / 20) * kBarsInMeter);
 
 
-    for (int i = 0; i < 15; ++i) {
+    for (int i = 0; i < kBarsInMeter; ++i) {
         if (i < bars) {
             printf("#");
         } else {
