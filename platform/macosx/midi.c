@@ -909,10 +909,10 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
                 packetList.packet[0].data[2] = d2;
 
                 native_fa_error_t result = MIDISend(
-                                            stream->native,
-                                            stream->device->native,
-                                            &packetList
-                                        );
+                                               stream->native,
+                                               stream->device->native,
+                                               &packetList
+                                           );
 
                 if (result < 0) {
                     fa_warn(fa_string("Could not send MIDI"));
@@ -942,10 +942,10 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
             }
 
             native_fa_error_t result = MIDISend(
-                                        stream->native,
-                                        stream->device->native,
-                                        &packetList
-                                    );
+                                           stream->native,
+                                           stream->device->native,
+                                           &packetList
+                                       );
 
             if (result < 0) {
                 fa_warn(fa_string("Could not send MIDI"));

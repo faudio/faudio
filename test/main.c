@@ -45,36 +45,36 @@ void test_value_references()
 {
     test_section("Value references");
     // FIXME leaks
-    
+
     printf("bool:       %s\n", fa_type_str(fa_fb(true)));
     assert(fa_tb(fa_fb(true)) == true);
     assert(fa_tb(fa_fb(false)) == false);
-    
+
     printf("int8:       %s\n", fa_type_str(fa_i8(62)));
     assert(fa_ti8(fa_i8('h')) == 'h');
     assert(fa_ti8(fa_i8(121)) == 121);
     assert(fa_ti8(fa_i8(-42)) == -42);
-    
+
     printf("int16:      %s\n", fa_type_str(fa_i16(12372)));
     printf("int16:      %d\n", fa_ti16(fa_i16(1267)));
     assert(fa_ti16(fa_i16(1267)) == 1267);
     assert(fa_ti16(fa_i16(-8712)) == -8712);
-    
+
     printf("int32:      %s\n", fa_type_str(fa_i32(12372)));
     printf("int32:      %d\n", fa_ti32(fa_i32(1267)));
     assert(fa_ti32(fa_i32(2147483646)) == 2147483646);
     assert(fa_ti32(fa_i32(-343646748)) == -343646748);
-    
+
     printf("int64:      %s\n", fa_type_str(fa_i64(12372)));
     printf("int64:      %lli\n", fa_ti64(fa_i64(9223372036854775807ll)));
     assert(fa_ti64(fa_i64(4872837827878787871ll)) == 4872837827878787871ll);
     assert(fa_ti64(fa_i64(-6888881236767676711ll)) == -6888881236767676711ll);
-    
+
     printf("double:     %s\n", fa_type_str(fa_f64(12372)));
     printf("double:     %f\n", fa_tf64(fa_f64(3.141592653589793)));
     // Does not work on Windows
     //assert(fa_tf64(fa_f64(3.141592653589793D)) == 3.141592653589793D);
-    //assert(fa_tf64(fa_f64(-1.4142135623730951D)) == -1.4142135623730951D);     
+    //assert(fa_tf64(fa_f64(-1.4142135623730951D)) == -1.4142135623730951D);
 }
 
 
@@ -88,7 +88,7 @@ void test_generic_functions()
     printf("2 * 3.2                      ==> %f\n",   fa_tf64(fa_multiply(fa_f64(2), fa_f64(3.2))));
     printf("1 / 3                        ==> %f\n",   fa_tf64(fa_divide(fa_f64(1), fa_f64(3))));
     printf("1 + 1.5                      ==> %f\n",   fa_tf64(fa_add(fa_f64(1), fa_f64(1.5))));
-    
+
     printf("32                  + 1      ==> %i\n",   fa_ti8(fa_add(fa_i8(32), fa_i8(1))));
     printf("5123                + 1      ==> %i\n",   fa_ti16(fa_add(fa_i16(5123), fa_i16(1))));
     printf("2147483646          + 1      ==> %i\n",   fa_ti32(fa_add(fa_i32(2147483646), fa_i32(1))));
@@ -102,12 +102,12 @@ void test_generic_functions()
     printf("3333333333          / 2      ==> %i\n",   fa_ti32(fa_divide(fa_i32(3333333333l), fa_i32(2))));
     printf("3333333333333333333 / 2      ==> %lli\n", fa_ti64(fa_divide(fa_i64(3333333333333333333ll), fa_i64(2))));
     printf("3                   / 1      ==> %i\n",   fa_ti8(fa_divide(fa_i8(32), fa_i8(1))));
-    
+
     printf("true == false                ==> %s\n", (fa_equal(fa_fb(true), fa_fb(true))) ? "true" : false);
     printf("32   == 32                   ==> %s\n", (fa_equal(fa_i8(32), fa_i8(32))) ? "true" : false);
     printf("5123 == 5123                 ==> %s\n", (fa_equal(fa_i16(5123), fa_i16(5123))) ? "true" : false);
-    
-       
+
+
 }
 
 

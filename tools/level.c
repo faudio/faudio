@@ -152,10 +152,10 @@ void run_level()
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
         fa_list_t out           = fa_pair_to_list(fa_signal_level(
-                                                   // fa_signal_sin(fa_signal_line(0.1)),
-                                                   fa_signal_input(kInputOffset + 0),
+                                                      // fa_signal_sin(fa_signal_line(0.1)),
+                                                      fa_signal_input(kInputOffset + 0),
 
-                                                   fa_signal_input(kInputOffset + 0)));
+                                                      fa_signal_input(kInputOffset + 0)));
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
         // fa_audio_add_message_callback(_message_out, NULL, st);

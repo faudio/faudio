@@ -283,7 +283,7 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
 
 // TODO only writes one channel etc
 fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
-                            fa_buffer_t  buffer)
+                               fa_buffer_t  buffer)
 {
     int channels = 1;
     assert(channels == 1 && "fa_buffer_write_audio: Can not write more than 1 channels");

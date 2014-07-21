@@ -555,9 +555,9 @@ fa_ptr_t stream_thread_callback(fa_ptr_t x)
                             &&
                             Pm_MessageStatus(events[0].message) != 0xf7) {
                         fa_midi_message_t msg = fa_midi_message(
-                                                 Pm_MessageStatus(events[0].message),
-                                                 Pm_MessageData1(events[0].message),
-                                                 Pm_MessageData2(events[0].message));
+                                                    Pm_MessageStatus(events[0].message),
+                                                    Pm_MessageData1(events[0].message),
+                                                    Pm_MessageData2(events[0].message));
 
                         f(x, fa_pair_create(time, msg));
                     } else {

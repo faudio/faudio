@@ -1511,8 +1511,8 @@ void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 fa_error_t audio_device_error(fa_string_t msg)
 {
     fa_error_t err = fa_error_create_simple(error,
-                                         msg,
-                                         fa_string("Doremir.Device.Audio"));
+                                            msg,
+                                            fa_string("Doremir.Device.Audio"));
     fa_error_log(NULL, err);
     return err;
 }
@@ -1522,11 +1522,11 @@ fa_error_t audio_device_error_with(fa_string_t msg, int code)
     fa_string_t pa_error_str = fa_string(code != 0 ? (char *) Pa_GetErrorText(code) : "");
 
     fa_error_t err = fa_error_create_simple(error,
-                                         fa_string_dappend(msg,
-                                                           fa_string_dappend(fa_string(": "), pa_error_str)
-                                                           // format_integral(" (error code %d)", code)
-                                                          ),
-                                         fa_string("Doremir.Device.Audio"));
+                                            fa_string_dappend(msg,
+                                                              fa_string_dappend(fa_string(": "), pa_error_str)
+                                                              // format_integral(" (error code %d)", code)
+                                                             ),
+                                            fa_string("Doremir.Device.Audio"));
     fa_error_log(NULL, err);
     return err;
 }
