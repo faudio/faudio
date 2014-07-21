@@ -225,11 +225,11 @@ void test_compare()
 void test_rational()
 {
     test_section("Rational numbers");
-    fa_dprint("1/3 <  1/2                   ==> %s\n", fb(fa_less_than(ratio(1, 3), ratio(1, 2))));
-    fa_dprint("1/3 >  1/2                   ==> %s\n", fb(fa_greater_than(ratio(1, 3), ratio(1, 2))));
-    fa_dprint("1/3 == 2/6                   ==> %s\n", fb(fa_equal(ratio(1, 3), ratio(2, 6))));
-    fa_dprint("1/3 == 254/762               ==> %s\n", fb(fa_equal(ratio(1, 3), ratio(254, 762))));
-    fa_dprint("1/3 <= 7/8                   ==> %s\n", fb(fa_equal(ratio(1, 3), ratio(254, 762))));
+    fa_dprint("1/3 <  1/2                   ==> %s\n", fb(fa_less_than(fa_ratio(1, 3), fa_ratio(1, 2))));
+    fa_dprint("1/3 >  1/2                   ==> %s\n", fb(fa_greater_than(fa_ratio(1, 3), fa_ratio(1, 2))));
+    fa_dprint("1/3 == 2/6                   ==> %s\n", fb(fa_equal(fa_ratio(1, 3), fa_ratio(2, 6))));
+    fa_dprint("1/3 == 254/762               ==> %s\n", fb(fa_equal(fa_ratio(1, 3), fa_ratio(254, 762))));
+    fa_dprint("1/3 <= 7/8                   ==> %s\n", fb(fa_equal(fa_ratio(1, 3), fa_ratio(254, 762))));
 }
 
 
@@ -287,8 +287,8 @@ void test_time()
 {
     test_section("Time");
 
-    fa_time_t t = fa_time_create(1, 0, 0, ratio(25, 8));
-    fa_time_t u = fa_time_create(0, 1, 1, ratio(58, 1));
+    fa_time_t t = fa_time_create(1, 0, 0, fa_ratio(25, 8));
+    fa_time_t u = fa_time_create(0, 1, 1, fa_ratio(58, 1));
 
     fa_print("t                            ==> %s\n", t);
     fa_print("u                            ==> %s\n", u);
@@ -299,7 +299,7 @@ void test_time()
 
 
     fa_print("200 ms       ==> %s\n", fa_milliseconds(200));
-    fa_print("200 ms       ==> %s\n", fa_time_create(0, 0, 0, ratio(1, 5)));
+    fa_print("200 ms       ==> %s\n", fa_time_create(0, 0, 0, fa_ratio(1, 5)));
 
     fa_destroy(t);
     fa_destroy(u);
@@ -1190,8 +1190,8 @@ void test_map()
 
         // a = fa_map_dadd(fa_string("happy"), fb(true), a);
         // a = fa_map_dadd(fa_string("pair"), pair(fb(true), f64(3.1415)), a);
-        // a = fa_map_dadd(fa_string("ratio"), ratio(1, 3), a);
-        // a = fa_map_dadd(fa_string("ratio2"), fa_multiply(ratio(4, 4444), ratio(1, 2)), a);
+        // a = fa_map_dadd(fa_string("ratio"), fa_ratio(1, 3), a);
+        // a = fa_map_dadd(fa_string("ratio2"), fa_multiply(fa_ratio(4, 4444), fa_ratio(1, 2)), a);
 
         fa_print("a                            ==> %s\n", a);
         fa_print("size(a)                      ==> %s\n", i16(fa_map_size(a)));
@@ -1299,7 +1299,7 @@ void test_json(string_t path)
 //
 //     ptr_t val = map(
 //                     fa_string("lyrics"), list(fa_string("Help"), fa_string("me"), fa_string("if"), fa_string("you"), fa_string("can")),
-//                     fa_string("pitches"), list(ratio(60, 1), ratio(62, 1))
+//                     fa_string("pitches"), list(fa_ratio(60, 1), fa_ratio(62, 1))
 //                 );
 //
 //     fa_message_send((receiver_t) disp, i16(1), val);

@@ -77,7 +77,7 @@
 // #define string32(a)         fa_string_from_utf32(U##a)
 // #define unstring(a)         fa_string_to_utf8(a)
 #define fa_unstring(a)         fa_string_to_utf8(a)
-#define ratio(a,b)          fa_ratio_create(a,b)
+#define fa_ratio(a,b)          fa_ratio_create(a,b)
 #define priority_queue()    fa_priority_queue_empty()
 #define atomic()            fa_atomic_create()
 #define atomic_queue()      fa_atomic_queue_create()
@@ -98,14 +98,14 @@
 #define action_accum        fa_action_accum
 #define action_send         fa_action_send
 
-#define hms(h,m,s)          fa_time_create(0,h,m,ratio(s,1))
-#define days(d)             fa_time_create(d,0,0,ratio(0,1))
-#define hours(h)            fa_time_create(0,h,0,ratio(0,1))
-#define minutes(m)          fa_time_create(0,0,m,ratio(0,1))
-#define seconds(s)          fa_time_create(0,0,0,ratio(s,1))
-#define divisions(a,b)      fa_time_create(0,0,0,ratio(a,b))
-#define fa_milliseconds(s)  fa_time_create(0,0,0,ratio(s,1000))
-#define microseconds(s)     fa_time_create(0,0,0,ratio(s,1000000))
+#define hms(h,m,s)          fa_time_create(0,h,m,fa_ratio(s,1))
+#define days(d)             fa_time_create(d,0,0,fa_ratio(0,1))
+#define hours(h)            fa_time_create(0,h,0,fa_ratio(0,1))
+#define minutes(m)          fa_time_create(0,0,m,fa_ratio(0,1))
+#define seconds(s)          fa_time_create(0,0,0,fa_ratio(s,1))
+#define divisions(a,b)      fa_time_create(0,0,0,fa_ratio(a,b))
+#define fa_milliseconds(s)  fa_time_create(0,0,0,fa_ratio(s,1000))
+#define microseconds(s)     fa_time_create(0,0,0,fa_ratio(s,1000000))
 
 #define stime               fa_signal_time
 #define srandom             fa_signal_random

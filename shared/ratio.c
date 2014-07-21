@@ -97,7 +97,7 @@ fa_ratio_t fa_ratio_add(fa_ratio_t x, fa_ratio_t y)
     num_t   c = y->num;
     denom_t d = y->denom;
 
-    return ratio(a * d + b * c, b * d);
+    return fa_ratio(a * d + b * c, b * d);
 }
 
 fa_ratio_t fa_ratio_add_dither(fa_ratio_t x, fa_ratio_t y)
@@ -105,7 +105,7 @@ fa_ratio_t fa_ratio_add_dither(fa_ratio_t x, fa_ratio_t y)
     double x2 = to_double(x);
     double y2 = to_double(y);
     double res = x2 + y2;
-    return ratio(res * 10000, 10000);
+    return fa_ratio(res * 10000, 10000);
 }
 
 fa_ratio_t fa_ratio_add_safe(fa_ratio_t x, fa_ratio_t y)
@@ -124,7 +124,7 @@ fa_ratio_t fa_ratio_subtract(fa_ratio_t x, fa_ratio_t y)
     num_t   c = y->num;
     denom_t d = y->denom;
 
-    return ratio(a * d - b * c, b * d);
+    return fa_ratio(a * d - b * c, b * d);
 }
 
 fa_ratio_t fa_ratio_multiply(fa_ratio_t x, fa_ratio_t y)
@@ -134,7 +134,7 @@ fa_ratio_t fa_ratio_multiply(fa_ratio_t x, fa_ratio_t y)
     num_t   c = y->num;
     denom_t d = y->denom;
 
-    return ratio(a * c, b * d);
+    return fa_ratio(a * c, b * d);
 }
 
 fa_ratio_t fa_ratio_divide(fa_ratio_t x, fa_ratio_t y)
@@ -144,27 +144,27 @@ fa_ratio_t fa_ratio_divide(fa_ratio_t x, fa_ratio_t y)
     num_t   c = y->num;
     denom_t d = y->denom;
 
-    return ratio(a * d, b * c);
+    return fa_ratio(a * d, b * c);
 }
 
 fa_ratio_t fa_ratio_succ(fa_ratio_t x)
 {
-    return fa_ratio_add(x, ratio(1, 1));
+    return fa_ratio_add(x, fa_ratio(1, 1));
 }
 
 fa_ratio_t fa_ratio_pred(fa_ratio_t x)
 {
-    return fa_ratio_subtract(x, ratio(1, 1));
+    return fa_ratio_subtract(x, fa_ratio(1, 1));
 }
 
 fa_ratio_t fa_ratio_negate(fa_ratio_t x)
 {
-    return fa_ratio_multiply(x, ratio(-1, 1));
+    return fa_ratio_multiply(x, fa_ratio(-1, 1));
 }
 
 fa_ratio_t fa_ratio_recip(fa_ratio_t x)
 {
-    return fa_ratio_divide(ratio(1, 1), x);
+    return fa_ratio_divide(fa_ratio(1, 1), x);
 }
 
 inline static int gcd(int x, int y)
@@ -214,7 +214,7 @@ fa_ratio_t fa_ratio_absolute(fa_ratio_t x)
         b *= -1;
     }
 
-    return ratio(a, b);
+    return fa_ratio(a, b);
 }
 
 void fa_ratio_to_mixed(fa_ratio_t x,
@@ -225,7 +225,7 @@ void fa_ratio_to_mixed(fa_ratio_t x,
     denom_t b = x->denom;
 
     *n = a / b;
-    *y = ratio(a % b, b);
+    *y = fa_ratio(a % b, b);
 }
 
 
