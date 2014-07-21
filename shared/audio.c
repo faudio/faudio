@@ -1012,6 +1012,14 @@ fa_clock_t fa_audio_get_clock(fa_audio_stream_t stream)
     return (fa_clock_t) stream;
 }
 
+void fa_audio_set_speed(double speed, fa_audio_stream_t stream)
+{
+    if (stream->state) {
+        state_base_t state = (state_base_t) stream->state;
+        state->speed = speed;
+    }
+}
+
 void fa_audio_add_message_callback(fa_audio_message_callback_t function,
                                    fa_ptr_t data,
                                    fa_audio_stream_t stream)
@@ -1446,6 +1454,7 @@ int64_t audio_stream_milliseconds(ptr_t a)
         // We cache time in the stream in case the stream state has been freed
         state_base_t state = (state_base_t) stream->state;
 
+#define ENABLE_VIRTUAL_TIME
 #ifdef ENABLE_VIRTUAL_TIME
         stream->last_time = ((double) state->elapsed_time * 1000.0);
 #else

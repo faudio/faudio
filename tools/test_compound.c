@@ -77,6 +77,7 @@ void run_midi()
         mark_used(ast);
 
         // Use audio clock
+        // fa_audio_set_speed(0.1, ast);
         fa_midi_set_clock(st, fa_audio_stream_clock(ast));
     }
 
@@ -126,6 +127,7 @@ void run_midi()
                                   // )
 
                                   , st);
+
 
         fa_thread_sleep(100000);
         // mark_used(notes1);

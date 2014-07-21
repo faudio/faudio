@@ -122,6 +122,22 @@ fa_clock_t fa_audio_get_clock(fa_audio_stream_t stream);
 */
 fa_clock_t fa_audio_stream_clock(fa_audio_stream_t stream);
 
+/** Set the speed of the virtual time for the given streem.
+
+    By default, time runs at speed `1.0`, meaning that the stream clock returns the actual processing time.
+    More generally, the time returned by an audio stream clock is the integral of its speed over time.
+    
+    @note
+        This only affects scheduling, audio processing always run at a fixed sample rate.
+
+    @param speed
+        Speed to set.
+    @param stream
+        The stream.
+      
+*/
+void fa_audio_set_speed(double speed, fa_audio_stream_t stream);
+
 /** Register a callback to be invoked when a message is received.
 
     Multiple callbacks can be registered this way. All registered callbacks
@@ -134,8 +150,6 @@ fa_clock_t fa_audio_stream_clock(fa_audio_stream_t stream);
         Data closed over by the callback function.
     @param session
         Stream on which to register the callback.
-    @warning
-        Experimental.
 */
 void fa_audio_add_message_callback(fa_audio_message_callback_t callback,
                                    fa_ptr_t callbackData,

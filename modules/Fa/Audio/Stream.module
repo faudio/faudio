@@ -105,6 +105,21 @@ module "transient" Fa.Audio.Stream
      */
     streamClock : Stream -> Clock;
 
+    /** Set the speed of the virtual time for the given streem.
+
+        By default, time runs at speed `1.0`, meaning that the stream clock returns the actual processing time.
+        More generally, the time returned by an audio stream clock is the integral of its speed over time.
+        
+        @note
+            This only affects scheduling, audio processing always run at a fixed sample rate.
+
+        @param speed
+            Speed to set.
+        @param stream
+            The stream.
+      */
+    setSpeed : (speed : Double, stream : Stream) -> Void;
+
     /** Register a callback to be invoked when a message is received.
 
         Multiple callbacks can be registered this way. All registered callbacks
@@ -117,8 +132,6 @@ module "transient" Fa.Audio.Stream
             Data closed over by the callback function.
         @param session
             Stream on which to register the callback.
-        @warning
-            Experimental.
      */
     addMessageCallback : (callback : MessageCallback, callbackData : Ptr, stream : Stream) -> Void;
 
