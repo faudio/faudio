@@ -194,7 +194,7 @@ fa_signal_t fa_signal_lift2(fa_string_t n,
 fa_signal_t fa_signal_loop(fa_signal_unary_signal_t function, fa_ptr_t data)
 {
     if (kVectorMode) {
-        warn(fa_string("Loop not supported in vector mode"));
+        fa_warn(fa_string("Loop not supported in vector mode"));
         assert(false && "Loop not supported in vector mode");
     }
 
@@ -208,7 +208,7 @@ fa_signal_t fa_signal_loop(fa_signal_unary_signal_t function, fa_ptr_t data)
 fa_signal_t fa_signal_delay(int n, fa_signal_t a)
 {
     if (kVectorMode) {
-        warn(fa_string("Delay not supported in vector mode"));
+        fa_warn(fa_string("Delay not supported in vector mode"));
         assert(false && "Delay not supported in vector mode");
     }
 
@@ -914,7 +914,7 @@ void custom_procs_receive(state_t state, fa_signal_message_callback_t cb, ptr_t 
 ptr_t run_simple_action(state_t state, action_t action)
 {
     if (fa_action_is_compound(action)) {
-        warn(string_dappend(fa_string("Compound action passed to Signal.runSimpleAction: "), fa_string_show(action)));
+        fa_warn(fa_string_dappend(fa_string("Compound action passed to Signal.runSimpleAction: "), fa_string_show(action)));
         return NULL;
     }
 
@@ -935,7 +935,7 @@ ptr_t run_simple_action(state_t state, action_t action)
         return NULL;
     }
 
-    warn(string_dappend(fa_string("Unknown simple action passed to Signal.runSimpleAction: "), fa_string_show(action)));
+    fa_warn(fa_string_dappend(fa_string("Unknown simple action passed to Signal.runSimpleAction: "), fa_string_show(action)));
     return NULL;
 }
 
@@ -1266,7 +1266,7 @@ inline static double _play_stream(ptr_t buffer, double _)
         bool res = fa_atomic_ring_buffer_read_double(buffer, &x);
 
         if (!res) {
-            // warn(fa_string("U"));
+            // fa_warn(fa_string("U"));
         }
 
         mark_used(res);
@@ -1336,7 +1336,7 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
 
     if (fa_equal(ext->name, n)) {
         if (ext->buffer) {
-            // warn(fa_string_format_integral("Bytes written: %zu", ext->bytes_written));
+            // fa_warn(fa_string_format_integral("Bytes written: %zu", ext->bytes_written));
             fa_atomic_ring_buffer_close(ext->buffer);
         }
 
@@ -1344,7 +1344,7 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
         ext->buffer = msg;
         // ext->bytes_written = 0;
     } else {
-        // warn(fa_string_dappend(fa_string("Unknown message to external recorder: "), fa_copy(ext->name)));
+        // fa_warn(fa_fa_string_dappend(fa_string("Unknown message to external recorder: "), fa_copy(ext->name)));
         // no assert!
     }
 
@@ -1621,10 +1621,10 @@ ptr_t vst_render_(ptr_t x, int count, fa_signal_state_t *state)
     // assert(count == 64); // TODO (also change VST loader)
     
     if (kVectorMode) {
-        fail(fa_string("Vector mode not supported!"));
+        fa_fail(fa_string("Vector mode not supported!"));
         exit(-1);
     } else {
-        // fail(fa_string("Non-Vector mode not supported!"));
+        // fa_fail(fa_string("Non-Vector mode not supported!"));
 
         assert(context->inputs && context->outputs);                 
         silenceChannel(context->inputs, plugin->numInputs, count);
@@ -1657,12 +1657,12 @@ void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *
 // Used by vst.cc
 void vst_log(const char* msg)
 {
-    // warn(string_dappend(fa_string("Error in VST: "), fa_string((char*) msg)));
+    // fa_warn(fa_string_dappend(fa_string("Error in VST: "), fa_string((char*) msg)));
 }
 
 void vst_log_i(const char* fmt, long n)
 {
-    // warn(string_dappend(fa_string("Error in VST: "), 
+    // fa_warn(fa_string_dappend(fa_string("Error in VST: "), 
         // fa_string_format_integral((char*) fmt, n)
     // ));
 }
@@ -1672,20 +1672,20 @@ ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     vst_context* context = x;
     AEffect*     plugin = context->plugin;
 
-    warn(n);
-    warn(context->name);
-    warn(fa_equal(n, context->name) ? fa_string("t") : fa_string("f"));
-    warn(fa_string(""));
+    fa_warn(n);
+    fa_warn(context->name);
+    fa_warn(fa_equal(n, context->name) ? fa_string("t") : fa_string("f"));
+    fa_warn(fa_string(""));
     
     if (fa_equal(n, context->name)) {
         
         if (fa_dynamic_is_pair(msg) && fa_dynamic_is_fa_string(fa_pair_first(msg)) && fa_equal(fa_pair_first(msg), fa_string("open")))
         {
-            warn(fa_string("Opening VST window..."));
+            fa_warn(fa_string("Opening VST window..."));
             if (fa_pair_second(msg)) {
                 openPlugin(plugin, fa_pair_second(msg));                
             } else {
-                warn(fa_string("Asked to open VST window but handle is NULL, ignoring."));
+                fa_warn(fa_string("Asked to open VST window but handle is NULL, ignoring."));
             }
             return x;
         }
@@ -1693,7 +1693,7 @@ ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
         // Assume this is MIDI message
         // TODO add MIDI messags to dynamic and check this!
         if (!fa_midi_message_is_simple(msg)) {
-            warn(fa_string("Unknown message to DLS"));
+            fa_warn(fa_string("Unknown message to DLS"));
             return x;
         } else {
             int status, data1, data2;
@@ -1763,8 +1763,8 @@ list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
     vst_context* context = fa_malloc(sizeof(vst_context));
     context->plugin = plugin;
     context->name = name;
-    warn(string_append(fa_string("Creating VST plugin\n    Name: "), name));
-    warn(string_append(fa_string("    Path: "), path));
+    fa_warn(fa_string_append(fa_string("Creating VST plugin\n    Name: "), name));
+    fa_warn(fa_string_append(fa_string("    Path: "), path));
     
     context->inputs = malloc(sizeof(ptr_t) * plugin->numInputs);
     context->outputs = malloc(sizeof(ptr_t) * plugin->numOutputs);
@@ -1803,7 +1803,7 @@ void fa_signal_show_vst_gui(fa_string_t string, void* handle)
 
 list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
 {
-    fail(fa_string("VST not supported for this platform yet."));
+    fa_fail(fa_string("VST not supported for this platform yet."));
 }
 
 #endif // _WIN32

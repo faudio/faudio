@@ -186,7 +186,7 @@ void au_prepare(au_context_t context, double sample_rate)
     
     
     if ((err = AudioUnitInitialize(instance))) {
-        warn(fa_string_format_integral("Could not initialize AU instance, error code %d", err));
+        fa_warn(fa_string_format_integral("Could not initialize AU instance, error code %d", err));
         assert(false);
     }
 }
@@ -297,7 +297,7 @@ ptr_t new_dls_music_device_instance()
     
     OSStatus err;
     if ((err = AudioComponentInstanceNew(dls, (AudioComponentInstance*) &instance))) {
-        warn(fa_string_format_integral("Could not create AU instance, error code %d", err));
+        fa_warn(fa_string_format_integral("Could not create AU instance, error code %d", err));
         assert(false);
     }
 

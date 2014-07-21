@@ -373,7 +373,7 @@ ptr_t midi_thread(ptr_t x)
     // Save the loop so we can stop it from outside
     gMidiThreadRunLoop = CFRunLoopGetCurrent();
 
-    inform(fa_string("    CoreMIDI interaction thread active"));
+    fa_inform(fa_string("    CoreMIDI interaction thread active"));
 
     // Until faudio is terminated, this thread will repeatedly wait for instructions
     // to start a session, and act as its run loop.
@@ -405,7 +405,7 @@ ptr_t midi_thread(ptr_t x)
                      );
 
             if (result) {
-                warn(fa_string_format_integral("Could not start CoreMIDI, MIDIClientCreate failed with %d", result));
+                fa_warn(fa_string_format_integral("Could not start CoreMIDI, MIDIClientCreate failed with %d", result));
                 assert(false);
             }
 
@@ -449,17 +449,17 @@ ptr_t midi_thread(ptr_t x)
             result = MIDIClientDispose(session->native);
 
             if (result) {
-                warn(fa_string_format_integral("Could not start CoreMIDI, MIDIClientDispose failed with %d", result));
+                fa_warn(fa_string_format_integral("Could not start CoreMIDI, MIDIClientDispose failed with %d", result));
                 assert(false);
             } else {
-                inform(fa_string("(disposed client)"));
+                fa_inform(fa_string("(disposed client)"));
             }
 
             gMidiActive = false;
         }
     }
 
-    inform(fa_string("Disposing CoreMIDI interaction thread"));
+    fa_inform(fa_string("Disposing CoreMIDI interaction thread"));
 
     // Successfully terminated
     return NULL;
@@ -489,7 +489,7 @@ void fa_midi_initialize()
 
     gMidiThread         = fa_thread_create(midi_thread, NULL);
 
-    inform(fa_string("    Using CoreMIDI as MIDI backend."));
+    fa_inform(fa_string("    Using CoreMIDI as MIDI backend."));
 
     while (!gMidiThreadRunLoop) {
         fa_thread_sleep(10); // Wait for run loop to be initialized by thread
@@ -517,7 +517,7 @@ void fa_midi_terminate()
 session_t fa_midi_begin_session()
 {
     assert_module_initialized();
-    inform(fa_string("Initializing real-time midi session"));
+    fa_inform(fa_string("Initializing real-time midi session"));
 
     session_t session;
 
@@ -546,20 +546,20 @@ session_t fa_midi_begin_session()
 void fa_midi_end_session(session_t session)
 {
     assert_module_initialized();
-    inform(fa_string("Terminating real-time midi session"));
+    fa_inform(fa_string("Terminating real-time midi session"));
 
-    inform(fa_string("    Closing streams"));
+    fa_inform(fa_string("    Closing streams"));
     fa_for_each(stream, session->streams) {
         // It is OK if the stream is already closed
         fa_midi_close_stream(stream);
         delete_stream(stream);
     }
-    inform(fa_string("    Stopping driver"));
+    fa_inform(fa_string("    Stopping driver"));
 
     fa_with_lock(gMidiMutex);
     {
         if (gMidiActive) {
-            inform(fa_string("    Actually terminating"));
+            fa_inform(fa_string("    Actually terminating"));
             CFRunLoopStop(gMidiThreadRunLoop);
 
             // Wait for the session to end
@@ -570,7 +570,7 @@ void fa_midi_end_session(session_t session)
             gMidiCurrentSession = NULL;
         }
     }
-    inform(fa_string("    Finished terminating midi session"));
+    fa_inform(fa_string("    Finished terminating midi session"));
 }
 
 void fa_midi_with_session(session_callback_t    session_callback,
@@ -714,16 +714,16 @@ bool fa_midi_has_output(device_t device)
 
 
 
-void midi_inform_opening(device_t device)
+void midi_fa_inform_opening(device_t device)
 {
-    inform(fa_string("Opening real-time midi stream"));
+    fa_inform(fa_string("Opening real-time midi stream"));
 
     if (device->input) {
-        inform(string_dappend(fa_string("    Input:  "), fa_string_show(device)));
+        fa_inform(fa_string_dappend(fa_string("    Input:  "), fa_string_show(device)));
     }
 
     if (device->output) {
-        inform(string_dappend(fa_string("    Output:  "), fa_string_show(device)));
+        fa_inform(fa_string_dappend(fa_string("    Output:  "), fa_string_show(device)));
     }
 }
 
@@ -748,7 +748,7 @@ void reset_sysex_buffer(stream_t stream)
 void push_sysex_byte(stream_t stream, uint8_t x)
 {
     if (stream->sysex_in_buffer.count >= kSysexMaxSize) {
-        warn(fa_string("Sysex overflow!"));
+        fa_warn(fa_string("Sysex overflow!"));
     }
 
     stream->sysex_in_buffer.data[stream->sysex_in_buffer.count++] = x;
@@ -793,14 +793,14 @@ void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
 
             if (open_sysex) {
                 if (state != init) {
-                    warn(fa_string("Bad MIDI syntax"));
+                    fa_warn(fa_string("Bad MIDI syntax"));
                 }
 
                 push_sysex_byte(stream, packet->data[j]);
                 state = in_sysex;
             } else if (close_sysex) {
                 if (state != in_sysex) {
-                    warn(fa_string("Bad MIDI syntax"));
+                    fa_warn(fa_string("Bad MIDI syntax"));
                 }
 
                 push_sysex_byte(stream, packet->data[j]);
@@ -833,7 +833,7 @@ void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
                     continue;
 
                 default:
-                    warn(fa_string("Bad MIDI syntax"));
+                    fa_warn(fa_string("Bad MIDI syntax"));
                     continue;
                 }
 
@@ -881,7 +881,7 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
     stream_t stream = x;
 
     if (fa_action_is_compound(action)) {
-        warn(string_dappend(fa_string("Compound action passed to Midi.forwardActionToMidi: "), fa_string_show(action)));
+        fa_warn(fa_string_dappend(fa_string("Compound action passed to Midi.forwardActionToMidi: "), fa_string_show(action)));
         return NULL;
     }
 
@@ -915,16 +915,16 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
                                         );
 
                 if (result < 0) {
-                    warn(fa_string("Could not send MIDI"));
+                    fa_warn(fa_string("Could not send MIDI"));
                     return 0;
                 }
             }
         } else {
-            // warn(fa_string("Could not send SysEx"));
+            // fa_warn(fa_string("Could not send SysEx"));
             buffer_t data = fa_midi_message_sysex_data(message);
 
             if (fa_buffer_size(data) > 256) {
-                warn(fa_string("Too large SysEx to send, ignoring!"));
+                fa_warn(fa_string("Too large SysEx to send, ignoring!"));
                 return 0;
             }
 
@@ -948,7 +948,7 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
                                     );
 
             if (result < 0) {
-                warn(fa_string("Could not send MIDI"));
+                fa_warn(fa_string("Could not send MIDI"));
                 return 0;
             }
         }
@@ -956,7 +956,7 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
         return NULL;
     }
 
-    warn(string_dappend(fa_string("Unknown simple action passed to Midi.forwardActionToMidi: "), fa_string_show(action)));
+    fa_warn(fa_string_dappend(fa_string("Unknown simple action passed to Midi.forwardActionToMidi: "), fa_string_show(action)));
     return NULL;
 }
 
@@ -989,7 +989,7 @@ ptr_t midi_stream_callback(ptr_t x)
 
 fa_midi_stream_t fa_midi_open_stream(device_t device)
 {
-    midi_inform_opening(device);
+    midi_fa_inform_opening(device);
 
     stream_t stream = new_stream(device);
 
@@ -1022,7 +1022,7 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
 
 void fa_midi_close_stream(stream_t stream)
 {
-    inform(fa_string("Closing real-time midi stream"));
+    fa_inform(fa_string("Closing real-time midi stream"));
 
     if (stream->device->input) {
         MIDIPortDisconnectSource(stream->native, stream->device->native);
@@ -1095,8 +1095,8 @@ void fa_midi_set_clock(fa_midi_stream_t stream, fa_clock_t clock)
 fa_string_t midi_session_show(ptr_t a)
 {
     string_t str = fa_string("<MidiSession ");
-    str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
-    str = string_dappend(str, fa_string(">"));
+    str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
+    str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -1140,10 +1140,10 @@ fa_string_t midi_device_show(ptr_t a)
     device_t device = (device_t) a;
 
     string_t str = fa_string("<MidiDevice ");
-    str = string_dappend(str, fa_midi_host_name(device));
-    str = string_dappend(str, fa_string(" "));
-    str = string_dappend(str, fa_midi_name(device));
-    str = string_dappend(str, fa_string(">"));
+    str = fa_string_dappend(str, fa_midi_host_name(device));
+    str = fa_string_dappend(str, fa_string(" "));
+    str = fa_string_dappend(str, fa_midi_name(device));
+    str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -1172,8 +1172,8 @@ ptr_t midi_device_impl(fa_id_t interface)
 fa_string_t midi_stream_show(ptr_t a)
 {
     string_t str = fa_string("<MidiStream ");
-    str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
-    str = string_dappend(str, fa_string(">"));
+    str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
+    str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -1218,7 +1218,7 @@ error_t midi_device_error(string_t msg)
 error_t midi_device_error_with(string_t msg, native_error_t code)
 {
     return fa_error_create_simple(error,
-                                  string_dappend(msg, format_integral(" (error code %d)", code)),
+                                  fa_string_dappend(msg, fa_string_format_integral(" (error code %d)", code)),
                                   fa_string("Doremir.Device.Midi"));
 }
 
@@ -1232,7 +1232,7 @@ error_t midi_error(string_t msg, native_error_t code)
 {
     string_t msg2 = from_os_status2(code);
     return fa_error_create_simple(error,
-                                  string_dappend(msg, msg2),
+                                  fa_string_dappend(msg, msg2),
                                   fa_string("Doremir.Device.Midi"));
 }
 
@@ -1240,7 +1240,7 @@ error_t midi_error(string_t msg, native_error_t code)
 void midi_device_fatal(string_t msg, native_error_t code)
 {
     fa_log_error_from(
-        string_dappend(msg, format_integral(" (error code %d)", code)),
+        fa_string_dappend(msg, fa_string_format_integral(" (error code %d)", code)),
         fa_string("Doremir.Device.Midi"));
 
     fa_log_error(fa_string("Terminating Fa"));

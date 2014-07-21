@@ -542,8 +542,8 @@ string_t action_show(ptr_t a)
     action_t x = (action_t) a;
 
     string_t str = fa_string("<Action ");
-    str = string_dappend(str, fa_string_format_integral(" %p", (long) x));
-    str = string_dappend(str, fa_string(">"));
+    str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) x));
+    str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
 

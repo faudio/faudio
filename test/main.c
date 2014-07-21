@@ -5,7 +5,7 @@
 void test_section(char *str)
 {
     printf("\n\n--------------------\n");
-    fa_log_info(string_dappend(fa_string("Running test: "), fa_string(str)));
+    fa_log_info(fa_string_dappend(fa_string("Running test: "), fa_string(str)));
 }
 
 
@@ -139,16 +139,16 @@ void test_string()
         printf("len: %i\n", fa_string_length(s));
         fa_print("str: %s\n", s);
 
-        printf("charAt 0: %x\n", char_at(0, s));
-        printf("charAt 1: %x\n", char_at(1, s));
-        printf("charAt 2: %x\n", char_at(2, s));
+        printf("charAt 0: %x\n", fa_char_at(0, s));
+        printf("charAt 1: %x\n", fa_char_at(1, s));
+        printf("charAt 2: %x\n", fa_char_at(2, s));
         fa_destroy(s);
     }
 
     {
         string_t s = fa_string("foo");
         string_t t = fa_string("bar");
-        string_t u = string_append(s, t);
+        string_t u = fa_string_append(s, t);
         fa_dprint("str: %s\n", s);
         fa_dprint("str: %s\n", t);
         fa_dprint("str: %s\n", u);
@@ -160,7 +160,7 @@ void test_string()
         fa_print("str: %s\n", s);
         fa_print("str: %s\n", t);
         {
-            string_t u = string_dappend(s, t);
+            string_t u = fa_string_dappend(s, t);
             fa_dprint("str: %s\n", u);
         }
     }
@@ -1427,7 +1427,7 @@ void test_scheduler()
 // {
 //     test_section("Processors");
 //
-//     inform(string_append(fa_string("Writing "), path));
+//     inform(fa_string_append(fa_string("Writing "), path));
 //
 //     processor_t p, q, chain, rchain;
 //     p = unary(type(i8), type(i8), add1234, NULL);
@@ -1556,7 +1556,7 @@ void test_log()
     for (int i = 0; i < 3; ++i) {
 
         fa_log_info(fa_string("We have a problem"));
-        // fa_log_warning(fa_string("We have a problem"));
+        // fa_log_fa_warning(fa_string("We have a problem"));
         fa_log_error(fa_string("We have a problem"));
 
         fa_log(NULL,
@@ -1618,13 +1618,13 @@ void test_regex()
 //     // Handle possible errors
 //     if (fa_check(input)) {
 //         log_error((error_t) input);
-//         warn(fa_string("Aborting test due to error"));
+//         fa_warn(fa_string("Aborting test due to error"));
 //         goto cleanup;
 //     }
 //
 //     if (fa_check(output)) {
 //         log_error((error_t) output);
-//         warn(fa_string("Aborting test due to error"));
+//         fa_warn(fa_string("Aborting test due to error"));
 //         goto cleanup;
 //     }
 //
@@ -1633,7 +1633,7 @@ void test_regex()
 //     // Handle possible error
 //     if (fa_check(result)) {
 //         log_error((error_t) result);
-//         warn(fa_string("Aborting test due to error"));
+//         fa_warn(fa_string("Aborting test due to error"));
 //         goto cleanup;
 //     }
 //
@@ -1675,8 +1675,8 @@ void test_audio_stream()
 
     // Handle possible error
     if (fa_check(session)) {
-        log_error((error_t) session);
-        warn(fa_string("Aborting test due to error"));
+        fa_error_log(NULL, (error_t) session);
+        fa_warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
@@ -1688,8 +1688,8 @@ void test_audio_stream()
 
     // Handle possible error
     if (fa_check(stream)) {
-        log_error((error_t) stream);
-        warn(fa_string("Aborting test due to error"));
+        fa_error_log(NULL, (error_t) stream);
+        fa_warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
@@ -1760,8 +1760,8 @@ void test_midi_stream()
 
     // Handle possible error
     if (fa_check(session)) {
-        log_error((error_t) session);
-        warn(fa_string("Aborting test due to error"));
+        fa_error_log(NULL, (error_t) session);
+        fa_warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
@@ -1778,14 +1778,14 @@ void test_midi_stream()
 
     // Handle possible errors
     if (fa_check(in_stream)) {
-        log_error((error_t) in_stream);
-        warn(fa_string("Aborting test due to error"));
+        fa_error_log(NULL, (error_t) in_stream);
+        fa_warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
     if (fa_check(out_stream)) {
-        log_error((error_t) out_stream);
-        warn(fa_string("Aborting test due to error"));
+        fa_error_log(NULL, (error_t) out_stream);
+        fa_warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
@@ -1843,8 +1843,8 @@ void test_midi_hotplug()
 
     // Handle possible error
     if (fa_check(session)) {
-        log_error((error_t) session);
-        warn(fa_string("Aborting test due to error"));
+        fa_error_log(NULL, (error_t) session);
+        fa_warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
@@ -1957,9 +1957,9 @@ int main(int argc, char const *argv[])
         add_test(list);
         add_test(set);
         add_test(map);
-        // test_graph(string_dappend(fa_system_directory_current(), fa_string("/test/gen.dot")));
+        // test_graph(fa_string_dappend(fa_system_directory_current(), fa_string("/test/gen.dot")));
         // test_priority_queue(10);
-        // test_json(string_dappend(fa_system_directory_current(), fa_string("/test/example.json")));
+        // test_json(fa_string_dappend(fa_system_directory_current(), fa_string("/test/example.json")));
 
         add_test(log);
         add_test(error);

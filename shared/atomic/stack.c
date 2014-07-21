@@ -148,8 +148,8 @@ fa_ptr_t fa_atomic_stack_read(fa_atomic_stack_t stack)
 fa_string_t atomic_stack_show(fa_ptr_t v)
 {
     string_t s = fa_string("<AtomicStack ");
-    s = string_dappend(s, format_integral("%p", (long) v));
-    s = string_dappend(s, fa_string(">"));
+    s = fa_string_dappend(s, fa_format_integral("%p", (long) v));
+    s = fa_string_dappend(s, fa_string(">"));
     return s;
 }
 

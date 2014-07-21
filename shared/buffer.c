@@ -239,7 +239,7 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
             return (buffer_t) fa_error_create_simple(error, fa_string(err), fa_string("Doremir.Buffer"));
         }
 
-        inform(string_append(fa_string("Reading "), path));
+        fa_inform(fa_string_append(fa_string("Reading "), path));
     }
     {
         size_t bufSize  = info.frames * info.channels * sizeof(double);
@@ -376,18 +376,18 @@ fa_string_t buffer_show(fa_ptr_t a)
     string_t str    = fa_string("<Buffer");
 
     for (size_t i = 0; i < length; ++i) {
-        str = string_dappend(str, fa_string(" "));
-        str = string_dappend(str, format_integral(
+        str = fa_string_dappend(str, fa_string(" "));
+        str = fa_string_dappend(str, fa_format_integral(
                                  "%02x",
                                  fa_buffer_get(buffer, i)));
     }
 
     if (more) {
-        str = string_dappend(str, fa_string(" "));
-        str = string_dappend(str, fa_string("..."));
+        str = fa_string_dappend(str, fa_string(" "));
+        str = fa_string_dappend(str, fa_string("..."));
     }
 
-    str = string_dappend(str, fa_string(">"));
+    str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -417,7 +417,7 @@ void buffer_fatal(char *msg, int error)
 {
     void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
-    fa_log_error_from(string_dappend(fa_string(msg), format_integral(" (error code %d)", error)), fa_string("Doremir.Buffer"));
+    fa_log_error_from(fa_string_dappend(fa_string(msg), fa_format_integral(" (error code %d)", error)), fa_string("Doremir.Buffer"));
     fa_log_error(fa_string("Terminating Audio Engine"));
     exit(error);
 }

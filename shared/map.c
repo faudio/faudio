@@ -291,16 +291,16 @@ fa_string_t entry_show(fa_ptr_t a)
 {
     entry_t b = (entry_t) a;
     string_t s = fa_string("<Entry (");
-    s = string_dappend(s, fa_string_show(b->key));
-    s = string_dappend(s, fa_string(","));
+    s = fa_string_dappend(s, fa_string_show(b->key));
+    s = fa_string_dappend(s, fa_string(","));
 
     if (b->value) {
-        s = string_dappend(s, fa_string_show(b->value));
+        s = fa_string_dappend(s, fa_string_show(b->value));
     } else {
-        s = string_dappend(s, fa_string("null"));
+        s = fa_string_dappend(s, fa_string("null"));
     }
 
-    s = string_dappend(s, fa_string(")>"));
+    s = fa_string_dappend(s, fa_string(")>"));
     return s;
 }
 
@@ -374,15 +374,15 @@ fa_string_t map_show(fa_ptr_t x)
 
     fa_for_each_last(x, fa_set_to_list(map->entries), last) {
         entry_t entry = x;
-        s = string_dappend(s, fa_string_show(entry->key));
-        s = string_dappend(s, fa_string(": "));
-        s = string_dappend(s, fa_string_show(entry->value));
+        s = fa_string_dappend(s, fa_string_show(entry->key));
+        s = fa_string_dappend(s, fa_string(": "));
+        s = fa_string_dappend(s, fa_string_show(entry->value));
 
         if (!last) {
-            s = string_dappend(s, fa_string(", "));
+            s = fa_string_dappend(s, fa_string(", "));
         }
     }
-    s = string_dappend(s, fa_string("}"));
+    s = fa_string_dappend(s, fa_string("}"));
     return s;
 }
 

@@ -152,8 +152,8 @@ bool priority_queue_equal(fa_ptr_t a, fa_ptr_t b)
 fa_string_t priority_queue_show(fa_ptr_t v)
 {
     string_t s = fa_string("<PriorityQueue");
-    s = string_dappend(s, fa_string_format_integral(" %02x", (long) v));
-    s = string_dappend(s, fa_string(">"));
+    s = fa_string_dappend(s, fa_string_format_integral(" %02x", (long) v));
+    s = fa_string_dappend(s, fa_string(">"));
     return s;
 }
 

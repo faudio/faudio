@@ -21,7 +21,7 @@ bool pred1(ptr_t _, ptr_t x)
 #ifdef __APPLE__
     CGEventRef event = CGEventCreate(nil);
     CGPoint loc = CGEventGetLocation(event);
-    inform(fa_string_format_floating("x: %f", loc.x));
+    fa_inform(fa_string_format_floating("x: %f", loc.x));
     bool res = loc.x > 200;
     CFRelease(event);
 
@@ -37,7 +37,7 @@ bool pred2(ptr_t _, ptr_t x)
 
     CGEventRef event = CGEventCreate(nil);
     CGPoint loc = CGEventGetLocation(event);
-    inform(fa_string_format_floating("x: %f", loc.x));
+    fa_inform(fa_string_format_floating("x: %f", loc.x));
     bool res = loc.y > 200;
     CFRelease(event);
 

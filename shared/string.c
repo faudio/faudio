@@ -539,7 +539,7 @@ string_t fa_string_join_map(unary_t func, ptr_t data, string_t string)
     string_t result = fa_string("");
 
     for (int i = 0; i < string->size; ++i) {
-        result = string_dappend(result,
+        result = fa_string_dappend(result,
 
                                 func(data, (ptr_t)(long) string->data[i]));
     }
@@ -647,9 +647,9 @@ static bool string_greater_than(fa_ptr_t as, fa_ptr_t bs)
 static fa_string_t string_show(fa_ptr_t a)
 {
     string_t s = fa_string("");
-    s = string_dappend(s, fa_string("\""));
-    s = string_dappend(s, escape(a));
-    s = string_dappend(s, fa_string("\""));
+    s = fa_string_dappend(s, fa_string("\""));
+    s = fa_string_dappend(s, escape(a));
+    s = fa_string_dappend(s, fa_string("\""));
     return s;
 }
 

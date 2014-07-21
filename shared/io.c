@@ -73,7 +73,7 @@ void fa_io_push_through(fa_io_filter_t filter, fa_io_sink_t downstream, fa_buffe
 
 void split_filter_destroy(ptr_t x)
 {
-    warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t split_filter_show(ptr_t x)
@@ -115,7 +115,7 @@ FILTER_IMPLEMENTATION(split_filter);
 
 void stdin_filter_destroy(ptr_t x)
 {
-    warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t stdin_filter_show(ptr_t x)
@@ -156,7 +156,7 @@ FILTER_IMPLEMENTATION(stdin_filter);
 
 void standardout_filter_destroy(ptr_t x)
 {
-    warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t standardout_filter_show(ptr_t x)
@@ -185,7 +185,7 @@ FILTER_IMPLEMENTATION(standardout_filter);
 
 void write_filter_destroy(ptr_t x)
 {
-    warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t  write_filter_show(ptr_t x)
@@ -205,7 +205,7 @@ void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
         FILE *fp = fopen(fa_unstring(path), "ab");
 
         if (!fp) {
-            fail(string_dappend(fa_string("Could not write file: "), path));
+            fa_fail(fa_string_dappend(fa_string("Could not write file: "), path));
             fclose(fp);
         } else {
             fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
@@ -222,7 +222,7 @@ FILTER_IMPLEMENTATION(write_filter);
 
 void read_filter_destroy(ptr_t x)
 {
-    warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t  read_filter_show(ptr_t x)
@@ -238,7 +238,7 @@ void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t call
     FILE *fp = fopen(fa_unstring(path), "rb");
 
     if (!fp) {
-        fail(string_dappend(fa_string("Could not read file: "), path));
+        fa_fail(fa_string_dappend(fa_string("Could not read file: "), path));
     } else {
         byte_t raw[1024 * 8];
         size_t read;
@@ -265,7 +265,7 @@ FILTER_IMPLEMENTATION(read_filter);
 
 void ref_filter_destroy(ptr_t x)
 {
-    warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t ref_filter_show(ptr_t x)
@@ -290,7 +290,7 @@ FILTER_IMPLEMENTATION(ref_filter);
 
 void identity_destroy(ptr_t x)
 {
-    warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t identity_show(ptr_t x)
@@ -314,7 +314,7 @@ FILTER_IMPLEMENTATION(identity);
 
 void composed_filter_destroy(ptr_t x)
 {
-    warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t  composed_filter_show(ptr_t x)
@@ -362,7 +362,7 @@ FILTER_IMPLEMENTATION(composed_filter);
 
 void simple_filter_destroy(ptr_t x)
 {
-    warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy"));
 }
 
 string_t simple_filter_show(ptr_t x)
@@ -543,7 +543,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
     // Buffer closed
     assert(fa_atomic_ring_buffer_is_closed(rbuffer));
     {
-        // warn(fa_string_format_integral("Bytes read: %zu", bytes_read));
+        // fa_warn(fa_string_format_integral("Bytes read: %zu", bytes_read));
 
 // should be 1
 // we drop last frame as ogg converter (and others) expect an even number of sample

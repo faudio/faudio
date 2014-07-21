@@ -207,8 +207,8 @@ fa_string_t thread_show(ptr_t a)
     thread_t x = (thread_t) a;
 
     string_t str = fa_string("<Thread ");
-    str = string_dappend(str, fa_string_format_integral(" %p", (long) x->native));
-    str = string_dappend(str, fa_string(">"));
+    str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) x->native));
+    str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -239,8 +239,8 @@ ptr_t thread_impl(fa_id_t interface)
 fa_string_t mutex_show(ptr_t a)
 {
     string_t str = fa_string("<Mutex ");
-    str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
-    str = string_dappend(str, fa_string(">"));
+    str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
+    str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
 

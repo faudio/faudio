@@ -75,7 +75,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
     if (fa_equal(n, fa_string("dls"))) {
         if (!fa_midi_message_is_simple(msg)) {
-            warn(fa_string("Unknown message to DLS"));
+            fa_warn(fa_string("Unknown message to DLS"));
         } else {
             int status, data1, data2;
             fa_midi_message_decons(msg, &status, &data1, &data2);
@@ -88,7 +88,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
 ptr_t destroy_(ptr_t x)
 {
-    inform(fa_string("Destroying DSLSynth instance (doing nothing)"));
+    fa_inform(fa_string("Destroying DSLSynth instance (doing nothing)"));
     return x;
 }
 

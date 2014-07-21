@@ -111,8 +111,8 @@ bool standard_clock_equal(fa_ptr_t a, fa_ptr_t b)
 fa_string_t standard_clock_show(fa_ptr_t a)
 {
     string_t str = fa_string("<StandardClock ");
-    str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
-    str = string_dappend(str, fa_string(">"));
+    str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
+    str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
 

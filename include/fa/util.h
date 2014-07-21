@@ -112,22 +112,22 @@
 #define fa_cons                fa_list_cons
 #define fa_is_empty            fa_list_is_empty
 
-#define char_at             fa_string_char_at
-#define string_append       fa_string_append
-#define string_dappend      fa_string_dappend
-#define format_integral     fa_string_format_integral
-#define format_floating     fa_string_format_floating
+#define fa_char_at             fa_string_char_at
+#define fa_string_append       fa_string_append
+#define fa_string_dappend      fa_string_dappend
+#define fa_format_integral     fa_string_format_integral
+#define fa_format_floating     fa_string_format_floating
 
 void fa_log_info(fa_string_t);
 void fa_log_warning(fa_string_t);
 void fa_log_error(fa_string_t);
 void fa_dlog_info(fa_string_t);
 
-#define inform(s)           fa_log_info(s)
-#define dinform(s)          fa_dlog_info(s)
-#define warn(s)             fa_log_warning(s)
-#define fail(s)             fa_log_error(s)
-#define log_error(e)        fa_error_log(NULL,e)
+#define fa_inform(s)           fa_log_info(s)
+// #define fa_dinform(s)          fa_dlog_info(s)
+#define fa_warn(s)             fa_log_warning(s)
+#define fa_fail(s)             fa_log_error(s)
+// #define fa_log_error(e)        fa_error_log(NULL,e)
 
 #define tb                  fa_to_bool
 #define ti8                 fa_to_int8

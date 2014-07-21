@@ -79,7 +79,7 @@ int main(int argc, char const *argv[])
             option_declaration,
             argc, argv,
             options, args) {
-            inform(fa_string("Running sine test"));
+            fa_inform(fa_string("Running sine test"));
             run_sines(options);
         }
     }

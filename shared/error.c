@@ -115,19 +115,19 @@ fa_string_t fa_error_format(bool colored, fa_error_t a)
 
     switch (simple->severity) {
     case info:
-        str = string_dappend(str, strs[0 + colored * 6]);
+        str = fa_string_dappend(str, strs[0 + colored * 6]);
         break;
 
     case warning:
-        str = string_dappend(str, strs[1 + colored * 6]);
+        str = fa_string_dappend(str, strs[1 + colored * 6]);
         break;
 
     case error:
-        str = string_dappend(str, strs[2 + colored * 6]);
+        str = fa_string_dappend(str, strs[2 + colored * 6]);
         break;
 
     case misc:
-        str = string_dappend(str, strs[3 + colored * 6]);
+        str = fa_string_dappend(str, strs[3 + colored * 6]);
         break;
 
     default:
@@ -135,12 +135,12 @@ fa_string_t fa_error_format(bool colored, fa_error_t a)
     }
 
     if (fa_string_length(simple->origin) > 0) {
-        str = string_dappend(str, strs[4 + colored * 6]);
-        str = string_dappend(str, fa_copy(simple->origin));
-        str = string_dappend(str, strs[5 + colored * 6]);
+        str = fa_string_dappend(str, strs[4 + colored * 6]);
+        str = fa_string_dappend(str, fa_copy(simple->origin));
+        str = fa_string_dappend(str, strs[5 + colored * 6]);
     }
 
-    str = string_dappend(str, fa_copy(simple->message));
+    str = fa_string_dappend(str, fa_copy(simple->message));
 
     return str;
 }
@@ -183,19 +183,19 @@ fa_string_t simple_error_show(fa_ptr_t a)
 
     switch (simple->severity) {
     case info:
-        result = string_dappend(result, fa_string("Info "));
+        result = fa_string_dappend(result, fa_string("Info "));
         break;
 
     case warning:
-        result = string_dappend(result, fa_string("Warning "));
+        result = fa_string_dappend(result, fa_string("Warning "));
         break;
 
     case error:
-        result = string_dappend(result, fa_string("Error "));
+        result = fa_string_dappend(result, fa_string("Error "));
         break;
 
     case misc:
-        result = string_dappend(result, fa_string("Misc "));
+        result = fa_string_dappend(result, fa_string("Misc "));
         break;
 
     default:
@@ -203,12 +203,12 @@ fa_string_t simple_error_show(fa_ptr_t a)
     }
 
     if (fa_string_length(simple->origin) > 0) {
-        result = string_dappend(result, fa_copy(simple->origin));
-        result = string_dappend(result, fa_string(": "));
+        result = fa_string_dappend(result, fa_copy(simple->origin));
+        result = fa_string_dappend(result, fa_string(": "));
     }
 
-    result = string_dappend(result, fa_copy(simple->message));
-    result = string_dappend(result, fa_string(">"));
+    result = fa_string_dappend(result, fa_copy(simple->message));
+    result = fa_string_dappend(result, fa_string(">"));
 
     return result;
 }
