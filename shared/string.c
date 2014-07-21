@@ -541,7 +541,7 @@ string_t fa_string_join_map(unary_t func, ptr_t data, string_t string)
     for (int i = 0; i < string->size; ++i) {
         result = fa_string_dappend(result,
 
-                                func(data, (ptr_t)(long) string->data[i]));
+                                   func(data, (ptr_t)(long) string->data[i]));
     }
 
     return result;

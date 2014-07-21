@@ -27,7 +27,7 @@
         - Lists are still single-ownership, but destroying
           may not necessarily lead to its nodes being destroyed as they might
           be shared by other lists.
-       
+
        - Destroying a list does not destroy its contents (as with all containters)
  */
 

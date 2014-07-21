@@ -115,11 +115,11 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
     fa_io_filter_t filt = fa_io_compose(ogg, end);
     fa_io_run(
         // fa_io_apply(
-            fa_io_from_ring_buffer(rbuffer),
-            // filt
+        fa_io_from_ring_buffer(rbuffer),
+        // filt
         // ),
-    
-    
+
+
         // fa_io_coapply(
         // fa_io_identity(),
         // fa_io_create_ogg_encoder(),

@@ -378,8 +378,8 @@ fa_string_t buffer_show(fa_ptr_t a)
     for (size_t i = 0; i < length; ++i) {
         str = fa_string_dappend(str, fa_string(" "));
         str = fa_string_dappend(str, fa_format_integral(
-                                 "%02x",
-                                 fa_buffer_get(buffer, i)));
+                                    "%02x",
+                                    fa_buffer_get(buffer, i)));
     }
 
     if (more) {

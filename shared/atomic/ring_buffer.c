@@ -194,6 +194,7 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
         for (size_t i = 0; i < count; ++i) {
             unsafe_write_byte(dst, src[i]);
         }
+
         return count;
     } else {
         if (dst->status == buffer_alright) {

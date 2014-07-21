@@ -26,7 +26,7 @@ void pull(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
 fa_io_filter_t fa_io_create_test_filter()
 {
     return fa_io_create_simple_filter(push, pull, NULL);
-}  
+}
 
 int main(int argc, char const *argv[])
 {
@@ -42,9 +42,10 @@ int main(int argc, char const *argv[])
             fa_buffer_set(buf, 0, 3);
             fa_io_push(sink, buf);
         }
+
         // fa_io_run(
-        //     fa_io_standard_in(), 
-        //     fa_io_coapply(fa_io_split(sink), fa_io_standard_out())            
+        //     fa_io_standard_in(),
+        //     fa_io_coapply(fa_io_split(sink), fa_io_standard_out())
         //         );
     }
 }

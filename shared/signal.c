@@ -22,7 +22,7 @@
 #include "action_internal.h"
 
 #ifndef _WIN32
-    #include "../platform/macosx/vst.h"
+#include "../platform/macosx/vst.h"
 #endif
 
 typedef fa_signal_custom_processor_t   *custom_proc_t;
@@ -871,6 +871,7 @@ void run_custom_procs(custom_proc_when_t when, int count, state_t state)
                 proc->destroy(proc->data);
                 proc->data = NULL;
             }
+
             break;
         }
 
@@ -1323,6 +1324,7 @@ ptr_t record_extrenal_render_(ptr_t x, int count, fa_signal_state_t *state)
             }
         }
     }
+
     return x;
 }
 
@@ -1583,21 +1585,21 @@ fa_signal_t fa_signal_ceil(fa_signal_t x, fa_signal_t y)
 
 struct _vst_context {
     string_t name;
-    AEffect* plugin;
-    float** inputs;
-    float** outputs;    
+    AEffect *plugin;
+    float **inputs;
+    float **outputs;
 };
 
 typedef struct _vst_context vst_context;
 
 // TODO remove
-static vst_context* last_vst_plug = NULL;
+static vst_context *last_vst_plug = NULL;
 
 
 ptr_t vst_before_(ptr_t x, int count, fa_signal_state_t *state)
 {
-    vst_context* context = x;
-    AEffect*     plugin = context->plugin;
+    vst_context *context = x;
+    AEffect     *plugin = context->plugin;
 
     setPluginParams(plugin, state->rate, kMaxVectorSize);
     resumePlugin(plugin);
@@ -1606,8 +1608,8 @@ ptr_t vst_before_(ptr_t x, int count, fa_signal_state_t *state)
 }
 ptr_t vst_after_(ptr_t x, int count, fa_signal_state_t *state)
 {
-    vst_context* context = x;
-    AEffect*     plugin = context->plugin;
+    vst_context *context = x;
+    AEffect     *plugin = context->plugin;
 
     suspendPlugin(plugin);
     return x;
@@ -1615,27 +1617,27 @@ ptr_t vst_after_(ptr_t x, int count, fa_signal_state_t *state)
 
 ptr_t vst_render_(ptr_t x, int count, fa_signal_state_t *state)
 {
-    vst_context* context = x;
-    AEffect*     plugin = context->plugin;
+    vst_context *context = x;
+    AEffect     *plugin = context->plugin;
 
     // assert(count == 64); // TODO (also change VST loader)
-    
+
     if (kVectorMode) {
         fa_fail(fa_string("Vector mode not supported!"));
         exit(-1);
     } else {
         // fa_fail(fa_string("Non-Vector mode not supported!"));
 
-        assert(context->inputs && context->outputs);                 
+        assert(context->inputs && context->outputs);
         silenceChannel(context->inputs, plugin->numInputs, count);
         silenceChannel(context->outputs, plugin->numOutputs, count);
-        
+
         // TODO inputs
-        
+
         processAudio(plugin, context->inputs, context->outputs, 1);
-        
-        for (int channel = 0; channel < plugin->numOutputs; ++channel) {                                  
-            for (int sample = 0; sample < 1; ++sample) {                                  
+
+        for (int channel = 0; channel < plugin->numOutputs; ++channel) {
+            for (int sample = 0; sample < 1; ++sample) {
                 if (channel < 2) {
                     state->buffer[(kVstOffset + channel)*kMaxVectorSize + sample] = context->outputs[channel][sample];
                 }
@@ -1655,41 +1657,42 @@ ptr_t vst_render_(ptr_t x, int count, fa_signal_state_t *state)
 void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
 
 // Used by vst.cc
-void vst_log(const char* msg)
+void vst_log(const char *msg)
 {
     // fa_warn(fa_string_dappend(fa_string("Error in VST: "), fa_string((char*) msg)));
 }
 
-void vst_log_i(const char* fmt, long n)
+void vst_log_i(const char *fmt, long n)
 {
-    // fa_warn(fa_string_dappend(fa_string("Error in VST: "), 
-        // fa_string_format_integral((char*) fmt, n)
+    // fa_warn(fa_string_dappend(fa_string("Error in VST: "),
+    // fa_string_format_integral((char*) fmt, n)
     // ));
 }
 
 ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
-    vst_context* context = x;
-    AEffect*     plugin = context->plugin;
+    vst_context *context = x;
+    AEffect     *plugin = context->plugin;
 
     fa_warn(n);
     fa_warn(context->name);
     fa_warn(fa_equal(n, context->name) ? fa_string("t") : fa_string("f"));
     fa_warn(fa_string(""));
-    
+
     if (fa_equal(n, context->name)) {
-        
-        if (fa_dynamic_is_pair(msg) && fa_dynamic_is_fa_string(fa_pair_first(msg)) && fa_equal(fa_pair_first(msg), fa_string("open")))
-        {
+
+        if (fa_dynamic_is_pair(msg) && fa_dynamic_is_fa_string(fa_pair_first(msg)) && fa_equal(fa_pair_first(msg), fa_string("open"))) {
             fa_warn(fa_string("Opening VST window..."));
+
             if (fa_pair_second(msg)) {
-                openPlugin(plugin, fa_pair_second(msg));                
+                openPlugin(plugin, fa_pair_second(msg));
             } else {
                 fa_warn(fa_string("Asked to open VST window but handle is NULL, ignoring."));
             }
+
             return x;
         }
-        
+
         // Assume this is MIDI message
         // TODO add MIDI messags to dynamic and check this!
         if (!fa_midi_message_is_simple(msg)) {
@@ -1701,7 +1704,7 @@ ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
             VstMidiEvent event;
             event.type = kVstMidiType;
-            event.byteSize = sizeof (VstMidiEvent);
+            event.byteSize = sizeof(VstMidiEvent);
             event.deltaFrames = 0;
             event.flags = 0;
             event.noteLength = 100;
@@ -1714,16 +1717,18 @@ ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
             event.detune = 0;
             event.noteOffVelocity = 0;
-    
+
             VstEvents events;
             events.numEvents = 1;
-            events.events[0] = (VstEvent*) &event;
-    
+            events.events[0] = (VstEvent *) &event;
+
             processMidi(plugin, &events);
             return x;
         }
+
         assert(false && "Unreachable");
     }
+
     return x;
 }
 
@@ -1732,46 +1737,47 @@ list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
     // TODO
     string_t name = fa_copy(name1);
     string_t path = fa_copy(path1);
-    
-    char* rpath = fa_unstring(path);
-    AEffect* plugin = loadPlugin(rpath);
+
+    char *rpath = fa_unstring(path);
+    AEffect *plugin = loadPlugin(rpath);
     initPlugin(plugin);
-    
+
     // TODO
     assert(canPluginDo(plugin, "receiveVstMidiEvent"));
 
     // {
     //     WindowRef theWindow;
-    //     Rect contentRect; 
+    //     Rect contentRect;
     //     contentRect.top = 200;
     //     contentRect.left = 300;
     //     contentRect.bottom = 400;
     //     contentRect.right = 500;
-    //     
+    //
     //     // SetRect(&contentRect, 100,100,100,100);
     //     OSStatus err;
-    //      
+    //
     //     err=CreateNewWindow(kDocumentWindowClass,kWindowStandardDocumentAttributes,&contentRect, &theWindow);
     //     if(err!=noErr)printf("Error in CreateNewWindow\n");
     //     ShowWindow(theWindow);
-    // 
-    //     WindowRef refWindow = theWindow;    
+    //
+    //     WindowRef refWindow = theWindow;
     //     openPlugin(plugin, refWindow);
-    // }   
-    
+    // }
 
-    vst_context* context = fa_malloc(sizeof(vst_context));
+
+    vst_context *context = fa_malloc(sizeof(vst_context));
     context->plugin = plugin;
     context->name = name;
     fa_warn(fa_string_append(fa_string("Creating VST plugin\n    Name: "), name));
     fa_warn(fa_string_append(fa_string("    Path: "), path));
-    
+
     context->inputs = malloc(sizeof(ptr_t) * plugin->numInputs);
     context->outputs = malloc(sizeof(ptr_t) * plugin->numOutputs);
 
     for (int i = 0; i < plugin->numInputs; ++i) {
         context->inputs[i] = malloc(sizeof(float) * kMaxVectorSize);
     }
+
     for (int i = 0; i < plugin->numOutputs; ++i) {
         context->outputs[i] = malloc(sizeof(float) * kMaxVectorSize);
     }
@@ -1791,7 +1797,7 @@ list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
     return list(fa_signal_custom(proc, fa_signal_input(kVstOffset + 0)), fa_signal_input(kVstOffset + 1));
 }
 
-void fa_signal_show_vst_gui(fa_string_t string, void* handle)
+void fa_signal_show_vst_gui(fa_string_t string, void *handle)
 {
     // TODO find correct plugin
     openPlugin(last_vst_plug->plugin, handle);

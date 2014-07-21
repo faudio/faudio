@@ -108,10 +108,10 @@ pair_t fa_signal_level(signal_t a, signal_t b)
     proc->data    = NULL;
 
     return fa_pair_create(fa_signal_custom(proc,
-                                 fa_signal_latter(fa_signal_output(0, kThisPlugOffset + 0, slope(fa_signal_absolute(a))), a)
-                                ),
-                fa_signal_latter(fa_signal_output(0, kThisPlugOffset + 1, b), b)
-               );
+                                           fa_signal_latter(fa_signal_output(0, kThisPlugOffset + 0, slope(fa_signal_absolute(a))), a)
+                                          ),
+                          fa_signal_latter(fa_signal_output(0, kThisPlugOffset + 1, b), b)
+                         );
 }
 
 

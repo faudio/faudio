@@ -718,12 +718,12 @@ fa_pair_t fa_audio_recommended_latency(fa_audio_device_t device)
 {
     const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
     return fa_pair_create(fa_pair_create(
-                    f64(info->defaultLowInputLatency),
-                    f64(info->defaultHighInputLatency)
-                ), fa_pair_create(
-                    f64(info->defaultLowOutputLatency),
-                    f64(info->defaultHighOutputLatency)
-                ));
+                              f64(info->defaultLowInputLatency),
+                              f64(info->defaultHighInputLatency)
+                          ), fa_pair_create(
+                              f64(info->defaultLowOutputLatency),
+                              f64(info->defaultHighOutputLatency)
+                          ));
 }
 
 
@@ -747,12 +747,13 @@ string_t show_range(pair_t x)
 static bool is_wasapi_device(device_t device)
 {
     if (device) {
-        // Note that device->host is a runtime-determined index, 
+        // Note that device->host is a runtime-determined index,
         // so we need toook up static type id here
         if (Pa_GetHostApiInfo(device->host)->type == paWASAPI) {
             return true;
         }
     }
+
     return false;
 }
 
@@ -845,7 +846,7 @@ stream_t fa_audio_open_stream(device_t input,
 
         PaWasapiFlags wasapiFlags = 0;
         wasapiFlags |= (session->parameters.exclusive ? paWinWasapiExclusive : 0);
-        
+
         struct PaWasapiStreamInfo wasapiInfo = {
             .size                       = sizeof(PaWasapiStreamInfo),
             .hostApiType                = paWASAPI,
@@ -1137,7 +1138,7 @@ void before_processing(stream_t stream)
 {
     session_t session  = stream->input ? stream->input->session : stream->output->session;
     stream->state      = new_state(session->parameters.sample_rate); // FIXME
-    
+
     signal_t merged = fa_signal_constant(0);
 
     for (int c = 0; c < stream->signal_count; ++c) {
@@ -1171,7 +1172,7 @@ void after_processing(stream_t stream)
 }
 
 void after_failed_processing(stream_t stream)
-{         
+{
     // This is ugly: create a temporary state just to enumerate processors
     fa_inform(fa_string("Streams did not start, destroying external processors."));
     session_t session  = stream->input ? stream->input->session : stream->output->session;
@@ -1301,6 +1302,7 @@ int native_audio_callback(const void                       *input,
         during_processing(stream, count, (float **) input, (float **) output);
         stream->pa_flags |= flags;
     }
+
     return paContinue;
     // else {
     //     return paAbort;
@@ -1506,9 +1508,9 @@ error_t audio_device_error_with(string_t msg, int code)
 
     error_t err = fa_error_create_simple(error,
                                          fa_string_dappend(msg,
-                                                        fa_string_dappend(fa_string(": "), pa_error_str)
-                                                        // format_integral(" (error code %d)", code)
-                                                       ),
+                                                           fa_string_dappend(fa_string(": "), pa_error_str)
+                                                           // format_integral(" (error code %d)", code)
+                                                          ),
                                          fa_string("Doremir.Device.Audio"));
     fa_error_log(NULL, err);
     return err;
