@@ -357,7 +357,7 @@ session_t fa_audio_begin_session()
         }
     }
     // FIXME cache pair
-    session->status_closure = pair(_status_callback, session);
+    session->status_closure = fa_pair_create(_status_callback, session);
     add_audio_status_listener(session->status_closure);
 
     inform(string("Done initializing session"));
@@ -625,7 +625,7 @@ fa_pair_t fa_audio_default(session_t session)
 {
     fail_if_no_input(fa_pair_t);
     fail_if_no_output(fa_pair_t);
-    return pair(session->def_input, session->def_output);
+    return fa_pair_create(session->def_input, session->def_output);
 }
 
 device_t fa_audio_default_input(session_t session)
@@ -717,10 +717,10 @@ double fa_audio_default_sample_rate(fa_audio_device_t device)
 fa_pair_t fa_audio_recommended_latency(fa_audio_device_t device)
 {
     const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
-    return pair(pair(
+    return fa_pair_create(fa_pair_create(
                     f64(info->defaultLowInputLatency),
                     f64(info->defaultHighInputLatency)
-                ), pair(
+                ), fa_pair_create(
                     f64(info->defaultLowOutputLatency),
                     f64(info->defaultHighOutputLatency)
                 ));
@@ -1077,7 +1077,7 @@ ptr_t audio_control_thread(ptr_t x)
                     // stopped
                     string_t name2 = fa_copy(name);
                     ptr_t    value2 = fa_copy(value);
-                    // inform(fa_string_show(pair(name2, value2)));
+                    // inform(fa_string_show(fa_pair_create(name2, value2)));
 
                     for (int j = 0; j < n; ++j) {
                         binary_t cbFunc = stream->callbacks.elements[j].function;
@@ -1200,7 +1200,7 @@ void handle_outgoing_message(ptr_t x, string_t name, ptr_t value)
 {
     stream_t stream = x;
     mark_used(stream);
-    fa_atomic_queue_write(stream->out_controls, pair(name, value));
+    fa_atomic_queue_write(stream->out_controls, fa_pair_create(name, value));
 }
 
 void during_processing(stream_t stream, unsigned count, float **input, float **output)

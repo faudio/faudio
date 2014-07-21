@@ -407,36 +407,36 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
     switch (signal->tag) {
 
     case time_signal:
-        return pair(string("time"), empty());
+        return fa_pair_create(string("time"), empty());
 
     case random_signal:
-        return pair(string("random"), empty());
+        return fa_pair_create(string("random"), empty());
 
     case constant_signal: {
         double value = constant_get(signal, value);
-        return pair(fa_string_to_string(fa_from_double(value)), empty());
+        return fa_pair_create(fa_string_to_string(fa_from_double(value)), empty());
     }
 
     case lift_signal: {
         pair_t tree = fa_signal_to_tree(lift_get(signal, a));
-        return pair(lift_get(signal, name), list(tree));
+        return fa_pair_create(lift_get(signal, name), list(tree));
     }
 
     case lift2_signal: {
         pair_t tree1 = fa_signal_to_tree(lift2_get(signal, a));
         pair_t tree2 = fa_signal_to_tree(lift2_get(signal, b));
-        return pair(lift_get(signal, name), list(tree1, tree2));
+        return fa_pair_create(lift_get(signal, name), list(tree1, tree2));
     }
 
     case input_signal:
-        return pair(
+        return fa_pair_create(
                    concat(
                        string("input "),
                        fa_string_format_integral("%d", input_get(signal, c))),
                    empty());
 
     case output_signal:
-        return pair(
+        return fa_pair_create(
                    concat(
                        string("output "),
                        fa_string_show(fa_from_int32(output_get(signal, c))),

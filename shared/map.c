@@ -254,7 +254,7 @@ map_t fa_map(int count, ...)
 
 pair_t entry_to_pair(ptr_t data, entry_t entry)
 {
-    return pair(entry->key, entry->value);
+    return fa_pair_create(entry->key, entry->value);
 }
 fa_list_t fa_map_to_list(fa_map_t map)
 {

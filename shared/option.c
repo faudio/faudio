@@ -19,7 +19,7 @@ pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char *l
             ptr_t result  = option.parser((char *) value);
 
             if (result) {
-                return pair(string(option.long_name), result);
+                return fa_pair_create(string(option.long_name), result);
             } else {
                 return NULL;
             }
@@ -94,7 +94,7 @@ pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
         }
     }
 
-    return pair(add_defaults(optc, optv, args), anon_args); // FIXME
+    return fa_pair_create(add_defaults(optc, optv, args), anon_args); // FIXME
 }
 
 void fa_option_show(int optc, opt_t optv[], char *header)

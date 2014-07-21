@@ -71,7 +71,7 @@ void fa_pair_left_destroy(fa_pair_left_t pair_left)
 
 fa_pair_t fa_pair_left_to_pair(fa_pair_left_t pair_left)
 {
-    return pair(pair_left->values[0], pair_left->values[1]);
+    return fa_pair_create(pair_left->values[0], pair_left->values[1]);
 }
 
 fa_pair_left_t fa_pair_left_from_pair(fa_pair_t pair)

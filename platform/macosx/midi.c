@@ -632,7 +632,7 @@ fa_pair_t fa_midi_default(session_t session)
 {
     fail_if_no_input(fa_pair_t);
     fail_if_no_output(fa_pair_t);
-    return pair(session->def_input, session->def_output);
+    return fa_pair_create(session->def_input, session->def_output);
 }
 
 device_t fa_midi_default_input(session_t session)
@@ -736,7 +736,7 @@ void forward_message_to_callbacks(midi_stream_t stream, time_t time, ptr_t msg)
         unary_t f = stream->callbacks.elements[j].function;
         ptr_t   x = stream->callbacks.elements[j].data;
 
-        f(x, pair(time, msg));
+        f(x, fa_pair_create(time, msg));
     }
 }
 

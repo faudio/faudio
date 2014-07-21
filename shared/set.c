@@ -222,7 +222,7 @@ fa_set_t fa_set_product(fa_set_t a, fa_set_t b)
     set_t c = fa_set_empty();
     fa_for_each(x, base_to_list(a->elems)) {
         fa_for_each(y, base_to_list(b->elems)) {
-            c = fa_set_dadd(pair(x, y), c);
+            c = fa_set_dadd(fa_pair_create(x, y), c);
         }
     }
     return c;

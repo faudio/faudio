@@ -100,7 +100,7 @@ static inline void _split_pull(fa_ptr_t x, fa_buffer_t buffer)
 void split_filter_pull(fa_ptr_t x, fa_io_source_t source, fa_io_callback_t callback, ptr_t data)
 {
     fa_io_sink_t sink2 = ((struct filter_base *) x)->data1;
-    fa_io_pull(source, _split_pull, pair(sink2, pair(callback, data)));
+    fa_io_pull(source, _split_pull, fa_pair_create(sink2, fa_pair_create(callback, data)));
 }
 void split_filter_push(fa_ptr_t x, fa_io_sink_t sink, fa_buffer_t buffer)
 {
@@ -340,8 +340,8 @@ void composed_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t 
     fa_io_filter_t f1 = ((struct filter_base *) x)->data1;
     fa_io_filter_t f2 = ((struct filter_base *) x)->data2;
 
-    fa_with_temp(closure, pair(callback, data)) {
-        fa_with_temp(x, pair(f2, closure)) {
+    fa_with_temp(closure, fa_pair_create(callback, data)) {
+        fa_with_temp(x, fa_pair_create(f2, closure)) {
             fa_io_pull_through(f1, upstream, _composed_pull, x);
         }
     }
@@ -388,7 +388,7 @@ void _simple_filter_pull1(ptr_t y, buffer_t buffer)
 void simple_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
 {
     if (upstream) {
-        fa_io_pull(upstream, _simple_filter_pull1, pair(x, pair(callback, data)));
+        fa_io_pull(upstream, _simple_filter_pull1, fa_pair_create(x, fa_pair_create(callback, data)));
     } else {
         fa_io_read_callback_t simple_pull = ((struct filter_base *) x)->data2;
         ptr_t                 cbData = ((struct filter_base *) x)->data3;
@@ -596,7 +596,7 @@ static inline void _run(fa_ptr_t pair, fa_buffer_t buffer)
 void fa_io_run(fa_io_source_t source, fa_io_sink_t sink)
 {
     bool ok = true;
-    fa_with_temp(pair, pair(sink, &ok)) {
+    fa_with_temp(pair, fa_pair_create(sink, &ok)) {
         while (ok) {
             fa_io_pull(source, _run, pair);
         }

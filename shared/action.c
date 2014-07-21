@@ -295,12 +295,12 @@ static inline ptr_t _repeat(ptr_t data, ptr_t compound)
     time_t interval;
     action_t simple;
     unpair(interval, simple, data);
-    return pair(simple, pair(interval, compound));
+    return fa_pair_create(simple, fa_pair_create(interval, compound));
 }
 
 fa_action_t fa_action_repeat(time_t interval, fa_action_t action)
 {
-    return fa_action_compound(_repeat, pair(interval, action));
+    return fa_action_compound(_repeat, fa_pair_create(interval, action));
 }
 
 
@@ -317,7 +317,7 @@ static inline ptr_t _many(ptr_t data, ptr_t compound)
         unpair(first, interval, fa_list_head(timeActions));
 
         action_t rest = fa_action_many(fa_list_tail(timeActions));
-        return pair(first, pair(interval, rest));
+        return fa_pair_create(first, fa_pair_create(interval, rest));
     }
 }
 
@@ -342,7 +342,7 @@ static inline ptr_t _if(ptr_t data, ptr_t compound)
 
     if (fa_action_is_simple(action)) {
         if (pred_function(pred_data, NULL)) {
-            return pair(action, NULL);
+            return fa_pair_create(action, NULL);
         } else {
             return NULL;
         }
@@ -352,9 +352,9 @@ static inline ptr_t _if(ptr_t data, ptr_t compound)
         time_t   interval = fa_action_compound_interval(action);
 
         if (pred_function(pred_data, NULL)) {
-            return pair(first,            pair(interval, fa_action_if(pred_function, pred_data, rest)));
+            return fa_pair_create(first,            fa_pair_create(interval, fa_action_if(pred_function, pred_data, rest)));
         } else {
-            return pair(fa_action_null(), pair(interval, fa_action_if(pred_function, pred_data, rest)));
+            return fa_pair_create(fa_action_null(), fa_pair_create(interval, fa_action_if(pred_function, pred_data, rest)));
         }
     }
 }
@@ -371,7 +371,7 @@ static inline ptr_t _while(ptr_t data, ptr_t compound)
 
     if (fa_action_is_simple(action)) {
         if (pred_function(pred_data, NULL)) {
-            return pair(action, NULL);
+            return fa_pair_create(action, NULL);
         } else {
             return NULL;
         }
@@ -381,7 +381,7 @@ static inline ptr_t _while(ptr_t data, ptr_t compound)
         time_t   interval = fa_action_compound_interval(action);
 
         if (pred_function(pred_data, NULL)) {
-            return pair(first,            pair(interval, fa_action_while(pred_function, pred_data, rest)));
+            return fa_pair_create(first,            fa_pair_create(interval, fa_action_while(pred_function, pred_data, rest)));
         } else {
             return NULL;
         }
@@ -400,7 +400,7 @@ static inline ptr_t _until(ptr_t data, ptr_t compound)
 
     if (fa_action_is_simple(action)) {
         if (!pred_function(pred_data, NULL)) {
-            return pair(action, NULL);
+            return fa_pair_create(action, NULL);
         } else {
             return NULL;
         }
@@ -410,7 +410,7 @@ static inline ptr_t _until(ptr_t data, ptr_t compound)
         time_t   interval = fa_action_compound_interval(action);
 
         if (!pred_function(pred_data, NULL)) {
-            return pair(first,            pair(interval, fa_action_until(pred_function, pred_data, rest)));
+            return fa_pair_create(first,            fa_pair_create(interval, fa_action_until(pred_function, pred_data, rest)));
         } else {
             return NULL;
         }
@@ -421,17 +421,17 @@ static inline ptr_t _until(ptr_t data, ptr_t compound)
 // [(Action, Time)] -> Action
 fa_action_t fa_action_if(pred_t pred, ptr_t data, fa_action_t action)
 {
-    return fa_action_compound(_if, pair(pair(pred, data), action));
+    return fa_action_compound(_if, fa_pair_create(fa_pair_create(pred, data), action));
 }
 
 fa_action_t fa_action_while(pred_t pred, ptr_t data, fa_action_t action)
 {
-    return fa_action_compound(_while, pair(pair(pred, data), action));
+    return fa_action_compound(_while, fa_pair_create(fa_pair_create(pred, data), action));
 }
 
 fa_action_t fa_action_until(pred_t pred, ptr_t data, fa_action_t action)
 {
-    return fa_action_compound(_until, pair(pair(pred, data), action));
+    return fa_action_compound(_until, fa_pair_create(fa_pair_create(pred, data), action));
 }
 
 
