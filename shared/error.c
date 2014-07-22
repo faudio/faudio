@@ -16,7 +16,7 @@ typedef fa_error_interface_t error_interface_t;
 
 struct simple_error {
     fa_impl_t              impl;           //  Interface dispatcher
-    fa_error_severity_t          severity;
+    fa_error_severity_t    severity;
     fa_string_t            message;
     fa_string_t            origin;
 };

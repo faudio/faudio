@@ -34,18 +34,18 @@ typedef fa_atomic_ring_buffer_t ring_fa_buffer_t;
 
 struct _fa_atomic_ring_buffer_t {
 
-    fa_impl_t              impl;                   //  Interface dispatcher
+    fa_impl_t           impl;                   //  Interface dispatcher
 
     size_t              size;                   //  Size (immutable)
     size_t              first, last;            //  Next read or write, always < size
-    fa_atomic_t            count;                  //  Bytes written not yet read, always <= size
+    fa_atomic_t         count;                  //  Bytes written not yet read, always <= size
 
     //  if count == size, the buffer is full
     //  if count == 0,    the buffer is empty
     //  We can always read n bytes, where n == count
     //  We can always write n bytes, where n == (size-count)
 
-    byte_t             *data;                   //  Memory region (data..data+size) [0,1,2,3,4]
+    byte_t              *data;                  //  Memory region (data..data+size) [0,1,2,3,4]
 
     bool                closed;
     enum {

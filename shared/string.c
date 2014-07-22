@@ -33,9 +33,9 @@
 #define kStandardCodeSize   sizeof(uint16_t)    // Internal char size
 
 struct _fa_string_t {
-    fa_impl_t          impl;           // Dispatcher
+    fa_impl_t       impl;           // Dispatcher
     size_t          size;           // Character count
-    uint16_t       *data;           // Payload
+    uint16_t        *data;          // Payload
 };
 
 

@@ -44,11 +44,11 @@ typedef PmStream                   *native_stream_t;
 
 struct _fa_midi_session_t {
 
-    fa_impl_t              impl;               // Dispatcher
+    fa_impl_t           impl;               // Dispatcher
     system_time_t       acquired;           // Time of acquisition (not used at the moment)
 
-    fa_list_t              devices;            // Cached device list
-    fa_list_t              streams;            // All streams started on this sessiuon (list of stream_t)
+    fa_list_t           devices;            // Cached device list
+    fa_list_t           streams;            // All streams started on this sessiuon (list of stream_t)
 
     device_t            def_input;          // Default devices, both possibly null
     device_t            def_output;         // If present, these are also in the above list
@@ -56,35 +56,35 @@ struct _fa_midi_session_t {
 
 struct _fa_midi_device_t {
 
-    fa_impl_t              impl;               // Dispatcher
+    fa_impl_t           impl;               // Dispatcher
     native_index_t      index;              // Native device index
     session_t           session;            // Underlying session
 
     bool                input, output;      // Cached capabilities
-    fa_string_t            name;               // Cached names
-    fa_string_t            host_name;
+    fa_string_t         name;               // Cached names
+    fa_string_t         host_name;
 };
 
 struct _fa_midi_stream_t {
 
-    fa_impl_t              impl;               // Dispatcher
+    fa_impl_t           impl;               // Dispatcher
     native_stream_t     native_input,
                         native_output;      // Native stream(s)
     device_t            device;
 
-    fa_thread_t            thread;
+    fa_thread_t         thread;
     bool                aborted;            // Set to non-zero when thread should stop (and native streams stopped)
 
-    // fa_atomic_t         receivers;          // Atomic [(Unary, Ptr)]
+    // fa_atomic_t      receivers;          // Atomic [(Unary, Ptr)]
     int                 message_callback_count;
     fa_unary_t          message_callbacks[kMaxMessageCallbacks];
     fa_ptr_t            message_callback_ptrs[kMaxMessageCallbacks];
 
     fa_clock_t          clock;              // Clock used for scheduler and incoming events
-    fa_atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
-    fa_priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
+    fa_atomic_queue_t   in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
+    fa_priority_queue_t controls;           // Scheduled controls (Time, (Channel, Ptr))
 
-    // fa_list_t              incoming;
+    // fa_list_t           incoming;
 };
 
 static fa_thread_mutex_t   pm_mutex;

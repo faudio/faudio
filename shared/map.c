@@ -32,8 +32,8 @@ struct entry {
 typedef struct entry *entry_t;
 
 struct _fa_map_t {
-    fa_impl_t          impl;       //  Interface dispatcher
-    fa_set_t           entries;    //  Set of entries
+    fa_impl_t       impl;       //  Interface dispatcher
+    fa_set_t        entries;    //  Set of entries
 };
 
 

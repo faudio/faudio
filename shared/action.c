@@ -33,32 +33,32 @@ struct _fa_action_t {
         struct {
             channel_t               channel;
             double                  value;
-        }                       set;
+        }                           set;
 
         struct {
-            channel_t           channel;
-            unary_double_t      function;
-            fa_ptr_t               data;
-        }                       accum;
+            channel_t               channel;
+            unary_double_t          function;
+            fa_ptr_t                data;
+        }                           accum;
 
         struct {
-            name_t              name;
-            fa_ptr_t               value;
-        }                       send;
+            name_t                  name;
+            fa_ptr_t                value;
+        }                           send;
 
         struct {
-            fa_nullary_t           function;
-            fa_ptr_t               data;
-        }                       do_;
+            fa_nullary_t            function;
+            fa_ptr_t                data;
+        }                           do_;
 
         struct {
             // Action -> NULL or (SimpleAction, (Time, Action))
-            fa_unary_t             function;
-            fa_ptr_t               data;
-        }                       compound;
+            fa_unary_t              function;
+            fa_ptr_t                data;
+        }                           compound;
 
 
-    }                       fields;
+    }                               fields;
 };
 
 inline static action_t new_action(int tag)

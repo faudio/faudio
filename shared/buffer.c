@@ -26,13 +26,13 @@
 #define buffer_warn(str) // do nothing
 
 struct _fa_buffer_t {
-    fa_impl_t          impl;
+    fa_impl_t       impl;
 
     size_t          size;
-    uint8_t        *data;
+    uint8_t         *data;
 
-    fa_unary_t     destroy_function;
-    fa_ptr_t       destroy_data;
+    fa_unary_t      destroy_function;
+    fa_ptr_t        destroy_data;
 
     fa_map_t        meta;
 };

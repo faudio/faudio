@@ -25,13 +25,13 @@ typedef struct node            *node_t;
 typedef fa_priority_queue_t        queue_t;
 
 struct node {
-    fa_ptr_t           value;          // Value
+    fa_ptr_t        value;          // Value
     node_t          left;           // Children
     node_t          right;
 };
 
 struct _fa_priority_queue_t {
-    fa_impl_t          impl;           // Dispatcher
+    fa_impl_t       impl;           // Dispatcher
     node_t          node;
 };
 

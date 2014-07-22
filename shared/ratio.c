@@ -15,7 +15,7 @@ typedef fa_ratio_num_t    num_t;
 typedef fa_ratio_denom_t  denom_t;
 
 struct _fa_ratio_t {
-    fa_impl_t          impl;       //  Interface dispatcher
+    fa_impl_t       impl;       //  Interface dispatcher
 
     num_t           num;        //  Components
     denom_t         denom;

@@ -34,13 +34,13 @@
 struct node {
     size_t          count;      //  Number of references
     struct node    *next;       //  Next node or null
-    fa_ptr_t           value;      //  The value
+    fa_ptr_t        value;      //  The value
 };
 
 typedef struct node *node_t;
 
 struct _fa_list_t {
-    fa_impl_t          impl;       //  Interface dispatcher
+    fa_impl_t       impl;       //  Interface dispatcher
     node_t          node;       //  Top-level node
 };
 

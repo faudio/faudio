@@ -41,7 +41,7 @@
 #define base_to_list        fa_list_to_list
 
 struct _fa_set_t {
-    fa_impl_t          impl;       //  Interface dispatcher
+    fa_impl_t       impl;       //  Interface dispatcher
     base_t          elems;
 };
 

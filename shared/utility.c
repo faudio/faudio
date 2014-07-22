@@ -21,7 +21,7 @@ static unsigned       gInitCount    = 0;
 static long           gBytesAlloc   = 0;
 static long           gRegionCount = 0;
 static log_func_t     gLogFunc      = NULL;
-static fa_ptr_t          gLogData      = NULL;
+static fa_ptr_t       gLogData      = NULL;
 
 static struct {
     char *pre;

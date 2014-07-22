@@ -52,15 +52,15 @@ typedef PaStream     *native_stream_t;
 
 struct _fa_audio_session_t {
 
-    fa_impl_t              impl;               // Dispatcher
+    fa_impl_t           impl;               // Dispatcher
     system_time_t       acquired;           // Time of acquisition (not used at the moment)
 
-    fa_list_t              devices;            // Cached device list
+    fa_list_t           devices;            // Cached device list
 
     device_t            def_input;          // Default devices, both possibly null
     device_t            def_output;         // If present, these are also in the above list
 
-    fa_list_t              streams;            // All streams started on this sessiuon (list of stream_t)
+    fa_list_t           streams;            // All streams started on this sessiuon (list of stream_t)
 
     struct {
         double          sample_rate;
@@ -78,18 +78,18 @@ struct _fa_audio_session_t {
         }                           elements[kMaxStatusCallbacks];
     }                               callbacks;          // Status callbacks
 
-    fa_pair_t                          status_closure;
+    fa_pair_t                       status_closure;
 };
 
 struct _fa_audio_device_t {
 
-    fa_impl_t              impl;               // Dispatcher
+    fa_impl_t           impl;               // Dispatcher
     native_index_t      index;              // Native device index
     native_host_t       host;
     session_t           session;            // Underlying session
 
-    fa_string_t            name;               // Cached names
-    fa_string_t            host_name;
+    fa_string_t         name;               // Cached names
+    fa_string_t         host_name;
 
     // bool                muted;           // Not used at the moment
     // double              volume;
@@ -97,12 +97,12 @@ struct _fa_audio_device_t {
 
 struct _fa_audio_stream_t {
 
-    fa_impl_t              impl;               // Dispatcher
+    fa_impl_t           impl;               // Dispatcher
     native_stream_t     native;             // Native stream, or NULL if closed
     device_t            input, output;
 
     unsigned            signal_count;       // Number of signals (same as number of outputs)
-    fa_signal_t            signals[kMaxSignals];
+    fa_signal_t         signals[kMaxSignals];
     state_t             state;              // DSP state
     int64_t             last_time;          // Cached time in milliseconds
 
@@ -112,18 +112,18 @@ struct _fa_audio_stream_t {
     PaStreamCallbackFlags pa_flags;         // Potential error messages from PortAudio
 
     struct {
-        fa_thread_t        thread;
+        fa_thread_t     thread;
         // fa_thread_mutex_t         mutex;
         bool            stop;
     }                   controller;         // Controller thread (where scheduling runs)
 
-    fa_atomic_queue_t      before_controls;    // Non-sechedyled controls
+    fa_atomic_queue_t   before_controls;    // Non-sechedyled controls
 
-    fa_atomic_queue_t      in_controls;        // From scheduler to audio (AtomicQueue SomeAction)
-    fa_atomic_queue_t      short_controls;     // Directly to audio (AtomicQueue SomeAction)
-    fa_atomic_queue_t      out_controls;       // Audio to scheduler (AtomicQueue SomeAction)
+    fa_atomic_queue_t   in_controls;        // From scheduler to audio (AtomicQueue SomeAction)
+    fa_atomic_queue_t   short_controls;     // Directly to audio (AtomicQueue SomeAction)
+    fa_atomic_queue_t   out_controls;       // Audio to scheduler (AtomicQueue SomeAction)
 
-    fa_priority_queue_t    controls;           // Scheduling queue (PriorityQueue (Time, Action))
+    fa_priority_queue_t controls;           // Scheduling queue (PriorityQueue (Time, Action))
 
     struct {
         int             count;

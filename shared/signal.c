@@ -33,7 +33,7 @@ typedef fa_action_t                     action_t;
 
 struct _fa_signal_t {
 
-    fa_impl_t                  impl;
+    fa_impl_t               impl;
 
     enum {
         time_signal,
@@ -58,33 +58,33 @@ struct _fa_signal_t {
         }                   constant;
 
         struct {
-            fa_string_t        name;
-            dfa_unary_t        function;
-            fa_ptr_t           data;
-            fa_signal_t        a;
+            fa_string_t     name;
+            dfa_unary_t     function;
+            fa_ptr_t        data;
+            fa_signal_t     a;
         }                   lift;
 
         struct {
-            fa_string_t        name;
-            dfa_binary_t       function;
-            fa_ptr_t           data;
-            fa_signal_t        a;
-            fa_signal_t        b;
+            fa_string_t     name;
+            dfa_binary_t    function;
+            fa_ptr_t        data;
+            fa_signal_t     a;
+            fa_signal_t     b;
         }                   lift2;
 
         struct {
             fixpoint_t      function;
-            fa_ptr_t           data;
+            fa_ptr_t        data;
         } loop;
 
         struct {
             int             n;
-            fa_signal_t        a;
+            fa_signal_t     a;
         } delay;
 
         struct {
             custom_proc_t   proc;
-            fa_signal_t        a;
+            fa_signal_t     a;
         }                   custom;
 
         struct {
@@ -94,7 +94,7 @@ struct _fa_signal_t {
         struct {
             int             n;
             int             c;
-            fa_signal_t        a;
+            fa_signal_t     a;
         }                   output;
     }                       fields;
 
