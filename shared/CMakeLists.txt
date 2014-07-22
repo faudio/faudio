@@ -9,7 +9,7 @@ list(APPEND SRCS
   core.c
   action.c
   atomic/queue.c
-  atomic/stack.c
+  # atomic/stack.c
   atomic/ring_buffer.c
   audio.c
   midi.c

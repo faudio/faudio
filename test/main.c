@@ -496,6 +496,7 @@ void test_atomic_queue()
 
 // --------------------------------------------------------------------------------
 
+/*
 struct test_atomic_stack_reader_args {
     fa_atomic_stack_t stack;
     fa_atomic_t active;
@@ -555,6 +556,8 @@ void test_atomic_stack()
 {
     test_atomic_stack_(5, 2);
 }
+*/
+
 
 // --------------------------------------------------------------------------------
 
@@ -1950,7 +1953,7 @@ int main(int argc, char const *argv[])
 
         add_test(atomic);
         add_test(atomic_queue);
-        add_test(atomic_stack);
+        // add_test(atomic_stack);
         add_test(atomic_ring_buffer);
 
         add_test(for_each);

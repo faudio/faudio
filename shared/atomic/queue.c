@@ -24,15 +24,15 @@
  */
 
 struct node {
-    struct node    *next;
-    fa_ptr_t           value;
+    struct node         *next;
+    fa_ptr_t            value;
 };
 
 typedef struct node *node_t;
 
 struct _fa_atomic_queue_t {
-    fa_impl_t      impl;               //  Interface dispatcher
-    fa_atomic_t    first, div, last;   //  Node refs
+    fa_impl_t           impl;               //  Interface dispatcher
+    fa_atomic_t         first, div, last;   //  Node refs
 };
 
 fa_ptr_t atomic_queue_impl(fa_id_t interface);
