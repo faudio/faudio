@@ -78,14 +78,14 @@ typedef OSStatus                    native_fa_error_t;
 #define kSysexMaxSize               1024
 
 struct _fa_midi_session_t {
-    fa_impl_t                          impl;               // Dispatcher
+    fa_impl_t                       impl;               // Dispatcher
     native_session_t                native;
 
-    fa_list_t                          devices;            // Cached device list
+    fa_list_t                       devices;            // Cached device list
     device_t                        def_input;          // Default devices, both possibly null
     device_t                        def_output;         // If present, these are also in the above list
 
-    fa_list_t                          streams;            // All streams started on this sessiuon (list of stream_t)
+    fa_list_t                       streams;            // All streams started on this sessiuon (list of stream_t)
 
     struct {
         int                         count;
@@ -105,7 +105,7 @@ struct _fa_midi_session_t {
 };
 
 struct _fa_midi_device_t {
-    fa_impl_t                          impl;               // Dispatcher
+    fa_impl_t                       impl;               // Dispatcher
     native_device_t                 native;             // Native device
     session_t                       session;            // Enclosing session
 
@@ -115,14 +115,14 @@ struct _fa_midi_device_t {
 
 struct _fa_midi_stream_t {
 
-    fa_impl_t                          impl;               // Dispatcher
+    fa_impl_t                       impl;               // Dispatcher
     native_stream_t                 native;             // Native stream
     device_t                        device;             // Enclosing session
 
     fa_clock_t                      clock;              // Clock used for scheduler and incoming events
-    fa_atomic_queue_t                  in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
-    fa_atomic_queue_t                  short_controls;     // Controls to run directly (optimization)
-    fa_priority_queue_t                controls;           // Scheduled controls (Time, (Channel, Ptr))
+    fa_atomic_queue_t               in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
+    fa_atomic_queue_t               short_controls;     // Controls to run directly (optimization)
+    fa_priority_queue_t             controls;           // Scheduled controls (Time, (Channel, Ptr))
     int                             timer_id;           // Used to unregister timer callbacks
 
     bool                            in_sysex;           // Currently receiving a SysEx message
@@ -321,7 +321,12 @@ inline static void delete_stream(stream_t stream)
 */
 
 
-// A non-null value which is not a valid pointer either
+/*
+    kRequestSession
+        Synonym for null.
+    kNoSession
+        A non-null value which is not a valid pointer either
+*/
 #define kNoSession      ((session_t) 1)
 #define kRequestSession ((session_t) 0)
 
@@ -607,12 +612,9 @@ fa_ptr_t fa_midi_end_all_sessions()
 }
 
 
-
-
-
-
-
-
+#pragma mark ---------------------------------------------------------------------------
+#pragma mark Introspection
+#pragma mark ---------------------------------------------------------------------------
 
 fa_list_t fa_midi_all(session_t session)
 {
@@ -705,14 +707,9 @@ bool fa_midi_has_output(device_t device)
 }
 
 
-
-
-
-
-
-
-
-
+#pragma mark ---------------------------------------------------------------------------
+#pragma mark Stream start and stop
+#pragma mark ---------------------------------------------------------------------------
 
 void midi_fa_inform_opening(device_t device)
 {
@@ -768,11 +765,13 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
     stream_t stream = x;
     // printf("Called status_listener (if you see this, please report it as a bug)\n");
 
-    // TODO tolerate SysEx distributed over many packets
+    // We currently do not tolerate SysEx distributed over many packets
     // Do an extra reset here just in case
     reset_sysex_buffer(stream);
 
-    // TODO optinally get time from time stamp
+    // Use stream clock for time stamp
+    // We could get time from time stamp for more relative precision, but that would
+    // require an extra step to with the stream clock.
     fa_time_t time = fa_clock_time(stream->clock);
 
     for (int i = 0; i < packetList->numPackets; ++i) {
@@ -844,32 +843,6 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
     }
 
     fa_destroy(time);
-
-
-    // // TODO optionally use CoreMIDI time
-    // fa_time_t time = fa_clock_time(stream->clock);
-    //
-    // // Started receiving a SysEx
-    // if (packet->data[0] == 0xf0) {
-    //     stream->in_sysex = true;
-    // }
-    //
-    // if (stream->in_sysex) {
-    //     fa_midi_message_t msg;
-    //     fa_buffer_t b = fa_copy(fa_buffer_wrap((void*) packet->data, packet->length, NULL, NULL));
-    //     msg = fa_midi_message_create_sysex(b);
-    //     forward_fa_message_to_callbacks(stream, time, msg);
-    //
-    // } else {
-    //     fa_midi_message_t msg;
-    //     msg = fa_midi_message(packet->data[0], packet->data[1], packet->data[2]);
-    //     forward_fa_message_to_callbacks(stream, time, msg);
-    // }
-    //
-    // // Finished receiving a SysEx
-    // if (packet->data[0] == 0xf7) {
-    //     stream->in_sysex = false;
-    // }
 }
 
 void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
@@ -884,8 +857,6 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
         fa_warn(fa_string_dappend(fa_string("Compound action passed to Midi.forwardActionToMidi: "), fa_string_show(action)));
         return NULL;
     }
-
-    // fa_print("%s\n", action);
 
     if (fa_action_is_send(action)) {
         // fa_string_t name   = fa_action_send_name(action);
