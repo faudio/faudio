@@ -363,43 +363,27 @@ void fa_signal_destroy(fa_signal_t signal)
 // --------------------------------------------------------------------------------
 // Introspection etc
 
-bool fa_signal_is_variable(fa_signal_t a)
-{
-    assert(false && "Not implemented");
-}
-
-
 bool fa_signal_is_constant(fa_signal_t a)
 {
-    return !fa_signal_is_variable(a);
+    if (is_constant(a)) {
+        return true;
+    }
+    if (is_lift(a)) {
+        return fa_signal_is_constant(lift2_get(a, a));
+    }
+    if (is_lift2(a)) {        
+        return fa_signal_is_constant(lift2_get(a, a)) 
+            && fa_signal_is_constant(lift2_get(a, b));
+    }
+    return false;
 }
 
-
-bool fa_signal_are_constant(fa_list_t a)
+bool fa_signal_is_variable(fa_signal_t a)
 {
-    assert(false && "Not implemented");
+    return !fa_signal_is_constant(a);
 }
-
 
 int fa_signal_signal_node_count(fa_signal_t a)
-{
-    assert(false && "Not implemented");
-}
-
-
-int fa_signal_required_inputs(fa_signal_t a)
-{
-    assert(false && "Not implemented");
-}
-
-
-int fa_signal_required_buses(fa_signal_t a)
-{
-    assert(false && "Not implemented");
-}
-
-
-int fa_signal_required_delay(fa_signal_t a)
 {
     assert(false && "Not implemented");
 }
@@ -844,7 +828,16 @@ double *write_bus(int n, int c, state_t state)
     return state->buses + (index_bus((bp + n) % max_delay(state), c, state));
 }
 
-//----------
+
+
+
+
+
+
+
+
+
+
 
 /**
     Loops through the custom processors in a state_t or state2_t, running
@@ -958,6 +951,13 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
     fa_warn(fa_string_dappend(fa_string("Unknown simple action passed to Signal.runSimpleAction: "), fa_string_show(action)));
     return NULL;
 }
+
+
+
+
+
+
+
 
 
 /**
@@ -1140,9 +1140,7 @@ void fa_signal_run(int count, fa_list_t controls, fa_signal_t a, double *output)
         run_actions(controls2, now, run_simple_action_, state);
 
         run_custom_procs(custom_proc_render, 1, state);
-
         output[i] = step(a2, state);
-
         inc_state1(state);
     }
 
