@@ -89,11 +89,13 @@ struct _fa_signal_t {
 
         struct {
             int             c;
+            fa_ptr_t        proc; // Custom processor (if any)
         }                   input;
 
         struct {
             int             n;
             int             c;
+            fa_ptr_t        proc; // Custom processor (if any)
             fa_signal_t     a;
         }                   output;
     }                       fields;
