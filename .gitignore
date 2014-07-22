@@ -36,3 +36,4 @@ stop-server.sh
 *.ogg
 *.rawMono
 .lispworks
+repl.sh
