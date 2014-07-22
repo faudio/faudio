@@ -31,10 +31,12 @@ type Macro = Lisp -> Lisp
 type CName = String
 data CType
   = CPtr CType
+  | CConst CType
   | CType String
   deriving (Eq, Ord, Show)
 data CDecl
-  = CTypedefD CName CType
+  = CInclude String
+  | CTypedefD CName CType
   | CStructD CName [(CDecl, String)]
   | CFuncD CName CType [(CName, CType)] [CStm]
   deriving (Eq, Ord, Show)
@@ -62,8 +64,10 @@ data CExpr
 showC :: CDecl -> String
 showC = showDecl
   where
-    showType (CPtr x) = "*" ++ showType x
+    showType (CPtr x) = showType x ++ "*"
+    showType (CConst x) = "const " ++ showType x
     showType (CType x) = x
+    showDecl (CInclude e) = "#include <" ++ e ++ ">"
     showDecl (CTypedefD n t) = "typedef " ++ showType t ++ n
     showDecl (CStructD n xs) = "struct {}" -- TODO
     showDecl (CFuncD n rt ps b) = showType rt ++ " " ++ n 
@@ -126,7 +130,7 @@ compilePrimE = go
   go (Symbol "t")   = CVar "true"
   go (Number (I n)) = CInt n
   go (Number (D n)) = CFloat n
-  go (String s)     = CApp "fa_string" [CStr ((compileName.unpack) s)]
+  go (String s)     = CApp "fa_string_from_utf8" [CStr ((compileName.unpack) s)]
   go (List [Symbol "c-string", String s]) = CStr ((compileName.unpack) s)
 
   -- Single variable
@@ -170,7 +174,23 @@ compilePrimS x = CExpr $ compilePrimE x
 
 -- TODO function pointers etc
 compilePrimT :: Lisp -> CType
-compilePrimT _ = CType "int"
+compilePrimT = go
+  where
+    go (Symbol t) = prim t
+    go (List [Symbol ":pointer", t]) = CPtr (go t)
+    go (List [Symbol ":const", t]) = CConst (go t)
+    
+    prim ":int"         = CType "int"
+    prim ":uint"        = CType "uint"
+    prim ":int32"       = CType "int32"
+    prim ":uint32"      = CType "uint32"
+    prim ":int64"       = CType "int64"
+    prim ":uint64"      = CType "uint64"
+    prim ":float"       = CType "float"
+    prim ":double"      = CType "double"
+    prim ":char"        = CType "char"
+    prim ":uchar"       = CType "uchar"
+    prim "string-type"  = CType "fa_string_t"
 
 compilePrimD :: Lisp -> CDecl
 -- (defun foo (x))
@@ -187,6 +207,7 @@ compilePrimD (List (Symbol "defun" : Symbol n : t@(Symbol _) : List ps : body)) 
       (compilePrimT t)
       (fmap compileParam ps)
       (compileBody body)
+compilePrimD (List (Symbol "include" : String n : [])) = CInclude (unpack n)
 compilePrimD x = error $ "compilePrimD: Unknown form " ++ show x
 
 compileParam (Symbol x) = (compileName.unpack $ x,CType "fa_ptr_t")
