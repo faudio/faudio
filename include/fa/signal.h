@@ -185,6 +185,9 @@ typedef struct {
         You probably do not want to do this. This is a very low-level function used
         internally in faudio for implementing new I/O backends, plug-in formats. If
         you simply want to lift a pure function into the audio thread, see `fa_signal_lift`.            
+
+    @deprecated
+        Use XXX instead.
 */
 fa_signal_t fa_signal_custom(fa_signal_custom_processor_t *,
                              fa_signal_t signal);
