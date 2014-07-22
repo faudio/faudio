@@ -9,11 +9,14 @@ import   Data.Attoparsec.Number
 import Data.AttoLisp
 import qualified Data.Attoparsec.ByteString as P
 import qualified Data.List as L
+import qualified Data.List.Split as LS
 import Data.Text(unpack)
 
 main = do
   !inp <- getContents
-  putStrLn inp
+  -- putStrLn "/*"
+  -- putStrLn inp
+  -- putStrLn "*/"
   putStrLn ""
   putStrLn $ translateFlisp inp
   putStrLn ""
@@ -64,7 +67,7 @@ showC = showDecl
       ++ "(" ++ L.intercalate "," (map (showType . snd) ps) ++ ")"
       ++ showStm (CBlock b)
     showStm (CBlock b)  = "{\n" ++ L.intercalate "\n" (map showStm b) ++ "\n}"
-    showStm (CIf p a b) = "if (" ++ showExpr p ++ ") " ++ showStm a ++ maybe "" showStm b
+    showStm (CIf p a b) = "if (" ++ showExpr p ++ ") " ++ showStm a ++ maybe "" ((" else " ++ ) . showStm) b
     showStm (CWhile p a) = "while (" ++ showExpr p ++ ") " ++ showStm a
     showStm (CAssign t n e) = maybe "" ((++ " ").showType) t ++ "" ++ n ++ " = " ++ showExpr e ++ ";"
     showStm (CExpr e) = showExpr e ++ ";"
@@ -112,6 +115,13 @@ Primitives
 
 -}
 compilePrim :: Lisp -> CExpr
+compilePrim (Symbol "nil") = CVar "false"
+compilePrim (Symbol "t")   = CVar "true"
+compilePrim (Symbol n) = CVar ((compileName.unpack) n)
+compilePrim (Number (I n)) = CInt n
+compilePrim (Number (D n)) = CFloat n
+compilePrim (String s)                  = CApp "__tostring__" [CStr ((compileName.unpack) s)]
+compilePrim (List [Symbol "c-string", String s]) = CStr ((compileName.unpack) s)
 compilePrim (List [Symbol "not", x])    = COp1 "!" (compilePrim x)
 compilePrim (List [Symbol "negate", x])    = COp1 "-" (compilePrim x)
 compilePrim (List [Symbol "and", x, y]) = COp2 "&&" (compilePrim x) (compilePrim y)
@@ -121,25 +131,41 @@ compilePrim (List [Symbol "-", x, y])   = COp2 "-" (compilePrim x) (compilePrim 
 compilePrim (List [Symbol "*", x, y])   = COp2 "*" (compilePrim x) (compilePrim y)
 compilePrim (List [Symbol "/", x, y])   = COp2 "/" (compilePrim x) (compilePrim y)
 compilePrim (List [Symbol "%", x, y])   = COp2 "%" (compilePrim x) (compilePrim y)
-compilePrim (List (Symbol n : xs))      = CApp (unpack n) (fmap compilePrim xs)
+compilePrim (List [Symbol "<", x, y])   = COp2 "<" (compilePrim x) (compilePrim y)
+compilePrim (List [Symbol ">", x, y])   = COp2 ">" (compilePrim x) (compilePrim y)
+compilePrim (List [Symbol "<=", x, y])   = COp2 "<=" (compilePrim x) (compilePrim y)
+compilePrim (List [Symbol ">=", x, y])   = COp2 ">=" (compilePrim x) (compilePrim y)
+compilePrim (List (Symbol n : xs))      = CApp ((compileName.unpack) n) (fmap compilePrim xs)
+-- compilePrim (List (Symbol n : []))      = CVar ((compileName.unpack) n)
+compilePrim x = error $ "compilePrim: Unknown form " ++ show x
 
-compilePrim (String s)                  = CApp "__tostring__" [CStr (unpack s)]
-compilePrim (List [Symbol "c-string", String s]) = CStr (unpack s)
-compilePrim (Number (I n)) = CInt n
-compilePrim (Number (D n)) = CFloat n
-compilePrim (Symbol n) = CVar (unpack n)
 
 compilePrimS (List (Symbol "progn":xs))          = CBlock (fmap compilePrimS xs)
-compilePrimS (List [Symbol "setf", Symbol n, y]) = CAssign Nothing (unpack n) (compilePrim y)
+compilePrimS (List [Symbol "setf", Symbol n, y]) = CAssign Nothing ((compileName.unpack) n) (compilePrim y)
 compilePrimS (List (Symbol "if":p:a:[]))         = CIf (compilePrim p) (compilePrimS a) Nothing
 compilePrimS (List (Symbol "if":p:a:b:[]))       = CIf (compilePrim p) (compilePrimS a) (Just $ compilePrimS b)
+compilePrimS (List (Symbol "if":_))              = error "Strange if"
 compilePrimS x = CExpr $ compilePrim x
 
 compilePrimT _ = CType "ptr_t"
 
 compilePrimD (List (Symbol "defun" : Symbol n : t : body))
-  = CFuncD (unpack n) (CType "ptr_t") [] (fmap compilePrimS body)
+  = CFuncD ((compileName.unpack) n) (CType "ptr_t") [] (compileBody body)
+  where
+    compileBody []  = error "Empty body"
+    compileBody xs  = fmap compilePrimS (init xs) ++ [CReturn $ compilePrim $ last xs]
   -- TODO translate n
+compilePrimD x = error $ "compilePrimD: Unknown form " ++ show x
+
+compileName :: String -> String
+compileName = id
+  . replace "-" "_" 
+  . replace ":" "_"
+  . replace "+" "add"
+  -- . replace "-" "subtract"
+  . replace "*" "multiply"
+  where
+    replace o n = L.intercalate n . LS.splitOn o
 
 translateFlisp :: String -> String
 translateFlisp x = case P.parse lisp (fromString x) of
