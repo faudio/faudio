@@ -323,6 +323,16 @@ fa_ptr_t fa_dadd(fa_ptr_t a, fa_ptr_t b)
 
 GENERIC1(copy,      copy,           fa_ptr_t, fa_ptr_t);
 GENERIC1(destroy,   destroy,        fa_ptr_t, void);
+GENERIC2(semigroup, append,         fa_ptr_t, fa_ptr_t, fa_ptr_t);
+GENERIC1(monoid,    empty,          fa_ptr_t, fa_ptr_t);
+
+fa_ptr_t fa_dappend(fa_ptr_t a, fa_ptr_t b)
+{
+    fa_ptr_t c = fa_append(a, b);
+    fa_destroy(a);
+    fa_destroy(b);
+    return c;
+}
 
 fa_string_t fa_show(fa_ptr_t a)
 {

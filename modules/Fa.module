@@ -201,6 +201,19 @@ module Fa
     destroy : Ptr -> Void;
     // TODO deepDestroy : Ptr -> Void;
 
+    type Semigroup = struct {
+        append : ((Ptr, Ptr) -> Ptr)*
+    };
+
+    type Monoid = struct {
+        empty : ((dummy : Ptr) -> Ptr)*
+    };
+
+    append : (Ptr, Ptr) -> Ptr;
+    dappend : (Ptr, Ptr) -> Ptr;
+    
+    empty : Ptr -> Ptr;
+
     /** Return whether the given value is an error or not.
 
         This function is often used with [log](@ref fa_error_log) as in:

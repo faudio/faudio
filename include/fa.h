@@ -300,6 +300,25 @@ fa_ptr_t fa_move(fa_ptr_t ptr);
 */
 void fa_destroy(fa_ptr_t ptr);
 
+
+typedef struct {
+            fa_ptr_t (* append)(fa_ptr_t, fa_ptr_t);
+        } fa_semigroup_t;
+
+
+typedef struct {
+            fa_ptr_t (* empty)(fa_ptr_t dummy);
+        } fa_monoid_t;
+
+
+fa_ptr_t fa_append(fa_ptr_t ptr, fa_ptr_t ptr_);
+
+
+fa_ptr_t fa_dappend(fa_ptr_t ptr, fa_ptr_t ptr_);
+
+
+fa_ptr_t fa_empty(fa_ptr_t ptr);
+
 /** Return whether the given value is an error or not.
 
     This function is often used with [log](@ref fa_error_log) as in:

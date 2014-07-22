@@ -643,6 +643,10 @@ static bool string_greater_than(fa_ptr_t as, fa_ptr_t bs)
     }
 }
 
+static fa_ptr_t _string_append(fa_ptr_t as, fa_ptr_t bs)
+{
+    return fa_string_append(as, bs);
+}
 
 static fa_string_t string_show(fa_ptr_t a)
 {
@@ -677,6 +681,7 @@ fa_ptr_t string_impl(fa_id_t interface)
     static fa_destroy_t string_destroy_impl = { string_destroy };
     static fa_order_t string_order_impl = { string_less_than, string_greater_than };
     static fa_dynamic_t string_dynamic_impl = { string_get_type };
+    static fa_semigroup_t string_semigroup_impl = { _string_append };
 
     switch (interface) {
     case fa_equal_i:
@@ -696,6 +701,9 @@ fa_ptr_t string_impl(fa_id_t interface)
 
     case fa_dynamic_i:
         return &string_dynamic_impl;
+
+    case fa_semigroup_i:
+        return &string_semigroup_impl;
 
     default:
         return NULL;

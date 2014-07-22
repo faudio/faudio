@@ -332,6 +332,23 @@ void fa_audio_terminate()
 void add_audio_status_listener(fa_pair_t closure);
 void remove_audio_status_listener(fa_pair_t closure);
 
+#ifdef FLISP
+(defun fa-audio-begin-session ()
+  (if (not pa-mutex)
+    (assert nil _"Module not intialized"))
+  (fa-inform "Initializing real-time audio session")
+  (var session)
+  (fa-with-lock (pa-mutex)
+    (if (pa-status)
+      (progn
+        (setf session (cast session-t (audio-device-error "Overlapping")))
+        )
+        (inform "   Starting up PortAudio")
+        (Pa-Initialize)
+        (setf pa-status t)
+        (fa-inform ""))))
+#endif
+
 session_t fa_audio_begin_session()
 {
     if (!pa_mutex) {
