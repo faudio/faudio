@@ -181,11 +181,11 @@ compilePrimT = go
     go (List [Symbol ":const", t]) = CConst (go t)
     
     prim ":int"         = CType "int"
-    prim ":uint"        = CType "uint"
-    prim ":int32"       = CType "int32"
-    prim ":uint32"      = CType "uint32"
-    prim ":int64"       = CType "int64"
-    prim ":uint64"      = CType "uint64"
+    prim ":uint"        = CType "unsigned int"
+    prim ":int32"       = CType "int32_t"
+    prim ":uint32"      = CType "uint32_t"
+    prim ":int64"       = CType "int64_t"
+    prim ":uint64"      = CType "uint64_t"
     prim ":float"       = CType "float"
     prim ":double"      = CType "double"
     prim ":char"        = CType "char"
