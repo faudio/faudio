@@ -46,6 +46,16 @@
 */
 typedef struct _fa_action_t * fa_action_t;
 
+/** A nullary function that also receives time.
+*/
+typedef fa_ptr_t fa_action_nullary_with_time_t(fa_ptr_t, fa_time_t);
+
+/** A predicate that also receives time.
+*/
+typedef bool fa_action_pred_with_time_t(fa_ptr_t,
+                                        fa_time_t,
+                                        fa_ptr_t);
+
 /** Channel on which to carry out the action.
     
 */
@@ -190,9 +200,45 @@ fa_action_t fa_action_until(fa_pred_t pred,
                             fa_ptr_t predData,
                             fa_action_t action);
 
+/** Creates a derived action from the given action that executes íf and only given predicate holds.
+    The predicate function is called for every occurence.
+    
+    This is exactly like @ref fa_action_if, except that it also includes time.
+*/
+fa_action_t fa_action_if_with_time(fa_action_pred_with_time_t pred,
+                                   fa_ptr_t predData,
+                                   fa_action_t action);
+
+/** Creates a derived action from the given action that executes as long as the given predicate holds.
+    The predicate function is called for every occurence.
+    
+    This is exactly like @ref fa_action_while, except that it also includes time.
+*/
+fa_action_t fa_action_while_with_time(fa_action_pred_with_time_t pred,
+                                      fa_ptr_t predData,
+                                      fa_action_t action);
+
+/** Creates a derived action from the given action that executes as long as the given predicate
+    does *not* hold.
+    
+    The predicate function is called for every occurence.
+
+    This is exactly like @ref fa_action_until, except that it also includes time.
+*/
+fa_action_t fa_action_until_with_time(fa_action_pred_with_time_t pred,
+                                      fa_ptr_t predData,
+                                      fa_action_t action);
+
 /** Convert a unary function to an action.
 */
 fa_action_t fa_action_do(fa_nullary_t nullary, fa_ptr_t ptr);
+
+/** Convert a unary function to an action.
+    
+    This is exactly like @ref fa_action_do, except that it also includes time.
+*/
+fa_action_t fa_action_do_with_time(fa_action_nullary_with_time_t nullaryWithTime,
+                                   fa_ptr_t ptr);
 
 /** Returns whether the given action is simple or not.
 */

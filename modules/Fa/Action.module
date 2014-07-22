@@ -36,7 +36,14 @@ module Fa.Action
     /** The abstract type of actions.
     */
     type Action = opaque;
-    
+
+    /** A nullary function that also receives time.
+     */
+    type NullaryWithTime = (Ptr, Time) -> Ptr;
+
+    /** A predicate that also receives time.
+     */
+    type PredWithTime = (Ptr, Time, Ptr) -> Bool;
     
     /** Channel on which to carry out the action.
     */
@@ -167,9 +174,38 @@ module Fa.Action
      */
     until : (pred : Pred, predData : Ptr, action : Action) -> Action;
 
+    /** Creates a derived action from the given action that executes íf and only given predicate holds.
+        The predicate function is called for every occurence.
+        
+        This is exactly like @ref fa_action_if, except that it also includes time.
+     */
+    ifWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
+
+    /** Creates a derived action from the given action that executes as long as the given predicate holds.
+        The predicate function is called for every occurence.
+        
+        This is exactly like @ref fa_action_while, except that it also includes time.
+     */
+    whileWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
+
+    /** Creates a derived action from the given action that executes as long as the given predicate
+        does *not* hold.
+        
+        The predicate function is called for every occurence.
+
+        This is exactly like @ref fa_action_until, except that it also includes time.
+     */
+    untilWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
+
     /** Convert a unary function to an action.
      */
     do : (Nullary, Ptr) -> Action;
+
+    /** Convert a unary function to an action.
+        
+        This is exactly like @ref fa_action_do, except that it also includes time.
+     */
+    doWithTime : (NullaryWithTime, Ptr) -> Action;
 
     /** Returns whether the given action is simple or not.
      */
