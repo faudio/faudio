@@ -1,15 +1,23 @@
 
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE BangPatterns #-}
 
 module Flisp where
 
+import Data.String
 import   Data.Attoparsec.Number
 import Data.AttoLisp
 import qualified Data.Attoparsec.ByteString as P
 import qualified Data.List as L
 import Data.Text(unpack)
 
-main = putStrLn "flisp"
+main = do
+  !inp <- getContents
+  putStrLn inp
+  putStrLn ""
+  putStrLn $ translateFlisp inp
+  putStrLn ""
+  -- putStrLn "flisp"
 
 
 type Macro = Lisp -> Lisp
@@ -123,6 +131,8 @@ compilePrim (Symbol n) = CVar (unpack n)
 
 compilePrimS (List (Symbol "progn":xs))          = CBlock (fmap compilePrimS xs)
 compilePrimS (List [Symbol "setf", Symbol n, y]) = CAssign Nothing (unpack n) (compilePrim y)
+compilePrimS (List (Symbol "if":p:a:[]))         = CIf (compilePrim p) (compilePrimS a) Nothing
+compilePrimS (List (Symbol "if":p:a:b:[]))       = CIf (compilePrim p) (compilePrimS a) (Just $ compilePrimS b)
 compilePrimS x = CExpr $ compilePrim x
 
 compilePrimT _ = CType "ptr_t"
@@ -131,9 +141,11 @@ compilePrimD (List (Symbol "defun" : Symbol n : t : body))
   = CFuncD (unpack n) (CType "ptr_t") [] (fmap compilePrimS body)
   -- TODO translate n
 
-test = case P.parse lisp "(defun foo (a b c) (progn (+ 1 (+ 2 3)) (setf foppa 1) (print \"foo\") 3))" of
-  P.Done _ r -> putStrLn $ showC $ compilePrimD r
+translateFlisp :: String -> String
+translateFlisp x = case P.parse lisp (fromString x) of
+  P.Done _ r -> showC $ compilePrimD r
   _          -> error "Parse error"
 
 compileFlisp :: [Macro] -> [Lisp] -> [CDecl]
 compileFlisp _ = undefined
+
