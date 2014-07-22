@@ -1091,9 +1091,9 @@ void step_vector(fa_signal_t signal, state_t state, int count, double *out)
     }
 
     case output_signal: {
-        int         n         = output_get(signal, n);
-        int         c         = output_get(signal, c);
-        fa_signal_t    a         = output_get(signal, a);
+        int         n = output_get(signal, n);
+        int         c = output_get(signal, c);
+        fa_signal_t a = output_get(signal, a);
 
         step_vector(a, state, count, out);
         double *xs = write_samp(n, c, state);
