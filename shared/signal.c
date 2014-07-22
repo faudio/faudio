@@ -27,8 +27,8 @@
 
 typedef fa_signal_custom_processor_t   *custom_proc_t;
 typedef fa_signal_unary_signal_t        fixpoint_t;
-typedef fa_signal_unary_double_t        dfa_unary_t;
-typedef fa_signal_binary_double_t       dfa_binary_t;
+typedef fa_signal_unary_double_t        fa_dunary_t;
+typedef fa_signal_binary_double_t       fa_dbinary_t;
 typedef fa_action_t                     action_t;
 
 struct _fa_signal_t {
@@ -59,14 +59,14 @@ struct _fa_signal_t {
 
         struct {
             fa_string_t     name;
-            dfa_unary_t     function;
+            fa_dunary_t     function;
             fa_ptr_t        data;
             fa_signal_t     a;
         }                   lift;
 
         struct {
             fa_string_t     name;
-            dfa_binary_t    function;
+            fa_dbinary_t    function;
             fa_ptr_t        data;
             fa_signal_t     a;
             fa_signal_t     b;
@@ -574,7 +574,7 @@ fa_signal_t simplify(part_t *part, fa_list_t *procs, fa_signal_t signal2)
 
     case lift_signal: {
         fa_string_t    name        = lift_get(signal2, name);
-        dfa_unary_t    func        = lift_get(signal2, function);
+        fa_dunary_t    func        = lift_get(signal2, function);
         fa_ptr_t       func_data   = lift_get(signal2, data);
 
         fa_signal_t a              = simplify(part, procs, lift_get(signal2, a));
@@ -583,7 +583,7 @@ fa_signal_t simplify(part_t *part, fa_list_t *procs, fa_signal_t signal2)
 
     case lift2_signal: {
         fa_string_t    name        = lift2_get(signal2, name);
-        dfa_binary_t   func        = lift2_get(signal2, function);
+        fa_dbinary_t   func        = lift2_get(signal2, function);
         fa_ptr_t       func_data   = lift2_get(signal2, data);
 
         part_t part1;
@@ -978,7 +978,7 @@ double step(fa_signal_t signal, state_t state)
     }
 
     case lift_signal: {
-        dfa_unary_t    function  = lift_get(signal, function);
+        fa_dunary_t    function  = lift_get(signal, function);
         fa_ptr_t       data      = lift_get(signal, data);
         fa_signal_t    a         = lift_get(signal, a);
         double      xa        = step(a, state);
@@ -986,7 +986,7 @@ double step(fa_signal_t signal, state_t state)
     }
 
     case lift2_signal: {
-        dfa_binary_t   function  = lift2_get(signal, function);
+        fa_dbinary_t   function  = lift2_get(signal, function);
         fa_ptr_t       data      = lift2_get(signal, data);
         fa_signal_t    a         = lift2_get(signal, a);
         fa_signal_t    b         = lift2_get(signal, b);
@@ -1049,7 +1049,7 @@ void step_vector(fa_signal_t signal, state_t state, int count, double *out)
     }
 
     case lift_signal: {
-        dfa_unary_t    function  = lift_get(signal, function);
+        fa_dunary_t    function  = lift_get(signal, function);
         fa_ptr_t       data      = lift_get(signal, data);
         fa_signal_t    a         = lift_get(signal, a);
         step_vector(a, state, count, out);
@@ -1062,7 +1062,7 @@ void step_vector(fa_signal_t signal, state_t state, int count, double *out)
     }
 
     case lift2_signal: {
-        dfa_binary_t   function  = lift2_get(signal, function);
+        fa_dbinary_t   function  = lift2_get(signal, function);
         fa_ptr_t       data      = lift2_get(signal, data);
         fa_signal_t    a         = lift2_get(signal, a);
         fa_signal_t    b         = lift2_get(signal, b);
