@@ -19,7 +19,7 @@ typedef fa_signal_unary_double_t    unary_double_t;
 
 struct _fa_action_t {
 
-    fa_impl_t                      impl;
+    fa_impl_t                       impl;
 
     enum {
         set_action,
@@ -27,12 +27,12 @@ struct _fa_action_t {
         send_action,
         do_action,
         compound_action
-    }                           tag;
+    }                               tag;
 
     union {
         struct {
-            channel_t           channel;
-            double              value;
+            channel_t               channel;
+            double                  value;
         }                       set;
 
         struct {
