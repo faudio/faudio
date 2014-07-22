@@ -1,10 +1,12 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE TupleSections #-}
 
 module Flisp where
 
 import Data.String
+import Data.Monoid
 import   Data.Attoparsec.Number
 import Data.AttoLisp
 import qualified Data.Attoparsec.ByteString as P
@@ -18,7 +20,7 @@ main = do
   -- putStrLn inp
   -- putStrLn "*/"
   putStrLn ""
-  putStrLn $ translateFlisp inp
+  putStrLn $ L.intercalate "\n\n" $ translateFlispDefs inp
   putStrLn ""
   -- putStrLn "flisp"
 
@@ -40,6 +42,7 @@ data CStm
   = CBlock [CStm]
   | CIf CExpr CStm (Maybe CStm)
   | CWhile CExpr CStm
+  | CDecl CType CName
   | CAssign (Maybe CType) CName CExpr
   | CExpr CExpr
   | CReturn CExpr
@@ -64,12 +67,13 @@ showC = showDecl
     showDecl (CTypedefD n t) = "typedef " ++ showType t ++ n
     showDecl (CStructD n xs) = "struct {}" -- TODO
     showDecl (CFuncD n rt ps b) = showType rt ++ " " ++ n 
-      ++ "(" ++ L.intercalate "," (map (showType . snd) ps) ++ ")"
+      ++ "(" ++ L.intercalate "," (map (\(n,t) -> showType t ++ " " ++ n) ps) ++ ")"
       ++ showStm (CBlock b)
     showStm (CBlock b)  = "{\n" ++ L.intercalate "\n" (map showStm b) ++ "\n}"
     showStm (CIf p a b) = "if (" ++ showExpr p ++ ") " ++ showStm a ++ maybe "" ((" else " ++ ) . showStm) b
     showStm (CWhile p a) = "while (" ++ showExpr p ++ ") " ++ showStm a
-    showStm (CAssign t n e) = maybe "" ((++ " ").showType) t ++ "" ++ n ++ " = " ++ showExpr e ++ ";"
+    showStm (CDecl t n) = showType t ++ " " ++ n ++ ";"
+    showStm (CAssign t n e) = maybe "" ((++ " ").showType) t ++ n ++ " = " ++ showExpr e ++ ";"
     showStm (CExpr e) = showExpr e ++ ";"
     showStm (CReturn e) = "return " ++ showExpr e ++ ";"
     showExpr (COp1 n a) = n ++ showExpr a
@@ -114,61 +118,91 @@ Primitives
       "Number of references"))
 
 -}
-compilePrim :: Lisp -> CExpr
-compilePrim (Symbol "nil") = CVar "false"
-compilePrim (Symbol "t")   = CVar "true"
-compilePrim (Symbol n) = CVar ((compileName.unpack) n)
-compilePrim (Number (I n)) = CInt n
-compilePrim (Number (D n)) = CFloat n
-compilePrim (String s)                  = CApp "__tostring__" [CStr ((compileName.unpack) s)]
-compilePrim (List [Symbol "c-string", String s]) = CStr ((compileName.unpack) s)
-compilePrim (List [Symbol "not", x])    = COp1 "!" (compilePrim x)
-compilePrim (List [Symbol "negate", x])    = COp1 "-" (compilePrim x)
-compilePrim (List [Symbol "and", x, y]) = COp2 "&&" (compilePrim x) (compilePrim y)
-compilePrim (List [Symbol "or", x, y])  = COp2 "||" (compilePrim x) (compilePrim y)
-compilePrim (List [Symbol "+", x, y])   = COp2 "+" (compilePrim x) (compilePrim y)
-compilePrim (List [Symbol "-", x, y])   = COp2 "-" (compilePrim x) (compilePrim y)
-compilePrim (List [Symbol "*", x, y])   = COp2 "*" (compilePrim x) (compilePrim y)
-compilePrim (List [Symbol "/", x, y])   = COp2 "/" (compilePrim x) (compilePrim y)
-compilePrim (List [Symbol "%", x, y])   = COp2 "%" (compilePrim x) (compilePrim y)
-compilePrim (List [Symbol "<", x, y])   = COp2 "<" (compilePrim x) (compilePrim y)
-compilePrim (List [Symbol ">", x, y])   = COp2 ">" (compilePrim x) (compilePrim y)
-compilePrim (List [Symbol "<=", x, y])   = COp2 "<=" (compilePrim x) (compilePrim y)
-compilePrim (List [Symbol ">=", x, y])   = COp2 ">=" (compilePrim x) (compilePrim y)
-compilePrim (List (Symbol n : xs))      = CApp ((compileName.unpack) n) (fmap compilePrim xs)
--- compilePrim (List (Symbol n : []))      = CVar ((compileName.unpack) n)
-compilePrim x = error $ "compilePrim: Unknown form " ++ show x
+compilePrimE :: Lisp -> CExpr
+compilePrimE = go 
+ where
+  -- Literals
+  go (Symbol "nil") = CVar "false"
+  go (Symbol "t")   = CVar "true"
+  go (Number (I n)) = CInt n
+  go (Number (D n)) = CFloat n
+  go (String s)     = CApp "fa_string" [CStr ((compileName.unpack) s)]
+  go (List [Symbol "c-string", String s]) = CStr ((compileName.unpack) s)
+
+  -- Single variable
+  go (Symbol n) = CVar ((compileName.unpack) n)
+  
+  -- Operators
+  go (List [Symbol "not", x])    = COp1 "!" (go x)
+  go (List [Symbol "negate", x]) = COp1 "-" (go x)
+  go (List [Symbol "and", x, y]) = COp2 "&&" (go x) (go y)
+  go (List [Symbol "or", x, y])  = COp2 "||" (go x) (go y)
+  go (List [Symbol "+", x, y])   = COp2 "+" (go x) (go y)
+  go (List [Symbol "-", x, y])   = COp2 "-" (go x) (go y)
+  go (List [Symbol "*", x, y])   = COp2 "*" (go x) (go y)
+  go (List [Symbol "/", x, y])   = COp2 "/" (go x) (go y)
+  go (List [Symbol "%", x, y])   = COp2 "%" (go x) (go y)
+  go (List [Symbol "<", x, y])   = COp2 "<" (go x) (go y)
+  go (List [Symbol ">", x, y])   = COp2 ">" (go x) (go y)
+  go (List [Symbol "<=", x, y])  = COp2 "<=" (go x) (go y)
+  go (List [Symbol ">=", x, y])  = COp2 ">=" (go x) (go y)
+  go (List [Symbol "if", x, y, z])  = COp3 "?:" (go x) (go y) (go z)
+
+  -- Function
+  go (List (Symbol n : xs))      = CApp ((compileName.unpack) n) (fmap go xs)
+  go x = error $ "compilePrim: Unknown form " ++ show x
 
 
+compilePrimS (List (Symbol "defvar":Symbol n:[]))   = CDecl (CType "fa_ptr_t") (compileName.unpack$ n)
+compilePrimS (List (Symbol "defvar":Symbol n:t:[])) = CDecl (compilePrimT t) (compileName.unpack$ n)
+compilePrimS (List (Symbol "defvar":Symbol n:t:v:[])) = CAssign (Just $ compilePrimT t) (compileName.unpack$ n) (compilePrimE v)
+compilePrimS (List (Symbol "return":x:[]))       = CReturn (compilePrimE x)
 compilePrimS (List (Symbol "progn":xs))          = CBlock (fmap compilePrimS xs)
-compilePrimS (List [Symbol "setf", Symbol n, y]) = CAssign Nothing ((compileName.unpack) n) (compilePrim y)
-compilePrimS (List (Symbol "if":p:a:[]))         = CIf (compilePrim p) (compilePrimS a) Nothing
-compilePrimS (List (Symbol "if":p:a:b:[]))       = CIf (compilePrim p) (compilePrimS a) (Just $ compilePrimS b)
-compilePrimS (List (Symbol "if":_))              = error "Strange if"
-compilePrimS x = CExpr $ compilePrim x
+compilePrimS (List [Symbol "setf", Symbol n, y]) = CAssign Nothing ((compileName.unpack) n) (compilePrimE y)
+compilePrimS (List (Symbol "c-if":p:a:[]))       = CIf (compilePrimE p) (compilePrimS a) Nothing
+compilePrimS (List (Symbol "c-if":p:a:b:[]))     = CIf (compilePrimE p) (compilePrimS a) (Just $ compilePrimS b)
+compilePrimS (List (Symbol "c-if":_))            = error "Strange if"
+compilePrimS (List (Symbol "c-while":p:a:[]))    = CWhile (compilePrimE p) (compilePrimS a)
+compilePrimS x = CExpr $ compilePrimE x
 
-compilePrimT _ = CType "ptr_t"
+compilePrimT _ = CType "fa_ptr_t"
 
-compilePrimD (List (Symbol "defun" : Symbol n : t : body))
-  = CFuncD ((compileName.unpack) n) (CType "ptr_t") [] (compileBody body)
-  where
-    compileBody []  = error "Empty body"
-    compileBody xs  = fmap compilePrimS (init xs) ++ [CReturn $ compilePrim $ last xs]
-  -- TODO translate n
+compilePrimD (List (Symbol "defun" : Symbol n : List ps : body)) = 
+    CFuncD 
+      ((compileName.unpack) n)
+      (CType "fa_ptr_t")
+      (fmap ((,CType "fa_ptr_t").compileName.unpack.(\(Symbol x) -> x)) ps)
+      (compileBody body)
 compilePrimD x = error $ "compilePrimD: Unknown form " ++ show x
+
+compileBody []  = error "Empty body"
+compileBody xs  = fmap compilePrimS (init xs) ++ [CReturn $ compilePrimE $ last xs]
 
 compileName :: String -> String
 compileName = id
-  . replace "-" "_" 
   . replace ":" "_"
-  . replace "+" "add"
+  . replace "-" "_"
+  . replace "-type" "_t"
+  . replace "*" "__"
+  -- . replaceExact "-" "subtract" 
+  -- . replaceExact "+" "add"
   -- . replace "-" "subtract"
-  . replace "*" "multiply"
+  -- . replaceExact "*" "multiply"
+  . checkReserved
   where
+    replaceExact o n x = if x == o then n else x
     replace o n = L.intercalate n . LS.splitOn o
+    checkReserved x = if x `elem` res then error ("Reserved Name: '" ++ x ++ "', possibly by using a statement in expression context") else x
+    res = ["not", "negate", "and", "or", "if", "c-if", "c-while", "progn", "setf"]
+    
+translateFlispDefs :: String -> [String]
+translateFlispDefs x = case P.parse lisp ("(" <> fromString x <> ")") of
+  P.Done _ (List rs) -> fmap (showC . compilePrimD) rs
+  _                  -> error "Parse error"
 
-translateFlisp :: String -> String
-translateFlisp x = case P.parse lisp (fromString x) of
+-- Translate singlel definition
+translateFlispDef :: String -> String
+translateFlispDef x = case P.parse lisp (fromString x) of
   P.Done _ r -> showC $ compilePrimD r
   _          -> error "Parse error"
 
