@@ -37,3 +37,6 @@ stop-server.sh
 *.rawMono
 .lispworks
 repl.sh
+#*#
+*#*#
+*#*.*
