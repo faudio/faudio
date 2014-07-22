@@ -153,6 +153,7 @@ compilePrimE = go
   go x = error $ "compilePrim: Unknown form " ++ show x
 
 
+compilePrimS :: Lisp -> CStm
 compilePrimS (List (Symbol "defvar":Symbol n:[]))   = CDecl (CType "fa_ptr_t") (compileName.unpack$ n)
 compilePrimS (List (Symbol "defvar":Symbol n:t:[])) = CDecl (compilePrimT t) (compileName.unpack$ n)
 compilePrimS (List (Symbol "defvar":Symbol n:t:v:[])) = CAssign (Just $ compilePrimT t) (compileName.unpack$ n) (compilePrimE v)
@@ -163,18 +164,35 @@ compilePrimS (List (Symbol "c-if":p:a:[]))       = CIf (compilePrimE p) (compile
 compilePrimS (List (Symbol "c-if":p:a:b:[]))     = CIf (compilePrimE p) (compilePrimS a) (Just $ compilePrimS b)
 compilePrimS (List (Symbol "c-if":_))            = error "Strange if"
 compilePrimS (List (Symbol "c-while":p:a:[]))    = CWhile (compilePrimE p) (compilePrimS a)
+-- TODO switch
+compilePrimS (List (Symbol "c-switch":e:List cs:[])) = undefined
 compilePrimS x = CExpr $ compilePrimE x
 
-compilePrimT _ = CType "fa_ptr_t"
+-- TODO function pointers etc
+compilePrimT :: Lisp -> CType
+compilePrimT _ = CType "int"
 
+compilePrimD :: Lisp -> CDecl
+-- (defun foo (x))
 compilePrimD (List (Symbol "defun" : Symbol n : List ps : body)) = 
     CFuncD 
-      ((compileName.unpack) n)
+      (compileName.unpack $ n)
       (CType "fa_ptr_t")
-      (fmap ((,CType "fa_ptr_t").compileName.unpack.(\(Symbol x) -> x)) ps)
+      (fmap compileParam ps)
+      (compileBody body)
+-- (defun foo :t (x :t))
+compilePrimD (List (Symbol "defun" : Symbol n : t@(Symbol _) : List ps : body)) = 
+    CFuncD 
+      (compileName.unpack $ n)
+      (compilePrimT t)
+      (fmap compileParam ps)
       (compileBody body)
 compilePrimD x = error $ "compilePrimD: Unknown form " ++ show x
 
+compileParam (Symbol x) = (compileName.unpack $ x,CType "fa_ptr_t")
+compileParam (List [Symbol x, t]) = (compileName.unpack $ x,compilePrimT t)
+
+compileBody :: [Lisp] -> [CStm]
 compileBody []  = error "Empty body"
 compileBody xs  = fmap compilePrimS (init xs) ++ [CReturn $ compilePrimE $ last xs]
 
