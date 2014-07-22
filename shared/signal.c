@@ -933,7 +933,17 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         return NULL;
     }
 
-    // TODO accum
+    if (fa_action_is_accum(action)) {
+        int ch = fa_action_accum_channel(action);
+        fa_signal_unary_double_t f = fa_action_accum_function(action);
+        fa_ptr_t ctxt = fa_action_accum_data(action);
+
+        double x  = read_samp1(ch, state);
+        double x2 = f(ctxt, x);
+
+        write_samp1(0, ch, x2, state);
+        return NULL;
+    }
 
     if (fa_action_is_send(action)) {
         fa_string_t name = fa_action_send_name(action);
