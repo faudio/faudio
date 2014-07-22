@@ -512,12 +512,14 @@ void fa_midi_terminate()
 
 }
 
+#pragma mark ---------------------------------------------------------------------------
+#pragma mark Session start and stop
+#pragma mark ---------------------------------------------------------------------------
+
 #define assert_module_initialized() \
     if (!gMidiMutex) { \
         assert(false && "Not initialized"); \
     }
-
-// --------------------------------------------------------------------------------
 
 session_t fa_midi_begin_session()
 {
