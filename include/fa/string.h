@@ -52,6 +52,10 @@
     A CP1252 (also known as Windows-1252) encoded raw string.
     This type use the endianness of the system, and is terminated by a null character.
 
+    @typedef fa_string_mac_roman_t
+    A MacRoman encoded string.
+    This type use the endianness of the system, and is terminated by a null character.
+
     @typedef fa_string_utf16_t
     A UTF-16 encoded raw string.
     This type use the endianness of the system, and is terminated by a null character.
@@ -59,6 +63,7 @@
     @typedef fa_string_utf32_t
     A UTF-32 encoded raw string.
     This type use the endianness of the system, and is terminated by a null character.
+
 */
 typedef fa_char8_t * fa_string_utf8_t;
 
