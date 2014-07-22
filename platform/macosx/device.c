@@ -19,20 +19,6 @@
 typedef fa_audio_status_callback_t  audio_status_callback_t;
 typedef fa_midi_status_callback_t   midi_status_callback_t;
 
-// struct nullary_closure {
-//     fa_nullary_t   function;
-//     fa_ptr_t       data;
-// };
-// typedef struct nullary_closure *closure_t;
-
-// inline static closure_t new_closure(fa_nullary_t function, fa_ptr_t data)
-// {
-//     closure_t closure = malloc(sizeof(struct nullary_closure));
-//     closure->function = function;
-//     closure->data = data;
-//     return closure;
-// }
-
 // --------------------------------------------------------------------------------
 
 void fa_device_initialize()
@@ -115,13 +101,15 @@ void remove_audio_status_listener(fa_pair_t closure)
 }
 
 
+/*
+    This function does nothing on OS X, as CoreMIDI handles hot-pluggning by itself.
+    
+    It is defined here in case we want to try and compile using the PortMIDI backend instead
+    of the usual CoreMIDI implementation, in which case hog-plugging is not supported
+    and the fa_audio_add_status_callback function has no effect.
+*/
 void add_midi_status_listener(midi_status_callback_t function, fa_ptr_t data)
 {
-    // Note: This function does nothing on OS X
-
-    // It is only here if one wants to try and compile using the PortMIDI backend instead
-    // of the usual CoreMIDI implementation, in which case hog-plugging is not supported
-    // and the fa_audio_add_status_callback function has no effect.
 }
 
 

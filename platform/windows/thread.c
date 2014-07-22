@@ -29,12 +29,6 @@ struct _fa_thread_mutex_t {
     LPCRITICAL_SECTION native;
 };
 
-// struct _fa_thread_condition_t {
-// fa_impl_t          impl;       //  Interface dispatcher
-// HANDLE native;
-// fa_thread_mutex_t  mutex;
-// };
-
 static HANDLE main_thread_g = INVALID_HANDLE_VALUE;
 
 static void fa_thread_fatal(char *msg, int error);
