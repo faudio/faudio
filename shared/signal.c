@@ -1181,6 +1181,56 @@ fa_ptr_t fa_signal_run_file(int n, fa_list_t controls, fa_signal_t a, fa_string_
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // --------------------------------------------------------------------------------
 // Derived signals
 
@@ -1471,29 +1521,50 @@ fa_signal_t fa_signal_power(fa_signal_t x, fa_signal_t y)
     assert(false && "Not implemented");
 }
 
+
+inline static double _fmod(fa_ptr_t _, double x, double y)
+{
+    return fmod(x, y);
+}
 fa_signal_t fa_signal_modulo(fa_signal_t x, fa_signal_t y)
 {
-    assert(false && "Not implemented");
+    return fa_signal_lift2(fa_string("(%)"), _fmod, NULL, x, y);
 }
 
-fa_signal_t fa_signal_not()
+inline static double _not(fa_ptr_t _, double x)
 {
-    assert(false && "Not implemented");
+    return !x;
+}
+fa_signal_t fa_signal_not(fa_signal_t x)
+{
+    return fa_signal_lift(fa_string("not"), _not, NULL, x);
 }
 
+inline static double _and(fa_ptr_t _, double x, double y)
+{
+    return x && y;
+}
 fa_signal_t fa_signal_and(fa_signal_t x, fa_signal_t y)
 {
-    assert(false && "Not implemented");
+    return fa_signal_lift2(fa_string("(&&)"), _and, NULL, x, y);
 }
 
+inline static double _or(fa_ptr_t _, double x, double y)
+{
+    return x && y;
+}
 fa_signal_t fa_signal_or(fa_signal_t x, fa_signal_t y)
 {
-    assert(false && "Not implemented");
+    return fa_signal_lift2(fa_string("(||)"), _or, NULL, x, y);
 }
 
+inline static double _xor(fa_ptr_t _, double x, double y)
+{
+    return (double)((int)x ^ (int)y);
+}
 fa_signal_t fa_signal_xor(fa_signal_t x, fa_signal_t y)
 {
-    assert(false && "Not implemented");
+    return fa_signal_lift2(fa_string("(^)"), _xor, NULL, x, y);
 }
 
 fa_signal_t fa_signal_equal(fa_signal_t x, fa_signal_t y)
