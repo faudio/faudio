@@ -1,0 +1,236 @@
+; 
+; 
+; ; (defun foo (x y z)
+; ;   (+ 1 2)
+; ;   (foo bar baz))
+; ; 
+; ; (defun foo (x) x)
+; ; 
+; ; (defun fa-audio-begin-session (a b c)
+; ;   (if (not pa-mutex)
+; ;     (assert nil (c-string "Module not intialized")))
+; ;   (fa-inform "Initializing real-time audio session")
+; ;   (defvar session :session-type)
+; ;     (if (pa-status)
+; ;       (progn
+; ;         (setf session 
+; ;           (coerce (audio-device-error "Overlapping") session-type))))
+; ;         (inform "   Starting up PortAudio")
+; ;     (Pa-Initialize)
+; ;     (setf pa-status t)
+; ;     (fa-inform "")
+; ;     nil)       
+; ; 
+; ; 
+; ; (defun rslope (rec cur)
+; ;   (fa:max curr
+; ;     (fa:+ (fa:* 0.999 rec)
+; ;       (fa:* 0.001 curr))))
+; ; 
+; ; (defun sines ()
+; ;   (fa:* (fa:n 0.01) (fa:sum (list 440 550 660 770)))) 
+; ; 
+; ; (defun merge-sort (xs fa:list-type)
+; ;   ; (defvar len mid :int left right fa:list-type)
+; ;   (setf len (fa:list-length xs))
+; ;   (setf mid (/ len 2))
+; ;   (if (<= len 1) 
+; ;     (return xs)
+; ;     (progn 
+; ;       (setf left (merge-sort (fa:list-take mid xs)))
+; ;       (setf right (merge-sort (fa:list-ddrop mid xs)))
+; ;       (return (merge left right))))
+; ;   nil)
+; ; 
+; ; 
+; 
+; ; (defun fa-audio-begin-session (a b c)
+; ;   (if (not pa-mutex)
+; ;     (assert nil (c-string "Module not intialized")))
+; ;   (fa-inform "Initializing real-time audio session")
+; ;   (defvar session :session-type)
+; ;     (if (pa-status)
+; ;       (progn
+; ;         (setf session 
+; ;           (coerce (audio-device-error "Overlapping") session-type))))
+; ;         (inform "   Starting up PortAudio")
+; ;     (Pa-Initialize)
+; ;     (setf pa-status t)
+; ;     (fa-inform "")
+; ;     nil)       
+; ;                   
+; ; 
+; ; (defun fa:signal-to-tree (signal fa:signal-type)
+; ;   (case signal
+; ;     ((time-signal) 
+; ;       (fa:cons "time" (fa:empty)))
+; ;     ((random-signal)
+; ;       (fa:cons "random" (fa:empty)))
+; ;     ((constant-signal value)
+; ;       (fa:cons
+; ;         (fa:string-to-string (fa:from-double value))
+; ;         (fa:empty)))
+; ;     ((lift-signal name a)
+; ;       (fa:cons name (fa:list a)))
+; ;     ((lift2-signal _ a b) 
+; ;       (fa:cons name (fa:list a b)))
+; ;     ;(input-signal )
+; ;     ;(output-signal )
+; ;     ))
+; ;                  
+; ; (defun foo (x y) x)
+; ; 
+; (defun foo (x) x)
+; 
+; (defun foo (x y) (+ x y))
+; 
+; ;(defun foo (x y) (+ x y z))
+; 
+; (defun remove-duplicates (foo bar baz)
+;   (if (fa:list-is-empty xs) xs
+;     (if (not (fa:list-has (fa:list-head xs) (fa:list-tail xs))) 
+;       xs
+;       (fa:list-tail xs))))  
+; 
+; (defun foo (x)
+;   (c-if t (print x))
+;   nil)
+; 
+; (defun foo (x)
+;   (c-while t (print x))
+;   nil)
+; 
+; (defun foo (x y)
+;   (defvar *foo*)
+;   (defvar *bar* :int)
+;   (defvar *bar* :int 2)
+;   (setf *foo* (+ x y))
+;   *foo*) 
+; 
+; (defun foo (x y)
+;   (c-if (fa:less-than "x" 2) (return 1))
+;   1)     
+;          
+
+; 
+; (defun fa:set-set (x set)
+;   (defvar i :int (base-index-of x (-> set elems))
+;   (if (< i 0)
+;     ()
+;     )
+;   )
+; fa_set_t fa_set_set(fa_ptr_t x, fa_set_t set)
+; {
+;     int i = base_index_of(x, set->elems);
+; 
+;     if (i < 0) {
+;         return new_set(base_insert((-i - 1), x, set->elems));
+;     } else {
+;         return new_set(base_insert(i, x, base_remove(i, set->elems)));
+;         // TODO should be base_dinsert?
+;     }
+; }
+; 
+; fa_set_t fa_set_remove(fa_ptr_t x, fa_set_t set)
+; {
+;     int i = base_index_of(x, set->elems);
+; 
+;     if (i < 0) {
+;         return fa_set_copy(set);
+;     } else {
+;         return new_set(base_remove(i, set->elems));
+;     }
+; }
+; 
+; fa_set_t fa_set_dadd(fa_ptr_t x, fa_set_t set)
+; {
+;     fa_set_t set2 = fa_set_add(x, set);
+;     fa_set_destroy(set);
+;     return set2;
+; }
+; 
+; 
+; 
+; 
+; 
+; 
+; 
+; 
+; 
+
+
+
+
+(include "stdio.h")
+(include "fa/fa.h")
+; (include "fa/util.h")
+(include "fa/thread.h")
+
+(defun remove-duplicates (xs)
+  (if (fa:list-is-empty xs) xs
+    (if (not (fa:list-has (fa:list-head xs) (fa:list-tail xs))) 
+      (fa:list-cons (fa:list-head xs) (remove-duplicates (fa:list-tail xs))) 
+      (remove-duplicates (fa:list-tail xs)))))  
+
+; (defmacro fa:list ()      (fa:list))
+; (defmacro fa:list (x ...) (fa:list-cons x (fa:list ...))))
+
+(defun fa:put-string (x)
+  (fa:print (c-string "%s\n") x)
+  nil)
+
+
+(defun proc (ct inputs)
+  inputs)
+
+(defun play ()
+  (defvar session)
+  (defvar in)
+  (defvar out)
+  (defvar stream)
+  (setf session (fa:audio-begin-session))
+  (setf in (fa:audio-default-input session))
+  (setf out (fa:audio-default-output session))
+  (fa:audio-open-stream in out proc nil)
+  (fa:thread-sleep 10000)
+  nil
+  )
+
+(defun main :int ((argc :int) (argv (:const (:pointer (:pointer :char)))))
+  (fa:initialize)
+  (fa:set-log-std)
+  ; (defvar x :int 0)
+  ; (defvar y)
+  ; (c-while (< x 3)
+  ;   (progn
+  ;     (setf x (+ 1 x))
+  ;     (setf y (fa:list-single "hello"))      
+  ;     (fa:set-log-std)
+  ;     (fa:thread-sleep 500)         
+  ;     (fa:log-info "What?")
+  ; 
+  ;     (setf y
+  ;       (fa:list-cons (fa:from-int32 3) 
+  ;         (fa:list-cons (fa:from-int32 2) 
+  ;           (fa:list-cons (fa:from-int32 3) 
+  ;           (fa:list-cons (fa:from-int32 2) 
+  ;           (fa:list-cons (fa:from-int32 31) 
+  ;           (fa:list-cons (fa:from-int32 3) 
+  ;           (fa:list-cons (fa:from-int32 31) 
+  ;             (fa:list-cons (fa:from-int32 3) 
+  ;           (fa:list-empty)))))))))) 
+  ;     (fa:put-string y)
+  ;     (fa:put-string (remove-duplicates y))
+  ;     ))
+  (play)
+  (fa:terminate)
+  nil)
+
+
+
+
+
+
+
+
+
