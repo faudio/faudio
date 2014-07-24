@@ -49,13 +49,14 @@ typedef struct _fa_action_t * fa_action_t;
 
 /** A nullary function that also receives time.
 */
-typedef fa_ptr_t fa_action_nullary_with_time_t(fa_ptr_t, fa_time_t);
+typedef fa_ptr_t (* fa_action_nullary_with_time_t)(fa_ptr_t,
+                                                   fa_time_t);
 
 /** A predicate that also receives time.
 */
-typedef bool fa_action_pred_with_time_t(fa_ptr_t,
-                                        fa_time_t,
-                                        fa_ptr_t);
+typedef bool (* fa_action_pred_with_time_t)(fa_ptr_t,
+                                            fa_time_t,
+                                            fa_ptr_t);
 
 /** Channel on which to carry out the action.
     

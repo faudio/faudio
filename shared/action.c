@@ -16,6 +16,7 @@ typedef fa_action_t                 action_t;
 typedef fa_action_channel_t         channel_t;
 typedef fa_action_name_t            name_t;
 typedef fa_signal_unary_double_t    unary_double_t;
+typedef fa_action_nullary_with_time_t nullary_with_time_t;
 
 struct _fa_action_t {
 
@@ -55,6 +56,7 @@ struct _fa_action_t {
 
         struct {
             fa_nullary_t            function;
+            nullary_with_time_t     function_with_time; // Either function may be set, data is the same
             fa_ptr_t                data;
         }                           do_;
 
@@ -141,8 +143,18 @@ fa_action_t fa_action_send(fa_action_name_t name, fa_ptr_t value)
 fa_action_t fa_action_do(fa_nullary_t function, fa_ptr_t data)
 {
     action_t action = new_action(do_action);
-    do_get(action, function)  = function;
-    do_get(action, data)      = data;
+    do_get(action, function)            = function;
+    do_get(action, function_with_time)  = NULL;
+    do_get(action, data)                = data;
+    return action;
+}
+
+fa_action_t fa_action_do_with_time(nullary_with_time_t function_with_time, fa_ptr_t data)
+{
+    action_t action = new_action(do_action);
+    do_get(action, function)            = NULL;
+    do_get(action, function_with_time)  = function_with_time;
+    do_get(action, data)                = data;
     return action;
 }
 
@@ -515,9 +527,15 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
     } else {
         // TODO should this always happen here?
         if (is_do(action)) {
-            fa_nullary_t function  = do_get(action, function);
-            fa_ptr_t     data      = do_get(action, data);
-            function(data);
+            fa_nullary_t           function           = do_get(action, function);
+            nullary_with_time_t    function_with_time = do_get(action, function_with_time);
+            fa_ptr_t     data                         = do_get(action, data);
+            if (function) {
+                function(data);
+            }
+            if (function_with_time) {
+                function_with_time(time, data);
+            }
         }
 
         // printf("Running!\n");

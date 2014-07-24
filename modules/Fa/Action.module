@@ -40,11 +40,11 @@ module Fa.Action
 
     /** A nullary function that also receives time.
      */
-    type NullaryWithTime = (Ptr, Time) -> Ptr;
+    type NullaryWithTime = ((Ptr, Time) -> Ptr)*;
 
     /** A predicate that also receives time.
      */
-    type PredWithTime = (Ptr, Time, Ptr) -> Bool;
+    type PredWithTime = ((Ptr, Time, Ptr) -> Bool)*;
 
     /** Channel on which to carry out the action.
     */
