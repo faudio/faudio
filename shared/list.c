@@ -792,6 +792,11 @@ fa_dynamic_type_repr_t list_get_type(fa_ptr_t a)
     return list_type_repr;
 }
 
+static fa_ptr_t _list_append(fa_ptr_t as, fa_ptr_t bs)
+{
+    return fa_list_append(as, bs);
+}
+
 fa_ptr_t list_impl(fa_id_t interface)
 {
     static fa_equal_t list_equal_impl
@@ -806,6 +811,8 @@ fa_ptr_t list_impl(fa_id_t interface)
         = { list_destroy };
     static fa_dynamic_t list_dynamic_impl
         = { list_get_type };
+    static fa_semigroup_t list_semigroup_impl
+        = { _list_append };
 
     switch (interface) {
     case fa_equal_i:
@@ -825,6 +832,9 @@ fa_ptr_t list_impl(fa_id_t interface)
 
     case fa_dynamic_i:
         return &list_dynamic_impl;
+
+    case fa_semigroup_i:
+        return &list_semigroup_impl;
 
     default:
         return NULL;
