@@ -180,6 +180,14 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+(defun make-nullary-function (f)
+  (assert (functionp f))
+  (lambda (&rest args)
+    (declare (ignore args))
+    (funcall f)))
+
+; ---------------------------------------------------------------------------------------------------
+
 (defun time (&key days hours minutes
                   seconds milliseconds nanoseconds
                   min sec ms ns)
@@ -256,13 +264,13 @@
   (list-find-index (callback predcall1#) (func-to-int# f) xs))
 
 (defun action-if* (f a)
- (action-if (callback predcall1#) (func-to-int# f) a))
+ (action-if (callback predcall1#) (func-to-int# (make-nullary-function f)) a))
 
 (defun action-while* (f a)
-  (action-while (callback predcall1#) (func-to-int# f) a))
+  (action-while (callback predcall1#) (func-to-int# (make-nullary-function f)) a))
 
 (defun action-until* (f a)
- (action-until (callback predcall1#) (func-to-int# f) a))
+ (action-until (callback predcall1#) (func-to-int# (make-nullary-function f)) a))
 
 (defun action-do* (f)
   (action-do (callback funcall0#) (func-to-int# f)))
