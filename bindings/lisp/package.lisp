@@ -29,6 +29,7 @@
                 :time
                 :type
                 :sequence
+                :append
                 :parallel
                 :identity
                 :constant
