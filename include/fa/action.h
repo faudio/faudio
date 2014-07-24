@@ -141,6 +141,11 @@ fa_action_t fa_action_accum(fa_action_channel_t channel,
 fa_action_t fa_action_send(fa_action_name_t name,
                            fa_action_value_t value);
 
+/** Return whether the given action is a get action.
+      
+*/
+bool fa_action_is_get(fa_action_t action);
+
 /** Get the channel of a get action.
 */
 fa_action_channel_t fa_action_get_channel(fa_action_t action);
@@ -157,11 +162,6 @@ fa_ptr_t fa_action_get_data(fa_action_t action);
       
 */
 bool fa_action_is_set(fa_action_t action);
-
-/** Return whether the given action is a get action.
-      
-*/
-bool fa_action_is_get(fa_action_t action);
 
 /** Get the channel of a set action.
 */
@@ -207,6 +207,7 @@ fa_action_t fa_action_repeat(fa_time_t interval,
                              fa_action_t action);
 
 /** Join a list of actions into a single compond action.
+    TODO document
 */
 fa_action_t fa_action_many(fa_list_t actions);
 

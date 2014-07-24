@@ -122,6 +122,10 @@ module Fa.Action
     send : (Name, Value) -> Action;
 
 
+    /** Return whether the given action is a get action.
+      */
+    isGet : Action -> Bool;
+    
     /** Get the channel of a get action.
      */
     getChannel : Action -> Channel;
@@ -139,10 +143,6 @@ module Fa.Action
       */
     isSet : Action -> Bool;
 
-    /** Return whether the given action is a get action.
-      */
-    isGet : Action -> Bool;
-    
     /** Get the channel of a set action.
      */
     setChannel : Action -> Channel;
@@ -180,12 +180,15 @@ module Fa.Action
     /** Get the value of an send action.
      */
     sendValue : Action -> Value;
+
+
     
     /** Repeat the given action indefinitely.
      */
     repeat : (interval : Time, action : Action) -> Action;
 
     /** Join a list of actions into a single compond action.
+        TODO document
      */
     many : (actions : List) -> Action;
     
@@ -238,6 +241,9 @@ module Fa.Action
         This is exactly like @ref fa_action_do, except that it also includes time.
      */
     doWithTime : (NullaryWithTime, Ptr) -> Action;
+
+
+
 
     /** Returns whether the given action is simple or not.
      */
