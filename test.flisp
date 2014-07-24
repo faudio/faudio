@@ -183,22 +183,29 @@
   (fa:print (c-string "%s\n") x)
   nil)
 
+(defmacro mul (a b)     (*~ a b))
+(defmacro mul (a b c)   (mul a (mul b c)))
+(defmacro mul (a b c d) (mul a (mul b c d)))
 
-(defun proc (ct inputs)
-  inputs)
+(defun play-proc list-type ((x ptr-type) (y list-type)) 
+  (defvar left  ptr-type (mul (+~ (fa:signal-random) (fa:signal-max (fa:signal-line 1) (fa:signal-constant 1))) 
+    (fa:signal-constant 0.2) (fa:signal-sin (fa:signal-line 220)))) 
+  (defvar right ptr-type (mul (fa:signal-constant 0.2) (fa:signal-sin (fa:signal-line 223)))) 
+  (fa:list left right))
 
-; (defun play ()
-;   (defvar session)
-;   (defvar in)
-;   (defvar out)
-;   (defvar stream)
-;   (setf session (fa:audio-begin-session))
-;   (setf in (fa:audio-default-input session))
-;   (setf out (fa:audio-default-output session))
-;   (fa:audio-open-stream in out proc nil)
-;   (fa:thread-sleep 10000)
-;   nil
-;   )    
+(defun play ()
+  (defvar session)
+  (defvar in)
+  (defvar out)
+  (defvar stream)
+  (setf session (fa:audio-begin-session))
+  (setf in (fa:audio-default-input session))
+  (setf out (fa:audio-default-output session))
+  (fa:audio-open-stream in out play-proc nil)
+  (fa:thread-sleep 10000)
+  nil
+  )
+    
 (defmacro fa:list ()        (fa:list-empty))
 (defmacro fa:list (a)       (fa:list-cons a (fa:list)))
 (defmacro fa:list (a b)     (fa:list-cons a (fa:list b)))
@@ -208,24 +215,37 @@
 (defmacro let (n v x) (progn (defvar n ptr-type v) x))
 (defmacro let (n1 v1 n2 v2 x) (let n1 v1 (let n2 v2 x)))
 
+(defmacro >> (a b) (progn a b))
+(defmacro >> (a b c) (progn a b c))
+
+(defmacro with-scoped-resource (su td x) (>> su x td))
+(defmacro fa:initialize-with-log () (>> (fa:set-log-std) (fa:initialize))) 
+
+(defmacro with-audio (b)
+  (with-scoped-resource (fa:initialize-with-log) (fa:terminate) b))
+(defmacro with-audio (a b) (with-audio (progn a b)))
+
 (defun main :int ((argc :int) (argv (:const (:pointer (:pointer :char)))))
+  (with-audio
+    (fa:put-string "Active!")
+    (play))
   ; (fa:initialize)
   ; (fa:set-log-std)
 
-  (let 
-    foo "x"
-    bar "y"
-    (fa:put-string (fa:append foo bar)))
-  
-  (if t
-    (fa:put-string "t")
-    (fa:put-string "f")) 
-  (fa:put-string
-    (fa:pair-create
-      (fa:list-join (fa:list (fa:list "hans" "s") (fa:list "t")))
-      (fa:list "x" "y")
-      )
-    )     
+  ; (let 
+  ;   foo "x"
+  ;   bar "y"
+  ;   (fa:put-string (fa:append foo bar)))
+  ; 
+  ; (if t
+  ;   (fa:put-string "t")
+  ;   (fa:put-string "f")) 
+  ; (fa:put-string
+  ;   (fa:pair-create
+  ;     (fa:list-join (fa:list (fa:list "hans" "s") (fa:list "t")))
+  ;     (fa:list "x" "y")
+  ;     )
+  ;   )     
 
   ; (defvar x :int 0)
   ; (defvar y)
@@ -251,7 +271,6 @@
   ;     (fa:put-string (remove-duplicates y))
   ;     ))  
   ;           
-  ; (play)
   ; (fa:terminate)
   nil)
 

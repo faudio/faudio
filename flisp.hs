@@ -216,6 +216,9 @@ compilePrimE = go
   go (List [Symbol ">=", x, y])  = COp2 ">=" (go x) (go y)
   go (List [Symbol "if", x, y, z])  = COp3 "?:" (go x) (go y) (go z)
 
+  go (List [Symbol "+~", x, y]) = CApp "fa_add" [go x, go y]
+  go (List [Symbol "*~", x, y]) = CApp "fa_multiply" [go x, go y]
+
   -- Function
   go (List (Symbol n : xs))      = CApp ((compileName.unpack) n) (fmap go xs)
   go x = error $ "compilePrim: Unknown form " ++ show x
@@ -260,6 +263,7 @@ compilePrimT = go
     prim ":uchar"       = CType "uchar"
     prim "string-type"  = CType "fa_string_t"
     prim "ptr-type"     = CType "fa_ptr_t"
+    prim "list-type"     = CType "fa_list_t"
 
 compilePrimD :: Lisp -> CDecl
 -- (defun foo (x))
