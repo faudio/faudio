@@ -1,4 +1,3 @@
-7
 
 (in-package :faudio)
 
@@ -975,7 +974,7 @@
 (fa-initialize)
 
 ; Empty buffer
-(setf buf (buffer-create (cl:* 88200 8 20)))
+(setf buf (buffer-create (cl:* 44100 8 2 60 4)))
 
 ; Buffer from signal
 (setf buf (signal-run-buffer 44100 (cl:list) (* 0.1 (random))))
@@ -992,10 +991,19 @@
           (left-index (+ (* j 2) 0))    ; 0,2,4..
           (right-index (+ (* j 2) 1))   ; 1,3,5..
           (left (signal-record buf left-index (first inputs)))
-          (right (signal-record buf right-index (second inputs))))
-     (cl:list 
-      (signal-latter left (constant 0)) 
-      (signal-latter right (constant 0)))))) ; No output
+          (right (signal-record buf right-index (second inputs)))
+          (r (cl:list
+              (signal-latter left (constant 0)) 
+              (signal-latter right (constant 0)))))
+     
+     (progn
+;       (cl:print (signal-former (signal-former 0 left) right))
+;       (cl:list (+ 0 left-index) (+ 0 (+ 0 right-index)))
+       r
+       )
+
+)))
+; No output
 
 ; Play stereo buffer
 (signal-run-default 
@@ -1005,7 +1013,20 @@
           (right-index (+ (* j 2) 1))   ; 1,3,5..
           (left (signal-play buf left-index))
           (right (signal-play buf right-index)))
-     (cl:list left right)))) ; Stereo output
+     (cl:list left right)))) 
+; Stereo output
+
+(audio-end-all-sessions)
+(
+(cl:print
+(funcall (lambda (inputs)
+   (let* ((j (counter))                 ; 0,1,2..
+          (left-index (+ (* j 2) 0))    ; 0,2,4..
+          (right-index (+ (* j 2) 1))   ; 1,3,5..
+          (left (signal-play buf left-index))
+          (right (signal-play buf right-index)))
+     (cl:list left right))) (cl:list (input 0) (input 1))))
+
 
 ; Frequency modulation
 (signal-run-default (lambda (inputs)
