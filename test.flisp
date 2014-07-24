@@ -166,11 +166,12 @@
 ; (include "fa/util.h")
 (include "fa/thread.h")
 
-(defun remove-duplicates (xs)
-  (if (fa:list-is-empty xs) xs
-    (if (not (fa:list-has (fa:list-head xs) (fa:list-tail xs))) 
-      (fa:list-cons (fa:list-head xs) (remove-duplicates (fa:list-tail xs))) 
-      (remove-duplicates (fa:list-tail xs)))))  
+; (defun remove-duplicates (xs)
+;   (if (fa:list-is-empty xs) xs
+;     (let y (fa:list-head xs) ys (fa:list-tail xs)
+;       (if (not (fa:list-has y ys)) 
+;         (fa:list-cons y (remove-duplicates ys)) 
+;         (remove-duplicates ys)))))  
 
 ; (defmacro fa:list ()      (fa:list-empty))
 ; (defmacro fa:list (a b)   (fa:list-cons a (fa:list b))))
@@ -202,7 +203,9 @@
   (setf in (fa:audio-default-input session))
   (setf out (fa:audio-default-output session))
   (fa:audio-open-stream in out play-proc nil)
-  (fa:thread-sleep 10000)
+  (fa:put-string "Press ENTER to stop...")
+  (getchar)
+  (fa:audio-end-all-sessions)
   nil
   )
     
@@ -221,12 +224,12 @@
 (defmacro with-scoped-resource (su td x) (>> su x td))
 (defmacro fa:initialize-with-log () (>> (fa:set-log-std) (fa:initialize))) 
 
-(defmacro with-audio (b)
-  (with-scoped-resource (fa:initialize-with-log) (fa:terminate) b))
-(defmacro with-audio (a b) (with-audio (progn a b)))
+(defmacro with-faudio (b)
+  (with-scoped-resource (fa:initialize) (fa:terminate) b))
+(defmacro with-faudio (a b) (with-faudio (progn a b)))
 
 (defun main :int ((argc :int) (argv (:const (:pointer (:pointer :char)))))
-  (with-audio
+  (with-faudio
     (fa:put-string "Active!")
     (play))
   ; (fa:initialize)
