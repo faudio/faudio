@@ -24,6 +24,7 @@
 
     @par Literals
     - `set`
+    - `get`
     - `accum`
     - `send`
 
@@ -83,6 +84,21 @@ fa_action_t fa_action_copy(fa_action_t action);
 */
 void fa_action_destroy(fa_action_t action);
 
+/** The `get` action reads a single global bus.
+
+    The resulting action must be destroyed by the caller.
+    
+    @param channel
+        Channel to read from.
+    @param function
+        Function to receive value.
+    @param data
+        Context pointer.
+*/
+fa_action_t fa_action_get(fa_action_channel_t channel,
+                          fa_signal_unary_double_t unaryDouble,
+                          fa_ptr_t ptr);
+
 /** The `set` action updates a single global bus.
 
     The resulting action must be destroyed by the caller.
@@ -125,10 +141,27 @@ fa_action_t fa_action_accum(fa_action_channel_t channel,
 fa_action_t fa_action_send(fa_action_name_t name,
                            fa_action_value_t value);
 
+/** Get the channel of a get action.
+*/
+fa_action_channel_t fa_action_get_channel(fa_action_t action);
+
+/** Get the function of a get action.
+*/
+fa_signal_unary_double_t fa_action_get_function(fa_action_t action);
+
+/** Get the data of a get action.
+*/
+fa_ptr_t fa_action_get_data(fa_action_t action);
+
 /** Return whether the given action is a set action.
       
 */
 bool fa_action_is_set(fa_action_t action);
+
+/** Return whether the given action is a get action.
+      
+*/
+bool fa_action_is_get(fa_action_t action);
 
 /** Get the channel of a set action.
 */

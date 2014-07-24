@@ -22,6 +22,7 @@ struct _fa_action_t {
     fa_impl_t                       impl;
 
     enum {
+        get_action,
         set_action,
         accum_action,
         send_action,
@@ -30,6 +31,12 @@ struct _fa_action_t {
     }                               tag;
 
     union {
+        struct {
+            channel_t               channel;
+            unary_double_t          function;
+            fa_ptr_t                data;
+        }                           get;
+
         struct {
             channel_t               channel;
             double                  value;
@@ -76,12 +83,14 @@ inline static void delete_action(action_t action)
     fa_delete(action);
 }
 
+#define is_get(v)           (v->tag == get_action)
 #define is_set(v)           (v->tag == set_action)
 #define is_accum(v)         (v->tag == accum_action)
 #define is_send(v)          (v->tag == send_action)
 #define is_do(v)            (v->tag == do_action)
 #define is_compound(v)      (v->tag == compound_action)
 
+#define get_get(v,f)        v->fields.get.f
 #define set_get(v,f)        v->fields.set.f
 #define accum_get(v,f)      v->fields.accum.f
 #define send_get(v,f)       v->fields.send.f
@@ -90,6 +99,17 @@ inline static void delete_action(action_t action)
 
 // --------------------------------------------------------------------------------
 
+fa_action_t fa_action_get(fa_action_channel_t channel,
+                          unary_double_t function,
+                          fa_ptr_t data)
+{
+    action_t action = new_action(get_action);
+    get_get(action, channel)    = channel;
+    get_get(action, function)   = function;
+    get_get(action, data)       = data;
+    return action;
+}
+
 fa_action_t fa_action_set(channel_t channel, double value)
 {
     action_t action = new_action(set_action);
@@ -97,7 +117,6 @@ fa_action_t fa_action_set(channel_t channel, double value)
     set_get(action, value)   = value;
     return action;
 }
-
 
 fa_action_t fa_action_accum(channel_t       channel,
                             unary_double_t  function,
@@ -146,6 +165,30 @@ void fa_action_destroy(fa_action_t action)
     // TODO
     delete_action(action);
 }
+
+bool fa_action_is_get(fa_action_t action)
+{
+    return is_get(action);
+}
+
+fa_action_channel_t fa_action_get_channel(fa_action_t action)
+{
+    assert(is_get(action) && "Not a get action");
+    return get_get(action, channel);
+}
+
+fa_signal_unary_double_t fa_action_get_function(fa_action_t action)
+{
+    assert(is_get(action) && "Not a get action");
+    return get_get(action, function);
+}
+
+fa_ptr_t fa_action_get_data(fa_action_t action)
+{
+    assert(is_get(action) && "Not a get action");
+    return get_get(action, data);
+}
+
 
 bool fa_action_is_set(fa_action_t action)
 {

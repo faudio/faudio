@@ -15,6 +15,7 @@
 
     @par Literals
     - `set`
+    - `get`
     - `accum`
     - `send`
 
@@ -31,7 +32,7 @@ module Fa.Action
     import Fa;
     import Fa.Pair;
     import Fa.List;
-    import Fa.Signal;
+    import Fa.Signal; // For UnaryDouble TODO factor out
     
     /** The abstract type of actions.
     */
@@ -44,7 +45,7 @@ module Fa.Action
     /** A predicate that also receives time.
      */
     type PredWithTime = (Ptr, Time, Ptr) -> Bool;
-    
+
     /** Channel on which to carry out the action.
     */
     type Channel = Int;
@@ -68,6 +69,19 @@ module Fa.Action
     /** Destroy the given action.
      */
     destroy : Action -> Void;
+
+    /** The `get` action reads a single global bus.
+
+        The resulting action must be destroyed by the caller.
+        
+        @param channel
+            Channel to read from.
+        @param function
+            Function to receive value.
+        @param data
+            Context pointer.
+     */
+    get : (Channel, UnaryDouble, Ptr) -> Action;
 
     /** The `set` action updates a single global bus.
 
@@ -107,19 +121,37 @@ module Fa.Action
      */
     send : (Name, Value) -> Action;
 
+
+    /** Get the channel of a get action.
+     */
+    getChannel : Action -> Channel;
+    
+    /** Get the function of a get action.
+     */
+    getFunction : Action -> UnaryDouble;
+    
+    /** Get the data of a get action.
+     */
+    getData : Action -> Ptr;     
+
+
     /** Return whether the given action is a set action.
       */
     isSet : Action -> Bool;
+
+    /** Return whether the given action is a get action.
+      */
+    isGet : Action -> Bool;
     
     /** Get the channel of a set action.
      */
     setChannel : Action -> Channel;
-
+    
     /** Get the value of a set action.
      */
     setValue : Action -> Double;
-
-
+    
+    
     /** Return whether the given action is an accumulation action.
       */
     isAccum : Action -> Bool;

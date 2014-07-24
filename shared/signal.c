@@ -921,6 +921,15 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         return NULL;
     }
 
+    if (fa_action_is_get(action)) {
+        int ch = fa_action_get_channel(action);
+        fa_signal_unary_double_t f = fa_action_get_function(action);
+        fa_ptr_t ctxt = fa_action_get_data(action);
+        double x = read_samp1(ch, state);
+        f(ctxt, x); // Ignore result
+        return NULL;
+    }
+
     if (fa_action_is_set(action)) {
         int ch = fa_action_set_channel(action);
         double v = fa_action_set_value(action);
