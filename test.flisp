@@ -199,20 +199,33 @@
 ;   (fa:thread-sleep 10000)
 ;   nil
 ;   )    
+(defmacro fa:list ()        (fa:list-empty))
+(defmacro fa:list (a)       (fa:list-cons a (fa:list)))
+(defmacro fa:list (a b)     (fa:list-cons a (fa:list b)))
+(defmacro fa:list (a b c)   (fa:list-cons a (fa:list b c)))
+(defmacro fa:list (a b c d) (fa:list-cons a (fa:list b c d)))
+
+(defmacro let (n v x) (progn (defvar n ptr-type v) x))
+(defmacro let (n1 v1 n2 v2 x) (let n1 v1 (let n2 v2 x)))
 
 (defun main :int ((argc :int) (argv (:const (:pointer (:pointer :char)))))
   ; (fa:initialize)
   ; (fa:set-log-std)
+
+  (let 
+    foo "x"
+    bar "y"
+    (fa:put-string (fa:append foo bar)))
   
-  ; (if t
-  ;   (fa:put-string "t")
-  ;   (fa:put-string "f")) 
+  (if t
+    (fa:put-string "t")
+    (fa:put-string "f")) 
   (fa:put-string
     (fa:pair-create
       (fa:list-join (fa:list (fa:list "hans" "s") (fa:list "t")))
       (fa:list "x" "y")
       )
-    )
+    )     
 
   ; (defvar x :int 0)
   ; (defvar y)

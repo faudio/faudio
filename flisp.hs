@@ -259,6 +259,7 @@ compilePrimT = go
     prim ":char"        = CType "char"
     prim ":uchar"       = CType "uchar"
     prim "string-type"  = CType "fa_string_t"
+    prim "ptr-type"     = CType "fa_ptr_t"
 
 compilePrimD :: Lisp -> CDecl
 -- (defun foo (x))
@@ -300,8 +301,22 @@ compileName = id
     
 translateFlispDefs :: String -> [String]
 translateFlispDefs x = case P.parse lisp ("(" <> fromString x <> ")") of
-  P.Done _ (List rs) -> fmap (showC . compilePrimD . rdeepExpandMacros [foo, foo1, list0, list1, list2, list3, list4]) rs
+  P.Done _ (List rs) -> fmap showC . fmap compilePrimD . compileWithMacros $ rs
   _                  -> error "Parse error"
+
+compileWithMacros :: [Lisp] -> [Lisp]
+compileWithMacros as = let (m, xs) = separateMacros as
+  in fmap (rdeepExpandMacros m) xs
+
+compileWithoutMacros :: [Lisp] -> [Lisp]
+compileWithoutMacros as = let (m, xs) = separateMacros as in xs
+
+separateMacros :: [Lisp] -> ([Macro],[Lisp])
+separateMacros = mconcat . fmap g
+  where
+    g x = case parseMacro x of
+      Nothing -> ([],[x])
+      Just m  -> ([m],[])
 
 foo  = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro foo ()  bar)"
 foo1 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro foo (x) (foo x))"
@@ -313,6 +328,7 @@ list2 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa
 list3 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa:list (a b c) (fa:list-cons a (fa:list b c)))"
 list4 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa:list (a b c d) (fa:list-cons a (fa:list b c d)))"
 
+-- Deep expand macros until no macro applies
 rdeepExpandMacros :: [Macro] -> Lisp -> Lisp
 rdeepExpandMacros m x = 
   let x2 = deepExpandMacros m x in
