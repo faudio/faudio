@@ -1,11 +1,13 @@
 
+# v2.16
+
+- Adds transport processor
+
 # v2.15
 
 - Adds virtual time (experimental)
 
 - Adds Action.read
-
-- Adds transport processor
 
 # v2.14.2
 
