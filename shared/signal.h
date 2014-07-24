@@ -30,7 +30,7 @@ struct _state_base_t {
 
 #define kMaxCustomProcs                 10
 #define kMaxInputs                      128
-#define kMaxBuses                       64
+#define kMaxBuses                       256
 #define kMaxDelaySeconds                5
 
 #define kOutputOffset                   0
