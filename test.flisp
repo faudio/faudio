@@ -172,7 +172,11 @@
       (fa:list-cons (fa:list-head xs) (remove-duplicates (fa:list-tail xs))) 
       (remove-duplicates (fa:list-tail xs)))))  
 
-; (defmacro fa:list ()      (fa:list))
+; (defmacro fa:list ()      (fa:list-empty))
+; (defmacro fa:list (a b)   (fa:list-cons a (fa:list b))))
+; (defmacro fa:list (a b c) (fa:list-cons a (fa:list b c))))
+
+
 ; (defmacro fa:list (x ...) (fa:list-cons x (fa:list ...))))
 
 (defun fa:put-string (x)
@@ -183,22 +187,33 @@
 (defun proc (ct inputs)
   inputs)
 
-(defun play ()
-  (defvar session)
-  (defvar in)
-  (defvar out)
-  (defvar stream)
-  (setf session (fa:audio-begin-session))
-  (setf in (fa:audio-default-input session))
-  (setf out (fa:audio-default-output session))
-  (fa:audio-open-stream in out proc nil)
-  (fa:thread-sleep 10000)
-  nil
-  )
+; (defun play ()
+;   (defvar session)
+;   (defvar in)
+;   (defvar out)
+;   (defvar stream)
+;   (setf session (fa:audio-begin-session))
+;   (setf in (fa:audio-default-input session))
+;   (setf out (fa:audio-default-output session))
+;   (fa:audio-open-stream in out proc nil)
+;   (fa:thread-sleep 10000)
+;   nil
+;   )    
 
 (defun main :int ((argc :int) (argv (:const (:pointer (:pointer :char)))))
-  (fa:initialize)
-  (fa:set-log-std)
+  ; (fa:initialize)
+  ; (fa:set-log-std)
+  
+  ; (if t
+  ;   (fa:put-string "t")
+  ;   (fa:put-string "f")) 
+  (fa:put-string
+    (fa:pair-create
+      (fa:list-join (fa:list (fa:list "hans" "s") (fa:list "t")))
+      (fa:list "x" "y")
+      )
+    )
+
   ; (defvar x :int 0)
   ; (defvar y)
   ; (c-while (< x 3)
@@ -221,11 +236,11 @@
   ;           (fa:list-empty)))))))))) 
   ;     (fa:put-string y)
   ;     (fa:put-string (remove-duplicates y))
-  ;     ))
-  (play)
-  (fa:terminate)
+  ;     ))  
+  ;           
+  ; (play)
+  ; (fa:terminate)
   nil)
-
 
 
 

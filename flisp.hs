@@ -5,6 +5,7 @@
 
 module Flisp where
 
+import Data.Maybe
 import Data.String
 import Data.Monoid
 import   Data.Attoparsec.Number
@@ -25,7 +26,67 @@ main = do
   -- putStrLn "flisp"
 
 
-type Macro = Lisp -> Lisp
+data Macro = Macro {
+ _name :: String,
+ _vars :: [String],
+ _body :: Lisp
+ }
+ deriving (Eq, Ord, Show)
+-- TODO variadic
+
+
+deepExpandMacros :: [Macro] -> Lisp -> Lisp
+deepExpandMacros m l@(List xs) = expandMacros m $ List $ fmap (deepExpandMacros m) xs
+deepExpandMacros m l           = expandMacros m l
+
+-- expand all macros at the top level
+expandMacros :: [Macro] -> Lisp -> Lisp
+expandMacros = foldr (.) id . fmap expandMacro
+
+expandMacro :: Macro -> Lisp -> Lisp
+expandMacro m x = fromMaybe x $ applyMacro m x
+
+{-
+For the macro to apply the *form* must
+  - Be a list starting with the name of the macro
+  - If the macro is non-variadic
+    - Have exactly the same number of arguments as the macro
+  - Otherwise
+    - Have the at least the same number of arguments as the macro (excluding the ... wildcard)
+-}
+applyMacro :: Macro -> Lisp -> Maybe Lisp
+applyMacro (Macro n vs b) (List ((Symbol n') : ps))
+  | n == unpack n' && length vs == length ps
+  = Just $ deepSubst (zip vs ps) b
+applyMacro _ _ = Nothing
+-- TODO variadic
+
+deepSubst :: [(String, Lisp)] -> Lisp -> Lisp
+deepSubst s l@(List xs) = subst s $ List (fmap (deepSubst s) xs)
+deepSubst s l           = subst s l
+
+subst :: [(String, Lisp)] -> Lisp -> Lisp
+subst = foldr (.) id . map subst1
+
+subst1 :: (String, Lisp) -> Lisp -> Lisp
+subst1 (s, t) o@(Symbol s')
+  | s == unpack s' = t
+  | otherwise      = o
+subst1 _      o = o
+
+-- List [Symbol "defmacro"]
+
+-- TODO partial
+-- TODO variadic
+parseMacro :: Lisp -> Maybe Macro
+parseMacro (List (Symbol "defmacro" : Symbol n : List vs : [b])) = Just $ Macro (unpack n) (fmap getSymbol vs) b
+  where
+    getSymbol = show
+parseMacro _ = Nothing
+
+
+
+
 
 -- Minimal C AST
 type CName = String
@@ -67,12 +128,14 @@ showC = showDecl
     showType (CPtr x) = showType x ++ "*"
     showType (CConst x) = "const " ++ showType x
     showType (CType x) = x
+    
     showDecl (CInclude e) = "#include <" ++ e ++ ">"
     showDecl (CTypedefD n t) = "typedef " ++ showType t ++ n
     showDecl (CStructD n xs) = "struct {}" -- TODO
     showDecl (CFuncD n rt ps b) = showType rt ++ " " ++ n 
       ++ "(" ++ L.intercalate "," (map (\(n,t) -> showType t ++ " " ++ n) ps) ++ ")"
       ++ showStm (CBlock b)
+
     showStm (CBlock b)  = "{\n" ++ L.intercalate "\n" (map showStm b) ++ "\n}"
     showStm (CIf p a b) = "if (" ++ showExpr p ++ ") " ++ showStm a ++ maybe "" ((" else " ++ ) . showStm) b
     showStm (CWhile p a) = "while (" ++ showExpr p ++ ") " ++ showStm a
@@ -80,6 +143,7 @@ showC = showDecl
     showStm (CAssign t n e) = maybe "" ((++ " ").showType) t ++ n ++ " = " ++ showExpr e ++ ";"
     showStm (CExpr e) = showExpr e ++ ";"
     showStm (CReturn e) = "return " ++ showExpr e ++ ";"
+
     showExpr (COp1 n a) = n ++ showExpr a
     showExpr (COp2 n a b) = showExpr a ++ n ++ showExpr b
     showExpr (COp3 _ a b c) = showExpr a ++ "?" ++ showExpr b ++ ":" ++ showExpr c
@@ -158,19 +222,23 @@ compilePrimE = go
 
 
 compilePrimS :: Lisp -> CStm
-compilePrimS (List (Symbol "defvar":Symbol n:[]))   = CDecl (CType "fa_ptr_t") (compileName.unpack$ n)
-compilePrimS (List (Symbol "defvar":Symbol n:t:[])) = CDecl (compilePrimT t) (compileName.unpack$ n)
-compilePrimS (List (Symbol "defvar":Symbol n:t:v:[])) = CAssign (Just $ compilePrimT t) (compileName.unpack$ n) (compilePrimE v)
-compilePrimS (List (Symbol "return":x:[]))       = CReturn (compilePrimE x)
-compilePrimS (List (Symbol "progn":xs))          = CBlock (fmap compilePrimS xs)
-compilePrimS (List [Symbol "setf", Symbol n, y]) = CAssign Nothing ((compileName.unpack) n) (compilePrimE y)
-compilePrimS (List (Symbol "c-if":p:a:[]))       = CIf (compilePrimE p) (compilePrimS a) Nothing
-compilePrimS (List (Symbol "c-if":p:a:b:[]))     = CIf (compilePrimE p) (compilePrimS a) (Just $ compilePrimS b)
-compilePrimS (List (Symbol "c-if":_))            = error "Strange if"
-compilePrimS (List (Symbol "c-while":p:a:[]))    = CWhile (compilePrimE p) (compilePrimS a)
--- TODO switch
-compilePrimS (List (Symbol "c-switch":e:List cs:[])) = undefined
-compilePrimS x = CExpr $ compilePrimE x
+compilePrimS = go
+  where
+    go (List (Symbol "defvar":Symbol n:[]))   = CDecl (defaultType) (compileName.unpack$ n)
+    go (List (Symbol "defvar":Symbol n:t:[])) = CDecl (compilePrimT t) (compileName.unpack$ n)
+    go (List (Symbol "defvar":Symbol n:t:v:[])) = CAssign (Just $ compilePrimT t) (compileName.unpack$ n) (compilePrimE v)
+    
+    go (List (Symbol "return":x:[]))       = CReturn (compilePrimE x)
+    go (List (Symbol "progn":xs))          = CBlock (fmap compilePrimS xs)
+    go (List [Symbol "setf", Symbol n, y]) = CAssign Nothing ((compileName.unpack) n) (compilePrimE y)
+    
+    go (List (Symbol "c-if":p:a:[]))       = CIf (compilePrimE p) (compilePrimS a) Nothing
+    go (List (Symbol "c-if":p:a:b:[]))     = CIf (compilePrimE p) (compilePrimS a) (Just $ compilePrimS b)
+    go (List (Symbol "c-if":_))            = error "Strange if"
+    go (List (Symbol "c-while":p:a:[]))    = CWhile (compilePrimE p) (compilePrimS a)
+    -- TODO switch
+    go (List (Symbol "c-switch":e:List cs:[])) = undefined
+    go x = CExpr $ compilePrimE x
 
 -- TODO function pointers etc
 compilePrimT :: Lisp -> CType
@@ -194,28 +262,23 @@ compilePrimT = go
 
 compilePrimD :: Lisp -> CDecl
 -- (defun foo (x))
-compilePrimD (List (Symbol "defun" : Symbol n : List ps : body)) = 
-    CFuncD 
-      (compileName.unpack $ n)
-      (CType "fa_ptr_t")
-      (fmap compileParam ps)
-      (compileBody body)
--- (defun foo :t (x :t))
-compilePrimD (List (Symbol "defun" : Symbol n : t@(Symbol _) : List ps : body)) = 
-    CFuncD 
-      (compileName.unpack $ n)
-      (compilePrimT t)
-      (fmap compileParam ps)
-      (compileBody body)
-compilePrimD (List (Symbol "include" : String n : [])) = CInclude (unpack n)
+compilePrimD (List (Symbol "defun" : Symbol n : List ps : body))                = CFuncD (compileName.unpack $ n) (defaultType) (fmap compileParam ps) (compileBody body)
+compilePrimD (List (Symbol "defun" : Symbol n : t@(Symbol _) : List ps : body)) = CFuncD (compileName.unpack $ n) (compilePrimT t) (fmap compileParam ps) (compileBody body)
+compilePrimD (List (Symbol "include" : String n : []))                          = CInclude (unpack n)
 compilePrimD x = error $ "compilePrimD: Unknown form " ++ show x
 
-compileParam (Symbol x) = (compileName.unpack $ x,CType "fa_ptr_t")
-compileParam (List [Symbol x, t]) = (compileName.unpack $ x,compilePrimT t)
+compileParam :: Lisp -> (String, CType)
+compileParam = go
+  where
+    go (Symbol x) = (compileName.unpack $ x, defaultType)
+    go (List [Symbol x, t]) = (compileName.unpack $ x,compilePrimT t)
 
 compileBody :: [Lisp] -> [CStm]
 compileBody []  = error "Empty body"
 compileBody xs  = fmap compilePrimS (init xs) ++ [CReturn $ compilePrimE $ last xs]
+
+defaultType :: CType
+defaultType = CType "fa_ptr_t"
 
 compileName :: String -> String
 compileName = id
@@ -233,18 +296,47 @@ compileName = id
     replace o n = L.intercalate n . LS.splitOn o
     checkReserved x = if x `elem` res then error ("Reserved Name: '" ++ x ++ "', possibly by using a statement in expression context") else x
     res = ["not", "negate", "and", "or", "if", "c-if", "c-while", "progn", "setf"]
+
     
 translateFlispDefs :: String -> [String]
 translateFlispDefs x = case P.parse lisp ("(" <> fromString x <> ")") of
-  P.Done _ (List rs) -> fmap (showC . compilePrimD) rs
+  P.Done _ (List rs) -> fmap (showC . compilePrimD . rdeepExpandMacros [foo, foo1, list0, list1, list2, list3, list4]) rs
   _                  -> error "Parse error"
 
--- Translate singlel definition
-translateFlispDef :: String -> String
-translateFlispDef x = case P.parse lisp (fromString x) of
-  P.Done _ r -> showC $ compilePrimD r
-  _          -> error "Parse error"
+foo  = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro foo ()  bar)"
+foo1 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro foo (x) (foo x))"
+-- ifn = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro ifn (p a b) (p b a))"
+
+list0 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa:list ()      (fa:list-empty))"
+list1 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa:list (a)     (fa:list-cons a (fa:list)))"
+list2 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa:list (a b)   (fa:list-cons a (fa:list b)))"
+list3 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa:list (a b c) (fa:list-cons a (fa:list b c)))"
+list4 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa:list (a b c d) (fa:list-cons a (fa:list b c d)))"
+
+rdeepExpandMacros :: [Macro] -> Lisp -> Lisp
+rdeepExpandMacros m x = 
+  let x2 = deepExpandMacros m x in
+    if   x2 == x then x
+    else rdeepExpandMacros m x2
+
+rdeepExpandMacrosStep :: [Macro] -> Lisp -> [Lisp]
+rdeepExpandMacrosStep m x = 
+  let x2 = deepExpandMacros m x in
+    if   x2 == x then [x]
+    else x : rdeepExpandMacrosStep m x2
+
+
+testMacros x = mapM_ print $ rdeepExpandMacrosStep [list0, list1, list2, list3, list4] $ fromJust $ P.maybeResult $ P.parse lisp $ x --"(+ 1 (foo 1))"
+
+-- -- Translate singlel definition
+-- translateFlispDef :: String -> String
+-- translateFlispDef x = case P.parse lisp (fromString x) of
+--   P.Done _ r -> showC $ compilePrimD r
+--   _          -> error "Parse error"
 
 compileFlisp :: [Macro] -> [Lisp] -> [CDecl]
 compileFlisp _ = undefined
+
+
+
 
