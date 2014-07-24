@@ -1,4 +1,12 @@
 
+# v2.15
+
+- Adds virtual time (experimental)
+
+- Adds Action.read
+
+- Adds transport processor
+
 # v2.14.2
 
 - Fixes regression in Lisp bindings

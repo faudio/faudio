@@ -193,15 +193,25 @@ fa_signal_t fa_signal_custom(fa_signal_custom_processor_t *,
                              fa_signal_t signal);
 
 /** The primitive input signal, reading from the bus of the given number.
+    @param channel
+        Channel number.
 */
-fa_signal_t fa_signal_input(int int_);
+fa_signal_t fa_signal_input(int channel);
 
 /** The primitive output signal, writing to the bus of the given number
     and returning the written value.
+    @param delay
+        Delay of output in frames.
+    @param channel
+        Channel number.
+    @param input
+        Signal to output.
+    @returns
+        The original signal, which must be run for output to take place.
 */
-fa_signal_t fa_signal_output(int int_,
-                             int int__,
-                             fa_signal_t signal);
+fa_signal_t fa_signal_output(int delay,
+                             int channel,
+                             fa_signal_t input);
 
 /** Returns a signal that evaluates both of the given signal, and the result of the first.
 */

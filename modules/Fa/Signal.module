@@ -167,13 +167,23 @@ module Fa.Signal
     custom : (CustomProcessor*, Signal) -> Signal;
 
     /** The primitive input signal, reading from the bus of the given number.
+        @param channel
+            Channel number.
      */
-    input : ( Int )                                         -> Signal;
+    input : ( channel : Int ) -> Signal;
 
     /** The primitive output signal, writing to the bus of the given number
         and returning the written value.
+        @param delay
+            Delay of output in frames.
+        @param channel
+            Channel number.
+        @param input
+            Signal to output.
+        @returns
+            The original signal, which must be run for output to take place.
      */
-    output : ( Int, Int, Signal )                            -> Signal;
+    output : ( delay : Int, channel : Int, input : Signal ) -> Signal;
 
     /** Returns a signal that evaluates both of the given signal, and the result of the first.
      */
