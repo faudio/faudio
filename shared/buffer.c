@@ -178,38 +178,28 @@ uint8_t fa_buffer_get(fa_buffer_t buffer, size_t index)
 void fa_buffer_set(fa_buffer_t buffer, size_t index, uint8_t value)
 {
     assert(index < buffer->size && "Buffer overflow");
-
     buffer->data[index] = value;
 }
 
-float fa_buffer_get_float(fa_buffer_t buffer, size_t index)
-{
-    assert(index * sizeof(float) < buffer->size && "Buffer overflow");
+#define BUFFER_PRIM_GET_SET(NAME,TYPE) \
+    TYPE fa_buffer_get_##NAME(fa_buffer_t buffer, size_t index)                     \
+    {                                                                               \
+        assert(index * sizeof(TYPE) < buffer->size && "Buffer overflow");           \
+        return ((TYPE *) buffer->data)[index];                                      \
+    }                                                                               \
+                                                                                    \
+    void fa_buffer_set_##NAME(fa_buffer_t buffer, size_t index, TYPE value)         \
+    {                                                                               \
+        assert(index * sizeof(TYPE) < buffer->size && "Buffer overflow");           \
+        ((TYPE *) buffer->data)[index] = value;                                     \
+    }                                                                               \
 
-    return ((float *) buffer->data)[index];
-}
-
-void fa_buffer_set_float(fa_buffer_t buffer, size_t index, float value)
-{
-    assert(index * sizeof(float) < buffer->size && "Buffer overflow");
-
-    ((float *) buffer->data)[index] = value;
-}
-
-double fa_buffer_get_double(fa_buffer_t buffer, size_t index)
-{
-    assert(index * sizeof(double) < buffer->size && "Buffer overflow");
-
-    return ((double *) buffer->data)[index];
-}
-
-void fa_buffer_set_double(fa_buffer_t buffer, size_t index, double value)
-{
-    assert(index * sizeof(double) < buffer->size && "Buffer overflow");
-
-    ((double *) buffer->data)[index] = value;
-}
-
+BUFFER_PRIM_GET_SET(bool,bool)
+BUFFER_PRIM_GET_SET(float,float)
+BUFFER_PRIM_GET_SET(double,double)
+BUFFER_PRIM_GET_SET(int16,int16_t)
+BUFFER_PRIM_GET_SET(int32,int32_t)
+BUFFER_PRIM_GET_SET(int64,int64_t)
 
 void *fa_buffer_unsafe_address(fa_buffer_t buffer)
 {
@@ -320,40 +310,15 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
     return NULL;
 }
 
-
-int16_t fa_buffer_get_int16(fa_buffer_t x, size_t y)
-{
-    assert(false && "Not implemented");
-}
-int32_t fa_buffer_get_int32(fa_buffer_t x, size_t y)
-{
-    assert(false && "Not implemented");
-}
-int64_t fa_buffer_get_int64(fa_buffer_t x, size_t y)
-{
-    assert(false && "Not implemented");
-}
-void fa_buffer_set_int16(fa_buffer_t x, size_t y, int16_t z)
-{
-    assert(false && "Not implemented");
-}
-void fa_buffer_set_int32(fa_buffer_t x, size_t y, int32_t z)
-{
-    assert(false && "Not implemented");
-}
-void fa_buffer_set_int64(fa_buffer_t x, size_t y, int64_t z)
-{
-    assert(false && "Not implemented");
-}
 fa_buffer_t fa_buffer_read_raw(fa_string_t x)
 {
     assert(false && "Not implemented");
 }
+
 void fa_buffer_write_raw(fa_string_t x, fa_buffer_t y)
 {
     assert(false && "Not implemented");
 }
-
 
 
 // --------------------------------------------------------------------------------
