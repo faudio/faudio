@@ -330,16 +330,6 @@ separateMacros = mconcat . fmap g
       Nothing -> ([],[x])
       Just m  -> ([m],[])
 
-foo  = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro foo ()  bar)"
-foo1 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro foo (x) (foo x))"
--- ifn = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro ifn (p a b) (p b a))"
-
-list0 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa:list ()      (fa:list-empty))"
-list1 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa:list (a)     (fa:list-cons a (fa:list)))"
-list2 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa:list (a b)   (fa:list-cons a (fa:list b)))"
-list3 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa:list (a b c) (fa:list-cons a (fa:list b c)))"
-list4 = fromJust $ (parseMacro =<<) $ P.maybeResult $ P.parse lisp "(defmacro fa:list (a b c d) (fa:list-cons a (fa:list b c d)))"
-
 -- Deep expand macros until no macro applies
 rdeepExpandMacros :: [Macro] -> Lisp -> Lisp
 rdeepExpandMacros m x = 
@@ -352,9 +342,6 @@ rdeepExpandMacrosStep m x =
   let x2 = deepExpandMacros m x in
     if   x2 == x then [x]
     else x : rdeepExpandMacrosStep m x2
-
-
-testMacros x = mapM_ print $ rdeepExpandMacrosStep [list0, list1, list2, list3, list4] $ fromJust $ P.maybeResult $ P.parse lisp $ x --"(+ 1 (foo 1))"
 
 -- -- Translate singlel definition
 -- translateFlispDef :: String -> String
