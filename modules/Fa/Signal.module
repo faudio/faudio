@@ -243,7 +243,7 @@ module Fa.Signal
      */
     runFile : ( Int, List, Signal, String ) -> Ptr;
 
-    trigger : ( name : String ) -> Signal;
+    trigger : ( name : String, init : Double ) -> Signal;
 
     /**
         Index a buffer at the given sample.

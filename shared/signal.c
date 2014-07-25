@@ -1954,12 +1954,12 @@ fa_ptr_t trigger_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t ms
     return x;
 }
 
-fa_signal_t fa_signal_trigger(fa_string_t name)
+fa_signal_t fa_signal_trigger(fa_string_t name, double init)
 {
     trigger_context *context = fa_malloc(sizeof(trigger_context));
     context->name = name;
-    context->trigger = 0;
-    context->normal = -1; // TODO alternate
+    context->normal  = init; // TODO alternate
+    context->trigger = context->normal;
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = trigger_before_;

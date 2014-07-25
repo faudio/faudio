@@ -279,7 +279,7 @@ fa_ptr_t fa_signal_run_file(int int_,
                             fa_string_t string);
 
 
-fa_signal_t fa_signal_trigger(fa_string_t name);
+fa_signal_t fa_signal_trigger(fa_string_t name, double init);
 
 /**
     Index a buffer at the given sample.
