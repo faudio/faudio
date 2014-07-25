@@ -212,8 +212,7 @@ typedef fa_string_t path_t;
 
 fa_buffer_t fa_buffer_read_audio(fa_string_t path)
 {
-    int             channels;
-    fa_buffer_t        buffer;
+    fa_buffer_t     buffer;
 
     SNDFILE         *file;
     SF_INFO         info;
@@ -239,29 +238,19 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
         sf_count_t sz   = sf_read_double(file, raw, bufSize / sizeof(double));
         buffer          = fa_buffer_dresize(sz * sizeof(double), buffer);
 
-        if (info.channels == 1) {
-            channels = 1;
-        } else if (info.channels == 2) {
-            channels = 2;
-        } else {
-            buffer_fatal("Unknown buffer type", info.channels);
-        }
-
         // Meta-data
+
         fa_buffer_set_meta(buffer, fa_string("sample-rate"), fa_f32(info.samplerate));
         fa_buffer_set_meta(buffer, fa_string("channels"), fa_i32(info.channels));
-        {
-            char *str = (char *) sf_get_string(file, SF_STR_TITLE);
+
+        fa_let(str, (char*) sf_get_string(file, SF_STR_TITLE))
             fa_buffer_set_meta(buffer, fa_string("title"), fa_string(str ? str : ""));
-        }
-        {
-            char *str = (char *) sf_get_string(file, SF_STR_SOFTWARE);
+
+        fa_let(str, (char *) sf_get_string(file, SF_STR_SOFTWARE))
             fa_buffer_set_meta(buffer, fa_string("software"), fa_string(str ? str : ""));
-        }
-        {
-            char *str = (char *) sf_get_string(file, SF_STR_COPYRIGHT);
+
+        fa_let(str, (char *) sf_get_string(file, SF_STR_COPYRIGHT))
             fa_buffer_set_meta(buffer, fa_string("copyright"), fa_string(str ? str : ""));
-        }
 
         if (sf_close(file)) {
             return (fa_buffer_t) fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Buffer"));
