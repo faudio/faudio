@@ -278,6 +278,9 @@ fa_ptr_t fa_signal_run_file(int int_,
                             fa_signal_t signal,
                             fa_string_t string);
 
+
+fa_signal_t fa_signal_trigger(fa_string_t name);
+
 /**
     Index a buffer at the given sample.
 
