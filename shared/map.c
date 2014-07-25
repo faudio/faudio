@@ -164,15 +164,22 @@ bool fa_map_has_key(fa_map_key_t key, fa_map_t map)
 
 bool fa_map_has_elem(fa_ptr_t x, fa_map_t map)
 {
-    // entry_t entry = new_entry(NULL, x);
-    // return fa_set_get(COMP_VALUE(entry), map->entries);
-    assert(false && "Not implemented");
+    fa_for_each(y, fa_set_to_list(map->entries)) {
+        if (fa_equal(fa_pair_first(x), y)) {
+            return true;
+        }
+    }
+    return false;
 }
 
-bool fa_map_has_entry(fa_pair_t entry, fa_map_t map)
+bool fa_map_has_entry(fa_pair_t x, fa_map_t map)
 {
-    // return fa_set_get(COMP_BOTH(entry), map->entries);
-    assert(false && "Not implemented");
+    fa_for_each(y, fa_set_to_list(map->entries)) {
+        if (fa_equal(fa_pair_first(x), y)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 int fa_map_size(fa_map_t map)
