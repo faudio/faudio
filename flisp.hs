@@ -201,23 +201,30 @@ compilePrimE = go
   go (Symbol n) = CVar ((compileName.unpack) n)
   
   -- Operators
-  go (List [Symbol "not", x])    = COp1 "!" (go x)
-  go (List [Symbol "negate", x]) = COp1 "-" (go x)
-  go (List [Symbol "and", x, y]) = COp2 "&&" (go x) (go y)
-  go (List [Symbol "or", x, y])  = COp2 "||" (go x) (go y)
-  go (List [Symbol "+", x, y])   = COp2 "+" (go x) (go y)
-  go (List [Symbol "-", x, y])   = COp2 "-" (go x) (go y)
-  go (List [Symbol "*", x, y])   = COp2 "*" (go x) (go y)
-  go (List [Symbol "/", x, y])   = COp2 "/" (go x) (go y)
-  go (List [Symbol "%", x, y])   = COp2 "%" (go x) (go y)
-  go (List [Symbol "<", x, y])   = COp2 "<" (go x) (go y)
-  go (List [Symbol ">", x, y])   = COp2 ">" (go x) (go y)
-  go (List [Symbol "<=", x, y])  = COp2 "<=" (go x) (go y)
-  go (List [Symbol ">=", x, y])  = COp2 ">=" (go x) (go y)
+  go (List [Symbol "not", x])       = COp1 "!" (go x)
+  go (List [Symbol "negate", x])    = COp1 "-" (go x)
+  go (List [Symbol "and", x, y])    = COp2 "&&" (go x) (go y)
+  go (List [Symbol "or", x, y])     = COp2 "||" (go x) (go y)
+  go (List [Symbol "+", x, y])      = COp2 "+" (go x) (go y)
+  go (List [Symbol "-", x, y])      = COp2 "-" (go x) (go y)
+  go (List [Symbol "*", x, y])      = COp2 "*" (go x) (go y)
+  go (List [Symbol "/", x, y])      = COp2 "/" (go x) (go y)
+  go (List [Symbol "%", x, y])      = COp2 "%" (go x) (go y)
+  go (List [Symbol "<", x, y])      = COp2 "<" (go x) (go y)
+  go (List [Symbol ">", x, y])      = COp2 ">" (go x) (go y)
+  go (List [Symbol "<=", x, y])     = COp2 "<=" (go x) (go y)
+  go (List [Symbol ">=", x, y])     = COp2 ">=" (go x) (go y)
   go (List [Symbol "if", x, y, z])  = COp3 "?:" (go x) (go y) (go z)
 
-  go (List [Symbol "+~", x, y]) = CApp "fa_add" [go x, go y]
-  go (List [Symbol "*~", x, y]) = CApp "fa_multiply" [go x, go y]
+  go (List [Symbol "+~", x, y])  = CApp "fa_add" [go x, go y]
+  go (List [Symbol "-~", x, y])  = CApp "fa_subtract" [go x, go y]
+  go (List [Symbol "*~", x, y])  = CApp "fa_multiply" [go x, go y]
+  go (List [Symbol "/~", x, y])  = CApp "fa_divide" [go x, go y]
+
+  go (List [Symbol "<~", x, y])  = CApp "fa_less_than" [go x, go y]
+  go (List [Symbol ">~", x, y])  = CApp "fa_greater_than" [go x, go y]
+  go (List [Symbol "<=~", x, y]) = CApp "fa_less_than_equal" [go x, go y]
+  go (List [Symbol ">=~", x, y]) = CApp "fa_greater_than_equal" [go x, go y]
 
   -- Function
   go (List (Symbol n : xs))      = CApp ((compileName.unpack) n) (fmap go xs)
@@ -264,6 +271,7 @@ compilePrimT = go
     prim "string-type"  = CType "fa_string_t"
     prim "ptr-type"     = CType "fa_ptr_t"
     prim "list-type"     = CType "fa_list_t"
+    prim "signal-type"     = CType "fa_signal_t"
 
 compilePrimD :: Lisp -> CDecl
 -- (defun foo (x))
