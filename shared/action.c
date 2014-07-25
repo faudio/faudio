@@ -166,10 +166,85 @@ fa_action_t fa_action_compound(fa_unary_t function, fa_ptr_t data)
     return action;
 }
 
+static inline fa_action_t copy_get(fa_action_t action2)
+{
+    action_t action = new_action(get_action);
+    get_get(action, channel)    = get_get(action2, channel);
+    get_get(action, function)   = get_get(action2, function);
+    get_get(action, data)       = get_get(action2, data);
+    return action;
+}
+static inline fa_action_t copy_set(fa_action_t action2)
+{
+    action_t action = new_action(set_action);
+    set_get(action, channel) = set_get(action2, channel);
+    set_get(action, value)   = set_get(action2, value);
+    return action;
+}
+static inline fa_action_t copy_accum(fa_action_t action2)
+{
+    action_t action = new_action(accum_action);
+    accum_get(action, channel)  = accum_get(action2, channel);
+    accum_get(action, function) = accum_get(action2, function);
+    accum_get(action, data)     = accum_get(action2, data);
+    return action;
+}
+static inline fa_action_t copy_send(fa_action_t action2)
+{
+    action_t action = new_action(send_action);
+    send_get(action, name)  = send_get(action2, name);
+    send_get(action, value) = fa_copy(send_get(action2, value));
+    return action;
+}
+static inline fa_action_t copy_do(fa_action_t action2)
+{
+    action_t action = new_action(do_action);
+    do_get(action, function)            = do_get(action2, function);
+    do_get(action, function_with_time)  = do_get(action2, function_with_time);
+    do_get(action, data)                = do_get(action2, data);
+    return action;
+}
+static inline fa_action_t copy_compound(fa_action_t action2)
+{
+    action_t action = new_action(compound_action);
+    compound_get(action, function)  = compound_get(action2, function);
+    compound_get(action, data)      = compound_get(action2, data);
+    return action;
+}
 
+/*
+    For set, no copy needed
+    For send, the scheduled value is copied using fa_copy
+    For predicate/do, the closure is *not* copied
+    
+    For compound actions, we really should deep copy the entire structure
+    but this is not possible without a true deep_copy interface. Do
+    nothing for now (and do not free in destroy, to replace crashes with leaks).
+*/
 fa_action_t fa_action_copy(fa_action_t action)
 {
-    assert(false && "Not implemented");
+    switch (action->tag) {
+    case get_action:
+        return copy_get(action);
+
+    case set_action:
+        return copy_set(action);
+
+    case accum_action:
+        return copy_accum(action);
+
+    case send_action:
+        return copy_send(action);
+
+    case do_action:
+        return copy_do(action);
+
+    case compound_action:
+        return copy_compound(action);
+
+    default:
+        assert(false);
+    }
 }
 
 void fa_action_destroy(fa_action_t action)
