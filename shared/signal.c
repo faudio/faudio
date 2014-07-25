@@ -1899,18 +1899,79 @@ void fa_signal_show_vst_gui(fa_string_t string, void *handle)
     // TODO find correct plugin
     openPlugin(last_vst_plug->plugin, handle);
 }
-
-
 #else // _WIN32
-
-
 fa_list_t fa_signal_vst(fa_string_t name1, fa_string_t path1, fa_list_t inputs)
 {
     fa_fail(fa_string("VST not supported for this platform yet."));
 }
-
 #endif // _WIN32
 
+
+
+
+
+
+
+
+
+
+#define kTriggerOffset 15
+
+struct _trigger_context {
+    fa_string_t name;
+    double normal;
+    double trigger;
+};
+
+typedef struct _trigger_context trigger_context;
+
+fa_ptr_t trigger_before_(fa_ptr_t x, int count, fa_signal_state_t *state)
+{
+    return x;
+}
+fa_ptr_t trigger_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
+{
+    return x;
+}
+fa_ptr_t trigger_render_(fa_ptr_t x, int count, fa_signal_state_t *state)
+{
+    trigger_context *context = x;
+    if (!kVectorMode) {
+        state->buffer[(kTriggerOffset + 0)*kMaxVectorSize + 0] = context->trigger;
+        context->trigger = context->normal;
+    } else {
+        assert(false && "Not supported yet");
+    }
+    return x;
+}
+fa_ptr_t trigger_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+{
+    trigger_context *context = x;
+    if (fa_equal(n, context->name)) {
+        // Ignore value
+        context->trigger = fa_peek_double(msg);
+    }
+    return x;
+}
+
+fa_signal_t fa_signal_trigger(fa_string_t name)
+{
+    trigger_context *context = fa_malloc(sizeof(trigger_context));
+    context->name = name;
+    context->trigger = 0;
+    context->normal = -1; // TODO alternate
+
+    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
+    proc->before  = trigger_before_;
+    proc->after   = trigger_after_;
+    proc->render  = trigger_render_;
+    proc->receive = trigger_receive_;
+    proc->send    = NULL;
+    proc->destroy = NULL; // TODO
+    proc->data    = context;
+    
+    return fa_signal_custom(proc, fa_signal_input(kTriggerOffset));
+}           
 
 // --------------------------------------------------------------------------------
 
