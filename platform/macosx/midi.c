@@ -339,7 +339,7 @@ void status_listener(const MIDINotification *message, fa_ptr_t data)
 
     if (id == kMIDIMsgSetupChanged) {
         int n = session->callbacks.count;
-
+    
         for (int i = 0; i < n; ++i) {
             fa_nullary_t f = session->callbacks.elements[i].function;
             fa_ptr_t     x = session->callbacks.elements[i].data;
@@ -440,13 +440,12 @@ fa_ptr_t midi_thread(fa_ptr_t x)
                                       );
             CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, kCFRunLoopCommonModes);
 
-
             // We will be stuck here until the run loop is stopped
             // This only happen when a session is ended
             CFRunLoopRun();
 
+            CFRunLoopRemoveTimer(CFRunLoopGetCurrent(), timer, kCFRunLoopCommonModes);
             CFRelease(timer);
-
         }
 
         {

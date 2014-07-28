@@ -13,7 +13,6 @@
 */
 
 #include <CoreFoundation/CoreFoundation.h>
-// #include "../../external/vst/pluginterfaces/vst2.x/aeffect.h"
 #include "../../external/vst/pluginterfaces/vst2.x/aeffectx.h"
 
 // TODO use proper error reporting etc
