@@ -56,21 +56,21 @@ if [[ $* != *--clean* ]]; then
     tar -pvczf faudio-$VERSION.tar.gz faudio
     rm -rf faudio
     
-	if [[ $* != *--no-upload* ]]; then
-		echo "Uploading documentation"
-    	make doc
-	    
-		pushd pages
-	    git rm -rf docs
-	    cp -R ../doc/build/html/ docs
-	    mkdir -p versions/$VERSION
-	    cp -R ../doc/build/html/ versions/$VERSION/docs
-
-	    git add docs versions # -u does NOT work
-	    git commit -m "Updated docs"
-	    git push origin gh-pages
-	    popd
-	fi
+# 	if [[ $* != *--no-upload* ]]; then
+# 		echo "Uploading documentation"
+#     	make doc
+# 	    
+# 		pushd pages
+# 	    git rm -rf docs
+# 	    cp -R ../doc/build/html/ docs
+# 	    mkdir -p versions/$VERSION
+# 	    cp -R ../doc/build/html/ versions/$VERSION/docs
+# 
+# 	    git add docs versions # -u does NOT work
+# 	    git commit -m "Updated docs"
+# 	    git push origin gh-pages
+# 	    popd
+# 	fi
 
 	echo "Distribution faudio-$VERSION.tar.gz created, please upload."
 	open .
