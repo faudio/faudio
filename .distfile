@@ -1,0 +1,84 @@
+[package "dummy"]
+
+# Mac OS X dependencies
+
+[package "portaudio-osx"]
+    site    = doremir
+    version = 19.0.0
+    subpath = external/portaudio/result
+    path    = include, lib
+    mode    = get/put
+
+[package "portmidi-osx"]
+    site    = doremir
+    version = 2.17.0
+    subpath = external/portmidi/result
+    path    = include, lib
+    mode    = get/put
+
+[package "sndfile-osx"]
+    site    = doremir
+    version = 1.0.25
+    subpath = external/sndfile/result
+    path    = include, lib, bin, share
+    mode    = get/put
+
+[package "fluidsynth-osx"]
+    site    = doremir
+    version = 1.1.5
+    subpath = external/fluidsynth/result
+    path    = include, lib, bin, share
+    mode    = get/put
+
+
+# Windows/MinGW dependencies
+
+[package "portaudio-msys"]
+    site    = doremir
+    version = 19.0.0
+    subpath = external/portaudio/result
+    path    = include, lib
+    mode    = get/put
+
+[package "portmidi-msys"]
+    site    = doremir
+    version = 2.17.0
+    subpath = external/portmidi/result
+    path    = include, lib
+    mode    = get/put
+
+[package "sndfile-msys"]
+    site    = doremir
+    version = 1.0.25
+    subpath = external/sndfile/result
+    path    = include, lib, bin
+    mode    = get/put
+
+[package "fluidsynth-msys"]
+    site    = doremir
+    version = 1.1.5
+    subpath = external/fluidsynth/result
+    path    = include, lib, bin
+    mode    = get/put
+
+[package "gtest-msys"]
+    site    = doremir
+    version = 1.6.0
+    subpath = external/gtest/result
+    path    = include, lib
+    mode    = get/put
+
+[package "icu-msys"]
+    site    = doremir
+    version = 49.1.2
+    subpath = external/icu2/result
+    path    = include, lib
+    mode    = get/put
+
+[package "stdlib-msys"]
+    site    = doremir
+    version = 0.5
+    mode    = get/put
+    subpath = build
+    path    = libgcc_s_dw2-1.dll, libstdc++-6.dll
+
