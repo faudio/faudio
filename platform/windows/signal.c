@@ -156,7 +156,7 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
             }
 
             default: {
-                fa_warn(fa_dappend((fa_string("Unknown MIDI message to Fluidsynth: <status="), fa_string_format_integral("%d>", status)));
+                fa_warn(fa_string_dappend((fa_string("Unknown MIDI message to Fluidsynth: <status="), fa_string_format_integral("%d>", status)));
                 // assert(false && "Unknown MIDI message to Fluidsynth");
             }
             }
