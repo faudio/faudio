@@ -30,16 +30,16 @@
     path    = include, lib, bin, share
     mode    = get/put
 
-[package "libogg"]
+[package "libogg-osx"]
     site    = doremir
-    version = 0.0.1
+    version = 1.3.1
     subpath = external/libogg/result
     path    = include, lib, share
     mode    = get/put
 
-[package "libvorbis"]
+[package "libvorbis-osx"]
     site    = doremir
-    version = 0.0.1
+    version = 1.3.2
     subpath = external/libvorbis/result
     path    = include, lib, share
     mode    = get/put
