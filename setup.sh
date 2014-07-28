@@ -9,17 +9,17 @@ then
    BUILD_DIRECTORY="build"
 fi
 
-mkdir -p $BUILD_DIRECTORY;
-pushd $BUILD_DIRECTORY;
+mkdir -p $BUILD_DIRECTORY
+pushd $BUILD_DIRECTORY
 cmake "$@" .. && make components_resolve;
 
 if [ $? -eq 0 ]; then
-	popd;
-	echo "";
+	popd
+	echo ""
 	echo "Bootstrapping succeded, type 'make' to build or 'make help' for options."
-	echo "";
+	echo ""
 	exit 0
 else
-	popd;
+	popd
 	exit 1
 fi
