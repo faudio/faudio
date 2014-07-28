@@ -183,11 +183,14 @@
          (stream-callback (lambda (x) x))
          (input nil)
          (output nil)
+         (sample-rate 44100)
          ) 
-  (let* ((s (funcall session-callback (audio-begin-session))) 
-       (i (if input (audio-find-input input s) (audio-default-input s)))
-       (o (if output (audio-find-output output s) (audio-default-output s)))
-       (st (audio-open-stream* i o proc)))
+  (let* ((s (funcall session-callback (audio-begin-session)))
+         (s2 (faudio::audio-set-parameter "sample-rate" sample-rate s))
+         (i (if input (audio-find-input input s) (audio-default-input s)))
+         (o (if output (audio-find-output output s) (audio-default-output s)))
+         (st (audio-open-stream* i o proc)))
+    (declare (ignore s2))
   (funcall stream-callback st)
   (capi:popup-confirmer nil "Running signal..."
     :callback-type :none 
