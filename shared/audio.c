@@ -1093,7 +1093,6 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
         {
             fa_ptr_t nameValue;
 
-            // while (0) // FIXME
             while ((nameValue = fa_atomic_queue_read(stream->out_controls))) {
                 int n = stream->callbacks.count;
 

@@ -535,6 +535,7 @@ fa_ptr_t stream_thread_callback(fa_ptr_t x)
 
         // Inputs
         if (stream->native_input) {
+
             // While messages available
             while (Pm_Poll(stream->native_input)) {
 
@@ -656,7 +657,7 @@ void send_midi(stream_t stream, fa_midi_message_t midi)
     PmError result;
 
     if (fa_midi_message_is_simple(midi)) {
-        // timestamp ignored
+        // Timestamp ignored, as we use faudio clock time instead
         long midi_message = fa_midi_message_simple_to_long(midi);
 
         result = Pm_WriteShort(stream->native_output, 0, midi_message);
