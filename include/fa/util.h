@@ -134,7 +134,7 @@ void fa_dlog_info(fa_string_t);
 #define fa_ti16                fa_to_int16
 #define fa_ti32                fa_to_int32
 #define fa_ti64                fa_to_int64
-#define fa_tf32                fa_to_double
+#define fa_tf32                fa_to_float
 #define fa_tf64                fa_to_double
 #define fa_fb                  fa_from_bool
 // #define b                   fa_from_bool
@@ -142,7 +142,7 @@ void fa_dlog_info(fa_string_t);
 #define fa_i16                 fa_from_int16
 #define fa_i32                 fa_from_int32
 #define fa_i64                 fa_from_int64
-#define fa_f32                 fa_from_double
+#define fa_f32                 fa_from_float
 #define fa_f64                 fa_from_double
 
 #define fa_mark_used(X) X = *(&X)
