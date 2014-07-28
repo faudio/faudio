@@ -30,6 +30,20 @@
     path    = include, lib, bin, share
     mode    = get/put
 
+[package "libogg"]
+    site    = doremir
+    version = 0.0.1
+    subpath = external/libogg/result
+    path    = include, lib, share
+    mode    = get/put
+
+[package "libvorbis"]
+    site    = doremir
+    version = 0.0.1
+    subpath = external/libvorbis/result
+    path    = include, lib, share
+    mode    = get/put
+
 
 # Windows/MinGW dependencies
 
