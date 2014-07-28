@@ -273,10 +273,10 @@ DWORD WINAPI check_thread_audio(LPVOID _)
     and then checks for changes.
     */
     Sleep(500);
-    inform(string("  check_thread_audio"));
+    fa_inform(fa_string("  check_thread_audio"));
 
     if (wINumDevs != waveInGetNumDevs() || wONumDevs != waveOutGetNumDevs()) {
-        inform(string("  Change (number)"));
+        fa_inform(fa_string("  Change (number)"));
 
         fa_with_lock(windows_device_mutex) {
             for (int i = 0; i < gAudioCallbackTableCount; ++i) {
@@ -295,7 +295,7 @@ DWORD WINAPI check_thread_audio(LPVOID _)
         wONumDevs  = waveOutGetNumDevs();
         audio_hash = BuildAudioHash();
     } else if (!CheckAudioHash()) {
-        inform(string("  Change (hash)"));
+        fa_inform(fa_string("  Change (hash)"));
 
         fa_with_lock(windows_device_mutex) {
             for (int i = 0; i < gAudioCallbackTableCount; ++i) {
@@ -323,7 +323,7 @@ void ScheduleMidiCheck()
 
 void ScheduleAudioCheck()
 {
-    inform(string("ScheduleAudioCheck"));
+    fa_inform(fa_string("ScheduleAudioCheck"));
     CloseHandle(CreateThread(NULL, 0, check_thread_audio, (LPVOID) NULL, 0, 0));
 }
 
@@ -334,7 +334,7 @@ INT_PTR WINAPI audio_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam
     PDEV_BROADCAST_DEVICEINTERFACE pdi;
     static HDEVNOTIFY hDeviceNotify;
 
-    inform(string("Call to status callback"));
+    fa_inform(fa_string("Call to status callback"));
 
     switch (msg) {
     case WM_CREATE:

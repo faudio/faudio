@@ -90,9 +90,9 @@ fa_clock_t fa_clock_standard()
 
 fa_string_t standard_clock_show(fa_ptr_t a)
 {
-    fa_string_t str = string("<StandardClock ");
-    str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
-    str = string_dappend(str, string(">"));
+    fa_string_t str = fa_string("<StandardClock ");
+    str = fa_dappend((str, fa_string_format_integral(" %p", (long) a));
+    str = fa_dappend((str, fa_string(">"));
     return str;
 }
 

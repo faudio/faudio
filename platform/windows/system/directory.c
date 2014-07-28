@@ -30,7 +30,7 @@ fa_string_t fa_system_directory_home()
         assert(FALSE && "Error get home directory");
     }
 
-    return string(path);
+    return fa_unstring(path);
 }
 
 fa_string_t fa_system_directory_current()
@@ -41,7 +41,7 @@ fa_string_t fa_system_directory_current()
         assert(FALSE && "Error get current directory");
     }
 
-    return string(path);
+    return fa_string(path);
 }
 
 void fa_system_directory_create(fa_string_t path)
@@ -51,7 +51,7 @@ void fa_system_directory_create(fa_string_t path)
         For special permissions see:
         http://msdn.microsoft.com/en-us/library/windows/desktop/aa446595(v=vs.85).aspx
     */
-    if (FALSE == CreateDirectory(unstring(path), NULL)) {
+    if (FALSE == CreateDirectory(fa_unstring(path), NULL)) {
         if (ERROR_PATH_NOT_FOUND == GetLastError()) {
             assert(FALSE && "Intermediate directory not found");
         }
@@ -64,7 +64,7 @@ fa_string_t fa_system_directory_read_file(fa_string_t path)
     char buf[buf_size + 1];
 
     HANDLE file = CreateFile(
-                      unstring(path),
+                      fa_unstring(path),
                       GENERIC_READ,
                       FILE_SHARE_READ,
                       NULL,
@@ -84,7 +84,7 @@ fa_string_t fa_system_directory_read_file(fa_string_t path)
 
     CloseHandle(file);
 
-    return string(buf);
+    return fa_string(buf);
 }
 
 
@@ -101,7 +101,7 @@ void fa_system_directory_write_file(fa_string_t path,
     DWORD bytes_written;
 
     HANDLE file = CreateFile(
-                      unstring(path),
+                      fa_unstring(path),
                       GENERIC_WRITE,
                       FILE_SHARE_READ,
                       NULL,
@@ -121,14 +121,14 @@ void fa_system_directory_write_file(fa_string_t path,
 
     if (FALSE == WriteFile(
                 file,
-                unstring(string),
-                strlen(unstring(string)),
+                fa_unstring(string),
+                strlen(fa_unstring(string)),
                 &bytes_written, // This is necessary: see comment at top.
                 NULL)) {
         assert(FALSE && "Error writing to file");
     }
 
-    // FIXME error if srtlen(unstring(string)) != bytes_written ?
+    // FIXME error if srtlen(fa_unstring(string)) != bytes_written ?
 
     CloseHandle(file);
 }
@@ -146,7 +146,7 @@ void fa_system_directory_append_file(fa_string_t path,
     DWORD bytes_written;
 
     HANDLE file = CreateFile(
-                      unstring(path),
+                      fa_unstring(path),
                       FILE_APPEND_DATA,
                       FILE_SHARE_READ,
                       NULL,
@@ -160,14 +160,14 @@ void fa_system_directory_append_file(fa_string_t path,
 
     if (FALSE == WriteFile(
                 file,
-                unstring(string),
-                strlen(unstring(string)),
+                fa_unstring(string),
+                strlen(fa_unstring(string)),
                 &bytes_written, // This is necessary: see comment at top.
                 NULL)) {
         assert(FALSE && "Error appending to file");
     }
 
-    // FIXME error if srtlen(unstring(string)) != bytes_written ?
+    // FIXME error if srtlen(fa_unstring(string)) != bytes_written ?
 
     CloseHandle(file);
 }

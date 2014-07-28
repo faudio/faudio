@@ -49,7 +49,7 @@ fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
                     NULL,
                     NULL
                 )) {
-            warn(string("Fluidsynth: Could not render"));
+            fa_warn(fa_string("Fluidsynth: Could not render"));
         }
 
         state->buffer[(kFluidOffset + 0)*kMaxVectorSize] = left[0];
@@ -64,7 +64,7 @@ fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
                     NULL,
                     NULL
                 )) {
-            warn(string("Fluidsynth: Could not render"));
+            fa_warn(fa_string("Fluidsynth: Could not render"));
         }
 
         for (int i = 0; i < count; ++i) {
@@ -88,9 +88,9 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
 
     // TODO
-    if (fa_equal(n, string("fluid"))) {
+    if (fa_equal(n, fa_string("fluid"))) {
         if (!fa_midi_message_is_simple(msg)) {
-            warn(string("Unknown message to Fluidsynth (not a MIDI message)"));
+            fa_warn(fa_string("Unknown message to Fluidsynth (not a MIDI message)"));
         } else {
 
 
@@ -104,39 +104,39 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
             switch (status) {
             case 0x8: // off
                 if (FLUID_OK != fluid_synth_noteoff(synth, channel, data1)) {
-                    warn(string("Fluidsynth: Could not send message"));
+                    fa_warn(fa_string("Fluidsynth: Could not send message"));
                 }
 
                 break;
 
             case 0x9: // 9 on
                 if (FLUID_OK != fluid_synth_noteon(synth, channel, data1, data2)) {
-                    warn(string("Fluidsynth: Could not send message"));
+                    fa_warn(fa_string("Fluidsynth: Could not send message"));
                 }
 
                 break;
 
             case 0xa: // 10 polyp after
-                warn(string("Fluidsynth: Polyphonic key pressure not supported"));
+                fa_warn(fa_string("Fluidsynth: Polyphonic key pressure not supported"));
                 break;
 
             case 0xb: // 11 control
                 if (FLUID_OK != fluid_synth_cc(synth, channel, data1, data2)) {
-                    warn(string("Fluidsynth: Could not send message"));
+                    fa_warn(fa_string("Fluidsynth: Could not send message"));
                 }
 
                 break;
 
             case 0xc: // 12 program
                 if (FLUID_OK != fluid_synth_program_change(synth, channel, data1)) {
-                    warn(string("Fluidsynth: Could not send message"));
+                    fa_warn(fa_string("Fluidsynth: Could not send message"));
                 }
 
                 break;
 
             case 0xd: // 13 channel press
                 if (FLUID_OK != fluid_synth_channel_pressure(synth, channel, data1)) {
-                    warn(string("Fluidsynth: Could not send message"));
+                    fa_warn(fa_string("Fluidsynth: Could not send message"));
                 }
 
                 break;
@@ -149,14 +149,14 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
                 bend |= (unsigned short)data1;
 
                 if (FLUID_OK != fluid_synth_pitch_bend(synth, channel, bend)) {
-                    warn(string("Fluidsynth: Could not send message"));
+                    fa_warn(fa_string("Fluidsynth: Could not send message"));
                 }
 
                 break;
             }
 
             default: {
-                warn(string_dappend(string("Unknown MIDI message to Fluidsynth: <status="), fa_string_format_integral("%d>", status)));
+                fa_warn(fa_dappend((fa_string("Unknown MIDI message to Fluidsynth: <status="), fa_string_format_integral("%d>", status)));
                 // assert(false && "Unknown MIDI message to Fluidsynth");
             }
             }
@@ -169,7 +169,7 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
 fa_ptr_t destroy_(fa_ptr_t x)
 {
-    inform(string("Destroying FluidSynth instance"));
+    fa_inform(fa_string("Destroying FluidSynth instance"));
     fluid_synth_t *synth = x;
     fluid_settings_t *settings = fluid_synth_get_settings(synth);
 
@@ -192,14 +192,14 @@ fa_pair_t fa_signal_synth(fa_string_t path2)
         fluid_settings_setint(settings, "synth.threadsafe-api", 0);
         fluid_settings_setint(settings, "synth.verbose", 0);
 
-        inform(string("Creating FluidSynth instance"));
+        fa_inform(fa_string("Creating FluidSynth instance"));
         synth = new_fluid_synth(settings);
 
-        inform(fa_string_dappend(string("    Loading sound font"), fa_copy(path2)));
-        char *path = unstring(path2);
+        fa_inform(fa_string_dappend(fa_string("    Loading sound font"), fa_copy(path2)));
+        char *path = fa_unstring(path2);
 
         if (FLUID_FAILED == fluid_synth_sfload(synth, path, true)) {
-            warn(string("Fluidsynth: Could not load sound font"));
+            fa_warn(fa_string("Fluidsynth: Could not load sound font"));
             return NULL; // TODO error
         }
 
