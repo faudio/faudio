@@ -213,7 +213,7 @@ if (COMPONENTS_RESOLVED)
     add_definitions("-isysroot ${CMAKE_OSX_SYSROOT}")
     # add_definitions("-v")
     
-    set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -mmin-macosx-version=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+#    set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -mmin-macosx-version=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -isysroot ${CMAKE_OSX_SYSROOT}")
     # set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -v")

@@ -50,7 +50,8 @@ fa_midi_message_t fa_midi_message_create_simple(status_t status,
                                                 data_t data1,
                                                 data_t data2)
 {
-    assert(status != 0xf0 && status != 0xf7);
+//    FIXME logical error
+//    assert(status != 0xf0 && status != 0xf7);
 
     fa_midi_message_t m = new_midi_message();
 

@@ -147,7 +147,7 @@ inline static session_t new_session();
 inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
 inline static device_t new_device(session_t session, native_index_t index);
-inline static void delete_device(device_t device);
+//inline static void delete_device(device_t device);
 inline static stream_t new_stream(device_t input, device_t output, double sample_rate, long max_buffer_size);
 inline static void delete_stream(stream_t stream);
 
@@ -258,12 +258,12 @@ inline static device_t new_device(session_t session, native_index_t index)
     return device;
 }
 
-inline static void delete_device(device_t device)
-{
-    fa_destroy(device->name);
-    fa_destroy(device->host_name);
-    fa_delete(device);
-}
+// inline static void delete_device(device_t device)
+// {
+//     fa_destroy(device->name);
+//     fa_destroy(device->host_name);
+//     fa_delete(device);
+// }
 
 inline static stream_t new_stream(device_t input, device_t output, double sample_rate, long max_buffer_size)
 {

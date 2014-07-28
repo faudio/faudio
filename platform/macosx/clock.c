@@ -64,10 +64,10 @@ static fa_clock_t new_standard_clock()
     return (fa_clock_t) c;
 }
 
-inline static void delete_standard_clock(standard_fa_clock_t standard_clock)
-{
-    fa_delete(standard_clock);
-}
+// inline static void delete_standard_clock(standard_fa_clock_t standard_clock)
+// {
+//     fa_delete(standard_clock);
+// }
 
 // --------------------------------------------------------------------------------
 

@@ -68,11 +68,11 @@ inline static fa_map_t new_map(fa_set_t entries)
     return map;
 }
 
-inline static void delete_map(fa_map_t map)
-{
-    fa_delete(map->entries);
-    fa_delete(map);
-}
+// inline static void delete_map(fa_map_t map)
+// {
+//     fa_delete(map->entries);
+//     fa_delete(map);
+// }
 
 
 // --------------------------------------------------------------------------------

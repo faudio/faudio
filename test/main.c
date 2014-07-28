@@ -114,14 +114,14 @@ void test_generic_functions()
 
 // --------------------------------------------------------------------------------
 
-static inline void test_string_memdump(void *s, size_t n)
-{
-    for (size_t i = 0; i < n; ++i) {
-        printf("%x ", *((unsigned char *)(s + i)));
-    }
-
-    printf("\n");
-}
+// static inline void test_string_memdump(void *s, size_t n)
+// {
+//     for (size_t i = 0; i < n; ++i) {
+//         printf("%x ", *((unsigned char *)(s + i)));
+//     }
+// 
+//     printf("\n");
+// }
 
 void test_string()
 {
@@ -1665,8 +1665,8 @@ void test_audio_stream()
     test_section("Audio streams");
 
     fa_audio_session_t session;
-    fa_audio_device_t  input, output;
-    fa_audio_stream_t  stream;
+    fa_audio_device_t  input = NULL, output = NULL;
+    fa_audio_stream_t  stream = NULL;
     // processor_t     proc1, proc2;
 
     // Processor to use

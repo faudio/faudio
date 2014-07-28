@@ -61,46 +61,46 @@ fa_string_t component_name(AudioComponent component)
     return fa_string_from_native((void*) cf_str);
 }
 
-inline static 
-void instance_num_channels(AudioComponentInstance instance, int* numIns, int* numOuts)
-{
-    *numIns = 0;
-    *numOuts = 0;
-
-    OSStatus err;
-    AUChannelInfo supportedChannels [128];
-    UInt32 supportedChannelsSize = sizeof (supportedChannels);
-
-    if ((err = AudioUnitGetProperty (instance, kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global,
-                              0, supportedChannels, &supportedChannelsSize)
-               &&
-        supportedChannelsSize > 0))
-    {
-        assert(false && "Could not get number of channels");
-    }
-        
-    for (int i = 0; i < supportedChannelsSize / sizeof (AUChannelInfo); ++i)
-    {                     
-        *numIns = MAX(*numIns, (int) supportedChannels[i].inChannels);
-        *numOuts = MAX(*numOuts, (int) supportedChannels[i].outChannels);
-    }
-}
-
-inline static 
-int instance_num_inputs(AudioComponentInstance instance)
-{
-    int inputs, outputs;
-    instance_num_channels(instance, &inputs, &outputs);
-    return inputs;
-}
-
-inline static 
-int instance_num_outputs(AudioComponentInstance instance)
-{
-    int inputs, outputs;
-    instance_num_channels(instance, &inputs, &outputs);
-    return outputs;
-}
+// inline static 
+// void instance_num_channels(AudioComponentInstance instance, int* numIns, int* numOuts)
+// {
+//     *numIns = 0;
+//     *numOuts = 0;
+// 
+//     OSStatus err;
+//     AUChannelInfo supportedChannels [128];
+//     UInt32 supportedChannelsSize = sizeof (supportedChannels);
+// 
+//     if ((err = AudioUnitGetProperty (instance, kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global,
+//                               0, supportedChannels, &supportedChannelsSize)
+//                &&
+//         supportedChannelsSize > 0))
+//     {
+//         assert(false && "Could not get number of channels");
+//     }
+//         
+//     for (int i = 0; i < supportedChannelsSize / sizeof (AUChannelInfo); ++i)
+//     {                     
+//         *numIns = MAX(*numIns, (int) supportedChannels[i].inChannels);
+//         *numOuts = MAX(*numOuts, (int) supportedChannels[i].outChannels);
+//     }
+// }
+// 
+// inline static 
+// int instance_num_inputs(AudioComponentInstance instance)
+// {
+//     int inputs, outputs;
+//     instance_num_channels(instance, &inputs, &outputs);
+//     return inputs;
+// }
+// 
+// inline static 
+// int instance_num_outputs(AudioComponentInstance instance)
+// {
+//     int inputs, outputs;
+//     instance_num_channels(instance, &inputs, &outputs);
+//     return outputs;
+// }
 
 
 void init_audio_time_stamp (AudioTimeStamp *time_stamp, Float64 inSampleTime) {
