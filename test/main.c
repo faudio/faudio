@@ -34,7 +34,7 @@ void test_types()
     assert(fa_is_int32(fa_i32(1238712)));
     assert(fa_is_int64(fa_i64(1238712)));
 
-    // assert(fa_is_float(fa_f32(1238712)));
+    assert(fa_is_float(fa_f32(1238712)));
     assert(fa_is_double(fa_f64(1238712)));
     assert(fa_is_bool(fa_fb(true)));
 
@@ -69,6 +69,11 @@ void test_value_references()
     printf("int64:      %lli\n", fa_ti64(fa_i64(9223372036854775807ll)));
     assert(fa_ti64(fa_i64(4872837827878787871ll)) == 4872837827878787871ll);
     assert(fa_ti64(fa_i64(-6888881236767676711ll)) == -6888881236767676711ll);
+
+    printf("float:     %s\n", fa_type_str(fa_f32(12372)));
+    printf("float:     %f\n", fa_tf32(fa_f32(3.141592653589793)));
+    assert(fa_tf32(fa_f32(3.1415926)) == 3.1415926);
+    assert(fa_tf32(fa_f32(-3.1415926)) == -3.1415926);
 
     printf("double:     %s\n", fa_type_str(fa_f64(12372)));
     printf("double:     %f\n", fa_tf64(fa_f64(3.141592653589793)));
@@ -276,6 +281,26 @@ void test_buffer()
 
         fa_print("b                            ==> %s\n", b);
         fa_print("size(b)                      ==> %s\n", fa_i32(fa_buffer_size(b)));
+        fa_destroy(b);
+    }
+}
+
+
+// --------------------------------------------------------------------------------
+
+void test_buffer_meta()
+{
+    test_section("Buffer meta");
+
+    {
+        fa_buffer_t b = fa_buffer_create(1);
+
+        fa_print("fa_buffer_meta(b)            ==> %s\n", fa_buffer_meta(b));
+        fa_buffer_set_meta(b, fa_string("test"), fa_from_float(1.23456));
+        fa_print("fa_buffer_meta(b)            ==> %s\n", fa_buffer_meta(b));
+        fa_buffer_set_meta(b, fa_string("test"), fa_from_float(7.89012));
+        fa_print("fa_buffer_meta(b)            ==> %s\n", fa_buffer_meta(b));
+
         fa_destroy(b);
     }
 }
@@ -1943,6 +1968,7 @@ int main(int argc, char const *argv[])
         add_test(compare);
         add_test(rational);
         add_test(buffer);
+        add_test(buffer_meta);
         add_test(time);
         // test_system_time();
         // test_type();
