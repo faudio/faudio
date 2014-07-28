@@ -276,9 +276,9 @@ fa_string_t thread_show(fa_ptr_t a)
 {
     fa_thread_t x = (fa_thread_t) a;
 
-    fa_string_t str = string("<Thread ");
-    str = fa_string_dappend((str, fa_string_format_integral(" %p", (long) x->tId));
-    str = fa_string_dappend((str, string(">"));
+    fa_string_t str = fa_string("<Thread ");
+    str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) x->tId));
+    str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -308,9 +308,9 @@ fa_ptr_t thread_impl(fa_id_t iface)
 
 fa_string_t mutex_show(fa_ptr_t a)
 {
-    fa_string_t str = string("<Mutex ");
-    str = fa_string_dappend((str, fa_string_format_integral(" %p", (long) a));
-    str = fa_string_dappend((str, string(">"));
+    fa_string_t str = fa_string("<Mutex ");
+    str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
+    str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -347,9 +347,9 @@ void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
 void fa_thread_fatal(char *msg, int error)
 {
-    fa_log_error_from(string(msg),
-                      fa_string_dappend((string("Doremir.Thread, error code: "),
-                                     fa_string_format_integral("%d", error)));
+    fa_log_error_from(fa_string(msg),
+                      fa_string_dappend(fa_string("Doremir.Thread, error code: "),
+                                        fa_string_format_integral("%d", error)));
     exit(error);
 }
 

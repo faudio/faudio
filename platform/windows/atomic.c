@@ -113,8 +113,8 @@ fa_string_t atomic_show(fa_ptr_t v)
 {
     fa_atomic_t a = (fa_atomic_t) v;
     fa_string_t s = fa_string("<Atomic");
-    s = fa_string_dappend((s, fa_string_format_integral(" %02x", (LONG) a->value));
-    s = fa_string_dappend((s, fa_string(">"));
+    s = fa_string_dappend(s, fa_string_format_integral(" %02x", (LONG) a->value));
+    s = fa_string_dappend(s, fa_string(">"));
     return s;
 }
 

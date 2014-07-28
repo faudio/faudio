@@ -156,7 +156,7 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
             }
 
             default: {
-                fa_warn(fa_string_dappend((fa_string("Unknown MIDI message to Fluidsynth: <status="), fa_string_format_integral("%d>", status)));
+                fa_warn(fa_string_dappend(fa_string("Unknown MIDI message to Fluidsynth: <status="), fa_string_format_integral("%d>", status)));
                 // assert(false && "Unknown MIDI message to Fluidsynth");
             }
             }
@@ -221,5 +221,5 @@ fa_pair_t fa_signal_synth(fa_string_t path2)
     fa_signal_t right = fa_signal_input(kFluidOffset + 1);
 
     // Return stereo output, embedding the custom proc (so it is actually run)
-    return pair(fa_signal_custom(proc, left), right);
+    return fa_pair_create(fa_signal_custom(proc, left), right);
 }

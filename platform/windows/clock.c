@@ -91,8 +91,8 @@ fa_clock_t fa_clock_standard()
 fa_string_t standard_clock_show(fa_ptr_t a)
 {
     fa_string_t str = fa_string("<StandardClock ");
-    str = fa_string_dappend((str, fa_string_format_integral(" %p", (long) a));
-    str = fa_string_dappend((str, fa_string(">"));
+    str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
+    str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
 
@@ -109,8 +109,8 @@ fa_time_t standard_fa_clock_time(fa_ptr_t a)
     struct timeval tv;
     clock_get_time(&tv);
 
-    fa_time_t s  = seconds(tv.tv_sec);
-    fa_time_t ds = divisions(tv.tv_usec / 1000, 1000);
+    fa_time_t s  = fa_seconds(tv.tv_sec);
+    fa_time_t ds = fa_divisions(tv.tv_usec / 1000, 1000);
     return fa_dadd(s, ds);
 }
 
