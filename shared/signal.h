@@ -20,6 +20,8 @@ struct _state_base_t {
     #define kVectorMode false
 #endif
 
+#define kAllowVirtualTime               1
+
 #define kMaxVectorSize                  1024
 #define kDefVectorSize                  64
 #define kMaxSignalTreeDepth             90

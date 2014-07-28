@@ -1472,8 +1472,7 @@ int64_t audio_stream_milliseconds(fa_ptr_t a)
         // We cache time in the stream in case the stream state has been freed
         state_base_t state = (state_base_t) stream->state;
 
-#define ENABLE_VIRTUAL_TIME
-#ifdef ENABLE_VIRTUAL_TIME
+#ifdef kAllowVirtualTime
         stream->last_time = ((double) state->elapsed_time * 1000.0);
 #else
         stream->last_time = ((double) state->count / (double) state->rate * 1000.0);
