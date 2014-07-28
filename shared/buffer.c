@@ -193,13 +193,13 @@ void fa_buffer_set(fa_buffer_t buffer, size_t index, uint8_t value)
         assert(index * sizeof(TYPE) < buffer->size && "Buffer overflow");           \
         ((TYPE *) buffer->data)[index] = value;                                     \
     }                                                                               \
-
-BUFFER_PRIM_GET_SET(bool,bool)
-BUFFER_PRIM_GET_SET(float,float)
-BUFFER_PRIM_GET_SET(double,double)
-BUFFER_PRIM_GET_SET(int16,int16_t)
-BUFFER_PRIM_GET_SET(int32,int32_t)
-BUFFER_PRIM_GET_SET(int64,int64_t)
+ 
+BUFFER_PRIM_GET_SET(bool, bool)
+BUFFER_PRIM_GET_SET(float, float)
+BUFFER_PRIM_GET_SET(double, double)
+BUFFER_PRIM_GET_SET(int16, int16_t)
+BUFFER_PRIM_GET_SET(int32, int32_t)
+BUFFER_PRIM_GET_SET(int64, int64_t)
 
 void *fa_buffer_unsafe_address(fa_buffer_t buffer)
 {
@@ -243,14 +243,14 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
         fa_buffer_set_meta(buffer, fa_string("sample-rate"), fa_f32(info.samplerate));
         fa_buffer_set_meta(buffer, fa_string("channels"), fa_i32(info.channels));
 
-        fa_let(str, (char*) sf_get_string(file, SF_STR_TITLE))
-            fa_buffer_set_meta(buffer, fa_string("title"), fa_string(str ? str : ""));
+        fa_let(str, (char *) sf_get_string(file, SF_STR_TITLE))
+        fa_buffer_set_meta(buffer, fa_string("title"), fa_string(str ? str : ""));
 
         fa_let(str, (char *) sf_get_string(file, SF_STR_SOFTWARE))
-            fa_buffer_set_meta(buffer, fa_string("software"), fa_string(str ? str : ""));
+        fa_buffer_set_meta(buffer, fa_string("software"), fa_string(str ? str : ""));
 
         fa_let(str, (char *) sf_get_string(file, SF_STR_COPYRIGHT))
-            fa_buffer_set_meta(buffer, fa_string("copyright"), fa_string(str ? str : ""));
+        fa_buffer_set_meta(buffer, fa_string("copyright"), fa_string(str ? str : ""));
 
         if (sf_close(file)) {
             return (fa_buffer_t) fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Buffer"));

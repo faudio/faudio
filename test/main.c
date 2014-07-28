@@ -119,7 +119,7 @@ void test_generic_functions()
 //     for (size_t i = 0; i < n; ++i) {
 //         printf("%x ", *((unsigned char *)(s + i)));
 //     }
-// 
+//
 //     printf("\n");
 // }
 

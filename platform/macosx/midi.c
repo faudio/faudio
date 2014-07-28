@@ -339,7 +339,7 @@ void status_listener(const MIDINotification *message, fa_ptr_t data)
 
     if (id == kMIDIMsgSetupChanged) {
         int n = session->callbacks.count;
-    
+
         for (int i = 0; i < n; ++i) {
             fa_nullary_t f = session->callbacks.elements[i].function;
             fa_ptr_t     x = session->callbacks.elements[i].data;
@@ -849,7 +849,8 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
 void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
 
 
-static inline bool is_two_byte_message(uint8_t status) {
+static inline bool is_two_byte_message(uint8_t status)
+{
     return ((status & 0xF0) == 0xC0) || ((status & 0xF0) == 0xD0);
 }
 
@@ -877,6 +878,7 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
                 packetList.numPackets = 1;
 
                 packetList.packet[0].timeStamp = 0;
+
                 if (is_two_byte_message(sc)) {
                     packetList.packet[0].length = 2;
                 } else {

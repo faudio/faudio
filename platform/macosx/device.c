@@ -103,7 +103,7 @@ void remove_audio_status_listener(fa_pair_t closure)
 
 /*
     This function does nothing on OS X, as CoreMIDI handles hot-pluggning by itself.
-    
+
     It is defined here in case we want to try and compile using the PortMIDI backend instead
     of the usual CoreMIDI implementation, in which case hog-plugging is not supported
     and the fa_audio_add_status_callback function has no effect.

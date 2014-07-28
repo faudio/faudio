@@ -368,13 +368,16 @@ bool fa_signal_is_constant(fa_signal_t a)
     if (is_constant(a)) {
         return true;
     }
+
     if (is_lift(a)) {
         return fa_signal_is_constant(lift2_get(a, a));
     }
-    if (is_lift2(a)) {        
-        return fa_signal_is_constant(lift2_get(a, a)) 
-            && fa_signal_is_constant(lift2_get(a, b));
+
+    if (is_lift2(a)) {
+        return fa_signal_is_constant(lift2_get(a, a))
+               && fa_signal_is_constant(lift2_get(a, b));
     }
+
     return false;
 }
 
@@ -1936,21 +1939,25 @@ fa_ptr_t trigger_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 fa_ptr_t trigger_render_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     trigger_context *context = x;
+
     if (!kVectorMode) {
         state->buffer[(kTriggerOffset + 0)*kMaxVectorSize + 0] = context->trigger;
         context->trigger = context->normal;
     } else {
         assert(false && "Not supported yet");
     }
+
     return x;
 }
 fa_ptr_t trigger_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     trigger_context *context = x;
+
     if (fa_equal(n, context->name)) {
         // Ignore value
         context->trigger = fa_peek_double(msg);
     }
+
     return x;
 }
 
@@ -1969,9 +1976,9 @@ fa_signal_t fa_signal_trigger(fa_string_t name, double init)
     proc->send    = NULL;
     proc->destroy = NULL; // TODO
     proc->data    = context;
-    
+
     return fa_signal_custom(proc, fa_signal_input(kTriggerOffset));
-}           
+}
 
 // --------------------------------------------------------------------------------
 

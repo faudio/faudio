@@ -216,7 +216,7 @@ static inline fa_action_t copy_compound(fa_action_t action2)
     For set, no copy needed
     For send, the scheduled value is copied using fa_copy
     For predicate/do, the closure is *not* copied
-    
+
     For compound actions, we really should deep copy the entire structure
     but this is not possible without a true deep_copy interface. Do
     nothing for now (and do not free in destroy, to replace crashes with leaks).
@@ -319,6 +319,7 @@ void fa_action_destroy(fa_action_t action)
     default:
         assert(false);
     }
+
     delete_action(action);
 }
 
@@ -674,9 +675,11 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
             fa_nullary_t           function           = do_get(action, function);
             nullary_with_time_t    function_with_time = do_get(action, function_with_time);
             fa_ptr_t     data                         = do_get(action, data);
+
             if (function) {
                 function(data);
             }
+
             if (function_with_time) {
                 function_with_time(time, data);
             }
