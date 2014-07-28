@@ -849,8 +849,8 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
 void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
 
 
-bool is_two_byte_message(uint8_t status) {
-    return ((status & 0xF0) == 0xC0) ||((status & 0xF0) == 0xD0);
+static inline bool is_two_byte_message(uint8_t status) {
+    return ((status & 0xF0) == 0xC0) || ((status & 0xF0) == 0xD0);
 }
 
 fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
