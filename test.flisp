@@ -13,11 +13,11 @@
 ; ;   (defvar session :session-type)
 ; ;     (if (pa-status)
 ; ;       (progn
-; ;         (setf session 
+; ;         (setq session 
 ; ;           (coerce (audio-device-error "Overlapping") session-type))))
 ; ;         (inform "   Starting up PortAudio")
 ; ;     (Pa-Initialize)
-; ;     (setf pa-status t)
+; ;     (setq pa-status t)
 ; ;     (fa-inform "")
 ; ;     nil)       
 ; ; 
@@ -32,13 +32,13 @@
 ; ; 
 ; ; (defun merge-sort (xs fa:list-type)
 ; ;   ; (defvar len mid :int left right fa:list-type)
-; ;   (setf len (fa:list-length xs))
-; ;   (setf mid (/ len 2))
+; ;   (setq len (fa:list-length xs))
+; ;   (setq mid (/ len 2))
 ; ;   (if (<= len 1) 
 ; ;     (return xs)
 ; ;     (progn 
-; ;       (setf left (merge-sort (fa:list-take mid xs)))
-; ;       (setf right (merge-sort (fa:list-ddrop mid xs)))
+; ;       (setq left (merge-sort (fa:list-take mid xs)))
+; ;       (setq right (merge-sort (fa:list-ddrop mid xs)))
 ; ;       (return (merge left right))))
 ; ;   nil)
 ; ; 
@@ -51,11 +51,11 @@
 ; ;   (defvar session :session-type)
 ; ;     (if (pa-status)
 ; ;       (progn
-; ;         (setf session 
+; ;         (setq session 
 ; ;           (coerce (audio-device-error "Overlapping") session-type))))
 ; ;         (inform "   Starting up PortAudio")
 ; ;     (Pa-Initialize)
-; ;     (setf pa-status t)
+; ;     (setq pa-status t)
 ; ;     (fa-inform "")
 ; ;     nil)       
 ; ;                   
@@ -104,7 +104,7 @@
 ;   (defvar *foo*)
 ;   (defvar *bar* :int)
 ;   (defvar *bar* :int 2)
-;   (setf *foo* (+ x y))
+;   (setq *foo* (+ x y))
 ;   *foo*) 
 ; 
 ; (defun foo (x y)
@@ -180,35 +180,15 @@
 
 ; (defmacro fa:list (x ...) (fa:list-cons x (fa:list ...))))
 
-(defun fa:put-string (x)
-  (fa:print (c-string "%s\n") x)
-  nil)
-
 (defmacro mul (a b)     (*~ a b))
 (defmacro mul (a b c)   (mul a (mul b c)))
 (defmacro mul (a b c d) (mul a (mul b c d)))
+(defmacro sine (fq) (fa:signal-sin (fa:signal-line fq)))
+(defmacro fa:now () (fa:time-create 0 0 0 (fa:ratio-create 0 1)))
+(defmacro fa:seconds (s) (fa:time-create 0 0 0 (fa:ratio-create s 1)))
+(defmacro fa:quarter-seconds (s) (fa:time-create 0 0 0 (fa:ratio-create s 4)))
 
-(defun play-proc list-type ((x ptr-type) (y list-type)) 
-  (defvar left  ptr-type (mul (+~ (fa:signal-random) (fa:signal-max (fa:signal-line 1) (fa:signal-constant 1))) 
-    (fa:signal-constant 0.2) (fa:signal-sin (fa:signal-line 220)))) 
-  (defvar right ptr-type (mul (fa:signal-constant 0.2) (fa:signal-sin (fa:signal-line 223)))) 
-  (fa:list left right))
-
-(defun play ()
-  (defvar session)
-  (defvar in)
-  (defvar out)
-  (defvar stream)
-  (setf session (fa:audio-begin-session))
-  (setf in (fa:audio-default-input session))
-  (setf out (fa:audio-default-output session))
-  (fa:audio-open-stream in out play-proc nil)
-  (fa:put-string "Press ENTER to stop...")
-  (getchar)
-  (fa:audio-end-all-sessions)
-  nil
-  )
-    
+(defmacro >=~ (a b) (fa:signal-greater-than-equal a b)) 
 (defmacro fa:list ()        (fa:list-empty))
 (defmacro fa:list (a)       (fa:list-cons a (fa:list)))
 (defmacro fa:list (a b)     (fa:list-cons a (fa:list b)))
@@ -225,9 +205,78 @@
 (defmacro fa:initialize-with-log () (>> (fa:set-log-std) (fa:initialize))) 
 
 (defmacro with-faudio (b)
-  (with-scoped-resource (fa:initialize) (fa:terminate) b))
+  (with-scoped-resource (fa:initialize-with-log) (fa:terminate) b))
 (defmacro with-faudio (a b) (with-faudio (progn a b)))
 
+(defun fa:signal-if signal-type ((p signal-type) (a signal-type) (b signal-type))
+  (+~ 
+    (*~ p a)
+    (*~ (fa:signal-not p) a)))
+
+(defun fa:put-string (x)
+  (fa:print (c-string "%s\n") x)
+  nil)
+
+
+
+; (define-module fa:audio
+;  (defnewtype stream)
+;  (define-interface (equality A)
+;    (defun == :bool ((x A) (y A)))
+;    (defun /= :bool ((x A) (y A)))))
+
+
+
+(defun play-proc list-type ((x ptr-type) (y list-type)) 
+  (defvar left  ptr-type 
+    (*~ (fa:signal-constant 0.2) (fa:signal-trigger "foo" 0))) 
+  (defvar right  ptr-type 
+    (*~ (fa:signal-constant 0.2) (sine 110)))
+
+  (fa:list left right))
+
+
+; increment by speed, and change to seek whenever (seek >= 0)
+; (defun transport-prim signal-type ((speed signal-type) (seek signal-type))
+;   (loop (x)
+;     (if (>= seek 0) seek (+ prev-value speed))))
+
+(defun transport-prim-l signal-type (x (prev signal-type))
+  (defvar speed signal-type (fa:pair-first x))
+  (defvar seek  signal-type (fa:pair-second x))
+  (fa:signal-if (>=~ seek (fa:signal-constant 0)) 
+    seek
+    (+~ (fa-signal:constant 0) speed)))
+
+(defun transport-prim signal-type ((speed signal-type) (seek signal-type))
+  (fa:signal-loop transport-prim-l (fa:pair-create speed seek))) 
+
+(defun transport (name)
+  (defvar seek signal-type (fa:signal-trigger name -1)) ; send seek values here (just doubles)
+  (defvar speed signal-type (fa:signal-trigger "" 1))
+  (transport-prim seek speed))
+
+(defun play ()
+  (defvar session)
+  (defvar in)
+  (defvar out)
+  (defvar stream)
+  (setq session (fa:audio-begin-session))
+  (setq in (fa:audio-default-input session))
+  (setq out (fa:audio-default-output session))
+  (setq stream (fa:audio-open-stream in out play-proc nil))
+  (fa:audio-schedule-relative (fa:quarter-seconds 1) (fa:action-send "foo" (fa:from-double 1)) stream)
+  (fa:audio-schedule-relative (fa:quarter-seconds 2) (fa:action-send "foo" (fa:from-double 2)) stream)
+  (fa:audio-schedule-relative (fa:quarter-seconds 3) (fa:action-send "foo" (fa:from-double 3)) stream)
+  (fa:audio-schedule-relative (fa:quarter-seconds 4) (fa:action-send "foo" (fa:from-double 4)) stream)
+  
+  
+  (fa:put-string "Press ENTER to stop...")
+  (getchar)
+  (fa:audio-end-all-sessions)
+  nil
+  )
+    
 (defun main :int ((argc :int) (argv (:const (:pointer (:pointer :char)))))
   (with-faudio
     (fa:put-string "Active!")
@@ -254,13 +303,13 @@
   ; (defvar y)
   ; (c-while (< x 3)
   ;   (progn
-  ;     (setf x (+ 1 x))
-  ;     (setf y (fa:list-single "hello"))      
+  ;     (setq x (+ 1 x))
+  ;     (setq y (fa:list-single "hello"))      
   ;     (fa:set-log-std)
   ;     (fa:thread-sleep 500)         
   ;     (fa:log-info "What?")
   ; 
-  ;     (setf y
+  ;     (setq y
   ;       (fa:list-cons (fa:from-int32 3) 
   ;         (fa:list-cons (fa:from-int32 2) 
   ;           (fa:list-cons (fa:from-int32 3) 

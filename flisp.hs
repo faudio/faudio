@@ -241,6 +241,7 @@ compilePrimS = go
     go (List (Symbol "return":x:[]))       = CReturn (compilePrimE x)
     go (List (Symbol "progn":xs))          = CBlock (fmap compilePrimS xs)
     go (List [Symbol "setf", Symbol n, y]) = CAssign Nothing ((compileName.unpack) n) (compilePrimE y)
+    go (List [Symbol "setq", Symbol n, y]) = CAssign Nothing ((compileName.unpack) n) (compilePrimE y)
     
     go (List (Symbol "c-if":p:a:[]))       = CIf (compilePrimE p) (compilePrimS a) Nothing
     go (List (Symbol "c-if":p:a:b:[]))     = CIf (compilePrimE p) (compilePrimS a) (Just $ compilePrimS b)
