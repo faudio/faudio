@@ -172,6 +172,8 @@ module Fa.Signal
             Channel number.
      */
     input : ( channel : Int ) -> Signal;
+    inputWithCustom : ( proc : CustomProcessor*, channel : Int ) -> Signal;
+    
 
     /** The primitive output signal, writing to the bus of the given number
         and returning the written value.
@@ -185,6 +187,7 @@ module Fa.Signal
             The original signal, which must be run for output to take place.
      */
     output : ( delay : Int, channel : Int, input : Signal ) -> Signal;
+    outputWithCustom : ( proc : CustomProcessor*, delay : Int, channel : Int, input : Signal ) -> Signal;
 
     /** Returns a signal that evaluates both of the given signal, and the result of the first.
      */

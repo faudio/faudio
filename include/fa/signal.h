@@ -199,6 +199,10 @@ fa_signal_t fa_signal_custom(fa_signal_custom_processor_t *,
 */
 fa_signal_t fa_signal_input(int channel);
 
+
+fa_signal_t fa_signal_input_with_custom(fa_signal_custom_processor_t * proc,
+                                        int channel);
+
 /** The primitive output signal, writing to the bus of the given number
     and returning the written value.
     @param delay
@@ -213,6 +217,12 @@ fa_signal_t fa_signal_input(int channel);
 fa_signal_t fa_signal_output(int delay,
                              int channel,
                              fa_signal_t input);
+
+
+fa_signal_t fa_signal_output_with_custom(fa_signal_custom_processor_t * proc,
+                                         int delay,
+                                         int channel,
+                                         fa_signal_t input);
 
 /** Returns a signal that evaluates both of the given signal, and the result of the first.
 */
