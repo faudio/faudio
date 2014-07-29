@@ -85,7 +85,7 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
 fa_ptr_t destroy_(fa_ptr_t x)
 {
-    fa_inform(fa_string("Destroying DSLSynth instance (doing nothing)"));
+    // fa_inform(fa_string("Destroying DSLSynth instance (doing nothing)"));
     return x;
 }
 

@@ -1083,7 +1083,7 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
 {
     stream_t stream = x;
 
-    fa_inform(fa_string("Audio control thread active"));
+    fa_inform(fa_string("    Audio control thread active"));
 
     while (true) {
         if (stream->controller.stop) {
@@ -1149,7 +1149,7 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
         }
     }
 
-    fa_inform(fa_string("Audio control thread finished"));
+    fa_inform(fa_string("    Audio control thread finished"));
     return NULL;
 }
 
@@ -1172,12 +1172,16 @@ void before_processing(stream_t stream)
     }
 
     fa_list_t procs = fa_signal_get_procs(merged);
+
+    fa_inform(fa_string_format_integral("    Custom processors: %d", fa_list_length(procs)));
+
     fa_map_t proc_map = build_proc_map(procs);
+    fa_inform(fa_dappend(fa_string(     "        Allocated channel offsets: "), fa_string_show(proc_map)));
+
     fa_for_each(x, procs) {
         // printf("Adding custom proc %p!\n", x);
         add_custom_proc(x, stream->state);
     }
-    fa_inform(fa_string_format_integral("    Custom procs:   %d", ((state_base_t) stream->state)->custom_proc_count));
 
     merged = fa_signal_simplify(merged);
     print_fa_signal_tree(merged);
@@ -1353,7 +1357,7 @@ void native_finished_callback(void *data)
             fa_warn(fa_string("Output underflow detected"));
         }
 
-        fa_inform(fa_string_format_integral("Stream flag result (0 = ok): %d", stream->pa_flags));
+        // fa_inform(fa_string_format_integral("    Stream flag result (0 = ok): %d", stream->pa_flags));
         after_processing(data);
 
         stream->state = NULL;

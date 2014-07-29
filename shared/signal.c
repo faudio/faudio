@@ -1307,7 +1307,7 @@ fa_map_t build_proc_map(fa_list_t procs)
 {
     fa_list_t procs2 = fa_list_empty();
     fa_for_each(x, procs) {
-        printf("%lu\n", (unsigned long) x);
+        // printf("%lu\n", (unsigned long) x);
         procs2 = fa_list_dcons(fa_from_int64((int64_t) x), procs2);
     }
 
@@ -1316,10 +1316,9 @@ fa_map_t build_proc_map(fa_list_t procs)
     // Now remove duplicates, then build a map (ProcId => BusIndexOffset)
     fa_map_t proc_map = pointer_list_to_custom_proc_map(procs2);
 
-    fa_inform(fa_dappend(fa_string("Using the following processor bindings: "), fa_string_show(proc_map)));
     fa_mark_used(proc_map);
     fa_for_each(x, procs) {
-        printf("%lu\n", (unsigned long) x);
+        // printf("%lu\n", (unsigned long) x);
         fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) x);
         if (offset) {
             ((custom_proc_t) x)->channel_offset = fa_peek_int64(offset);
