@@ -39,14 +39,14 @@ module Fa.Io
     /** Implements the filter interface (pull calls have no effect, push ignores the sink). */
     type Sink = opaque;
 
-    /**
+    /** Generic I/O filter interface.
      */
     type FilterInterface = struct {
 
         pull : ((Ptr, Source, Callback, Ptr) -> Void)*,
+        // TODO Passing NULL means close stream
         push : ((Ptr, Sink, Buffer) -> Void)*
     };
-    // Passing NULL means close stream
     
     /** Pull data from a source. */
     pull : (Source, Callback, Ptr) -> Void;

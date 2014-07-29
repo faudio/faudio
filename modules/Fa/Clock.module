@@ -21,6 +21,8 @@ module Fa.Clock
     import Fa;
     import Fa.Time;
 
+    /** Generic clock interface.
+     */
     type Interface = struct {
         time         : (Ptr -> Time)*,
         milliseconds : (Ptr -> Int64)*

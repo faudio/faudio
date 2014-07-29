@@ -29,7 +29,8 @@
     @{
     */
 
-
+/** Generic clock interface.
+*/
 typedef struct {
             fa_time_t (* time)(fa_ptr_t); int64_t (* milliseconds)(fa_ptr_t);
         } fa_clock_interface_t;

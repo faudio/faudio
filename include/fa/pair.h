@@ -34,7 +34,10 @@
 */
 typedef struct _fa_pair_t * fa_pair_t;
 
-
+/** A struct isomorphic to a pair.
+    @deprecated
+        Use @ref fa_pair_first and @ref fa_pair_second instead.
+*/
 typedef struct {
             fa_ptr_t first; fa_ptr_t second;
         } fa_pair_struct_t;

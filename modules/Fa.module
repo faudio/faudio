@@ -201,10 +201,12 @@ module Fa
     destroy : Ptr -> Void;
     // TODO deepDestroy : Ptr -> Void;
 
+    /** Generic append operation interface. */
     type Semigroup = struct {
         append : ((Ptr, Ptr) -> Ptr)*
     };
 
+    /** Generic empty value interface. */
     type Monoid = struct {
         empty : ((dummy : Ptr) -> Ptr)*
     };

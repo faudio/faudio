@@ -53,7 +53,7 @@ typedef struct _fa_io_source_t * fa_io_source_t;
 */
 typedef struct _fa_io_sink_t * fa_io_sink_t;
 
-/**
+/** Generic I/O filter interface.
 */
 typedef struct {
             void (* pull)(fa_ptr_t,

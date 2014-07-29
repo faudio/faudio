@@ -25,6 +25,11 @@ module Fa.Pair
     /** The abstract type of pairs.
      */
     type Pair = opaque;
+
+    /** A struct isomorphic to a pair.
+        @deprecated
+            Use @ref fa_pair_first and @ref fa_pair_second instead.
+     */
     type Struct = struct { first : Ptr, second : Ptr };
 
     /** Create a new pair.

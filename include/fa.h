@@ -300,12 +300,14 @@ fa_ptr_t fa_move(fa_ptr_t ptr);
 */
 void fa_destroy(fa_ptr_t ptr);
 
-
+/** Generic append operation interface. 
+*/
 typedef struct {
             fa_ptr_t (* append)(fa_ptr_t, fa_ptr_t);
         } fa_semigroup_t;
 
-
+/** Generic empty value interface. 
+*/
 typedef struct {
             fa_ptr_t (* empty)(fa_ptr_t dummy);
         } fa_monoid_t;
