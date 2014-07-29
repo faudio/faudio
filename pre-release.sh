@@ -8,7 +8,8 @@ else
 fi
 
 make test
-mate CMakeLists.txt bindings/lisp/faudio.asd doc/Doxyfile
+nano CMakeLists.txt bindings/lisp/faudio.asd doc/Doxyfile
+
 git add -u
 git commit -m "v$VERSION"
 git tag "v$VERSION"
