@@ -135,6 +135,7 @@ module Fa.Signal
         send : ((Ptr,MessageCallback, Ptr) -> Ptr)*,
 
         destroy : (Ptr -> Ptr)*,
+        channelOffset : Int64,
         data : Ptr
     };
     

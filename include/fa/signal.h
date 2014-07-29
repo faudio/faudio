@@ -160,6 +160,7 @@ typedef struct {
                               fa_signal_message_callback_t,
                               fa_ptr_t);
             fa_ptr_t (* destroy)(fa_ptr_t);
+            int64_t channel_offset;
             fa_ptr_t data;
         } fa_signal_custom_processor_t;
 
