@@ -133,17 +133,20 @@ fa_signal_t fa_signal_loop(fa_signal_unary_signal_t unarySignal,
 fa_signal_t fa_signal_delay(int int_, fa_signal_t signal);
 
 
-typedef fa_string_t fa_signal_name_t;
-
-
-typedef fa_ptr_t fa_signal_message_t;
-
-
 typedef struct {
             double * buffer; fa_ptr_t dummy; int count; double rate;
         } fa_signal_state_t;
 
+/** Type of names.
+*/
+typedef fa_string_t fa_signal_name_t;
 
+/** Type of messages.
+*/
+typedef fa_ptr_t fa_signal_message_t;
+
+/** A callback to receive messages.
+*/
 typedef void (* fa_signal_message_callback_t)(fa_ptr_t,
                                               fa_signal_name_t,
                                               fa_signal_message_t);

@@ -4,9 +4,6 @@
 
     We provide threads and mutexes. For non-blocking constructs, see the @ref FaAtomic modules.
 
-    @par Literals
-    - `thread(function, data)`
-
     @par Implements 
     - fa_equal_t  (Thread only)
     - fa_order_t  (Thread only)

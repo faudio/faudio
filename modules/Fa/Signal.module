@@ -114,9 +114,6 @@ module Fa.Signal
     // insert : ( String, Int, Int, Int, Int, Signal ) -> Signal;
 
 
-    type Name    = String;
-    type Message = Ptr;
-
     type State = struct {
         buffer : Double*,
         dummy : Ptr,
@@ -124,6 +121,16 @@ module Fa.Signal
         rate : Double
     };
 
+    /** Type of names.
+     */
+    type Name    = String;
+
+    /** Type of messages.
+     */
+    type Message = Ptr;
+    
+    /** A callback to receive messages.
+     */
     type MessageCallback = ((Ptr, Name, Message) -> Void)*;
 
     type CustomProcessor = struct {

@@ -23,7 +23,7 @@
     ~~~
 
     @par Literals
-    - `string("foo")`
+    - `fa_string("foo")`
 
     @par Implements 
     - fa_equal_t
