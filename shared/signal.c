@@ -1133,6 +1133,43 @@ fa_ptr_t run_simple_action_(fa_ptr_t x, fa_ptr_t a)
 
 
 inline static
+fa_list_t fa_list_r(int64_t x, int64_t y)
+{
+    return x >= y ? fa_list_empty() : fa_list_cons(fa_from_int64(x), fa_list_r(1 + x, y));
+}
+
+inline static
+fa_ptr_t _add30__pointer_list_to_custom_proc_map(fa_ptr_t x)
+{
+    return fa_add(x, fa_from_int64(30));
+}
+inline static
+fa_ptr_t _times4__pointer_list_to_custom_proc_map(fa_ptr_t x)
+{
+    return fa_multiply(x, fa_from_int64(4));
+}
+
+inline static
+fa_map_t pointer_list_to_custom_proc_map(fa_list_t xs)
+{
+    return fa_map_from_list(fa_list_zip(
+        fa_list_remove_duplicates(
+            // fa_list_map(apply1, fa_from_int64, xs)
+            xs
+            ), 
+        fa_list_map(apply1, _add30__pointer_list_to_custom_proc_map, 
+            fa_list_map(apply1, _times4__pointer_list_to_custom_proc_map, 
+                fa_list_r(0, fa_list_length(xs))))
+                ));
+}
+
+inline static
+fa_ptr_t lookup_proc_offset(fa_map_t proc_map, intptr_t x)
+{
+    return fa_map_get(fa_from_int64(x), proc_map);
+}
+
+inline static
 fa_priority_queue_t list_to_queue(fa_list_t controls_)
 {
     fa_priority_queue_t controls = fa_priority_queue();
@@ -1148,10 +1185,32 @@ void fa_signal_run(int count, fa_list_t controls_, fa_signal_t a, double *output
         state_t             state    = new_state(kDefSampleRate); // TODO other sample rates
         fa_priority_queue_t controls = list_to_queue(controls_);
 
+        fa_list_t procs = fa_signal_get_procs(a);
+        fa_list_t procs2 = fa_list_empty();
+        fa_for_each(x, procs) {
+            printf("%lu\n", (unsigned long) x);
+            procs2 = fa_list_dcons(fa_from_int64((int64_t) x), procs2);
+        }
+
         // XXX Before this, inform custom procs of their offset
         // we have all the procs in a list (as raw pointer?)
         // Now remove duplicates, then build a map (ProcId => BusIndexOffset)
-        fa_for_each(x, fa_signal_get_procs(a)) {
+        fa_map_t proc_map = pointer_list_to_custom_proc_map(procs2);
+
+        fa_inform(fa_dappend(
+            fa_string("Using the following processor bindings: "), 
+            fa_string_show(proc_map)));
+        fa_mark_used(proc_map);
+
+        fa_for_each(x, procs) {
+            printf("%lu\n", (unsigned long) x);
+            fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) x);
+            if (offset) {
+                ((custom_proc_t) x)->channel_offset = fa_peek_int64(offset);
+            } else {
+                ((custom_proc_t) x)->channel_offset = 0;
+                fa_warn(fa_string("Could not find processor offset"));
+            }
             add_custom_proc(x, state);
         }
 
