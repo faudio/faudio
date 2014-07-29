@@ -1171,19 +1171,24 @@ void before_processing(stream_t stream)
         merged = fa_signal_former(merged, withOutput); // Could use any combinator here
     }
 
-    fa_for_each(x, fa_signal_get_procs(merged)) {
+    fa_list_t procs = fa_signal_get_procs(merged);
+    fa_map_t proc_map = build_proc_map(procs);
+    fa_for_each(x, procs) {
         // printf("Adding custom proc %p!\n", x);
         add_custom_proc(x, stream->state);
     }
     fa_inform(fa_string_format_integral("    Custom procs:   %d", ((state_base_t) stream->state)->custom_proc_count));
 
-    stream->MERGED_SIGNAL = fa_signal_simplify(merged);
+    merged = fa_signal_simplify(merged);
+    print_fa_signal_tree(merged);
 
-    print_fa_signal_tree(stream->MERGED_SIGNAL);
+    merged = fa_signal_route_processors(proc_map, merged);
+    print_fa_signal_tree(merged);
 
-    stream->MERGED_SIGNAL = fa_signal_doptimize(stream->MERGED_SIGNAL);
-    stream->MERGED_SIGNAL = fa_signal_dverify(stream->MERGED_SIGNAL);
+    merged = fa_signal_doptimize(merged);
+    merged = fa_signal_dverify(merged);
 
+    stream->MERGED_SIGNAL = merged;
     run_custom_procs(custom_proc_before, 0, stream->state);
 }
 

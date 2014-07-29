@@ -3,6 +3,8 @@
 
 // TODO hide all of these by rewriting signal/audio to use callbacks
 
+fa_signal_t fa_signal_route_processors(fa_map_t proc_map, fa_signal_t signal2);
+
 /** Create a new DSP state object,
  */
 state_t new_state(int sample_rate);
@@ -33,3 +35,9 @@ fa_ptr_t run_simple_action(state_t state, fa_action_t action);
 
 double step(fa_signal_t signal, state_t state);
 void step_vector(fa_signal_t signal, state_t state, int count, double* out);
+
+fa_map_t build_proc_map(fa_list_t procs);
+
+// Not strictly needed outside signal.c:
+fa_map_t pointer_list_to_custom_proc_map(fa_list_t xs);
+fa_ptr_t lookup_proc_offset(fa_map_t proc_map, intptr_t x);
