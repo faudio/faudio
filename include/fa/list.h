@@ -336,6 +336,12 @@ int fa_list_find_index(fa_pred_t pred,
                        fa_ptr_t ptr,
                        fa_list_t list);
 
+
+fa_list_t fa_list_remove_duplicates(fa_list_t list);
+
+
+fa_list_t fa_list_zip(fa_list_t list, fa_list_t list_);
+
 /** Return the given list with all elements not satisfying the given predicate removed.
     @par Performance
         O(n)

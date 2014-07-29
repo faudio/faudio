@@ -336,6 +336,10 @@ module Fa.List
      */
     findIndex : (Pred, Ptr, List) -> Int;
 
+    removeDuplicates : List -> List;
+
+    // Zips
+    zip : (List, List) -> List;
 
     // Maps and folds
     
