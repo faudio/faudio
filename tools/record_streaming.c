@@ -56,17 +56,18 @@ fa_list_t _signal(fa_ptr_t x, fa_list_t xs)
 {
     // fa_signal_t i1 = fa_list_head(xs);
 
-#ifndef _WIN32
-    fa_pair_t synth = fa_signal_dls();
-#define kSynthName "dls"
-#else
-    fa_pair_t synth = fa_signal_synth(fa_string("C:\\sf.sf2"));
-#define kSynthName "fluid"
-#endif
+// #ifndef _WIN32
+//     fa_pair_t synth = fa_signal_dls();
+// #define kSynthName "dls"
+// #else
+//     fa_pair_t synth = fa_signal_synth(fa_string("C:\\sf.sf2"));
+// #define kSynthName "fluid"
+// #endif
 
-// #define kSynthName "nosynth"
+#define kSynthName "nosynth"
 //
 //     fa_pair_t synth = pair(fa_signal_sin(fa_signal_line(20)), fa_signal_sin(fa_signal_line(20)));
+    fa_pair_t synth = fa_pair_create(fa_list_index(0, xs), fa_list_index(1, xs));
 
     fa_unpair(synth, synth1, synth2) {
         return list(
@@ -102,8 +103,8 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
                           fa_midi_message_create_simple(0x90, 60 + i, 127)) , s);
     }
 
-    fa_audio_schedule(fa_milliseconds(45000 + kRecOffset),  fa_action_send(fa_string("foo"), NULL) , s);
-    fa_audio_schedule(fa_milliseconds(45000 + kRecOffset),  fa_action_do(_print, fa_string("Finished recording")) , s);
+    fa_audio_schedule(fa_milliseconds(4000 + kRecOffset),  fa_action_send(fa_string("foo"), NULL) , s);
+    fa_audio_schedule(fa_milliseconds(4000 + kRecOffset),  fa_action_do(_print, fa_string("Finished recording")) , s);
 
 
     printf("Started listening\n");
@@ -114,10 +115,10 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
     fa_io_filter_t end = (!gEndian ? fa_io_identity() : fa_io_create_endian_filter());
     fa_io_filter_t filt = fa_io_compose(ogg, end);
     fa_io_run(
-        // fa_io_apply(
+        fa_io_apply(
         fa_io_from_ring_buffer(rbuffer),
-        // filt
-        // ),
+        filt
+        ),
 
 
         // fa_io_coapply(
@@ -127,7 +128,7 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
         fa_io_write_file(gOutput)
         // )
     );
-    fa_thread_sleep(1000000);
+    fa_thread_sleep(3000);
     return s;
 
     fa_mark_used(filt);
@@ -161,9 +162,9 @@ int main(int argc, char const *argv[])
             // gEndian = fa_map_get(fa_string("endian"), opts)      ? fa_to_bool(fa_map_get(fa_string("endian"), opts))      : false;
             // gOutput = fa_map_get(fa_string("output-file"), opts) ? fa_map_get(fa_string("output-file"), opts) : fa_string("test.raw");
 
-            gVorbis = false;
+            gVorbis = true;
             gEndian = false;
-            gOutput = fa_string("test.raw");
+            gOutput = fa_string("test.ogg");
 
             printf("Vorbis=%d, Endian=%d, Output=%s\n", gVorbis, gEndian, fa_unstring(gOutput));
             fa_atomic_ring_buffer_t rbuffer = fa_atomic_ring_buffer(kRingBufferSize);
