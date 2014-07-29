@@ -1916,6 +1916,76 @@ fa_list_t fa_signal_vst(fa_string_t name1, fa_string_t path1, fa_list_t inputs)
 
 
 
+/*
+
+// FIXME change this!!!
+#define kRecord2Offset 33
+
+struct _record2_context {
+    fa_string_t name;
+    buffer_t buffer;
+};
+
+typedef struct _record2_context record2_context;
+
+fa_ptr_t record2_before_(fa_ptr_t x, int count, fa_signal_state_t *state)
+{
+    return x;
+}
+fa_ptr_t record2_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
+{
+    return x;
+}
+fa_ptr_t record2_render_(fa_ptr_t x, int count, fa_signal_state_t *state)
+{
+    record2_context *context = x;
+
+    if (!kVectorMode) {
+        double x input = state->buffer[(kRecord2Offset + 0)*kMaxVectorSize + 0];
+        context->record2 = context->normal;
+    } else {
+        assert(false && "Not supported yet");
+    }
+
+    return x;
+}
+fa_ptr_t record2_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+{
+    record2_context *context = x;
+
+    if (fa_equal(n, context->name)) {
+        // TODO accept new buffer
+    }
+
+    return x;
+}
+
+fa_signal_t fa_signal_record2(fa_string_t name, buffer_t buffer, signal_t i, signal_t x)
+{
+    record2_context *context = fa_malloc(sizeof(record2_context));
+    context->name = name;
+    context->buffer = buffer;
+    context->i;
+    context->x;
+
+    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
+    proc->before  = record2_before_;
+    proc->after   = record2_after_;
+    proc->render  = record2_render_;
+    proc->receive = record2_receive_;
+    proc->send    = NULL;
+    proc->destroy = NULL; // TODO
+    proc->data    = context;
+
+    return fa_signal_custom(proc, fa_signal_input(kRecord2Offset));
+}
+*/
+
+
+
+
+
+
 
 
 #define kTriggerOffset 15
