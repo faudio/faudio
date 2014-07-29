@@ -702,9 +702,14 @@ EXCLUDE_SYMLINKS       = NO
 # for example use the pattern */test/*
 
 # Public
-EXCLUDE_PATTERNS       = */include/fa/graph* \
+EXCLUDE_PATTERNS       = \
                          */include/fa/pair/left* \
-                         */include/fa/set* \
+                         */include/fa/thread* \
+                         */include/fa/atomic* \
+                         */include/fa/priority_queue* \
+                         */include/fa/std* \
+                         */include/fa/system* \
+                         */include/fa/option* \
 
 #                          */include/fa/atomic/stack* \
 #                          */include/fa/std* \
