@@ -35,8 +35,6 @@ inline static fa_time_t new_time(double dvalue)
 
 inline static void delete_time(fa_time_t time)
 {
-    // TODO
-    // fa_ratio_destroy(time->value);
     fa_delete(time);
 }
 
