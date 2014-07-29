@@ -693,12 +693,14 @@ fa_signal_t fa_signal_route_processors(fa_map_t proc_map, fa_signal_t signal2)
         // TODO channel
         fa_signal_t a               = fa_signal_route_processors(proc_map, output_get(signal2, a));
 
-        fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) proc);
-        if (offset) {
-            int64_t offset2 = fa_peek_int64(offset);
-            channel += offset2;
-        } else {
-            fa_warn(fa_string("Could not find processor offset"));
+        if (proc) {
+            fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) proc);
+            if (offset) {
+                int64_t offset2 = fa_peek_int64(offset);
+                channel += offset2;
+            } else {
+                fa_warn(fa_string_format_integral("Could not find processor offset: %lu", (unsigned long) proc));
+            }
         }
         
         return fa_signal_output(samples, channel, a);
@@ -709,14 +711,15 @@ fa_signal_t fa_signal_route_processors(fa_map_t proc_map, fa_signal_t signal2)
         fa_ptr_t proc               = input_get(signal2, proc);
         // TODO channel
 
-        fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) proc);
-        if (offset) {
-            int64_t offset2 = fa_peek_int64(offset);
-            channel += offset2;
-        } else {
-            fa_warn(fa_string("Could not find processor offset"));
+        if (proc) {
+            fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) proc);
+            if (offset) {
+                int64_t offset2 = fa_peek_int64(offset);
+                channel += offset2;
+            } else {
+                fa_warn(fa_string_format_integral("Could not find processor offset: %lu", (unsigned long) proc));
+            }
         }
-        
 
         return fa_signal_input(channel);
     }
@@ -1322,7 +1325,7 @@ fa_map_t build_proc_map(fa_list_t procs)
             ((custom_proc_t) x)->channel_offset = fa_peek_int64(offset);
         } else {
             ((custom_proc_t) x)->channel_offset = 0;
-            fa_warn(fa_string("Could not find processor offset"));
+            fa_warn(fa_string_format_integral("Could not find processor offset: %lu", (unsigned long) x));
         }
     }
     return proc_map;
