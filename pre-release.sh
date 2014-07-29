@@ -10,9 +10,9 @@ fi
 make test
 nano CMakeLists.txt bindings/lisp/faudio.asd doc/Doxyfile
 
-git add -u
-git commit -m "v$VERSION"
-git tag "v$VERSION"
-git push
-git push --tags
+echo git add -u
+echo git commit -m "v$VERSION"
+echo git tag "v$VERSION"
+echo git push
+echo git push --tags
 
