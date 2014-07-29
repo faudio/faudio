@@ -24,16 +24,16 @@ fa_ptr_t after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
-fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 {
     if (!kVectorMode) {
-        state->buffer[(kThisPlugOffset + 0)*kMaxVectorSize] = should_click;
-        state->buffer[(kThisPlugOffset + 1)*kMaxVectorSize] = should_click;
+        state->buffer[(offset + 0)*kMaxVectorSize] = should_click;
+        state->buffer[(offset + 1)*kMaxVectorSize] = should_click;
         should_click = false;
     } else {
         for (int i = 0; i < count; ++i) {
-            state->buffer[(kThisPlugOffset + 0)*kMaxVectorSize + i] = should_click;
-            state->buffer[(kThisPlugOffset + 1)*kMaxVectorSize + i] = should_click;
+            state->buffer[(offset + 0)*kMaxVectorSize + i] = should_click;
+            state->buffer[(offset + 1)*kMaxVectorSize + i] = should_click;
             should_click = false;
         }
     }

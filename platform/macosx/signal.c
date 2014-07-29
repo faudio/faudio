@@ -39,7 +39,7 @@ struct au_context {
     double *outputs;
 };
 
-fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 {
     au_context_t context = x;
 
@@ -50,16 +50,16 @@ fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
             au_render(context, state->count, freq, NULL);
         }
 
-        state->buffer[(kAUOffset + 0)*kMaxVectorSize] = context->outputs[freq * 0 + (state->count % freq)];
-        state->buffer[(kAUOffset + 1)*kMaxVectorSize] = context->outputs[freq * 1 + (state->count % freq)];
+        state->buffer[(offset + 0)*kMaxVectorSize] = context->outputs[freq * 0 + (state->count % freq)];
+        state->buffer[(offset + 1)*kMaxVectorSize] = context->outputs[freq * 1 + (state->count % freq)];
 
         return x;
     } else {
         au_render(context, state->count, count, NULL);
 
         for (int i = 0; i < count; ++i) {
-            state->buffer[(kAUOffset + 0)*kMaxVectorSize + i] = context->outputs[count * 0 + i];
-            state->buffer[(kAUOffset + 1)*kMaxVectorSize + i] = context->outputs[count * 1 + i];
+            state->buffer[(offset + 0)*kMaxVectorSize + i] = context->outputs[count * 0 + i];
+            state->buffer[(offset + 1)*kMaxVectorSize + i] = context->outputs[count * 1 + i];
         }
 
         return x;

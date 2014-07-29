@@ -983,7 +983,7 @@ void run_custom_procs(custom_proc_when_t when, int count, state_t state)
             break;
 
         case custom_proc_render:
-            proc->render(proc->data, count, (fa_signal_state_t *) state);
+            proc->render(proc->data, proc->channel_offset, count, (fa_signal_state_t *) state);
             break;
 
         case custom_proc_after:
@@ -1588,19 +1588,19 @@ fa_ptr_t record_extrenal_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
     return x;
 }
 
-fa_ptr_t record_extrenal_render_(fa_ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t record_extrenal_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 {
     struct rec_external *ext = (struct rec_external *) x;
 
     if (!kVectorMode) {
-        double x = state->buffer[(kRecExternalOffset + 0) * kMaxVectorSize];
+        double x = state->buffer[(offset + 0) * kMaxVectorSize];
 
         if (ext->buffer) {
             fa_atomic_ring_buffer_write_double(ext->buffer, x);
         }
     } else {
         for (int sample = 0; sample < count; ++sample) {
-            double x = state->buffer[(kRecExternalOffset + 0) * kMaxVectorSize + sample];
+            double x = state->buffer[(offset + 0) * kMaxVectorSize + sample];
 
             if (ext->buffer) {
                 fa_atomic_ring_buffer_write_double(ext->buffer, x);
@@ -1653,7 +1653,7 @@ fa_signal_t fa_signal_record_external(fa_string_t name,
     proc->destroy = NULL;
     proc->data    = ext;
 
-    return fa_signal_custom(proc, fa_signal_output(0, kRecExternalOffset, signal));
+    return fa_signal_custom(proc, fa_signal_output_with_custom(proc, 0, kRecExternalOffset, signal));
 }
 
 
@@ -1943,7 +1943,7 @@ fa_ptr_t vst_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
     return x;
 }
 
-fa_ptr_t vst_render_(fa_ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t vst_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 {
     vst_context *context = x;
     AEffect     *plugin = context->plugin;
@@ -1967,7 +1967,7 @@ fa_ptr_t vst_render_(fa_ptr_t x, int count, fa_signal_state_t *state)
         for (int channel = 0; channel < plugin->numOutputs; ++channel) {
             for (int sample = 0; sample < 1; ++sample) {
                 if (channel < 2) {
-                    state->buffer[(kVstOffset + channel)*kMaxVectorSize + sample] = context->outputs[channel][sample];
+                    state->buffer[(offset + channel)*kMaxVectorSize + sample] = context->outputs[channel][sample];
                 }
             }
         }
@@ -2122,7 +2122,9 @@ fa_list_t fa_signal_vst(fa_string_t name1, fa_string_t path1, fa_list_t inputs)
     // TODO
     last_vst_plug = context;
 
-    return list(fa_signal_custom(proc, fa_signal_input(kVstOffset + 0)), fa_signal_input(kVstOffset + 1));
+    return list(fa_signal_custom(proc, 
+        fa_signal_input_with_custom(proc, 0)),
+        fa_signal_input_with_custom(proc, 1));
 }
 
 void fa_signal_show_vst_gui(fa_string_t string, void *handle)
@@ -2231,12 +2233,12 @@ fa_ptr_t trigger_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
-fa_ptr_t trigger_render_(fa_ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t trigger_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 {
     trigger_context *context = x;
 
     if (!kVectorMode) {
-        state->buffer[(kTriggerOffset + 0)*kMaxVectorSize + 0] = context->trigger;
+        state->buffer[(offset + 0)*kMaxVectorSize + 0] = context->trigger;
         context->trigger = context->normal;
     } else {
         assert(false && "Not supported yet");
@@ -2272,7 +2274,7 @@ fa_signal_t fa_signal_trigger(fa_string_t name, double init)
     proc->destroy = NULL; // TODO
     proc->data    = context;
 
-    return fa_signal_custom(proc, fa_signal_input_with_custom(proc, kTriggerOffset));
+    return fa_signal_custom(proc, fa_signal_input_with_custom(proc, 0));
 }
 
 // --------------------------------------------------------------------------------

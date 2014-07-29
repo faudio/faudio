@@ -2,6 +2,7 @@
 #include <fa/fa.h>
 #include <fa/util.h>
 #include "common.h"
+#include "../shared/signal.h"
 
 /*
     This program defines a custom processor and runs it on the default audio input and output devices.
@@ -21,10 +22,10 @@ fa_ptr_t after_(fa_ptr_t x, int count, fa_signal_state_t *state)
     printf("After!\n");
     return x;
 }
-fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 {
     // printf("Render!\n");
-    state->buffer[32] = 0.01 * (state->count / state->rate);
+    state->buffer[(offset + 0) * kMaxVectorSize] = 0.01 * (state->count / state->rate);
     return x;
 }
 fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)

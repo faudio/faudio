@@ -61,15 +61,15 @@ fa_ptr_t after_(fa_ptr_t x, int count, fa_signal_state_t *state)
     fa_destroy(out_value);
     return x;
 }
-fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 {
     if (!kVectorMode) {
-        values[0] = state->buffer[(kThisPlugOffset + 0) * kMaxVectorSize];
-        values[1] = state->buffer[(kThisPlugOffset + 1) * kMaxVectorSize];
+        values[0] = state->buffer[(offset + 0) * kMaxVectorSize];
+        values[1] = state->buffer[(offset + 1) * kMaxVectorSize];
         should_send = should_send || (!(state->count % (44100 / 100)));
     } else {
-        values[0] = state->buffer[(kThisPlugOffset + 0) * kMaxVectorSize + 0];
-        values[1] = state->buffer[(kThisPlugOffset + 1) * kMaxVectorSize + 0];
+        values[0] = state->buffer[(offset + 0) * kMaxVectorSize + 0];
+        values[1] = state->buffer[(offset + 1) * kMaxVectorSize + 0];
         // TODO should_send
     }
 
@@ -109,9 +109,8 @@ fa_pair_t fa_signal_level(fa_signal_t a, fa_signal_t b)
     proc->data    = NULL;
 
     return fa_pair_create(fa_signal_custom(proc,
-                                           fa_signal_latter(fa_signal_output(0, kThisPlugOffset + 0, slope(fa_signal_absolute(a))), a)
-                                          ),
-                          fa_signal_latter(fa_signal_output(0, kThisPlugOffset + 1, b), b)
+        fa_signal_latter(fa_signal_output_with_custom(proc, 0, kThisPlugOffset + 0, slope(fa_signal_absolute(a))), a)),
+        fa_signal_latter(fa_signal_output_with_custom(proc, 0, kThisPlugOffset + 1, b), b)
                          );
 }
 

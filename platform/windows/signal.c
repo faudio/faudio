@@ -215,8 +215,8 @@ fa_pair_t fa_signal_synth(fa_string_t path2)
     proc->destroy = destroy_;
     proc->data    = synth;
 
-    fa_signal_t left  = fa_signal_input(kFluidOffset + 0);
-    fa_signal_t right = fa_signal_input(kFluidOffset + 1);
+    fa_signal_t left  = fa_signal_input_with_custom(proc, 0);
+    fa_signal_t right = fa_signal_input_with_custom(proc, 1);
 
     // Return stereo output, embedding the custom proc (so it is actually run)
     return fa_pair_create(fa_signal_custom(proc, left), right);
