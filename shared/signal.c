@@ -1172,7 +1172,7 @@ void fa_signal_print(int n, fa_list_t controls, fa_signal_t a)
 {
     fa_buffer_t b = fa_signal_run_buffer(n, controls, a);
 
-    for (size_t i = 0; i < fa_buffer_size(b); ++i) {
+    for (size_t i = 0; (i * sizeof(double)) < fa_buffer_size(b); ++i) {
         double x = fa_buffer_get_double(b, i);
         printf("%3ld: %4f\n", (long) i, x);
     }
@@ -1577,44 +1577,64 @@ fa_signal_t fa_signal_xor(fa_signal_t x, fa_signal_t y)
     return fa_signal_lift2(fa_string("(^)"), _xor, NULL, x, y);
 }
 
+inline static double _eq(fa_ptr_t _, double x, double y)
+{
+    return x == y;
+}
 fa_signal_t fa_signal_equal(fa_signal_t x, fa_signal_t y)
 {
     assert(false && "Not implemented");
 }
 
+inline static double _lt(fa_ptr_t _, double x, double y)
+{
+    return x < y;
+}
 fa_signal_t fa_signal_less_than(fa_signal_t x, fa_signal_t y)
 {
-    assert(false && "Not implemented");
+    return fa_signal_lift2(fa_string("(<)"), _lt, NULL, x, y);
 }
 
+inline static double _gt(fa_ptr_t _, double x, double y)
+{
+    return x > y;
+}
 fa_signal_t fa_signal_greater_than(fa_signal_t x, fa_signal_t y)
 {
-    assert(false && "Not implemented");
+    return fa_signal_lift2(fa_string("(>)"), _gt, NULL, x, y);
 }
 
+inline static double _lte(fa_ptr_t _, double x, double y)
+{
+    return x <= y;
+}
 fa_signal_t fa_signal_less_than_equal(fa_signal_t x, fa_signal_t y)
 {
-    assert(false && "Not implemented");
+    return fa_signal_lift2(fa_string("(<=)"), _lte, NULL, x, y);
 }
 
+inline static double _gte(fa_ptr_t _, double x, double y)
+{
+    return x >= y;
+}
 fa_signal_t fa_signal_greater_than_equal(fa_signal_t x, fa_signal_t y)
 {
-    assert(false && "Not implemented");
+    return fa_signal_lift2(fa_string("(>=)"), _gte, NULL, x, y);
 }
 
 fa_signal_t fa_signal_acos(fa_signal_t x)
 {
-    assert(false && "Not implemented");
+    assert(false && "Not implemented: Signal.acos");
 }
 
 fa_signal_t fa_signal_asin(fa_signal_t x)
 {
-    assert(false && "Not implemented");
+    assert(false && "Not implemented: Signal.sin");
 }
 
 fa_signal_t fa_signal_atan(fa_signal_t x)
 {
-    assert(false && "Not implemented");
+    assert(false && "Not implemented: Signal.atan");
 }
 
 // fa_signal_t fa_signal_cos(fa_signal_t x ) { assert (false && "Not implemented"); }
@@ -1623,37 +1643,41 @@ fa_signal_t fa_signal_atan(fa_signal_t x)
 
 fa_signal_t fa_signal_tan(fa_signal_t x)
 {
-    assert(false && "Not implemented");
+    assert(false && "Not implemented: Signal.tan");
 }
 
 fa_signal_t fa_signal_exp(fa_signal_t x)
 {
-    assert(false && "Not implemented");
+    assert(false && "Not implemented: Signal.exp");
 }
 
 fa_signal_t fa_signal_log(fa_signal_t x)
 {
-    assert(false && "Not implemented");
+    assert(false && "Not implemented: Signal.log");
 }
 
 fa_signal_t fa_signal_log10(fa_signal_t x)
 {
-    assert(false && "Not implemented");
+    assert(false && "Not implemented: Signal.log10");
 }
 
 fa_signal_t fa_signal_sqrt(fa_signal_t x)
 {
-    assert(false && "Not implemented");
+    assert(false && "Not implemented: Signal.sqrt");
 }
 
+inline static double _min(fa_ptr_t _, double x, double y)
+{
+    return x < y ? x : y;
+}
 fa_signal_t fa_signal_min(fa_signal_t x, fa_signal_t y)
 {
-    assert(false && "Not implemented");
+    return fa_signal_lift2(fa_string("min"), _min, NULL, x, y);
 }
 
 inline static double _max(fa_ptr_t _, double x, double y)
 {
-    return fa_max(x, y);
+    return x >= y ? x : y;
 }
 fa_signal_t fa_signal_max(fa_signal_t x, fa_signal_t y)
 {
