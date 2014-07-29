@@ -263,11 +263,22 @@ fa_pair_t entry_to_pair(fa_ptr_t data, entry_t entry)
 {
     return fa_pair_create(entry->key, entry->value);
 }
+
+entry_t pair_to_entry(fa_ptr_t data, fa_pair_t pair)
+{
+    return new_entry(fa_pair_first(pair), fa_pair_second(pair));
+}
+
 fa_list_t fa_map_to_list(fa_map_t map)
 {
     return fa_list_map(
                (fa_unary_t) entry_to_pair, NULL,
                fa_set_to_list(map->entries));
+}
+
+fa_map_t fa_map_from_list(fa_list_t list)
+{
+    return new_map(fa_set_from_list(fa_list_map((fa_unary_t) pair_to_entry, NULL, list)));
 }
 
 

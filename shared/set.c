@@ -251,6 +251,11 @@ fa_list_t fa_set_to_list(fa_set_t set)
     return set->elems;
 }
 
+fa_set_t fa_set_from_list(fa_list_t elems)
+{
+    return new_set(elems);
+}
+
 // --------------------------------------------------------------------------------
 
 bool set_equal(fa_ptr_t a, fa_ptr_t b)

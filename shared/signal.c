@@ -1144,20 +1144,21 @@ fa_priority_queue_t list_to_queue(fa_list_t controls_)
 
 void fa_signal_run(int count, fa_list_t controls_, fa_signal_t a, double *output)
 {
-
     {
         state_t             state    = new_state(kDefSampleRate); // TODO other sample rates
         fa_priority_queue_t controls = list_to_queue(controls_);
 
         // XXX Before this, inform custom procs of their offset
+        // we have all the procs in a list (as raw pointer?)
+        // Now remove duplicates, then build a map (ProcId => BusIndexOffset)
         fa_for_each(x, fa_signal_get_procs(a)) {
             add_custom_proc(x, state);
         }
 
         // XXX Before this, remplace "local" buses with "global" (for custom procs)
-        fa_signal_t a2 = fa_signal_simplify(a);
-        a2 = fa_signal_doptimize(a2);
-        a2 = fa_signal_dverify(a2);
+        a = fa_signal_simplify(a);
+        a = fa_signal_doptimize(a);
+        a = fa_signal_dverify(a);
 
         {
             run_custom_procs(custom_proc_before, 0, state);
@@ -1167,7 +1168,7 @@ void fa_signal_run(int count, fa_list_t controls_, fa_signal_t a, double *output
                 run_actions(controls, now, run_simple_action_, state);
 
                 run_custom_procs(custom_proc_render, 1, state);
-                output[i] = step(a2, state);
+                output[i] = step(a, state);
                 inc_state1(state);
             }
 

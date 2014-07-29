@@ -20,6 +20,9 @@
 #define fa_option_show_all(A,S) fa_option_show(fa_sizeof_array(A),A,S)
 #define fa_option_parse_all(A,AC,AV) fa_option_parse(fa_sizeof_array(A), A, AC, AV)
 #define kRingBufferSize (44100 * 8 * 30)
+
+#define kRecTime 20000
+
 // #define kRingBufferSize (44100 * 8)
 
 void make_test_file()
@@ -103,8 +106,8 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
                           fa_midi_message_create_simple(0x90, 60 + i, 127)) , s);
     }
 
-    fa_audio_schedule(fa_milliseconds(4000 + kRecOffset),  fa_action_send(fa_string("foo"), NULL) , s);
-    fa_audio_schedule(fa_milliseconds(4000 + kRecOffset),  fa_action_do(_print, fa_string("Finished recording")) , s);
+    fa_audio_schedule(fa_milliseconds(kRecTime + kRecOffset),  fa_action_send(fa_string("foo"), NULL) , s);
+    fa_audio_schedule(fa_milliseconds(kRecTime + kRecOffset),  fa_action_do(_print, fa_string("Finished recording")) , s);
 
 
     printf("Started listening\n");
