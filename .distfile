@@ -20,14 +20,14 @@
     site    = doremir
     version = 1.0.25
     subpath = external/sndfile/result
-    path    = include, lib, bin, share
+    path    = bin, include, lib, share
     mode    = get/put
 
 [package "fluidsynth-osx"]
     site    = doremir
     version = 1.1.5
     subpath = external/fluidsynth/result
-    path    = include, lib, bin, share
+    path    = bin, include, lib, share
     mode    = get/put
 
 [package "libogg-osx"]
@@ -65,34 +65,26 @@
     site    = doremir
     version = 1.0.25
     subpath = external/sndfile/result
-    path    = include, lib, bin
+    path    = bin, include, lib
     mode    = get/put
 
 [package "fluidsynth-msys"]
     site    = doremir
     version = 1.1.5
     subpath = external/fluidsynth/result
-    path    = include, lib, bin
+    path    = bin, include, lib
     mode    = get/put
 
-[package "gtest-msys"]
+[package "libogg-msys"]
     site    = doremir
-    version = 1.6.0
-    subpath = external/gtest/result
-    path    = include, lib
+    version = 1.3.1
+    subpath = external/libogg/result
+    path    = bin, include, lib, share
     mode    = get/put
 
-[package "icu-msys"]
+[package "libvorbis-msys"]
     site    = doremir
-    version = 49.1.2
-    subpath = external/icu2/result
-    path    = include, lib
+    version = 1.3.2
+    subpath = external/libvorbis/result
+    path    = bin, include, lib, share
     mode    = get/put
-
-[package "stdlib-msys"]
-    site    = doremir
-    version = 0.5
-    mode    = get/put
-    subpath = build
-    path    = libgcc_s_dw2-1.dll, libstdc++-6.dll
-
