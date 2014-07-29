@@ -519,6 +519,29 @@ fa_list_t fa_list_dremove_range(int m, int n, fa_list_t xs)
 
 // --------------------------------------------------------------------------------
 
+fa_list_t fa_list_remove_duplicates(fa_list_t xs)
+{
+    if (fa_list_is_empty(xs)) {
+        return xs;
+    } else {
+        fa_list_t y = fa_list_head(xs);
+        fa_list_t ys = fa_list_tail(xs);
+
+        if (!fa_list_has(y, ys)) {
+            return fa_list_cons(y, fa_list_remove_duplicates(ys));
+        } else {
+            return fa_list_remove_duplicates(ys);
+        }
+    }
+}
+
+fa_list_t fa_list_zip(fa_list_t xs, fa_list_t ys)
+{
+    return fa_list_is_empty(xs) || fa_list_is_empty(ys) ? fa_list_empty() : fa_list_cons(fa_pair_create(fa_list_head(xs), fa_list_head(ys)), fa_list_zip(fa_list_tail(xs), fa_list_tail(ys)));
+}
+
+// --------------------------------------------------------------------------------
+
 bool fa_list_has(fa_ptr_t value, fa_list_t list)
 {
     impl_for_each(list, elem) {
