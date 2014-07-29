@@ -244,6 +244,7 @@
 (defmacro sine (fq) (fa:signal-sin (fa:signal-line fq)))
 (defmacro fa:now () (fa:time-create 0 0 0 (fa:ratio-create 0 1)))
 (defmacro fa:seconds (s) (fa:time-create 0 0 0 (fa:ratio-create s 1)))
+(defmacro fa:milliseconds (ms)   (fa:time-create 0 0 0 (fa:ratio-create ms 1000)))
 (defmacro fa:quarter-seconds (s) (fa:time-create 0 0 0 (fa:ratio-create s 4)))
 
 (defmacro >=~ (a b) (fa:signal-greater-than-equal a b)) 
@@ -268,7 +269,7 @@
 
 (defmacro pure (x) (fa:signal-constant x))
 
-(defmacro run-default (processor after-start)
+(defmacro run-default-audio (processor after-start)
   (progn
     (defvar session)
     (defvar in)
@@ -295,8 +296,9 @@
 
 (defun fa:signal-if signal-type ((p signal-type) (a signal-type) (b signal-type))
   (+~ 
+    ; (*~ (fa:signal-not (fa:signal-not p)) a)
     (*~ p a)
-    (*~ (fa:signal-not p) a)))
+    (*~ (fa:signal-not p) b)))
 
 (defun fa:put-string (x)
   (fa:print (c-string "%s\n") x)
@@ -318,6 +320,13 @@
 ;   (loop (x)
 ;     (if (>= seek 0) seek (+ prev-value speed))))
 
+; (trigger name norm) sends norm, except when a double has been sent to name, in which that value is sent once
+(defun hold signal-type ((name string-type) (init :double))
+  ; TODO
+  (pure init)
+  )
+
+
 ; A signal that is x[n] whenever x[n] >= 0, and y[n] otherwise 
 (defun first-if-non-negative signal-type ((x signal-type) (y signal-type))
   (fa:signal-if (>=~ x (pure 0)) x y))
@@ -326,29 +335,46 @@
   (defvar speed signal-type (fa:pair-first speed-seek))
   (defvar seek  signal-type (fa:pair-second speed-seek))
   (first-if-non-negative seek
-    (+~ (pure 0) speed)))
+    (+~ prev speed)))
+    
 (defun transport-prim signal-type ((speed signal-type) (seek signal-type))
   (fa:signal-loop transport-prim-l (fa:pair-create speed seek))) 
 
 (defun transport (name)
   (defvar seek signal-type (fa:signal-trigger (fa:append name "/seek") -1)) ; my-transport/seek 25123
-  (defvar speed signal-type (fa:signal-trigger (fa:append name "/speed") 1))   ; my-transport/speed -1
-  (transport-prim seek speed))
+  ; (defvar speed signal-type (hold (fa:append name "/speed") 1))   ; my-transport/speed -1
+
+  (defvar speed signal-type (pure 1))   ; my-transport/speed -1
+  ; (defvar seek signal-type (pure -0.1)) ; my-transport/seek 25123
+  (transport-prim speed seek))
 
 
 
 
 
-(defun play-proc list-type ((x ptr-type) (y list-type)) 
-  (defvar left  ptr-type 
-    (*~ (pure 0.2) (fa:signal-trigger "foo" 0))) 
-  (defvar right  ptr-type 
-    (*~ (pure 0.2) (sine 110)))
+; (defun play-proc list-type ((x ptr-type) (_ list-type)) 
+;   (defvar left  ptr-type 
+;     (*~ (pure 0.2) (fa:signal-trigger "foo" 0))) 
+;   (defvar right  ptr-type 
+;     (*~ (pure 0.2) (sine 110)))
+;   (fa:list left right))
 
-  (fa:list left right))
+(defun play-proc list-type ((x ptr-type) (_ list-type)) 
+ ; (defvar i signal-type (fa:signal-counter))
+  (defvar i signal-type (transport "tp"))
+
+  (defvar li signal-type (+~ (*~ (pure 2) i) (pure 1)))
+  (defvar ri signal-type (+~ (*~ (pure 2) i) (pure 0)))
+
+  (defvar b buffer-type (fa:buffer-read-audio "/Users/hans/audio/drums.wav"))
+  (defvar l signal-type (fa:signal-play b (*~ (pure 1.0) li)))
+  (defvar r signal-type (fa:signal-play b (*~ (pure 1.0) ri))) 
+  (fa:list l r)
+  )
+
 
 (defun play ()
-  (run-default 
+  (run-default-audio 
     play-proc
     (progn
       (fa:audio-schedule-relative (fa:quarter-seconds 1) (fa:action-send "foo" (fa:from-double 1)) stream)
@@ -359,8 +385,27 @@
     
 (defun main :int ((argc :int) (argv (:const (:pointer (:pointer :char)))))
   (with-faudio
-    (fa:put-string "Active!")
-    (play))
+    ; (play)
+    (fa:signal-print 4410
+      (fa:list
+        (fa:pair-create (fa:milliseconds 1) (fa:action-send "foo/seek" (fa:from-double 1))) 
+        ; (fa:pair-create (fa:milliseconds 2) (fa:action-send "foo/seek" (fa:from-double 1))) 
+        ) 
+      ; (first-if-non-negative (fa:signal-trigger "foo/seek" -1) (pure 1000))
+
+
+
+      ; (fa:signal-trigger "foo/seek" -1)
+      (fa:signal-if 
+        (>=~ (fa:signal-trigger "foo/seek" -1) (pure 0))
+        (fa:signal-trigger "foo/seek" -1)
+        (pure 222)
+        )        
+      ; (fa:signal-if (pure 1) (pure 4) (pure 5))
+
+      ; (transport "foo")
+      )
+    )
   ; (fa:initialize)
   ; (fa:set-log-std)
 
