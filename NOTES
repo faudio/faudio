@@ -1,7 +1,22 @@
 
 # v2.16
 
-- Adds transport processor
+- Adds custom processor allocation (now supports arbitrary 
+  number of synth/processor instances)
+
+- Adds Signal.trigger
+
+- Fixes various memory leaks
+
+- Fixes crash in Buffer.setMeta
+
+- Adds List.zip and List.removeDuplicates
+
+- Adds Action.doWithTime
+
+- Fixes issue with double value refs being assigned the wrong type
+
+- Documentation fixes
 
 # v2.15
 

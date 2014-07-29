@@ -11,7 +11,7 @@
 (in-package :faudio-asd)
 
 (defsystem :faudio
-  :version "2.15.0"
+  :version "2.16.0"
   :description "Faudio"
   :author "support@doremir.com"
   :depends-on (:cffi)
