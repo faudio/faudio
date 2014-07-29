@@ -1130,35 +1130,51 @@ fa_ptr_t run_simple_action_(fa_ptr_t x, fa_ptr_t a)
 {
     return run_simple_action(x, a);
 }
-void fa_signal_run(int count, fa_list_t controls, fa_signal_t a, double *output)
+
+
+inline static
+fa_priority_queue_t list_to_queue(fa_list_t controls_)
 {
-    fa_priority_queue_t controls2 = fa_priority_queue();
-    fa_for_each(x, controls) {
-        fa_priority_queue_insert(fa_pair_left_from_pair(x), controls2);
+    fa_priority_queue_t controls = fa_priority_queue();
+    fa_for_each(x, controls_) {
+        fa_priority_queue_insert(fa_pair_left_from_pair(x), controls);
     }
+    return controls;
+}
 
-    state_t state = new_state(kDefSampleRate); // TODO other sample rates
-    fa_for_each(x, fa_signal_get_procs(a)) {
-        add_custom_proc(x, state);
+void fa_signal_run(int count, fa_list_t controls_, fa_signal_t a, double *output)
+{
+
+    {
+        state_t             state    = new_state(kDefSampleRate); // TODO other sample rates
+        fa_priority_queue_t controls = list_to_queue(controls_);
+
+        // XXX Before this, inform custom procs of their offset
+        fa_for_each(x, fa_signal_get_procs(a)) {
+            add_custom_proc(x, state);
+        }
+
+        // XXX Before this, remplace "local" buses with "global" (for custom procs)
+        fa_signal_t a2 = fa_signal_simplify(a);
+        a2 = fa_signal_doptimize(a2);
+        a2 = fa_signal_dverify(a2);
+
+        {
+            run_custom_procs(custom_proc_before, 0, state);
+
+            for (int i = 0; i < count; ++ i) {
+                fa_time_t now = fa_milliseconds((double) state->count / (double) state->rate * 1000.0);
+                run_actions(controls, now, run_simple_action_, state);
+
+                run_custom_procs(custom_proc_render, 1, state);
+                output[i] = step(a2, state);
+                inc_state1(state);
+            }
+
+            run_custom_procs(custom_proc_after, 0, state);
+        }
+        delete_state(state);
     }
-    fa_signal_t a2 = fa_signal_simplify(a);
-    a2 = fa_signal_doptimize(a2);
-    a2 = fa_signal_dverify(a2);
-
-    run_custom_procs(custom_proc_before, 0, state);
-
-    for (int i = 0; i < count; ++ i) {
-        fa_time_t now = fa_milliseconds((double) state->count / (double) state->rate * 1000.0);
-        run_actions(controls2, now, run_simple_action_, state);
-
-        run_custom_procs(custom_proc_render, 1, state);
-        output[i] = step(a2, state);
-        inc_state1(state);
-    }
-
-    run_custom_procs(custom_proc_after, 0, state);
-
-    delete_state(state);
 }
 
 fa_buffer_t fa_signal_run_buffer(int n, fa_list_t controls, fa_signal_t a)
