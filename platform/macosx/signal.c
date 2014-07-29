@@ -39,9 +39,6 @@ struct au_context {
     double *outputs;
 };
 
-#define kAUOffset 32
-
-
 fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     au_context_t context = x;

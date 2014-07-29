@@ -1366,9 +1366,6 @@ fa_signal_t fa_signal_record_stream(fa_atomic_ring_buffer_t buffer, fa_signal_t 
 }
 
 
-#define kRecExternalOffset 40
-#define kVstOffset         34
-
 struct rec_external {
     fa_string_t name;
     fa_atomic_ring_buffer_t buffer;
@@ -1395,8 +1392,8 @@ fa_ptr_t record_extrenal_render_(fa_ptr_t x, int count, fa_signal_state_t *state
             fa_atomic_ring_buffer_write_double(ext->buffer, x);
         }
     } else {
-        for (int i = 0; i < count; ++i) {
-            double x = state->buffer[(kRecExternalOffset + 0) * kMaxVectorSize + i];
+        for (int sample = 0; sample < count; ++sample) {
+            double x = state->buffer[(kRecExternalOffset + 0) * kMaxVectorSize + sample];
 
             if (ext->buffer) {
                 fa_atomic_ring_buffer_write_double(ext->buffer, x);
@@ -2010,9 +2007,6 @@ fa_signal_t fa_signal_record2(fa_string_t name, buffer_t buffer, signal_t i, sig
 
 
 
-
-
-#define kTriggerOffset 15
 
 struct _trigger_context {
     fa_string_t name;
