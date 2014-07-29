@@ -232,6 +232,14 @@ fa_signal_t fa_signal_input(int c)
 {
     fa_signal_t signal = new_signal(input_signal);
     input_get(signal, c)  = c;
+    input_get(signal, proc) = NULL;
+    return signal;
+}
+fa_signal_t fa_signal_input_with_custom(custom_proc_t proc, int c)
+{
+    fa_signal_t signal = new_signal(input_signal);
+    input_get(signal, c)  = c;
+    input_get(signal, proc) = proc;
     return signal;
 }
 
@@ -241,6 +249,16 @@ fa_signal_t fa_signal_output(int n, int c, fa_signal_t a)
     output_get(signal, n)  = n;
     output_get(signal, c)  = c;
     output_get(signal, a)  = a;
+    output_get(signal, proc)  = NULL;
+    return signal;
+}
+fa_signal_t fa_signal_output_with_custom(custom_proc_t proc, int n, int c, fa_signal_t a)
+{
+    fa_signal_t signal = new_signal(output_signal);
+    output_get(signal, n)  = n;
+    output_get(signal, c)  = c;
+    output_get(signal, a)  = a;
+    output_get(signal, proc)  = proc;
     return signal;
 }
 
@@ -302,6 +320,7 @@ fa_signal_t copy_input(fa_signal_t signal2)
 {
     fa_signal_t signal = new_signal(input_signal);
     input_get(signal, c)  = input_get(signal2, c);
+    input_get(signal, proc)  = input_get(signal2, proc);
     return signal;
 }
 
@@ -311,6 +330,7 @@ fa_signal_t copy_output(fa_signal_t signal2)
     output_get(signal, n)  = output_get(signal2, n);
     output_get(signal, c)  = output_get(signal2, c);
     output_get(signal, a)  = output_get(signal2, a);
+    output_get(signal, proc)  = output_get(signal2, proc);
     return signal;
 }
 
@@ -421,13 +441,21 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
         return fa_pair_create(
                    concat(
                        fa_string("input "),
+                       input_get(signal, proc) 
+                            ? fa_string_format_integral("%lu@", (long) input_get(signal, proc))
+                            : fa_string(""),
                        fa_string_format_integral("%d", input_get(signal, c))),
                    fa_empty());
 
     case output_signal:
         return fa_pair_create(
                    concat(
-                       fa_string("output "),
+                       concat(
+                        fa_string("output "),
+                        output_get(signal, proc) 
+                            ? fa_string_format_integral("%lu@", (long) input_get(signal, proc))
+                            : fa_string("")
+                       ),
                        fa_string_show(fa_from_int32(output_get(signal, c))),
                        fa_string("[-"),
                        fa_string_show(fa_from_int32(output_get(signal, n))),
@@ -589,10 +617,13 @@ fa_signal_t simplify(part_t *part, fa_list_t *procs, fa_signal_t signal2)
     case output_signal: {
         int samples             = output_get(signal2, n);
         int channel             = output_get(signal2, c);
+        fa_ptr_t proc           = output_get(signal2, proc);
 
         fa_signal_t a              = simplify(part, procs, output_get(signal2, a));
 
-        return fa_signal_output(samples, channel, a);
+        fa_signal_t res = fa_signal_output(samples, channel, a);
+        output_get(signal2, proc) = proc;
+        return res;
     }
 
     default:
@@ -605,6 +636,95 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal2)
     init_part(&part);
     fa_list_t procs = fa_empty();
     return simplify(&part, &procs, signal2);
+}
+
+/*
+    fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) x);
+    if (offset) {
+        ((custom_proc_t) x)->channel_offset = fa_peek_int64(offset);
+    } else {
+        ((custom_proc_t) x)->channel_offset = 0;
+        fa_warn(fa_string("Could not find processor offset"));
+    }
+    
+*/
+
+inline static
+fa_ptr_t lookup_proc_offset(fa_map_t proc_map, intptr_t x);
+
+
+// Map RawPtr Int64
+fa_signal_t fa_signal_route_processors(fa_map_t proc_map, fa_signal_t signal2)
+{
+    switch (signal2->tag) {
+
+    case loop_signal: {
+        assert(false && "Must simplify before calling Signal.routeProcessors");
+    }
+
+    case delay_signal: {
+        assert(false && "Must simplify before calling Signal.routeProcessors");
+    }
+
+    case custom_signal: {
+        assert(false && "Must simplify before calling Signal.routeProcessors");
+    }
+
+    case lift_signal: {
+        fa_string_t    name        = lift_get(signal2, name);
+        fa_dunary_t    func        = lift_get(signal2, function);
+        fa_ptr_t       func_data   = lift_get(signal2, data);
+        fa_signal_t a              = fa_signal_route_processors(proc_map, lift_get(signal2, a));
+        return fa_signal_lift(name, func, func_data, a);
+    }
+    
+    case lift2_signal: {
+        fa_string_t    name        = lift2_get(signal2, name);
+        fa_dbinary_t   func        = lift2_get(signal2, function);
+        fa_ptr_t       func_data   = lift2_get(signal2, data);
+        fa_signal_t a              = fa_signal_route_processors(proc_map, lift2_get(signal2, a));
+        fa_signal_t b              = fa_signal_route_processors(proc_map, lift2_get(signal2, b));
+        return fa_signal_lift2(name, func, func_data, a, b);
+    }
+    
+    case output_signal: {
+        int samples                 = output_get(signal2, n);
+        int channel                 = output_get(signal2, c);
+        fa_ptr_t proc               = output_get(signal2, proc);
+        // TODO channel
+        fa_signal_t a               = fa_signal_route_processors(proc_map, output_get(signal2, a));
+
+        fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) proc);
+        if (offset) {
+            int64_t offset2 = fa_peek_int64(offset);
+            channel += offset2;
+        } else {
+            fa_warn(fa_string("Could not find processor offset"));
+        }
+        
+        return fa_signal_output(samples, channel, a);
+    }
+    
+    case input_signal: {
+        int channel                 = input_get(signal2, c);
+        fa_ptr_t proc               = input_get(signal2, proc);
+        // TODO channel
+
+        fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) proc);
+        if (offset) {
+            int64_t offset2 = fa_peek_int64(offset);
+            channel += offset2;
+        } else {
+            fa_warn(fa_string("Could not find processor offset"));
+        }
+        
+
+        return fa_signal_input(channel);
+    }
+
+    default:
+        return fa_copy(signal2);
+    }
 }
 
 fa_signal_t fa_signal_doptimize(fa_signal_t signal)
@@ -1139,9 +1259,9 @@ fa_list_t fa_list_r(int64_t x, int64_t y)
 }
 
 inline static
-fa_ptr_t _add30__pointer_list_to_custom_proc_map(fa_ptr_t x)
+fa_ptr_t _add32__pointer_list_to_custom_proc_map(fa_ptr_t x)
 {
-    return fa_add(x, fa_from_int64(30));
+    return fa_add(x, fa_from_int64(32));
 }
 inline static
 fa_ptr_t _times4__pointer_list_to_custom_proc_map(fa_ptr_t x)
@@ -1157,7 +1277,7 @@ fa_map_t pointer_list_to_custom_proc_map(fa_list_t xs)
             // fa_list_map(apply1, fa_from_int64, xs)
             xs
             ), 
-        fa_list_map(apply1, _add30__pointer_list_to_custom_proc_map, 
+        fa_list_map(apply1, _add32__pointer_list_to_custom_proc_map, 
             fa_list_map(apply1, _times4__pointer_list_to_custom_proc_map, 
                 fa_list_r(0, fa_list_length(xs))))
                 ));
@@ -1216,6 +1336,11 @@ void fa_signal_run(int count, fa_list_t controls_, fa_signal_t a, double *output
 
         // XXX Before this, remplace "local" buses with "global" (for custom procs)
         a = fa_signal_simplify(a);
+
+        fa_inform(fa_string_dappend(fa_string("    Signal Tree: \n"), fa_string_show(a)));
+        a = fa_signal_route_processors(proc_map, a);
+
+        fa_inform(fa_string_dappend(fa_string("    Signal Tree: \n"), fa_string_show(a)));
         a = fa_signal_doptimize(a);
         a = fa_signal_dverify(a);
 
@@ -2141,7 +2266,7 @@ fa_signal_t fa_signal_trigger(fa_string_t name, double init)
     proc->destroy = NULL; // TODO
     proc->data    = context;
 
-    return fa_signal_custom(proc, fa_signal_input(kTriggerOffset));
+    return fa_signal_custom(proc, fa_signal_input_with_custom(proc, kTriggerOffset));
 }
 
 // --------------------------------------------------------------------------------

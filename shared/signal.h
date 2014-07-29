@@ -35,11 +35,13 @@ struct _state_base_t {
 #define kMaxBuses                       256
 #define kMaxDelaySeconds                5
 
-#define kAUOffset                       32
+// #define kAUOffset                       32
+#define kAUOffset                       0
 #define kFluidOffset                    34
 #define kVstOffset                      36
 #define kRecExternalOffset              40
-#define kTriggerOffset                  64
+// #define kTriggerOffset                  64
+#define kTriggerOffset                  0
 
 #define kOutputOffset                   0
 #define kInputOffset                    8
