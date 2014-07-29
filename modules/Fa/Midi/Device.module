@@ -14,4 +14,46 @@
  */
 module "transient" Fa.Midi.Device
 {
+    import Fa.List;
+    import Fa.Pair;
+    import Fa.Action;
+    import Fa.Time;
+    import Fa.Clock;
+    import Fa.Error;
+    import Fa.Midi.Session;
+
+    /** A MIDI device.
+     */
+    type Device = opaque;
+
+   /** Get the standard input device of the given session.
+        @param session   The session.
+        @return
+            A device or an error if there are no input devices available.
+     */
+    defaultInput : Session -> Device;
+
+    /** Get the standard output device of the given session.
+        @param session   The session.
+        @return
+            A device or an error if there are no output devices available.
+     */
+    defaultOutput : Session -> Device;
+
+    /** Return the name of the given device.
+        @param device   The device.
+     */
+    name : Device -> String;
+    /** Return the host name of the given device.
+        @param device   The device.
+     */
+    hostName : Device -> String;
+    /** Return whether the given device has input or not.
+        @param device   The device.
+     */
+    hasInput : Device -> Bool;
+    /** Return whether the given device has output or not.
+        @param device   The device.
+     */
+    hasOutput : Device -> Bool;
 }

@@ -14,4 +14,102 @@
  */
 module "transient" Fa.Midi.Stream
 {
+    import Fa.List;
+    import Fa.Pair;
+    import Fa.Action;
+    import Fa.Time;
+    import Fa.Clock;
+    import Fa.Error;
+    import Fa.Midi.Device;
+
+        /** A MIDI stream.
+     */
+    type Stream = opaque;
+    
+    /** A callback to receive MIDI streams.
+     */
+    type StreamCallback = ((Ptr, Stream) -> Stream)*;
+
+    /** A callback to be invoked whenever a message is received.
+     */
+    type MessageCallback = Unary;
+
+    /**
+        Open a stream on the given devices.
+
+        @param device   The device.
+        @return         A new stream or an error if no stream could be opened.
+     */
+
+    openStream : Device -> Stream;
+    /**
+        Close the given stream.
+        @param session
+            Stream to close.
+     */
+
+    closeStream : Stream -> Void;
+    /**
+        Run a stream on the given devices.
+
+        @param device
+            The device.
+        @param callback
+            Function to receive the stream.
+        @param error_callback
+            Function to receive eventual errors.
+     */
+    withStream : (
+        Device, 
+        StreamCallback, Ptr, 
+        Callback, Ptr
+        ) -> Void;
+
+
+    /** Register a callback to be invoked when a message is received.
+
+        Multiple callbacks can be registered this way. All registered callbacks
+        are associated with a stream and will be removed when the stream is stopped
+        or its associated session ends.
+
+        @param callback
+            Callback to register.
+        @param callback_data
+            Data closed over by the callback function.
+        @param session
+            Stream on which to register the callback.
+        @warning
+            Experimental.
+     */
+    addMessageCallback : (MessageCallback, Ptr, Stream) -> Void;
+
+    /** Associate the given clock with the given stream.
+        @param stream The stream.
+        @param The clock.
+     */
+    setClock : (Stream, Clock) -> Void;
+
+    /** Return the clock associated with a given stream.
+        @param stream The stream.
+        @return A clock.
+     */
+    getClock : Stream -> Clock;
+    
+    /**
+        Schedule an action on the stream.
+        
+        The action will be run as soon as the time of the stream (as
+        reported by its clock) is greater than or equal to the given due time.
+     */
+    schedule : (Time, Action, Stream) -> Void;
+
+    /**
+        Schedule an action on the stream.
+
+        The action will be run when the given time has passed, relative to
+        when this function was invoked. This is a convenience function implemented
+        in terms of `fa_audio_schedule` and `fa_clock_time`, using the current
+        stream clock.
+     */
+    scheduleRelative : (Time, Action, Stream) -> Void;
 }
