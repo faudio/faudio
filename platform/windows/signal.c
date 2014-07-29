@@ -31,7 +31,7 @@ static float left[kMaxVectorSize];
 static float right[kMaxVectorSize];
 
 
-fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 {
     fluid_synth_t *synth = x;
 
@@ -50,8 +50,8 @@ fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
             fa_warn(fa_string("Fluidsynth: Could not render"));
         }
 
-        state->buffer[(kFluidOffset + 0)*kMaxVectorSize] = left[0];
-        state->buffer[(kFluidOffset + 1)*kMaxVectorSize] = right[0];
+        state->buffer[(offset + 0)*kMaxVectorSize] = left[0];
+        state->buffer[(offset + 1)*kMaxVectorSize] = right[0];
         return x;
     } else {
         if (FLUID_OK != fluid_synth_nwrite_float(
@@ -66,8 +66,8 @@ fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
         }
 
         for (int i = 0; i < count; ++i) {
-            state->buffer[(kFluidOffset + 0)*kMaxVectorSize + i] = left[i];
-            state->buffer[(kFluidOffset + 1)*kMaxVectorSize + i] = right[i];
+            state->buffer[(offset + 0)*kMaxVectorSize + i] = left[i];
+            state->buffer[(offset + 1)*kMaxVectorSize + i] = right[i];
         }
 
         return x;

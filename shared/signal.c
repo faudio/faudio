@@ -1653,7 +1653,7 @@ fa_signal_t fa_signal_record_external(fa_string_t name,
     proc->destroy = NULL;
     proc->data    = ext;
 
-    return fa_signal_custom(proc, fa_signal_output_with_custom(proc, 0, kRecExternalOffset, signal));
+    return fa_signal_custom(proc, fa_signal_output_with_custom(proc, 0, 0, signal));
 }
 
 

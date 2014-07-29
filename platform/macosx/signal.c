@@ -104,8 +104,8 @@ fa_pair_t fa_signal_dls()
     proc->destroy = destroy_;
     proc->data    = context;
 
-    fa_signal_t left  = fa_signal_input_with_custom(proc, kAUOffset + 0);
-    fa_signal_t right = fa_signal_input_with_custom(proc, kAUOffset + 1);
+    fa_signal_t left  = fa_signal_input_with_custom(proc, 0);
+    fa_signal_t right = fa_signal_input_with_custom(proc, 1);
     fa_signal_t left2 = fa_signal_custom(proc, left);
     return fa_pair_create(left2, right);
     fa_mark_used(left2);
