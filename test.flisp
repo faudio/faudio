@@ -208,6 +208,17 @@
   (with-scoped-resource (fa:initialize-with-log) (fa:terminate) b))
 (defmacro with-faudio (a b) (with-faudio (progn a b)))
 
+
+
+
+
+
+
+
+
+
+
+
 (defun fa:signal-if signal-type ((p signal-type) (a signal-type) (b signal-type))
   (+~ 
     (*~ p a)
@@ -226,14 +237,6 @@
 ;    (defun /= :bool ((x A) (y A)))))
 
 
-
-(defun play-proc list-type ((x ptr-type) (y list-type)) 
-  (defvar left  ptr-type 
-    (*~ (fa:signal-constant 0.2) (fa:signal-trigger "foo" 0))) 
-  (defvar right  ptr-type 
-    (*~ (fa:signal-constant 0.2) (sine 110)))
-
-  (fa:list left right))
 
 
 ; increment by speed, and change to seek whenever (seek >= 0)
@@ -256,6 +259,18 @@
   (defvar speed signal-type (fa:signal-trigger "" 1))
   (transport-prim seek speed))
 
+
+
+
+
+(defun play-proc list-type ((x ptr-type) (y list-type)) 
+  (defvar left  ptr-type 
+    (*~ (fa:signal-constant 0.2) (fa:signal-trigger "foo" 0))) 
+  (defvar right  ptr-type 
+    (*~ (fa:signal-constant 0.2) (sine 110)))
+
+  (fa:list left right))
+
 (defun play ()
   (defvar session)
   (defvar in)
@@ -269,13 +284,11 @@
   (fa:audio-schedule-relative (fa:quarter-seconds 2) (fa:action-send "foo" (fa:from-double 2)) stream)
   (fa:audio-schedule-relative (fa:quarter-seconds 3) (fa:action-send "foo" (fa:from-double 3)) stream)
   (fa:audio-schedule-relative (fa:quarter-seconds 4) (fa:action-send "foo" (fa:from-double 4)) stream)
-  
-  
+
   (fa:put-string "Press ENTER to stop...")
   (getchar)
   (fa:audio-end-all-sessions)
-  nil
-  )
+  nil)
     
 (defun main :int ((argc :int) (argv (:const (:pointer (:pointer :char)))))
   (with-faudio
@@ -325,11 +338,3 @@
   ;           
   ; (fa:terminate)
   nil)
-
-
-
-
-
-
-
-
