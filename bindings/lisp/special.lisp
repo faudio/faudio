@@ -235,9 +235,6 @@
 (defcallback funcall1# ptr ((f ptr) (x ptr))
   (funcall (int-to-func# f) x))
 
-(defcallback funcall1# ptr ((f ptr) (x ptr))
-  (funcall (int-to-func# f) x))
-
 (defcallback dfuncall1# :double ((f ptr) (x :double))
   (funcall (int-to-func# f) x))
 

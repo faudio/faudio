@@ -226,13 +226,13 @@
 (defun signal-run-file* (n x &key (controls '()) (path "test.wav"))
   (signal-run-file n controls x path))
 
-(defun signal-dls* ()
-  (let* ((dls (signal-dls)))
+(defun signal-dls* (name)
+  (let* ((dls (signal-dls name)))
     (cl:list (from-pointer 'signal (pair-first dls)) 
              (from-pointer 'signal (pair-second dls)))))
 
-(defun signal-synth* (path)
-  (let* ((synth (signal-synth path)))
+(defun signal-synth* (name path)
+  (let* ((synth (signal-synth name path)))
     (cl:list (from-pointer 'signal (pair-first synth)) 
              (from-pointer 'signal (pair-second synth)))))
 
