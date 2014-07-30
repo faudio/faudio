@@ -222,6 +222,12 @@ void fa_buffer_set_double(fa_buffer_t buffer,
                           size_t size_,
                           double double_);
 
+
+fa_buffer_t fa_buffer_zip(fa_buffer_t buffer, fa_buffer_t buffer_);
+
+
+fa_pair_t fa_buffer_unzip(fa_buffer_t buffer);
+
 /**
     Reads a buffer from a file.
 

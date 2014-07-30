@@ -136,6 +136,93 @@ fa_buffer_t fa_buffer_dresize(size_t size, fa_buffer_t buffer)
     return buffer2;
 }
 
+fa_pair_t fa_buffer_unzip(fa_buffer_t buffer)
+{
+    size_t sz = fa_buffer_size(buffer);
+    fa_buffer_t buffer1 = fa_buffer_create(sz/2);
+    fa_buffer_t buffer2 = fa_buffer_create(sz/2);
+    
+    for (int i = 0; i < (sz/2); ++i)
+    {
+        buffer1->data[i] = buffer->data[i*2+0];
+    }
+    for (int i = 0; i < (sz/2); ++i)
+    {
+        buffer2->data[i] = buffer->data[i*2+1];
+    }    
+    return fa_pair_create(buffer1, buffer2);
+}
+
+#define SIZE_MIN(x, y) (x < y ? x : y)
+
+fa_buffer_t fa_buffer_zip(fa_buffer_t buffer1, fa_buffer_t buffer2)
+{
+    size_t sz = SIZE_MIN(fa_buffer_size(buffer1), fa_buffer_size(buffer2));
+    fa_buffer_t buffer = fa_buffer_create(sz*2);
+
+    for (int i = 0; i < sz; ++i)
+    {
+        buffer->data[i*2+0] = buffer1->data[i];
+        buffer->data[i*2+1] = buffer2->data[i];
+    }
+    return buffer;
+}
+
+inline static
+void resample_raw
+    (
+    double   old_rate,
+    double   new_rate,
+    double*  in_samples,
+    size_t   in_sample_count,
+    double*  out_samples,
+    size_t   out_sample_count
+    )
+{
+    // TODO
+}
+
+fa_buffer_t fa_buffer_resample_mono(double new_rate, fa_buffer_t buffer)
+{
+    size_t old_size = fa_buffer_size(buffer);
+    double old_rate = fa_peek_int32(fa_buffer_get_meta(buffer, fa_string("sample-rate")));
+    size_t new_size = ((double) old_size) * (new_rate / old_rate);
+
+    fa_buffer_t buffer2 = fa_buffer_create(new_size);
+
+    resample_raw(old_rate, new_rate, (double*) buffer->data, old_size / sizeof(double), (double*) buffer2->data, new_size / sizeof(double));
+
+    buffer2->destroy_function   = buffer->destroy_function;
+    buffer2->destroy_data       = buffer->destroy_data;
+    buffer2->meta               = fa_copy(buffer->meta);
+    fa_buffer_set_meta(buffer, fa_string("sample-rate"), fa_from_int32(new_rate));
+
+    return buffer2;
+}
+
+fa_buffer_t fa_buffer_resample_stereo(double new_rate, fa_buffer_t buffer)
+{
+    fa_unpair(fa_buffer_unzip(buffer), b1, b2) {
+        return fa_buffer_zip(fa_buffer_resample_mono(new_rate, b1), fa_buffer_resample_mono(new_rate, b2));
+    }
+    assert(false);
+}
+
+fa_buffer_t fa_buffer_resample(double new_rate, fa_buffer_t buffer)
+{
+    int ch = fa_peek_int32(fa_buffer_get_meta(buffer, fa_string("channels")));
+    if (ch == 1) {
+        return fa_buffer_resample_mono(new_rate, buffer);
+    }
+    if (ch == 2) {
+        return fa_buffer_resample_stereo(new_rate, buffer);
+    }
+    fa_fail(fa_string("Buffer.resample: Unexpected number of channels: needs 1 or 2"));
+    assert(false);
+}
+
+
+
 void fa_buffer_destroy(fa_buffer_t buffer)
 {
     if (buffer->destroy_function) {

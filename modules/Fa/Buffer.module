@@ -194,6 +194,9 @@ module Fa.Buffer
     setDouble : (Buffer, Size, Double) -> Void;    
 
 
+    zip : (Buffer, Buffer) -> Buffer;
+    unzip : Buffer -> Pair;
+
     /**
         Reads a buffer from a file.
 

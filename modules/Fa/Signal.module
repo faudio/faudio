@@ -502,8 +502,5 @@ module Fa.Signal
     /** @deprecated Renamed to @ref fa_signal_local_output. */
     outputWithCustom : ( proc : CustomProcessor*, delay : Int, channel : Int, input : Signal ) -> Signal;
     
-    // lowPass : (Signal, Signal, Signal, Signal, Signal) -> Signal;
-    // biquad : (Signal, Signal, Signal, Signal, Signal, Signal) -> Signal;
-
 }
 
