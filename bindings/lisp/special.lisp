@@ -61,14 +61,14 @@
 
 (defcfun (pair-create# "fa_pair_create") :pointer (a ptr) (b ptr))
 (defcfun (pair-destroy# "fa_pair_destroy") :void (a :pointer))
-(defcfun (pair-fst# "fa_pair_fst") ptr (a :pointer))
-(defcfun (pair-snd# "fa_pair_snd") ptr (a :pointer))
+(defcfun (pair-first# "fa_pair_first") ptr (a :pointer))
+(defcfun (pair-second# "fa_pair_second") ptr (a :pointer))
 
 (defun export-pair# (x)
   (pair-create# (car x) (cdr x)))
 
 (defun import-pair# (x)
-  (cons (pair-fst# x) (pair-snd# x)))
+  (cons (pair-first# x) (pair-second# x)))
 
 ; TODO auto-import?
 
@@ -76,7 +76,7 @@
   (pair-create (car x) (cdr x)))
 
 (defun import-pair (x)
-  (cons (pair-fst x) (pair-snd x)))
+  (cons (pair-first x) (pair-second x)))
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -320,21 +320,6 @@
 (defun io-push* (sink buffer)
   (io-push sink (if (not buffer) (from-pointer 'buffer (cffi:null-pointer)) buffer)))
 
-; ---------------------------------------------------------------------------------------------------
-
-(defun event-map* (f xs)
-  (event-map (callback funcall1#) (func-to-int# f) xs))
-
-(defun event-filter* (f xs)
-  (event-filter (callback predcall1#) (func-to-int# f) xs))
-
-; ---------------------------------------------------------------------------------------------------
-
-(defun string-map* (f xs)
-  (string-map (callback funcall1#) (func-to-int# f) xs))
-
-(defun string-join-map* (f xs)
-  (string-join-map (callback funcall1#) (func-to-int# f) xs))
 
 ; ---------------------------------------------------------------------------------------------------
 
