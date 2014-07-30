@@ -670,23 +670,23 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
 
         return;
     } else {
-        // TODO should this always happen here?
         if (is_do(action)) {
-            fa_nullary_t           function           = do_get(action, function);
-            nullary_with_time_t    function_with_time = do_get(action, function_with_time);
-            fa_ptr_t     data                         = do_get(action, data);
+            fa_nullary_t           do_function           = do_get(action, function);
+            nullary_with_time_t    do_function_with_time = do_get(action, function_with_time);
+            fa_ptr_t               do_data               = do_get(action, data);
 
-            if (function) {
-                function(data);
+            if (do_function) {
+                do_function(do_data);
             }
 
-            if (function_with_time) {
-                function_with_time(time, data);
+            if (do_function_with_time) {
+                do_function_with_time(time, do_data);
             }
+        } else {
+            // printf("Running!\n");
+            function(data, action);
         }
 
-        // printf("Running!\n");
-        function(data, action);
         return;
     }
 
