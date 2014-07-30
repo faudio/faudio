@@ -287,6 +287,45 @@ void test_buffer()
 
 // --------------------------------------------------------------------------------
 
+void test_buffer_zip_unzip()
+{
+    test_section("Buffer zip/unzip");
+
+    {
+        fa_buffer_t b = fa_buffer_create(4);
+        fa_buffer_set(b, 0, 'a');
+        fa_buffer_set(b, 1, 'b');
+        fa_buffer_set(b, 2, 'c');
+        fa_buffer_set(b, 3, 'd');
+        fa_print("b                            ==> %s\n", b);
+
+        fa_unpair(fa_buffer_unzip(b), b1, b2)
+        {
+            fa_print("b1 (where b1,b2 = unzip b)   ==> %s\n", b1);
+            fa_print("b2 (where b1,b2 = unzip b)   ==> %s\n", b2);
+        }
+    }
+
+
+    {
+        fa_buffer_t b = fa_buffer_create(3);
+        fa_buffer_set(b, 0, 'a');
+        fa_buffer_set(b, 1, 'b');
+        fa_buffer_set(b, 2, 'c');
+        fa_print("b                            ==> %s\n", b);
+
+        fa_unpair(fa_buffer_unzip(b), b1, b2)
+        {
+            fa_print("b1 (where b1,b2 = unzip b)   ==> %s\n", b1);
+            fa_print("b2 (where b1,b2 = unzip b)   ==> %s\n", b2);
+        }
+    }
+}
+
+
+// --------------------------------------------------------------------------------
+
+
 void test_buffer_meta()
 {
     test_section("Buffer meta");
@@ -302,6 +341,7 @@ void test_buffer_meta()
 
         fa_destroy(b);
     }
+    exit(-1);
 }
 
 
@@ -1967,6 +2007,7 @@ int main(int argc, char const *argv[])
         add_test(compare);
         add_test(rational);
         add_test(buffer);
+        add_test(buffer_zip_unzip);
         add_test(buffer_meta);
         add_test(time);
         // test_system_time();
