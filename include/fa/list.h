@@ -345,7 +345,7 @@ fa_list_t fa_list_remove_duplicates(fa_list_t list);
 /** Create a list containing the paired contents of the given lists.
 
     @par Example
-
+        
         fa_list_zip(fa_list(1,2,3), fa_list(4,5,6)) == fa_list(fa_pair_create(1,4), fa_pair_create(2,5), fa_pair_create(3,6))
 
     @par Performance
