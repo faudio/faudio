@@ -22,6 +22,7 @@
 
 struct au_context {                     
     double *outputs;
+    fa_string_t name;
     int channels;
     int frames;
     double sample_rate;
