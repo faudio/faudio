@@ -147,50 +147,37 @@ module Fa.Signal
     };
     
     /** Add a custom processor to be executed with the given signal.
-        
-        A custom processor is simply a routine invoked on the DSP thread. It has access
-        to current sampling rate, vector size and all input and output channels.
-        The *before* and *after* methods are invoked in non-realtime mode and may allocate
-        memory, perform I/O etc. The *receive* and *render* methods are invoked in realtime
-        mode, and the usual restrictions apply. If you need to do I/O or similar during 
-        processing, use the @ref fa_audio_add_input_output_callback instead.
+        A custom processor is simply a routine invoked on the DSP thread.
 
         Adding a custom processor to a signal does *not* affect its input or output, the
-        user must allocate dedicated buses for this purpose: normally a custom processor
-        would be wrapped in a higher-level function which uses `fa_signal_input` and
-        `fa_signal_output` to read and write to the corresponding channels.
+        user must allocate dedicated buses for this purpose using @ref fa_signal_input_local
+        or @ref fa_signal_output_local.
         
         If a processor handles multichannel audio, simply add the processor to *one* of
         the output signals, implying that all channels of the output must always be used
         whether their output is needed or not (see also `fa_signal_former`).
 
         @warning
-            You probably do not want to do this. This is a very low-level function used
-            internally in faudio for implementing new I/O backends, plug-in formats. If
-            you simply want to lift a pure function into the audio thread, see `fa_signal_lift`.            
+            This is a low-level function used internally in faudio for implementing new
+            I/O backends, plug-in formats. If you simply want to lift a pure function into
+            the audio thread, see `fa_signal_lift`.
 
         @deprecated
             Use XXX instead.
      */
     custom : (CustomProcessor*, Signal) -> Signal;
 
-    /** An input signal, reading from the bus of the given number.
+    /** An input signal, reading from the global bus of the given number.
         @param channel
             Channel number.
      */
     input : ( channel : Int ) -> Signal;
 
-    /** The primitive input signal, reading from the bus of the given number.
-        @param channel
-            Channel number.
-     */
-    localInput : ( proc : CustomProcessor*, channel : Int ) -> Signal;
+    /** An output signal, writing to the global bus of the given number.
 
-    inputWithCustom : ( proc : CustomProcessor*, channel : Int ) -> Signal;
-    
+        Returns a signal that is identical to original signal except that it
+        enforces output.
 
-    /** The primitive output signal, writing to the bus of the given number
-        and returning the written value.
         @param delay
             Delay of output in frames.
         @param channel
@@ -201,7 +188,34 @@ module Fa.Signal
             The original signal, which must be run for output to take place.
      */
     output : ( delay : Int, channel : Int, input : Signal ) -> Signal;
-    outputWithCustom : ( proc : CustomProcessor*, delay : Int, channel : Int, input : Signal ) -> Signal;
+
+    /** An output signal, writing to the global bus of the given number.
+
+        Returns a signal that is identical to original signal except that it
+        enforces output.
+
+        @proc
+            Processor to route to.
+        @param channel
+            Channel number (local).
+     */
+    localInput : ( proc : CustomProcessor*, channel : Int ) -> Signal;
+
+    /** The primitive output signal, writing to the bus of the given number
+        and returning the written value.
+
+        @param proc
+            Processor to route from.
+        @param delay
+            Delay of output in frames.
+        @param channel
+            Channel number.
+        @param input
+            Signal to output.
+        @returns
+            The original signal, which must be run for output to take place.
+     */
+    localOutput : ( proc : CustomProcessor*, delay : Int, channel : Int, input : Signal ) -> Signal;
 
     /** Returns a signal that evaluates both of the given signal, and the result of the first.
      */
@@ -481,6 +495,12 @@ module Fa.Signal
     impulse : () -> Signal;
     line : Double -> Signal;
     
+
+    /** @deprecated Renamed to @ref fa_signal_local_input. */
+    inputWithCustom : ( proc : CustomProcessor*, channel : Int ) -> Signal;
+
+    /** @deprecated Renamed to @ref fa_signal_local_output. */
+    outputWithCustom : ( proc : CustomProcessor*, delay : Int, channel : Int, input : Signal ) -> Signal;
     
     // lowPass : (Signal, Signal, Signal, Signal, Signal) -> Signal;
     // biquad : (Signal, Signal, Signal, Signal, Signal, Signal) -> Signal;

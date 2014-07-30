@@ -171,27 +171,20 @@ typedef struct {
         } fa_signal_custom_processor_t;
 
 /** Add a custom processor to be executed with the given signal.
-    
-    A custom processor is simply a routine invoked on the DSP thread. It has access
-    to current sampling rate, vector size and all input and output channels.
-    The *before* and *after* methods are invoked in non-realtime mode and may allocate
-    memory, perform I/O etc. The *receive* and *render* methods are invoked in realtime
-    mode, and the usual restrictions apply. If you need to do I/O or similar during 
-    processing, use the @ref fa_audio_add_input_output_callback instead.
+    A custom processor is simply a routine invoked on the DSP thread.
 
     Adding a custom processor to a signal does *not* affect its input or output, the
-    user must allocate dedicated buses for this purpose: normally a custom processor
-    would be wrapped in a higher-level function which uses `fa_signal_input` and
-    `fa_signal_output` to read and write to the corresponding channels.
+    user must allocate dedicated buses for this purpose using @ref fa_signal_input_local
+    or @ref fa_signal_output_local.
     
     If a processor handles multichannel audio, simply add the processor to *one* of
     the output signals, implying that all channels of the output must always be used
     whether their output is needed or not (see also `fa_signal_former`).
 
     @warning
-        You probably do not want to do this. This is a very low-level function used
-        internally in faudio for implementing new I/O backends, plug-in formats. If
-        you simply want to lift a pure function into the audio thread, see `fa_signal_lift`.            
+        This is a low-level function used internally in faudio for implementing new
+        I/O backends, plug-in formats. If you simply want to lift a pure function into
+        the audio thread, see `fa_signal_lift`.
 
     @deprecated
         Use XXX instead.
@@ -199,25 +192,17 @@ typedef struct {
 fa_signal_t fa_signal_custom(fa_signal_custom_processor_t *,
                              fa_signal_t signal);
 
-/** An input signal, reading from the bus of the given number.
+/** An input signal, reading from the global bus of the given number.
     @param channel
         Channel number.
 */
 fa_signal_t fa_signal_input(int channel);
 
-/** The primitive input signal, reading from the bus of the given number.
-    @param channel
-        Channel number.
-*/
-fa_signal_t fa_signal_local_input(fa_signal_custom_processor_t * proc,
-                                  int channel);
+/** An output signal, writing to the global bus of the given number.
 
+    Returns a signal that is identical to original signal except that it
+    enforces output.
 
-fa_signal_t fa_signal_input_with_custom(fa_signal_custom_processor_t * proc,
-                                        int channel);
-
-/** The primitive output signal, writing to the bus of the given number
-    and returning the written value.
     @param delay
         Delay of output in frames.
     @param channel
@@ -231,11 +216,37 @@ fa_signal_t fa_signal_output(int delay,
                              int channel,
                              fa_signal_t input);
 
+/** An output signal, writing to the global bus of the given number.
 
-fa_signal_t fa_signal_output_with_custom(fa_signal_custom_processor_t * proc,
-                                         int delay,
-                                         int channel,
-                                         fa_signal_t input);
+    Returns a signal that is identical to original signal except that it
+    enforces output.
+
+    @proc
+        Processor to route to.
+    @param channel
+        Channel number (local).
+*/
+fa_signal_t fa_signal_local_input(fa_signal_custom_processor_t * proc,
+                                  int channel);
+
+/** The primitive output signal, writing to the bus of the given number
+    and returning the written value.
+
+    @param proc
+        Processor to route from.
+    @param delay
+        Delay of output in frames.
+    @param channel
+        Channel number.
+    @param input
+        Signal to output.
+    @returns
+        The original signal, which must be run for output to take place.
+*/
+fa_signal_t fa_signal_local_output(fa_signal_custom_processor_t * proc,
+                                   int delay,
+                                   int channel,
+                                   fa_signal_t input);
 
 /** Returns a signal that evaluates both of the given signal, and the result of the first.
 */
@@ -587,6 +598,18 @@ fa_signal_t fa_signal_impulse();
 
 
 fa_signal_t fa_signal_line(double double_);
+
+/** @deprecated Renamed to @ref fa_signal_local_input. 
+*/
+fa_signal_t fa_signal_input_with_custom(fa_signal_custom_processor_t * proc,
+                                        int channel);
+
+/** @deprecated Renamed to @ref fa_signal_local_output. 
+*/
+fa_signal_t fa_signal_output_with_custom(fa_signal_custom_processor_t * proc,
+                                         int delay,
+                                         int channel,
+                                         fa_signal_t input);
 
 /** @}
     @}
