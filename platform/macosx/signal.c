@@ -70,8 +70,9 @@ fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     au_context_t context = x;
-
-    if (fa_equal(n, context->name)) {
+    
+    // TODO no copy
+    if (fa_equal(n, fa_copy(context->name))) {
         if (!fa_midi_message_is_simple(msg)) {
             fa_warn(fa_string("Unknown message to DLS"));
         } else {
@@ -92,7 +93,7 @@ fa_ptr_t destroy_(fa_ptr_t x)
 fa_pair_t fa_signal_dls(fa_string_t name)
 {
     au_context_t context = create_au_context(new_dls_music_device_instance(), 2, kMaxVectorSize, 0); // Update SR later
-    context->name = name;
+    context->name = fa_copy(name);
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = before_;

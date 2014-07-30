@@ -74,7 +74,7 @@ typedef struct _state_base_t *state_base_t;
 
 /** Maximum delay in seconds.
  */
-#define kMaxDelaySeconds                5
+#define kMaxDelaySeconds                1
 
 #define kOutputOffset                   0
 #define kInputOffset                    8
