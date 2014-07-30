@@ -453,7 +453,7 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
                        concat(
                            fa_string("output "),
                            output_get(signal, proc)
-                           ? fa_string_format_integral("%lu@", (long) input_get(signal, proc))
+                           ? fa_string_format_integral("%lu@", (long) output_get(signal, proc))
                            : fa_string("")
                        ),
                        fa_string_show(fa_from_int32(output_get(signal, c))),
@@ -622,7 +622,7 @@ fa_signal_t simplify(part_t *part, fa_list_t *procs, fa_signal_t signal2)
         fa_signal_t a              = simplify(part, procs, output_get(signal2, a));
 
         fa_signal_t res = fa_signal_output(samples, channel, a);
-        output_get(signal2, proc) = proc;
+        output_get(res, proc) = proc;
         return res;
     }
 
@@ -1658,7 +1658,8 @@ fa_signal_t fa_signal_record_external(fa_string_t name,
     proc->destroy = NULL;
     proc->data    = ext;
 
-    return fa_signal_custom(proc, fa_signal_output_with_custom(proc, 0, 0, signal));
+    fa_signal_t s = fa_signal_custom(proc, fa_signal_output_with_custom(proc, 0, 0, signal));
+    return s;
 }
 
 
