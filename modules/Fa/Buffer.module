@@ -234,6 +234,17 @@ module Fa.Buffer
      */
     writeAudio : (String,Buffer) -> Ptr; // Error?
 
+    /** Resample the given buffer to the given rate (nullable).
+        
+        @param buffer
+            Buffer to resample.
+        @param sampleRate
+            The new sample rate.
+        @return
+            A new buffer.
+     */
+    resample : (sampleRate : Double, Buffer) -> Buffer;
+
     /** Return the address of the buffer.
 
         This function is unsafe as it provides access to the buffer contents without

@@ -263,6 +263,18 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t string);
 fa_ptr_t fa_buffer_write_audio(fa_string_t string,
                                fa_buffer_t buffer);
 
+/** Resample the given buffer to the given rate (nullable).
+    
+    @param buffer
+        Buffer to resample.
+    @param sampleRate
+        The new sample rate.
+    @return
+        A new buffer.
+*/
+fa_buffer_t fa_buffer_resample(double sampleRate,
+                               fa_buffer_t buffer);
+
 /** Return the address of the buffer.
 
     This function is unsafe as it provides access to the buffer contents without
