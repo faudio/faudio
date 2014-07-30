@@ -175,7 +175,7 @@ fa_ptr_t destroy_(fa_ptr_t x)
     delete_fluid_settings(settings);
 }
 
-fa_pair_t fa_signal_synth(fa_string_t path2)
+fa_pair_t fa_signal_synth(fa_string_t name, fa_string_t path2)
 {
     // create synth
     fluid_synth_t *synth = NULL;

@@ -199,11 +199,18 @@ typedef struct {
 fa_signal_t fa_signal_custom(fa_signal_custom_processor_t *,
                              fa_signal_t signal);
 
-/** The primitive input signal, reading from the bus of the given number.
+/** An input signal, reading from the bus of the given number.
     @param channel
         Channel number.
 */
 fa_signal_t fa_signal_input(int channel);
+
+/** The primitive input signal, reading from the bus of the given number.
+    @param channel
+        Channel number.
+*/
+fa_signal_t fa_signal_local_input(fa_signal_custom_processor_t * proc,
+                                  int channel);
 
 
 fa_signal_t fa_signal_input_with_custom(fa_signal_custom_processor_t * proc,
@@ -519,7 +526,7 @@ void fa_signal_show_vst_gui(fa_string_t string, fa_ptr_t ptr);
         This function is only available on Mac OS X and will
         fail ungracefully on other platforms.
 */
-fa_pair_t fa_signal_dls();
+fa_pair_t fa_signal_dls(fa_string_t name);
 
 /** Returns a pair of signals from FluidSynth (if available).
     You can send messages to it using the name `Fluid`.
@@ -534,7 +541,8 @@ fa_pair_t fa_signal_dls();
     @warning
         Experimental.    
 */
-fa_pair_t fa_signal_synth(fa_string_t string);
+fa_pair_t fa_signal_synth(fa_string_t name,
+                          fa_string_t soundfontPath);
 
 /** Convert the signal to a tree represented as set of
     nested pairs of type `(String,[...])`.

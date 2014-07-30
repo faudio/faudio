@@ -119,7 +119,7 @@ void run_midi()
     fa_midi_stream_t ost = fa_midi_open_stream(o);
 
 #ifndef _WIN32
-    fa_pair_t synth = fa_signal_dls();
+    fa_pair_t synth = fa_signal_dls(fa_string("dls"));
 #else
     fa_pair_t synth = fa_signal_synth(fa_string("C:\\sf.sf2"));
 #endif
