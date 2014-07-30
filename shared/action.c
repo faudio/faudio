@@ -680,7 +680,7 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
             }
 
             if (do_function_with_time) {
-                do_function_with_time(time, do_data);
+                do_function_with_time(do_data, time);
             }
         } else {
             // printf("Running!\n");
