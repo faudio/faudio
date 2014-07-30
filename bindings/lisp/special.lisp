@@ -235,6 +235,12 @@
 (defcallback funcall1# ptr ((f ptr) (x ptr))
   (funcall (int-to-func# f) x))
 
+(defcallback funcall1# ptr ((f ptr) (x ptr))
+  (funcall (int-to-func# f) x))
+
+(defcallback dfuncall1# :double ((f ptr) (x :double))
+  (funcall (int-to-func# f) x))
+
 #+win32
 (defcallback predcall1# (:boolean :unsigned-char) ((f ptr) (x ptr))
   (funcall (int-to-func# f) x))
@@ -274,6 +280,13 @@
 
 (defun action-do* (f)
   (action-do (callback funcall0#) (func-to-int# f)))
+
+(defun action-accum* (ch f)
+  (action-accum ch (callback dfuncall1#) (func-to-int# f)))
+
+(defun action-get* (ch f)
+  (let ((f2 (lambda (x) (funcall f x) 0.0d0)))
+    (action-get ch (callback dfuncall1#) (func-to-int# f2))))
 
 ; TODO move
 (defun translate-nil (type x)
@@ -347,12 +360,13 @@
 
 (defun midi-add-message-callback* (f stream)
   (midi-add-message-callback 
-    (callback funcall1#) 
-    (func-to-int# (lambda (time-msg-pair)
-      (let* ((time (from-pointer 'time (pair-first time-msg-pair)))
-             (msg  (pair-second time-msg-pair)))
-      (funcall f time msg))))
-    stream))
+   (callback funcall1#) 
+   (func-to-int# (lambda (time-msg-pair)
+                   (let* ((time (from-pointer 'time (pair-first time-msg-pair)))
+                          (msg  (pair-second time-msg-pair)))
+                     (funcall f time msg))
+                   nil))
+   stream))
     
 ; ---------------------------------------------------------------------------------------------------
 
@@ -390,5 +404,6 @@
 (defmethod print-object ((x midi-session) out) (format out "~a" (string-show# (slot-value x 'midi-session-ptr))))
 (defmethod print-object ((x midi-stream) out) (format out "~a" (string-show# (slot-value x 'midi-stream-ptr))))
 (defmethod print-object ((x midi-device) out) (format out "~a" (string-show# (slot-value x 'midi-device-ptr))))
+(defmethod print-object ((x clock) out) (format out "#<faudio::clock for ~a>" (string-show# (slot-value x 'clock-ptr))))
 
 
