@@ -2008,10 +2008,10 @@ fa_ptr_t vst_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     vst_context *context = x;
     AEffect     *plugin = context->plugin;
 
-    fa_warn(n);
-    fa_warn(context->name);
-    fa_warn(fa_equal(n, context->name) ? fa_string("t") : fa_string("f"));
-    fa_warn(fa_string(""));
+    // fa_warn(n);
+    // fa_warn(context->name);
+    // fa_warn(fa_equal(n, context->name) ? fa_string("t") : fa_string("f"));
+    // fa_warn(fa_string(""));
 
     if (fa_equal(n, context->name)) {
 
@@ -2030,7 +2030,7 @@ fa_ptr_t vst_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
         // Assume this is MIDI message
         // TODO add MIDI messags to dynamic and check this!
         if (!fa_midi_message_is_simple(msg)) {
-            fa_warn(fa_string("Unknown message to DLS"));
+            fa_warn(fa_string("Unknown message to VST plug"));
             return x;
         } else {
             int status, data1, data2;
