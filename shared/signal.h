@@ -1,5 +1,4 @@
 
-// TODO formalize better
 struct _state_base_t {
     double *inputs;
     void   *_;
@@ -14,6 +13,13 @@ struct _state_base_t {
     // ...
 };
 
+typedef struct _state_t *state_t;
+typedef struct _state_base_t *state_base_t;
+
+/** Enable/disable vector processing.
+
+    Note that vector mode is not fully implemented on Windows.
+ */
 #ifdef _WIN32
     #define kVectorMode false
 #else
@@ -22,30 +28,54 @@ struct _state_base_t {
 
 #define kAllowVirtualTime               1
 
+/** Maximal allowed vector size.
+ */
 #define kMaxVectorSize                  1024
+
+/** Maximal allowed vector size.
+ */
+#define kMaxVectorSize                  1024
+
+/** Default vector size.
+ */
 #define kDefVectorSize                  64
+
+/** Maximal depth of signal tree.
+ */
 #define kMaxSignalTreeDepth             90
 
+/** Maximal allowed sample rate.
+ */
+#define kMaxSignalTreeDepth             90
+
+/** Default sample rate.
+ */
 #define kDefSampleRate                  44100
+
+/** Default latency in seconds.
+ */
 #define kDefLatency                     0.030
+
+/** Audio scheduler interval in milliseconds.
+ */
 #define kAudioSchedulerIntervalMillis   1
 
-#define kMaxCustomProcs                 10
-#define kMaxInputs                      128
-#define kMaxBuses                       256
-#define kMaxDelaySeconds                5
+/** Maximum number of custom processors.
+ */
+#define kMaxCustomProcs                 64
 
-// #define kAUOffset                       32
-// #define kAUOffset                       0
-// #define kFluidOffset                    34
-// #define kVstOffset                      36
-// #define kRecExternalOffset              40
-// #define kTriggerOffset                  64
-// #define kTriggerOffset                  0
+/** Maximum number of (global + custom) inputs.
+ */
+#define kMaxInputs                      128
+
+/** Maximum number of internal buses (for delay and loop).
+ */
+#define kMaxBuses                       256
+
+/** Maximum delay in seconds.
+ */
+#define kMaxDelaySeconds                5
 
 #define kOutputOffset                   0
 #define kInputOffset                    8
-#define kControlOffset                  16
 
-typedef struct _state_t *state_t;
-typedef struct _state_base_t *state_base_t;

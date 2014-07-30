@@ -826,7 +826,7 @@ stream_t fa_audio_open_stream(device_t input,
     stream_t        stream = new_stream(input, output, sample_rate, buffer_size);
 
     {
-        // TODO number of inputs
+        // TODO allow any number of inputs
         fa_list_t inputs = list(fa_signal_input(kInputOffset + 0), fa_signal_input(kInputOffset + 1));
         fa_list_t signals = apply_processor(proc, proc_data, inputs);
 
