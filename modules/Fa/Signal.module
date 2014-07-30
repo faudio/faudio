@@ -174,11 +174,18 @@ module Fa.Signal
      */
     custom : (CustomProcessor*, Signal) -> Signal;
 
-    /** The primitive input signal, reading from the bus of the given number.
+    /** An input signal, reading from the bus of the given number.
         @param channel
             Channel number.
      */
     input : ( channel : Int ) -> Signal;
+
+    /** The primitive input signal, reading from the bus of the given number.
+        @param channel
+            Channel number.
+     */
+    localInput : ( proc : CustomProcessor*, channel : Int ) -> Signal;
+
     inputWithCustom : ( proc : CustomProcessor*, channel : Int ) -> Signal;
     
 

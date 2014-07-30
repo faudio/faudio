@@ -334,11 +334,25 @@ module Fa.List
         @par Performance
             O(log n)
      */
-    findIndex : (Pred, Ptr, List) -> Int;
+    findIndex : (predicate : Pred, predicateData : Ptr, input : List) -> Int;
 
+    /** Return a list that is the same as the given list with duplicates removed.
+        @par Performance
+            O(n^2)
+     */
     removeDuplicates : List -> List;
 
     // Zips
+
+    /** Create a list containing the paired contents of the given lists.
+
+        @par Example
+            
+            fa_list_zip(fa_list(1,2,3), fa_list(4,5,6)) == fa_list(fa_pair_create(1,4), fa_pair_create(2,5), fa_pair_create(3,6))
+
+        @par Performance
+            O(n)
+     */
     zip : (List, List) -> List;
 
     // Maps and folds
@@ -347,13 +361,13 @@ module Fa.List
         @par Performance
             O(n)
      */
-    filter : (Pred, Ptr, List) -> List;
+    filter : (predicate : Pred, predicateData : Ptr, input : List) -> List;
     
     /** Return the given list with all elements not satisfying the given predicate removed.
         @par Performance
             O(n)
      */
-    dfilter : (Pred, Ptr, List) -> List;
+    dfilter : (predicate : Pred, predicateData : Ptr, input : List) -> List;
     
     /** Return the result of applying the given function to all elements of the given list.
 
@@ -365,7 +379,7 @@ module Fa.List
         @par Performance
             O(n)
      */
-    map : (Unary, Ptr, List) -> List;
+    map : (function : Unary, functionData : Ptr, input : List) -> List;
     
     /** Return the result of applying the given function to all elements of the given list.
 
@@ -377,7 +391,7 @@ module Fa.List
         @par Performance
             O(n)
      */
-    dmap : (Unary, Ptr, List) -> List;
+    dmap : (function : Unary, functionData : Ptr, input : List) -> List;
     
     /**
      Map over the given list and join the results.

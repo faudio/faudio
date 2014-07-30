@@ -36,6 +36,9 @@ module Fa.Midi.Message
 
     type Channel = Int;    
     type Data    = Int;    
+
+    /** A MIDI message, which is either *simple* or *system exclusive*.
+     */
     type Message = opaque;
 
     /** Creates a simple message from the given components.
@@ -61,25 +64,46 @@ module Fa.Midi.Message
     destroy       : Message -> Void;
 
     /** Return whether the given midi_message message is a simple message.
+
+            fa_midi_message_is_sysex(a) == !fa_midi_message_is_simple(x)
      */
     isSimple      : Message -> Bool;
     
     /** Returns the status and channel part of a MIDI message.
+
+        @warning
+            Fails if the given message is not simple.
+            Should only be used in conjunction with fa_midi_message_is_simple.
      */
     simpleData    : Message -> Pair;
     
-    /** Return the status byte of given MIDI message.
+    /** Return the operation part of the status byte of given MIDI message.
+
+        @warning
+            Fails if the given message is not simple.
+            Should only be used in conjunction with fa_midi_message_is_simple.
      */
     status        : Message -> Status;
     
-    /** Return the channel byte of given MIDI message.
+    /** Return the channel part of the status byte of a given MIDI message.
+
+        @warning
+            Fails if the given message is not simple.
+            Should only be used in conjunction with fa_midi_message_is_simple.
      */
     channel       : Message -> Channel;
 
     /** Return whether the given MIDI message is a sysex message.
+
+            fa_midi_message_is_sysex(a) == !fa_midi_message_is_simple(x)
      */
     isSysex       : Message -> Bool;
-    /** Return the data buffer of a sysex message, except for the wrapping `F0` and `F7` bytes.
+
+    /** Return the data buffer of a sysex message, not including the surrounding `F0` and `F7` bytes.
+
+        @warning
+            Fails if the given message is not a sysex message.
+            Should only be used in conjunction with fa_midi_message_is_sysex.
      */
     sysexData     : Message -> Buffer;    
 }

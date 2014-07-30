@@ -51,7 +51,8 @@ typedef int fa_midi_message_channel_t;
 
 typedef int fa_midi_message_data_t;
 
-
+/** A MIDI message, which is either *simple* or *system exclusive*.
+*/
 typedef struct _fa_midi_message_t * fa_midi_message_t;
 
 /** Creates a simple message from the given components.
@@ -79,26 +80,46 @@ fa_midi_message_t fa_midi_message_copy(fa_midi_message_t message);
 void fa_midi_message_destroy(fa_midi_message_t message);
 
 /** Return whether the given midi_message message is a simple message.
+
+        fa_midi_message_is_sysex(a) == !fa_midi_message_is_simple(x)
 */
 bool fa_midi_message_is_simple(fa_midi_message_t message);
 
 /** Returns the status and channel part of a MIDI message.
+
+    @warning
+        Fails if the given message is not simple.
+        Should only be used in conjunction with fa_midi_message_is_simple.
 */
 fa_pair_t fa_midi_message_simple_data(fa_midi_message_t message);
 
-/** Return the status byte of given MIDI message.
+/** Return the operation part of the status byte of given MIDI message.
+
+    @warning
+        Fails if the given message is not simple.
+        Should only be used in conjunction with fa_midi_message_is_simple.
 */
 fa_midi_message_status_t fa_midi_message_status(fa_midi_message_t message);
 
-/** Return the channel byte of given MIDI message.
+/** Return the channel part of the status byte of a given MIDI message.
+
+    @warning
+        Fails if the given message is not simple.
+        Should only be used in conjunction with fa_midi_message_is_simple.
 */
 fa_midi_message_channel_t fa_midi_message_channel(fa_midi_message_t message);
 
 /** Return whether the given MIDI message is a sysex message.
+
+        fa_midi_message_is_sysex(a) == !fa_midi_message_is_simple(x)
 */
 bool fa_midi_message_is_sysex(fa_midi_message_t message);
 
-/** Return the data buffer of a sysex message, except for the wrapping `F0` and `F7` bytes.
+/** Return the data buffer of a sysex message, not including the surrounding `F0` and `F7` bytes.
+
+    @warning
+        Fails if the given message is not a sysex message.
+        Should only be used in conjunction with fa_midi_message_is_sysex.
 */
 fa_buffer_t fa_midi_message_sysex_data(fa_midi_message_t message);
 

@@ -332,31 +332,42 @@ int fa_list_index_of(fa_ptr_t ptr, fa_list_t list);
     @par Performance
         O(log n)
 */
-int fa_list_find_index(fa_pred_t pred,
-                       fa_ptr_t ptr,
-                       fa_list_t list);
+int fa_list_find_index(fa_pred_t predicate,
+                       fa_ptr_t predicateData,
+                       fa_list_t input);
 
-
+/** Return a list that is the same as the given list with duplicates removed.
+    @par Performance
+        O(n^2)
+*/
 fa_list_t fa_list_remove_duplicates(fa_list_t list);
 
+/** Create a list containing the paired contents of the given lists.
 
+    @par Example
+
+        fa_list_zip(fa_list(1,2,3), fa_list(4,5,6)) == fa_list(fa_pair_create(1,4), fa_pair_create(2,5), fa_pair_create(3,6))
+
+    @par Performance
+        O(n)
+*/
 fa_list_t fa_list_zip(fa_list_t list, fa_list_t list_);
 
 /** Return the given list with all elements not satisfying the given predicate removed.
     @par Performance
         O(n)
 */
-fa_list_t fa_list_filter(fa_pred_t pred,
-                         fa_ptr_t ptr,
-                         fa_list_t list);
+fa_list_t fa_list_filter(fa_pred_t predicate,
+                         fa_ptr_t predicateData,
+                         fa_list_t input);
 
 /** Return the given list with all elements not satisfying the given predicate removed.
     @par Performance
         O(n)
 */
-fa_list_t fa_list_dfilter(fa_pred_t pred,
-                          fa_ptr_t ptr,
-                          fa_list_t list);
+fa_list_t fa_list_dfilter(fa_pred_t predicate,
+                          fa_ptr_t predicateData,
+                          fa_list_t input);
 
 /** Return the result of applying the given function to all elements of the given list.
 
@@ -368,9 +379,9 @@ fa_list_t fa_list_dfilter(fa_pred_t pred,
     @par Performance
         O(n)
 */
-fa_list_t fa_list_map(fa_unary_t unary,
-                      fa_ptr_t ptr,
-                      fa_list_t list);
+fa_list_t fa_list_map(fa_unary_t function,
+                      fa_ptr_t functionData,
+                      fa_list_t input);
 
 /** Return the result of applying the given function to all elements of the given list.
 
@@ -382,9 +393,9 @@ fa_list_t fa_list_map(fa_unary_t unary,
     @par Performance
         O(n)
 */
-fa_list_t fa_list_dmap(fa_unary_t unary,
-                       fa_ptr_t ptr,
-                       fa_list_t list);
+fa_list_t fa_list_dmap(fa_unary_t function,
+                       fa_ptr_t functionData,
+                       fa_list_t input);
 
 /**
      Map over the given list and join the results.
