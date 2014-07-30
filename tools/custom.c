@@ -1,4 +1,3 @@
-
 #include <fa/fa.h>
 #include <fa/util.h>
 #include "common.h"

@@ -31,7 +31,19 @@ void run_vst()
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        fa_list_t out           = fa_signal_vst(fa_string("dls"), PATH, fa_empty());
+
+
+
+        fa_list_t vst       = fa_signal_vst(fa_string("vst"), PATH, fa_list_empty());
+        fa_signal_t vst0    = fa_list_index(0, vst);
+        fa_signal_t vst1    = fa_list_index(1, vst);
+        fa_pair_t dls       = fa_signal_dls(fa_string("dls"));
+        
+
+        fa_list_t out;
+        fa_unpair(dls, dls0, dls1) {
+            out = list(fa_add(vst0, dls0), fa_add(vst1, dls1));
+        }
 
         fa_audio_set_parameter(fa_string("sample-rate"), fa_f32(48000), s);
         fa_audio_set_parameter(fa_string("vector-size"), fa_i32(1024), s);
@@ -41,14 +53,16 @@ void run_vst()
             fa_error_log(st, NULL);
         }
 
+#define kSynthName "dls"
 
-        fa_audio_schedule_relative(fa_hms(0, 0, 0), fa_action_send(fa_string("dls"), fa_pair_create(fa_string("open"), NULL)), st);
 
-        fa_audio_schedule_relative(fa_hms(0, 0, 0), fa_action_send(fa_string("dls"),
-                                                                   fa_midi_message_create_simple(0xc0, 50, 0)), st);
+        // fa_audio_schedule_relative(fa_hms(0, 0, 0), fa_action_send(fa_string(kSynthName), fa_pair_create(fa_string("open"), NULL)), st);
+
+        fa_audio_schedule_relative(fa_hms(0, 0, 0), fa_action_send(fa_string(kSynthName),
+                                                                   fa_midi_message_create_simple(0xc0, 60, 0)), st);
 
         for (int i = 0; i < 24; ++i) {
-            fa_action_t chord = fa_action_send(fa_string("dls"),
+            fa_action_t chord = fa_action_send(fa_string(kSynthName),
                                                fa_midi_message_create_simple(0x90, 52 + ((i % 12) * 2), 90));
             fa_audio_schedule_relative(fa_hms(0, 0, 0), chord, st);
             fa_thread_sleep(150);
