@@ -441,9 +441,9 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
         return fa_pair_create(
                    concat(
                        fa_string("input "),
-                       input_get(signal, proc) 
-                            ? fa_string_format_integral("%lu@", (long) input_get(signal, proc))
-                            : fa_string(""),
+                       input_get(signal, proc)
+                       ? fa_string_format_integral("%lu@", (long) input_get(signal, proc))
+                       : fa_string(""),
                        fa_string_format_integral("%d", input_get(signal, c))),
                    fa_empty());
 
@@ -451,10 +451,10 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
         return fa_pair_create(
                    concat(
                        concat(
-                        fa_string("output "),
-                        output_get(signal, proc) 
-                            ? fa_string_format_integral("%lu@", (long) input_get(signal, proc))
-                            : fa_string("")
+                           fa_string("output "),
+                           output_get(signal, proc)
+                           ? fa_string_format_integral("%lu@", (long) input_get(signal, proc))
+                           : fa_string("")
                        ),
                        fa_string_show(fa_from_int32(output_get(signal, c))),
                        fa_string("[-"),
@@ -646,7 +646,7 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal2)
         ((custom_proc_t) x)->channel_offset = 0;
         fa_warn(fa_string("Could not find processor offset"));
     }
-    
+
 */
 
 // fa_ptr_t lookup_proc_offset(fa_map_t proc_map, intptr_t x);
@@ -676,7 +676,7 @@ fa_signal_t fa_signal_route_processors(fa_map_t proc_map, fa_signal_t signal2)
         fa_signal_t a              = fa_signal_route_processors(proc_map, lift_get(signal2, a));
         return fa_signal_lift(name, func, func_data, a);
     }
-    
+
     case lift2_signal: {
         fa_string_t    name        = lift2_get(signal2, name);
         fa_dbinary_t   func        = lift2_get(signal2, function);
@@ -685,7 +685,7 @@ fa_signal_t fa_signal_route_processors(fa_map_t proc_map, fa_signal_t signal2)
         fa_signal_t b              = fa_signal_route_processors(proc_map, lift2_get(signal2, b));
         return fa_signal_lift2(name, func, func_data, a, b);
     }
-    
+
     case output_signal: {
         int samples                 = output_get(signal2, n);
         int channel                 = output_get(signal2, c);
@@ -695,6 +695,7 @@ fa_signal_t fa_signal_route_processors(fa_map_t proc_map, fa_signal_t signal2)
 
         if (proc) {
             fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) proc);
+
             if (offset) {
                 int64_t offset2 = fa_peek_int64(offset);
                 channel += offset2;
@@ -702,10 +703,10 @@ fa_signal_t fa_signal_route_processors(fa_map_t proc_map, fa_signal_t signal2)
                 fa_warn(fa_string_format_integral("Could not find processor offset: %lu", (unsigned long) proc));
             }
         }
-        
+
         return fa_signal_output(samples, channel, a);
     }
-    
+
     case input_signal: {
         int channel                 = input_get(signal2, c);
         fa_ptr_t proc               = input_get(signal2, proc);
@@ -713,6 +714,7 @@ fa_signal_t fa_signal_route_processors(fa_map_t proc_map, fa_signal_t signal2)
 
         if (proc) {
             fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) proc);
+
             if (offset) {
                 int64_t offset2 = fa_peek_int64(offset);
                 channel += offset2;
@@ -1274,14 +1276,14 @@ fa_ptr_t _times4__pointer_list_to_custom_proc_map(fa_ptr_t x)
 fa_map_t pointer_list_to_custom_proc_map(fa_list_t xs)
 {
     return fa_map_from_list(fa_list_zip(
-        fa_list_remove_duplicates(
-            // fa_list_map(apply1, fa_from_int64, xs)
-            xs
-            ), 
-        fa_list_map(apply1, _add32__pointer_list_to_custom_proc_map, 
-            fa_list_map(apply1, _times4__pointer_list_to_custom_proc_map, 
-                fa_list_r(0, fa_list_length(xs))))
-                ));
+                                fa_list_remove_duplicates(
+                                    // fa_list_map(apply1, fa_from_int64, xs)
+                                    xs
+                                ),
+                                fa_list_map(apply1, _add32__pointer_list_to_custom_proc_map,
+                                            fa_list_map(apply1, _times4__pointer_list_to_custom_proc_map,
+                                                        fa_list_r(0, fa_list_length(xs))))
+                            ));
 }
 
 fa_ptr_t lookup_proc_offset(fa_map_t proc_map, intptr_t x)
@@ -1320,6 +1322,7 @@ fa_map_t build_proc_map(fa_list_t procs)
     fa_for_each(x, procs) {
         // printf("%lu\n", (unsigned long) x);
         fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) x);
+
         if (offset) {
             ((custom_proc_t) x)->channel_offset = fa_peek_int64(offset);
         } else {
@@ -2124,9 +2127,9 @@ fa_list_t fa_signal_vst(fa_string_t name1, fa_string_t path1, fa_list_t inputs)
     // TODO
     last_vst_plug = context;
 
-    return list(fa_signal_custom(proc, 
-        fa_signal_input_with_custom(proc, 0)),
-        fa_signal_input_with_custom(proc, 1));
+    return list(fa_signal_custom(proc,
+                                 fa_signal_input_with_custom(proc, 0)),
+                fa_signal_input_with_custom(proc, 1));
 }
 
 void fa_signal_show_vst_gui(fa_string_t string, void *handle)

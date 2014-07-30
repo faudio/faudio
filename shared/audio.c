@@ -332,55 +332,37 @@ void fa_audio_terminate()
 void add_audio_status_listener(fa_pair_t closure);
 void remove_audio_status_listener(fa_pair_t closure);
 
-#ifdef FLISP
-(defun fa - audio - begin - session()
-
- (if (not pa - mutex)
-  (assert nil _"Module not intialized"))
- (fa - inform "Initializing real-time audio session")
- (var session)
- (fa - with - lock(pa - mutex)
-  (if (pa - status)
-       (progn
-        (setf session(cast session - t(audio - device - error "Overlapping")))
-       )
-       (inform "   Starting up PortAudio")
-       (Pa - Initialize)
-       (setf pa - status t)
-       (fa - inform ""))))
-#endif
-
-        session_t fa_audio_begin_session()
-    {
-        if (!pa_mutex) {
-            assert(false && "Module not initalized");
-        }
-
-        fa_inform(fa_string("Initializing real-time audio session"));
-
-        session_t session;
-        fa_with_lock(pa_mutex) {
-            if (pa_status) {
-                session = (session_t) audio_device_error(fa_string("Overlapping real-time audio sessions"));
-            } else {
-                fa_inform(fa_string("    Starting up PortAudio"));
-                Pa_Initialize();
-                pa_status = true;
-                fa_inform(fa_string("    Done starting PortAudio"));
-
-                session = new_session();
-                session_init_devices(session);
-
-                current_session = session;
-            }
-        }
-        // FIXME cache pair
-        session->status_closure = fa_pair_create(_status_callback, session);
-        add_audio_status_listener(session->status_closure);
-
-        fa_inform(fa_string("Done initializing session"));
-        return session;
+session_t fa_audio_begin_session()
+{
+    if (!pa_mutex) {
+        assert(false && "Module not initalized");
     }
+
+    fa_inform(fa_string("Initializing real-time audio session"));
+
+    session_t session;
+    fa_with_lock(pa_mutex) {
+        if (pa_status) {
+            session = (session_t) audio_device_error(fa_string("Overlapping real-time audio sessions"));
+        } else {
+            fa_inform(fa_string("    Starting up PortAudio"));
+            Pa_Initialize();
+            pa_status = true;
+            fa_inform(fa_string("    Done starting PortAudio"));
+
+            session = new_session();
+            session_init_devices(session);
+
+            current_session = session;
+        }
+    }
+    // FIXME cache pair
+    session->status_closure = fa_pair_create(_status_callback, session);
+    add_audio_status_listener(session->status_closure);
+
+    fa_inform(fa_string("Done initializing session"));
+    return session;
+}
 
 void fa_audio_end_session(session_t session)
 {
@@ -1176,7 +1158,7 @@ void before_processing(stream_t stream)
     fa_inform(fa_string_format_integral("    Custom processors: %d", fa_list_length(procs)));
 
     fa_map_t proc_map = build_proc_map(procs);
-    fa_inform(fa_dappend(fa_string(     "        Allocated channel offsets: "), fa_string_show(proc_map)));
+    fa_inform(fa_dappend(fa_string("        Allocated channel offsets: "), fa_string_show(proc_map)));
 
     fa_for_each(x, procs) {
         // printf("Adding custom proc %p!\n", x);
