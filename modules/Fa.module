@@ -67,42 +67,129 @@ module Fa
     // Type predicates and conversions
     // TODO move to dynamic (se #158)
 
-    /**
-        @see [Value references](@ref ValueReferences)
-      */
+    /** Return whether the given value is referecing a @bool@. 
+        @see [Value references](@ref ValueReferences) */
     isBool     : Ptr -> Bool;
+
+    /** Return whether the given value is referecing a @int8_t@. 
+        @see [Value references](@ref ValueReferences) */
     isInt8     : Ptr -> Bool;
+
+    /** Return whether the given value is referecing a @int16_t@. 
+        @see [Value references](@ref ValueReferences) */
     isInt16    : Ptr -> Bool;
+
+    /** Return whether the given value is referecing a @int32_t@. 
+        @see [Value references](@ref ValueReferences) */
     isInt32    : Ptr -> Bool;
+
+    /** Return whether the given value is referecing a @int64_t@. 
+        @see [Value references](@ref ValueReferences) */
     isInt64    : Ptr -> Bool;
+
+    /** Return whether the given value is referecing a @float@. 
+        @see [Value references](@ref ValueReferences) */
     isFloat    : Ptr -> Bool;
+
+    /** Return whether the given value is referecing a @double@. 
+        @see [Value references](@ref ValueReferences) */
     isDouble   : Ptr -> Bool;
+
+    /** Return whether the given value is a reference ("object") type. 
+        @see [Value references](@ref ValueReferences) */
     isRef      : Ptr -> Bool;
 
+    /** Unwrap a referece to a @bool@ and destroy the reference. 
+        @see [Value references](@ref ValueReferences) */
     toBool     : Ptr -> Bool;
+
+    /** Unwrap a referece to a @int8_t@ and destroy the reference. 
+        @see [Value references](@ref ValueReferences) */
     toInt8     : Ptr -> Int8;
+
+    /** Unwrap a referece to a @int16_t@ and destroy the reference. 
+        @see [Value references](@ref ValueReferences) */
     toInt16    : Ptr -> Int16;
+
+    /** Unwrap a referece to a @int32_t@ and destroy the reference. 
+        @see [Value references](@ref ValueReferences) */
     toInt32    : Ptr -> Int32;
+
+    /** Unwrap a referece to a @int64_t@ and destroy the reference. 
+        @see [Value references](@ref ValueReferences) */
     toInt64    : Ptr -> Int64;
+
+    /** Unwrap a referece to a @float@ and destroy the reference. 
+        @see [Value references](@ref ValueReferences) */
     toFloat    : Ptr -> Float;
+
+    /** Unwrap a referece to a @double@ and destroy the reference. 
+        @see [Value references](@ref ValueReferences) */
     toDouble   : Ptr -> Double;
 
-    peekBool   : Ptr -> Bool;
-    peekInt8   : Ptr -> Int8;
-    peekInt16  : Ptr -> Int16;
-    peekInt32  : Ptr -> Int32;
-    peekInt64  : Ptr -> Int64;
-    peekFloat  : Ptr -> Float;
-    peekDouble : Ptr -> Double;
+    /** Unwrap a referece to a @bool@ without destroying the reference. 
+        @see [Value references](@ref ValueReferences) */
+    peekBool     : Ptr -> Bool;
 
+    /** Unwrap a referece to a @int8_t@ without destroying the reference. 
+        @see [Value references](@ref ValueReferences) */
+    peekInt8     : Ptr -> Int8;
+
+    /** Unwrap a referece to a @int16_t@ without destroying the reference. 
+        @see [Value references](@ref ValueReferences) */
+    peekInt16    : Ptr -> Int16;
+
+    /** Unwrap a referece to a @int32_t@ without destroying the reference. 
+        @see [Value references](@ref ValueReferences) */
+    peekInt32    : Ptr -> Int32;
+
+    /** Unwrap a referece to a @int64_t@ without destroying the reference. 
+        @see [Value references](@ref ValueReferences) */
+    peekInt64    : Ptr -> Int64;
+
+    /** Unwrap a referece to a @float@ without destroying the reference. 
+        @see [Value references](@ref ValueReferences) */
+    peekFloat    : Ptr -> Float;
+
+    /** Unwrap a referece to a @double@ without destroying the reference. 
+        @see [Value references](@ref ValueReferences) */
+    peekDouble   : Ptr -> Double;
+
+    /** Create a new referece to a @bool@ value.
+        The returned reference must be destroyed by the caller.
+        @see [Value references](@ref ValueReferences) */
     fromBool   : Bool -> Ptr;
-    fromInt8   : Int8 -> Ptr;
-    fromInt16  : Int16 -> Ptr;
-    fromInt32  : Int32 -> Ptr;
-    fromInt64  : Int64 -> Ptr;
-    fromFloat  : Float -> Ptr;
-    fromDouble : Double -> Ptr;
 
+    /** Create a new referece to a @int8_t@ value.
+        The returned reference must be destroyed by the callerler.
+        @see [Value references](@ref ValueReferences) */
+    fromInt8   : Int8 -> Ptr;
+
+    /** Create a new referece to a @int16_t@ value.
+        The returned reference must be destroyed by the callerlerler.
+        @see [Value references](@ref ValueReferences) */
+    fromInt16  : Int16 -> Ptr;
+
+    /** Create a new referece to a @int32_t@ value.
+        The returned reference must be destroyed by the callerlerlerler.
+        @see [Value references](@ref ValueReferences) */
+    fromInt32  : Int32 -> Ptr;
+
+    /** Create a new referece to a @int64_t@ value.
+        The returned reference must be destroyed by the callerlerlerlerler.
+        @see [Value references](@ref ValueReferences) */
+    fromInt64  : Int64 -> Ptr;
+
+    /** Create a new referece to a @float@ value.
+        The returned reference must be destroyed by the callerlerlerlerlerler.
+        @see [Value references](@ref ValueReferences) */
+    fromFloat  : Float -> Ptr;
+
+    /** Create a new referece to a @double@ value.
+        The returned reference must be destroyeded by the callerlerlerlerlerlerler.
+        @see [Value references](@ref ValueReferences) */
+    fromDouble : Double -> Ptr;
+    
 
     // Interface dispatch
 

@@ -74,94 +74,156 @@ typedef uint16_t fa_char16_t;
 */
 typedef uint32_t fa_char32_t;
 
-/**
-    @see [Value references](@ref ValueReferences)
-      
+/** Return whether the given value is referecing a @bool@. 
+    @see [Value references](@ref ValueReferences) 
 */
 bool fa_is_bool(fa_ptr_t ptr);
 
-
+/** Return whether the given value is referecing a @int8_t@. 
+    @see [Value references](@ref ValueReferences) 
+*/
 bool fa_is_int8(fa_ptr_t ptr);
 
-
+/** Return whether the given value is referecing a @int16_t@. 
+    @see [Value references](@ref ValueReferences) 
+*/
 bool fa_is_int16(fa_ptr_t ptr);
 
-
+/** Return whether the given value is referecing a @int32_t@. 
+    @see [Value references](@ref ValueReferences) 
+*/
 bool fa_is_int32(fa_ptr_t ptr);
 
-
+/** Return whether the given value is referecing a @int64_t@. 
+    @see [Value references](@ref ValueReferences) 
+*/
 bool fa_is_int64(fa_ptr_t ptr);
 
-
+/** Return whether the given value is referecing a @float@. 
+    @see [Value references](@ref ValueReferences) 
+*/
 bool fa_is_float(fa_ptr_t ptr);
 
-
+/** Return whether the given value is referecing a @double@. 
+    @see [Value references](@ref ValueReferences) 
+*/
 bool fa_is_double(fa_ptr_t ptr);
 
-
+/** Return whether the given value is a reference ("object") type. 
+    @see [Value references](@ref ValueReferences) 
+*/
 bool fa_is_ref(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @bool@ and destroy the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 bool fa_to_bool(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @int8_t@ and destroy the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 int8_t fa_to_int8(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @int16_t@ and destroy the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 int16_t fa_to_int16(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @int32_t@ and destroy the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 int32_t fa_to_int32(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @int64_t@ and destroy the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 int64_t fa_to_int64(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @float@ and destroy the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 float fa_to_float(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @double@ and destroy the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 double fa_to_double(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @bool@ without destroying the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 bool fa_peek_bool(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @int8_t@ without destroying the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 int8_t fa_peek_int8(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @int16_t@ without destroying the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 int16_t fa_peek_int16(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @int32_t@ without destroying the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 int32_t fa_peek_int32(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @int64_t@ without destroying the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 int64_t fa_peek_int64(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @float@ without destroying the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 float fa_peek_float(fa_ptr_t ptr);
 
-
+/** Unwrap a referece to a @double@ without destroying the reference. 
+    @see [Value references](@ref ValueReferences) 
+*/
 double fa_peek_double(fa_ptr_t ptr);
 
-
+/** Create a new referece to a @bool@ value.
+    The returned reference must be destroyed by the caller.
+    @see [Value references](@ref ValueReferences) 
+*/
 fa_ptr_t fa_from_bool(bool bool_);
 
-
+/** Create a new referece to a @int8_t@ value.
+    The returned reference must be destroyed by the callerler.
+    @see [Value references](@ref ValueReferences) 
+*/
 fa_ptr_t fa_from_int8(int8_t int8_);
 
-
+/** Create a new referece to a @int16_t@ value.
+    The returned reference must be destroyed by the callerlerler.
+    @see [Value references](@ref ValueReferences) 
+*/
 fa_ptr_t fa_from_int16(int16_t int16_);
 
-
+/** Create a new referece to a @int32_t@ value.
+    The returned reference must be destroyed by the callerlerlerler.
+    @see [Value references](@ref ValueReferences) 
+*/
 fa_ptr_t fa_from_int32(int32_t int32_);
 
-
+/** Create a new referece to a @int64_t@ value.
+    The returned reference must be destroyed by the callerlerlerlerler.
+    @see [Value references](@ref ValueReferences) 
+*/
 fa_ptr_t fa_from_int64(int64_t int64_);
 
-
+/** Create a new referece to a @float@ value.
+    The returned reference must be destroyed by the callerlerlerlerlerler.
+    @see [Value references](@ref ValueReferences) 
+*/
 fa_ptr_t fa_from_float(float float_);
 
-
+/** Create a new referece to a @double@ value.
+    The returned reference must be destroyeded by the callerlerlerlerlerlerler.
+    @see [Value references](@ref ValueReferences) 
+*/
 fa_ptr_t fa_from_double(double double_);
 
 /** Unique identifier. Only used for interface lookup at the moment.
