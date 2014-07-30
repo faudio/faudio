@@ -30,7 +30,7 @@ fa_string_t fa_system_directory_home()
         assert(FALSE && "Error get home directory");
     }
 
-    return fa_unstring(path);
+    return fa_string(path);
 }
 
 fa_string_t fa_system_directory_current()
