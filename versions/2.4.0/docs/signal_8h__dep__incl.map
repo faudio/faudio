@@ -1,0 +1,11 @@
+<map id="include/fa/signal.h" name="include/fa/signal.h">
+<area shape="rect" id="node3" href="$action_8h.html" title="include/fa/action.h" alt="" coords="266,86,416,117"/>
+<area shape="rect" id="node5" href="$audio_8h.html" title="include/fa/audio.h" alt="" coords="146,166,293,197"/>
+<area shape="rect" id="node7" href="$fa_2fa_8h.html" title="include/fa/fa.h" alt="" coords="367,246,490,277"/>
+<area shape="rect" id="node22" href="$midi_8h.html" title="include/fa/midi.h" alt="" coords="280,406,417,437"/>
+<area shape="rect" id="node10" href="$buffer_8h.html" title="include/fa/buffer.h" alt="" coords="764,326,912,357"/>
+<area shape="rect" id="node13" href="$clock_8h.html" title="include/fa/clock.h" alt="" coords="38,326,182,357"/>
+<area shape="rect" id="node16" href="$dynamic_8h.html" title="include/fa/dynamic.h" alt="" coords="524,326,689,357"/>
+<area shape="rect" id="node18" href="$error_8h.html" title="include/fa/error.h" alt="" coords="358,326,500,357"/>
+<area shape="rect" id="node25" href="$list_8h.html" title="include/fa/list.h" alt="" coords="207,326,333,357"/>
+</map>

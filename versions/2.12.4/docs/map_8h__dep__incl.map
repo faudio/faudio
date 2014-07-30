@@ -1,0 +1,11 @@
+<map id="include/fa/map.h" name="include/fa/map.h">
+<area shape="rect" id="node3" href="$buffer_8h.html" title="include/fa/buffer.h" alt="" coords="631,86,779,117"/>
+<area shape="rect" id="node19" href="$literals_8h.html" title="include/fa/util/literals.h" alt="" coords="803,86,983,117"/>
+<area shape="rect" id="node5" href="$io_8h.html" title="include/fa/io.h" alt="" coords="4,166,125,197"/>
+<area shape="rect" id="node7" href="$message_8h.html" title="include/fa/midi/message.h" alt="" coords="151,166,352,197"/>
+<area shape="rect" id="node9" href="$analysis_8h.html" title="include/fa/signal/analysis.h" alt="" coords="377,166,585,197"/>
+<area shape="rect" id="node11" href="$basic_8h.html" title="include/fa/signal/basic.h" alt="" coords="610,166,800,197"/>
+<area shape="rect" id="node13" href="$external_8h.html" title="include/fa/signal/external.h" alt="" coords="824,166,1033,197"/>
+<area shape="rect" id="node15" href="$filter_8h.html" title="include/fa/signal/filter.h" alt="" coords="1058,166,1243,197"/>
+<area shape="rect" id="node17" href="$synth_8h.html" title="include/fa/signal/synth.h" alt="" coords="1267,166,1457,197"/>
+</map>

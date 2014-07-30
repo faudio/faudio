@@ -1,0 +1,11 @@
+<map id="include/fa/atomic/ring_buffer.h" name="include/fa/atomic/ring_buffer.h">
+<area shape="rect" id="node3" href="$fa_2fa_8h.html" title="include/fa/fa.h" alt="" coords="141,104,264,136"/>
+<area shape="rect" id="node8" href="$io_8h.html" title="include/fa/io.h" alt="" coords="252,184,373,216"/>
+<area shape="rect" id="node10" href="$signal_8h.html" title="include/fa/signal.h" alt="" coords="4,184,152,216"/>
+<area shape="rect" id="node15" href="$analysis_8h.html" title="include/fa/signal/analysis.h" alt="" coords="338,104,547,136"/>
+<area shape="rect" id="node17" href="$basic_8h.html" title="include/fa/signal/basic.h" alt="" coords="571,104,761,136"/>
+<area shape="rect" id="node19" href="$external_8h.html" title="include/fa/signal/external.h" alt="" coords="785,104,995,136"/>
+<area shape="rect" id="node21" href="$filter_8h.html" title="include/fa/signal/filter.h" alt="" coords="1020,104,1204,136"/>
+<area shape="rect" id="node23" href="$synth_8h.html" title="include/fa/signal/synth.h" alt="" coords="1229,104,1419,136"/>
+<area shape="rect" id="node5" href="$action_8h.html" title="include/fa/action.h" alt="" coords="128,264,277,296"/>
+</map>
