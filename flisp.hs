@@ -275,6 +275,7 @@ compilePrimT = go
     prim "signal-type"     = CType "fa_signal_t"
     prim "pair-type"     = CType "fa_pair_t"
     prim "buffer-type"     = CType "fa_buffer_t"
+    prim "time-type"     = CType "fa_time_t"
 
 compilePrimD :: Lisp -> CDecl
 -- (defun foo (x))

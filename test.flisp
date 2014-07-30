@@ -163,7 +163,7 @@
 
 (include "stdio.h")
 (include "fa/fa.h")
-; (include "fa/util.h")
+(include "fa/util.h")
 (include "fa/thread.h")
 
 
@@ -382,29 +382,34 @@
       (fa:audio-schedule-relative (fa:quarter-seconds 3) (fa:action-send "foo" (fa:from-double 3)) stream)
       (fa:audio-schedule-relative (fa:quarter-seconds 4) (fa:action-send "foo" (fa:from-double 4)) stream)))
   nil)
+
+
+
+(defun func1 (ct)
+  (fa:warn "Hello!")
+  nil
+  )
+(defun func2 ptr-type ((ct ptr-type) (ti time-type))
+  (fa:print-ln (fa:seconds 5))
+  (fa:print-ln ti)
+  (fa:warn "Hello!")
+  nil
+  )
+(defun erik-problem ()
+  (run-default-audio 
+    play-proc
+    (progn
+      (fa:audio-schedule-relative (fa:seconds 3) 
+          (fa:action-do           func1 nil)
+           stream) 
+      (fa:audio-schedule-relative (fa:seconds 5) 
+          (fa:action-do-with-time func2 nil)
+           stream))) 
+  nil)
     
 (defun main :int ((argc :int) (argv (:const (:pointer (:pointer :char)))))
   (with-faudio
-    ; (play)
-    (fa:signal-print 4410
-      (fa:list
-        (fa:pair-create (fa:milliseconds 1) (fa:action-send "foo/seek" (fa:from-double 1))) 
-        ; (fa:pair-create (fa:milliseconds 2) (fa:action-send "foo/seek" (fa:from-double 1))) 
-        ) 
-      ; (first-if-non-negative (fa:signal-trigger "foo/seek" -1) (pure 1000))
-
-
-
-      ; (fa:signal-trigger "foo/seek" -1)
-      (fa:signal-if 
-        (>=~ (fa:signal-trigger "foo/seek" -1) (pure 0))
-        (fa:signal-trigger "foo/seek" -1)
-        (pure 222)
-        )        
-      ; (fa:signal-if (pure 1) (pure 4) (pure 5))
-
-      ; (transport "foo")
-      )
+    (erik-problem)
     )
   ; (fa:initialize)
   ; (fa:set-log-std)
