@@ -40,6 +40,9 @@
         (:file "time")
         (:file "clock")
         (:file "error")
+        (:file "signal")
+        (:file "action")
+        (:file "midi")
         (:module "midi2"
           :pathname "midi"
           :components (
@@ -47,9 +50,6 @@
             (:file "device")
             (:file "stream")
             (:file "message")))
-        (:file "signal")
-        (:file "action")
-        (:file "midi")
         (:file "audio")
         (:module "audio2"
           :pathname "audio"
