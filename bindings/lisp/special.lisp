@@ -232,6 +232,9 @@
 (defcallback funcall0# ptr ((f ptr))
   (funcall (int-to-func# f)))
 
+(defcallback funcall0+time# ptr ((f ptr) (time time))
+  (funcall (int-to-func# f) time))
+
 (defcallback funcall1# ptr ((f ptr) (x ptr))
   (funcall (int-to-func# f) x))
 
@@ -276,7 +279,19 @@
  (action-until (callback predcall1#) (func-to-int# (make-nullary-function f)) a))
 
 (defun action-do* (f)
-  (action-do (callback funcall0#) (func-to-int# f)))
+  (action-do (callback funcall0#) (func-to-int# (lambda () (funcall f) nil))))
+
+(defun action-do-with-time* (f)
+  (cl:error "Using action-do-with-time* is not recommended, please use action-do-with-ms* instead!")
+  (action-do-with-time (callback funcall0+time#) (func-to-int# (lambda (time) (funcall f time) nil))))
+
+(defun action-do-with-ms* (f)
+  (action-do-with-time (callback funcall0+time#) (func-to-int#
+                                                  (lambda (time)
+                                                    (let ((ms (time-to-milliseconds time)))
+                                                      (funcall f ms)
+                                                      (destroy time))
+                                                    nil))))
 
 (defun action-accum* (ch f)
   (action-accum ch (callback dfuncall1#) (func-to-int# f)))

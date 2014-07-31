@@ -236,6 +236,11 @@
     (cl:list (from-pointer 'signal (pair-first synth)) 
              (from-pointer 'signal (pair-second synth)))))
 
+(defun signal-vst* (name path input)
+  (let* ((vst (signal-vst name path (export-list (mapcar 'to-pointer input)))))
+    (cl:list (from-pointer 'signal (pair-first vst)) 
+             (from-pointer 'signal (pair-second vst)))))
+
 (defun signal-print* (n x &key (controls '()))
   (let* ((buffer (signal-run-buffer n controls x)))
     (dotimes (i (/ (size buffer) 8)) 
