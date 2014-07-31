@@ -59,7 +59,7 @@ fa_pair_t fa_signal_clicks()
     proc->destroy = NULL;
     proc->data    = NULL;
 
-    return fa_pair_create(fa_signal_custom(proc, fa_signal_local_input(proc, 0)), fa_signal_local_input(proc, 1));
+    return fa_pair_create(fa_signal_custom(proc, fa_signal_input_with_custom(proc, 0)), fa_signal_input_with_custom(proc, 1));
 }
 
 void run_clicks()

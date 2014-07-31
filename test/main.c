@@ -341,7 +341,7 @@ void test_buffer_meta()
 
         fa_destroy(b);
     }
-    exit(-1);
+    // exit(-1);
 }
 
 
