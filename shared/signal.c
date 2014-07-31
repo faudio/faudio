@@ -2074,6 +2074,9 @@ fa_list_t fa_signal_vst(fa_string_t name1, fa_string_t path1, fa_list_t inputs)
 
     char *rpath = fa_unstring(path);
     AEffect *plugin = loadPlugin(rpath);
+	if (!plugin) {
+		fa_warn(concat(fa_string("Could not load plugin "), path));
+	}
     initPlugin(plugin);
 
     // TODO
