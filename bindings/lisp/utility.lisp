@@ -223,6 +223,13 @@
   (destroy *temp-s*))
 
 
+(defun buffer-set-default-meta-data (buf)
+  (buffer-set-meta buf "sample-rate" 44100)
+  (buffer-set-meta buf "format" 65538)
+  (buffer-set-meta buf "channels" 1)
+  buf)
+
+
 (defun signal-run-file* (n x &key (controls '()) (path "test.wav"))
   (signal-run-file n controls x path))
 
@@ -238,8 +245,8 @@
 
 (defun signal-vst* (name path input)
   (let* ((vst (signal-vst name path (export-list (mapcar 'to-pointer input)))))
-    (cl:list (from-pointer 'signal (pair-first vst)) 
-             (from-pointer 'signal (pair-second vst)))))
+    (mapcar (lambda (x) (from-pointer 'signal x)) (import-list vst))))
+
 
 (defun signal-print* (n x &key (controls '()))
   (let* ((buffer (signal-run-buffer n controls x)))
