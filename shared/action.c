@@ -249,49 +249,53 @@ fa_action_t fa_action_copy(fa_action_t action)
 
 
 
-static inline void destroy_get(fa_action_t action2)
+static inline void destroy_get(fa_action_t action)
 {
-    action_t action = new_action(get_action);
+    //action_t action = new_action(get_action);
     fa_mark_used(action);
     // get_get(action, channel)    = get_get(action2, channel);
     // get_get(action, function)   = get_get(action2, function);
     // get_get(action, data)       = get_get(action2, data);
 }
-static inline void destroy_set(fa_action_t action2)
+static inline void destroy_set(fa_action_t action)
 {
-    action_t action = new_action(set_action);
+	// Nothing to free, only int and double used
     fa_mark_used(action);
-    // set_get(action, channel) = set_get(action2, channel);
-    // set_get(action, value)   = set_get(action2, value);
 }
-static inline void destroy_accum(fa_action_t action2)
+static inline void destroy_accum(fa_action_t action)
 {
-    action_t action = new_action(accum_action);
+    //action_t action = new_action(accum_action);
     fa_mark_used(action);
     // accum_get(action, channel)  = accum_get(action2, channel);
     // accum_get(action, function) = accum_get(action2, function);
     // accum_get(action, data)     = accum_get(action2, data);
 }
-static inline void destroy_send(fa_action_t action2)
+static inline void destroy_send(fa_action_t action)
 {
-    action_t action = new_action(send_action);
-    fa_mark_used(action);
-    // send_get(action, name)  = send_get(action2, name);
-    // send_get(action, value) = fa_copy(send_get(action2, value));
+    fa_destroy(send_get(action, name));
+    fa_destroy(send_get(action, value));
 }
-static inline void destroy_do(fa_action_t action2)
+static inline void destroy_do(fa_action_t action)
 {
-    action_t action = new_action(do_action);
+    //action_t action = new_action(do_action);
     fa_mark_used(action);
     // do_get(action, function)            = do_get(action2, function);
     // do_get(action, function_with_time)  = do_get(action2, function_with_time);
     // do_get(action, data)                = do_get(action2, data);
 }
-static inline void destroy_compound(fa_action_t action2)
+static inline void destroy_compound(fa_action_t action)
 {
-    action_t action = new_action(compound_action);
-    fa_mark_used(action); // TODO need deep destroy
-    // compound_get(action, function)  = compound_get(action2, function);
+	fa_ptr_t data = compound_get(action, data);
+	if (data) {
+		fa_destroy(fa_pair_first(data));
+		{
+			fa_ptr_t second = fa_pair_second(data);
+			if (second) {
+				fa_destroy(fa_pair_second(data));
+			}
+		}
+		fa_destroy(data);
+	}
     // compound_get(action, data)      = compound_get(action2, data);
 }
 
@@ -300,24 +304,30 @@ void fa_action_destroy(fa_action_t action)
     switch (action->tag) {
     case get_action:
         destroy_get(action);
+		break;
 
     case set_action:
         destroy_set(action);
+		break;
 
     case accum_action:
         destroy_accum(action);
+		break;
 
     case send_action:
         destroy_send(action);
+		break;
 
     case do_action:
         destroy_do(action);
+		break;
 
     case compound_action:
         destroy_compound(action);
+		break;
 
     default:
-        assert(false);
+        assert(false && "unknown action type in fa_action_destroy");
     }
 
     delete_action(action);

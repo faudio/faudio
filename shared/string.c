@@ -121,7 +121,7 @@ fa_string_t fa_string_dappend(fa_string_t str1,
 
     memcpy(str1->data + oldSize, str2->data, str2->size * kStandardCodeSize);
 
-    fa_free(str2);
+    fa_destroy(str2);
     return str1;
 }
 
@@ -388,6 +388,14 @@ fa_string_t fa_string_show(fa_ptr_t a)
 {
     assert(fa_interface(fa_string_show_i, a) && "Must implement Show");
     return ((fa_string_show_t *) fa_interface(fa_string_show_i, a))->show(a);
+}
+
+fa_string_t fa_string_dshow(fa_ptr_t a)
+{
+    assert(fa_interface(fa_string_show_i, a) && "Must implement Show");
+	fa_string_t result = ((fa_string_show_t *) fa_interface(fa_string_show_i, a))->show(a);
+	fa_destroy(a);
+	return result;
 }
 
 fa_string_t fa_string_to_string(fa_ptr_t a)

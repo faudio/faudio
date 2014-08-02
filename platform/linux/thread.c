@@ -69,9 +69,9 @@ fa_thread_t fa_thread_create(fa_nullary_t func, fa_ptr_t data)
     return thread;
 }
 
-void fa_thread_sleep(fa_time_milliseconds_t s)
+void fa_thread_sleep(fa_time_milliseconds_t ms)
 {
-    usleep(s * 1000);
+    usleep(ms * 1000);
 }
 
 void fa_thread_join(fa_thread_t thread)

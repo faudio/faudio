@@ -439,7 +439,7 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 
     case input_signal:
         return fa_pair_create(
-                   concat(
+                   dconcat(
                        fa_string("input "),
                        input_get(signal, proc)
                        ? fa_string_format_integral("%lu@", (long) input_get(signal, proc))
@@ -449,8 +449,8 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 
     case output_signal:
         return fa_pair_create(
-                   concat(
-                       concat(
+                   dconcat(
+                       dconcat(
                            fa_string("output "),
                            output_get(signal, proc)
                            ? fa_string_format_integral("%lu@", (long) output_get(signal, proc))
@@ -474,22 +474,23 @@ fa_string_t draw_tree(fa_pair_t value, fa_string_t indent, bool is_last, fa_stri
     fa_ptr_t  label    = fa_pair_first(value);
     fa_list_t children = fa_pair_second(value);
 
-    fa_write_string(result, indent);
+    fa_dwrite_string(result, fa_copy(indent));
 
     if (is_last) {
-        fa_write_string(result, fa_string("`- "));
-        fa_write_string(indent, fa_string("   "));
+        fa_dwrite_string(result, fa_string("`- "));
+        fa_dwrite_string(indent, fa_string("   "));
     } else {
-        fa_write_string(result, fa_string("+- "));
-        fa_write_string(indent, fa_string("|  "));
+        fa_dwrite_string(result, fa_string("+- "));
+        fa_dwrite_string(indent, fa_string("|  "));
     }
 
-    fa_write_string(result, fa_string_to_string(label));
-    fa_write_string(result, fa_string("\n"));
+    fa_dwrite_string(result, fa_string_to_string(label));
+    fa_dwrite_string(result, fa_string("\n"));
 
     fa_for_each_last(x, children, last) {
-        result = draw_tree(x, indent, last, result);
+        result = draw_tree(x, fa_copy(indent), last, result);
     }
+	fa_destroy(indent);
     return result;
 }
 
@@ -2325,6 +2326,7 @@ fa_ptr_t signal_absolute(fa_ptr_t a)
 
 fa_string_t signal_show(fa_ptr_t a)
 {
+	//return fa_string("TREE");
     return fa_signal_draw_tree(fa_signal_to_tree(fa_signal_simplify(a)));
 }
 

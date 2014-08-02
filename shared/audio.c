@@ -658,12 +658,12 @@ fa_string_t fa_audio_host_name(device_t device)
 fa_string_t fa_audio_full_name(device_t device)
 {
     fa_string_t str = fa_string("");
-    fa_write_string(str, fa_audio_host_name(device));
-    fa_write_string(str, fa_string(" "));
-    fa_write_string(str, fa_string_format_integral("[%d/", fa_audio_input_channels(device)));
-    fa_write_string(str, fa_string_format_integral("%d]", fa_audio_output_channels(device)));
-    fa_write_string(str, fa_string(" "));
-    fa_write_string(str, fa_audio_name(device));
+    fa_dwrite_string(str, fa_audio_host_name(device));
+    fa_dwrite_string(str, fa_string(" "));
+    fa_dwrite_string(str, fa_string_format_integral("[%d/", fa_audio_input_channels(device)));
+    fa_dwrite_string(str, fa_string_format_integral("%d]", fa_audio_output_channels(device)));
+    fa_dwrite_string(str, fa_string(" "));
+    fa_dwrite_string(str, fa_audio_name(device));
     return str;
 }
 
@@ -729,18 +729,22 @@ fa_pair_t fa_audio_recommended_latency(fa_audio_device_t device)
 
 
 // --------------------------------------------------------------------------------
+// TODO: fix memory leak originating from the recursive nature of the range pair
 
 inline static
-fa_string_t show_range(fa_pair_t x)
+fa_string_t dshow_range(fa_pair_t x)
 {
     fa_string_t str = fa_string("");
     fa_unpair(x, a, b) {
-        fa_write_string(str, fa_string("("));
-        fa_write_string(str, fa_string_show(a));
-        fa_write_string(str, fa_string(","));
-        fa_write_string(str, fa_string_show(b));
-        fa_write_string(str, fa_string(")"));
+        fa_dwrite_string(str, fa_string("("));
+        fa_dwrite_string(str, fa_string_show(a));
+        fa_dwrite_string(str, fa_string(","));
+        fa_dwrite_string(str, fa_string_show(b));
+        fa_dwrite_string(str, fa_string(")"));
+		fa_destroy(a);
+		fa_destroy(b);
     }
+	fa_destroy(x);
     return str;
 }
 
@@ -764,13 +768,15 @@ void print_audio_info(device_t input, device_t output)
     fa_inform(fa_string_dappend(fa_string("    Input: "), input ? fa_audio_full_name(input) : fa_string("N/A")));
 
     if (input) {
-        fa_inform(fa_string_dappend(fa_string("        Default Latency: "), show_range(fa_pair_first(fa_audio_recommended_latency(input)))));
+        fa_inform(fa_string_dappend(fa_string("        Default Latency: "),
+									dshow_range(fa_pair_first(fa_audio_recommended_latency(input)))));
     }
 
     fa_inform(fa_string_dappend(fa_string("    Output: "), output ? fa_audio_full_name(output) : fa_string("N/A")));
 
     if (output) {
-        fa_inform(fa_string_dappend(fa_string("        Default Latency: "), show_range(fa_pair_first(fa_audio_recommended_latency(output)))));
+        fa_inform(fa_string_dappend(fa_string("        Default Latency: "),
+									dshow_range(fa_pair_first(fa_audio_recommended_latency(output)))));
     }
 
     fa_let(session, input ? input->session : output->session) {

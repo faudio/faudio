@@ -108,6 +108,18 @@ void fa_log_warning(fa_string_t string);
 */
 void fa_log_error(fa_string_t string);
 
+/** Write an informative message to the log and destroy the argument.
+*/
+void fa_dlog_info(fa_string_t string);
+
+/** Write a warning to the log and destroy the argument.
+*/
+void fa_dlog_warning(fa_string_t string);
+
+/** Write an error to the log and destroy the argument.
+*/
+void fa_dlog_error(fa_string_t string);
+
 /** Write an informative message to the log.
 */
 void fa_log_info_from(fa_string_t string, fa_string_t string_);
@@ -119,6 +131,11 @@ void fa_log_warning_from(fa_string_t string, fa_string_t string_);
 /** Write an error to the log.
 */
 void fa_log_error_from(fa_string_t string, fa_string_t string_);
+
+/** Write the number of allocated regions to the log.
+*/
+void fa_log_region_count();
+
 
 /** @}
     @}

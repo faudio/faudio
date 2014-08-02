@@ -12,7 +12,7 @@
 
 struct _fa_time_t {
     fa_impl_t       impl;       //  Interface dispatcher
-    double          dvalue;      // Value in seconds
+    double          dvalue;     //  Value in seconds
 };
 
 double to_double(fa_ratio_t x);
@@ -43,7 +43,9 @@ inline static void delete_time(fa_time_t time)
 fa_time_t fa_time_create(int32_t days, int32_t hours, int32_t minutes, fa_ratio_t seconds)
 {
     double whole = days * (60 * 60 * 24) + hours * (60 * 60) + minutes * 60;
-    return new_time(whole + to_double(seconds));
+	double fraction = to_double(seconds);
+	fa_destroy(seconds);
+    return new_time(whole + fraction);
 }
 
 fa_time_t fa_time_copy(fa_time_t time)
@@ -61,7 +63,7 @@ void fa_time_destroy(fa_time_t time)
 
 fa_ratio_t fa_time_divisions(fa_time_t time)
 {
-    return from_double(time->dvalue);
+    return from_double(time->dvalue - trunc(time->dvalue));
 }
 
 int32_t fa_time_seconds(fa_time_t time)

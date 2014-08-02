@@ -62,12 +62,18 @@ static fa_clock_t new_standard_clock()
     c->origin.time         = raw_time();
 
     return (fa_clock_t) c;
+	return NULL;
 }
 
-// inline static void delete_standard_clock(standard_fa_clock_t standard_clock)
-// {
-//     fa_delete(standard_clock);
-// }
+inline static void delete_standard_clock(fa_ptr_t standard_clock)
+{
+	assert(standard_clock && "Attempting to destroy a NULL standard clock");
+	standard_fa_clock_t clock = (standard_fa_clock_t) standard_clock;
+	
+	if (clock->origin.time) 
+		fa_delete(clock->origin.time);
+	fa_delete(standard_clock);
+}
 
 // --------------------------------------------------------------------------------
 
@@ -80,6 +86,11 @@ void fa_clock_initialize()
 void fa_clock_terminate()
 {
     mach_port_deallocate(mach_task_self(), gMachClock);
+	fa_clock_t clock = kStandardClock;
+	if (clock) {
+		kStandardClock = NULL;
+		delete_standard_clock(clock);
+	}
 }
 
 // --------------------------------------------------------------------------------

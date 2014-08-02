@@ -122,11 +122,13 @@ void fa_log_info(fa_string_t);
 void fa_log_warning(fa_string_t);
 void fa_log_error(fa_string_t);
 void fa_dlog_info(fa_string_t);
+void fa_dlog_warning(fa_string_t);
+void fa_dlog_error(fa_string_t);
 
-#define fa_inform(s)           fa_log_info(s)
+#define fa_inform(s)           fa_dlog_info(s)
 // #define fa_dinform(s)          fa_dlog_info(s)
-#define fa_warn(s)             fa_log_warning(s)
-#define fa_fail(s)             fa_log_error(s)
+#define fa_warn(s)             fa_dlog_warning(s)
+#define fa_fail(s)             fa_dlog_error(s)
 // #define fa_log_error(e)        fa_error_log(NULL,e)
 
 #define fa_tb                  fa_to_bool

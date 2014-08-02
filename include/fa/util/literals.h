@@ -44,5 +44,14 @@ fa_map_t fa_map(int count, ...);
 #define concat5(a,b,c,d,e)                  concat2(a,concat4(b,c,d,e))
 #define concat(...) VARARG(concat, __VA_ARGS__)
 
+#define dconcat0()							fa_string_empty()
+#define dconcat1(a)							a
+#define dconcat2(a,b)                       fa_string_dappend(a,b)
+#define dconcat3(a,b,c)                     dconcat2(a,dconcat2(b,c))
+#define dconcat4(a,b,c,d)                   dconcat2(a,dconcat3(b,c,d))
+#define dconcat5(a,b,c,d,e)                 dconcat2(a,dconcat4(b,c,d,e))
+#define dconcat(...) VARARG(dconcat, __VA_ARGS__)
+
+
 #endif // _FA_UTIL_LITERALS
 

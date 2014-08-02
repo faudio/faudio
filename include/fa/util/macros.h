@@ -147,6 +147,9 @@
 
 #define fa_write_string(s, t) \
     s = fa_string_append(s, t)
+									 
+#define fa_dwrite_string(s, t) \
+	s = fa_string_dappend(s, t);
 
 /** Execute following statement while locking on the given mutex.
 

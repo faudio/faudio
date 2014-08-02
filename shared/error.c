@@ -37,7 +37,7 @@ fa_error_t fa_error_create_simple(
     e->impl     = &simple_error_impl;
     e->severity = severity;
     e->message  = fa_copy(message);
-    e->origin   = fa_copy(origin);
+    e->origin   = origin ? fa_copy(origin) : NULL;
     return (fa_error_t) e;
 }
 
@@ -48,14 +48,15 @@ fa_error_t fa_error_copy_simple(simple_fa_error_t simple)
     e->impl     = &simple_error_impl;
     e->severity = simple->severity;
     e->message  = fa_copy(simple->message);
-    e->origin   = fa_copy(simple->origin);
+    e->origin   = simple->origin ? fa_copy(simple->origin) : NULL;
     return (fa_error_t) e;
 }
 
 void fa_error_destroy_simple(simple_fa_error_t simple)
 {
     fa_destroy(simple->message);
-    fa_destroy(simple->origin);
+    if (simple->origin)
+		fa_destroy(simple->origin);
     fa_delete(simple);
 }
 
@@ -97,47 +98,32 @@ fa_string_t fa_error_format(bool colored, fa_error_t a)
     simple_fa_error_t simple = (simple_fa_error_t) a;
     fa_string_t str = fa_string("");
 
-    fa_string_t strs[12] = {
-        fa_string("[INFO]    "),
-        fa_string("[WARNING] "),
-        fa_string("[ERROR]   "),
-        fa_string("[MISC]    "),
-        fa_string(""),
-        fa_string(": "),
-
-        fa_string("\x1b[32m[INFO]\x1b[0m    "),
-        fa_string("\x1b[33m[WARNING]\x1b[0m "),
-        fa_string("\x1b[31m[ERROR]\x1b[0m   "),
-        fa_string("\x1b[35m[MISC]\x1b[0m    "),
-        fa_string("\x1b[36m"),
-        fa_string(":\x1b[0m ")
-    };
-
     switch (simple->severity) {
     case info:
-        str = fa_string_dappend(str, strs[0 + colored * 6]);
+        str = fa_string_dappend(str, colored ? fa_string("\x1b[32m[INFO]\x1b[0m    ") : fa_string("[INFO]    "));
         break;
 
     case warning:
-        str = fa_string_dappend(str, strs[1 + colored * 6]);
+        str = fa_string_dappend(str, colored ? fa_string("\x1b[33m[WARNING]\x1b[0m ") : fa_string("[WARNING] "));
         break;
 
     case error:
-        str = fa_string_dappend(str, strs[2 + colored * 6]);
+        str = fa_string_dappend(str, colored ? fa_string("\x1b[31m[ERROR]\x1b[0m   ") : fa_string("[ERROR]   "));
         break;
 
     case misc:
-        str = fa_string_dappend(str, strs[3 + colored * 6]);
+        str = fa_string_dappend(str, colored ? fa_string("\x1b[35m[MISC]\x1b[0m    ") : fa_string("[MISC]    "));
         break;
 
     default:
         assert(false && "Missing label");
     }
 
-    if (fa_string_length(simple->origin) > 0) {
-        str = fa_string_dappend(str, strs[4 + colored * 6]);
+    if (simple->origin && (fa_string_length(simple->origin) > 0)) {
+        if (colored)
+			str = fa_string_dappend(str, fa_string("\x1b[36m"));
         str = fa_string_dappend(str, fa_copy(simple->origin));
-        str = fa_string_dappend(str, strs[5 + colored * 6]);
+        str = fa_string_dappend(str, colored ? fa_string(":\x1b[0m ") : fa_string(": "));
     }
 
     str = fa_string_dappend(str, fa_copy(simple->message));
@@ -202,7 +188,7 @@ fa_string_t simple_error_show(fa_ptr_t a)
         assert(false && "Missing label");
     }
 
-    if (fa_string_length(simple->origin) > 0) {
+    if (simple->origin && (fa_string_length(simple->origin) > 0)) {
         result = fa_string_dappend(result, fa_copy(simple->origin));
         result = fa_string_dappend(result, fa_string(": "));
     }
