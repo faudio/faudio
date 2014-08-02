@@ -191,37 +191,37 @@ double fa_peek_double(fa_ptr_t ptr);
 fa_ptr_t fa_from_bool(bool bool_);
 
 /** Create a new referece to a @int8_t@ value.
-    The returned reference must be destroyed by the callerler.
+    The returned reference must be destroyed by the caller.
     @see [Value references](@ref ValueReferences) 
 */
 fa_ptr_t fa_from_int8(int8_t int8_);
 
 /** Create a new referece to a @int16_t@ value.
-    The returned reference must be destroyed by the callerlerler.
+    The returned reference must be destroyed by the caller.
     @see [Value references](@ref ValueReferences) 
 */
 fa_ptr_t fa_from_int16(int16_t int16_);
 
 /** Create a new referece to a @int32_t@ value.
-    The returned reference must be destroyed by the callerlerlerler.
+    The returned reference must be destroyed by the caller.
     @see [Value references](@ref ValueReferences) 
 */
 fa_ptr_t fa_from_int32(int32_t int32_);
 
 /** Create a new referece to a @int64_t@ value.
-    The returned reference must be destroyed by the callerlerlerlerler.
+    The returned reference must be destroyed by the caller.
     @see [Value references](@ref ValueReferences) 
 */
 fa_ptr_t fa_from_int64(int64_t int64_);
 
 /** Create a new referece to a @float@ value.
-    The returned reference must be destroyed by the callerlerlerlerlerler.
+    The returned reference must be destroyed by the caller.
     @see [Value references](@ref ValueReferences) 
 */
 fa_ptr_t fa_from_float(float float_);
 
 /** Create a new referece to a @double@ value.
-    The returned reference must be destroyeded by the callerlerlerlerlerlerler.
+    The returned reference must be destroyeded by the caller.
     @see [Value references](@ref ValueReferences) 
 */
 fa_ptr_t fa_from_double(double double_);
