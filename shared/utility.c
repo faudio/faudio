@@ -229,7 +229,7 @@ void fa_set_log_file(fa_string_t path)
     char *cpath = fa_string_to_utf8(path);
     gLogData  = fopen(cpath, "a");
     gLogFunc  = stdlog;
-    free(cpath);
+    fa_free(cpath);
 }
 
 void fa_set_log_std()
@@ -317,8 +317,9 @@ void fa_log_error_from(fa_string_t msg, fa_string_t origin)
 
 void fa_log_region_count()
 {
+	long count = gRegionCount;
     fa_dlog_info(fa_string_dappend(fa_string("Regions allocated: "),
-                                   fa_string_dshow(fa_i32(gRegionCount))));
-	printf("Actually: %ld\n", gRegionCount);
+                                   fa_string_dshow(fa_i32(count))));
+	//printf("Actually: %ld\n", gRegionCount);
 }
 

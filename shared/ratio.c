@@ -302,10 +302,11 @@ fa_string_t ratio_show(fa_ptr_t a)
 	if (b->num == 0) {
 		return fa_string("0");
 	}
-	fa_string_t s = fa_string("");
+	fa_string_t s = fa_string("<");
     s = fa_string_dappend(s, fa_string_dshow(fa_i32(b->num)));
 	s = fa_string_dappend(s, fa_string("/"));
     s = fa_string_dappend(s, fa_string_dshow(fa_i32(b->denom)));
+	s = fa_string_dappend(s, fa_string(">"));
     return s;
 }
 
