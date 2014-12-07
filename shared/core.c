@@ -86,7 +86,14 @@ bool fa_is_ref(fa_ptr_t x)
 // Wrapper functions
 // --------------------------------------------------------------------------------
 
-bool fa_to_bool(fa_ptr_t a)
+bool fa_peek_bool(fa_ptr_t a)
+{
+    intptr_t p = (intptr_t) a;
+    assert((p & 0x7) == 0x7 && "Wrong type, expected bool");
+    return (p & ~0x7) >> 24;
+}
+
+bool fa_to_bool(fa_ptr_t a)  // Identical to peek, since bool does not alloc
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x7 && "Wrong type, expected bool");
@@ -100,21 +107,35 @@ fa_ptr_t fa_from_bool(bool a)
 
 // --------------------------------------------------------------------------------
 
-int8_t fa_to_int8(fa_ptr_t a)
+int8_t fa_peek_int8(fa_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x6 && "Wrong type, expected int8");
     return (p & ~0x7) >> 24;
 }
 
-fa_ptr_t fa_from_int8(int8_t a)
+int8_t fa_to_int8(fa_ptr_t a)  // Identical to peek, since int8 does not alloc
+{
+    intptr_t p = (intptr_t) a;
+    assert((p & 0x7) == 0x6 && "Wrong type, expected int8");
+    return (p & ~0x7) >> 24;
+}
+
+fa_ptr_t fa_from_int8(int8_t a) // Only typecast
 {
     return (fa_ptr_t)(((intptr_t) a << 24 & ~0x7) | 0x6);
 }
 
 // --------------------------------------------------------------------------------
 
-int16_t fa_to_int16(fa_ptr_t a)
+int16_t fa_peek_int16(fa_ptr_t a)
+{
+    intptr_t p = (intptr_t) a;
+    assert((p & 0x7) == 0x5 && "Wrong type, expected int16");
+    return (p & ~0x7) >> 8;
+}
+
+int16_t fa_to_int16(fa_ptr_t a)  // Identical to peek, since int16 does not alloc
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x5 && "Wrong type, expected int16");
