@@ -165,7 +165,6 @@ fa_string_t fa_string_show(fa_ptr_t ptr);
 */
 fa_string_t fa_string_dshow(fa_ptr_t ptr);
 
-
 /** Behaves like the identity function on strings and as [show](@ref fa_string_show)
     on all other value.
     @see [Show](@ref fa_string_show_t)
@@ -253,7 +252,7 @@ fa_string_t fa_string_from_utf16(fa_string_utf16_t utf16);
 */
 fa_string_t fa_string_from_native(fa_ptr_t ptr);
 
-/** Return true if the given string matches the given regular expression.
+/** Return true iff the given string matches the given regular expression.
     @param expr   A regular expression string.
     @param string String to match.
 */

@@ -135,6 +135,15 @@ module Fa.String
             A new string.
      */
     show : Ptr -> String;
+	
+    /** Generic destructive string conversion.
+
+        @param value
+            Value to convert. The value is destroyed.
+        @return
+            A new string.
+     */
+    dshow : Ptr -> String;
     
     /** Behaves like the identity function on strings and as [show](@ref fa_string_show)
         on all other value.

@@ -103,7 +103,7 @@
 // #define stime               fa_signal_time
 // #define srandom             fa_signal_random
 #define fa_constant            fa_signal_constant
-#define fa_impulse            fa_signal_impulse
+#define fa_impulse             fa_signal_impulse
 #define fa_line                fa_signal_line
 #define fa_delay               fa_signal_delay
 #define fa_loop                fa_signal_loop
