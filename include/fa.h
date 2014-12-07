@@ -221,7 +221,7 @@ fa_ptr_t fa_from_int64(int64_t int64_);
 fa_ptr_t fa_from_float(float float_);
 
 /** Create a new referece to a @double@ value.
-    The returned reference must be destroyeded by the caller.
+    The returned reference must be destroyed by the caller.
     @see [Value references](@ref ValueReferences) 
 */
 fa_ptr_t fa_from_double(double double_);

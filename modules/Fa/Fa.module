@@ -100,6 +100,18 @@ module "transient" Fa.Utility
     /** Write an error to the log.
      */
     logError : (String) -> Void;
+	
+	/** Write an informative message to the log and destroy the argument.
+	*/
+	dlogInfo : (String) -> Void;
+
+	/** Write a warning to the log and destroy the argument.
+	*/
+	dlogWarning : (String) -> Void;
+
+	/** Write an error to the log and destroy the argument.
+	*/
+	dlogError : (String) -> Void;	
 
     /** Write an informative message to the log.
      */
@@ -112,5 +124,9 @@ module "transient" Fa.Utility
     /** Write an error to the log.
      */
     logErrorFrom : (String,String) -> Void;
+	
+	/** Write the number of allocated regions to the log.
+	 */
+	logRegionCount : () -> Void;
 }
 
