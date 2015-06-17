@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pushd external/portaudio;
+pushd external/libogg;
 rm -rf result;
 pushd source;
 make distclean;

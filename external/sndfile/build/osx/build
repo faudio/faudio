@@ -4,10 +4,12 @@ git submodule update external/sndfile/source;
 
 pushd external/sndfile/source;
 
-CFLAGS="-arch i386 -I /Developer/SDKs/MacOSX10.7.sdk/Developer/Headers/FlatCarbon/" \
-CXXFLAGS="-arch i386" \
-LDFLAGS="-arch i386" \
+CFLAGS="-arch x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/Carbon.framework/Headers/" \
+CXXFLAGS="-arch x86_64" \
+LDFLAGS="-arch x86_64" \
 ./configure \
     --prefix=`pwd`/../result \
+    --build=x86_64-apple-darwin \
+    --disable-external-libs \
 		&& make install;
 popd;
