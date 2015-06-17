@@ -31,7 +31,7 @@ VstIntPtr VSTCALLBACK hostCallback(
     AEffect *effect, 
     VstInt32 opcode,
     VstInt32 index, 
-    VstInt32 value, 
+    VstIntPtr value, 
     void *ptr, 
     float opt
     );
@@ -43,7 +43,7 @@ typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
 
 // Plugin's dispatcher function
 typedef VstIntPtr (*dispatcherFuncPtr)(AEffect *effect, VstInt32 opCode,
-  VstInt32 index, VstInt32 value, void *ptr, float opt);
+  VstInt32 index, VstIntPtr value, void *ptr, float opt);
 
 // Plugin's getParameter() method
 typedef float (*getParameterFuncPtr)(AEffect *effect, VstInt32 index);
@@ -67,7 +67,7 @@ VstIntPtr VSTCALLBACK hostCallback(
     AEffect *effect, 
     VstInt32 opcode,
     VstInt32 index, 
-    VstInt32 value, 
+    VstIntPtr value, 
     void *ptr, 
     float opt
     )
