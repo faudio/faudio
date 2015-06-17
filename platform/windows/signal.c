@@ -85,10 +85,14 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
     // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
 
-    // TODO
     if (fa_equal(n, fa_string("fluid"))) {
+
         if (!fa_midi_message_is_simple(msg)) {
-            fa_warn(fa_string("Unknown message to Fluidsynth (not a MIDI message)"));
+			//fa_warn(fa_string("SYSEX message to Fluidsynth"));
+			if (FLUID_OK != fluid_synth_sysex(synth, msg->sysex->data, msg->sysex->size, NULL, 0, NULL, 0)) {
+				fa_warn(fa_string("Fluidsynth: Could not send SYSEX message"));
+			}
+			
         } else {
 
 
