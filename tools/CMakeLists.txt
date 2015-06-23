@@ -20,6 +20,8 @@ endfunction()
 
 add_tool2("" faudio c)
 
+add_tool(erik)
+add_tool(server)
 add_tool(list_audio)
 add_tool(list_midi)
 add_tool(plug_midi)
