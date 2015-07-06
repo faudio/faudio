@@ -58,9 +58,17 @@ void fa_pair_write(fa_pair_struct_t *, fa_pair_t pair);
 */
 fa_pair_t fa_pair_copy(fa_pair_t pair);
 
+/** Deep copy the given pair.
+*/
+fa_pair_t fa_pair_deep_copy(fa_pair_t pair);
+
 /** Destroy the given pair.
 */
 void fa_pair_destroy(fa_pair_t pair);
+
+/** Destroy the given pair and its contained values.
+*/
+void fa_pair_deep_destroy(fa_pair_t pair, fa_deep_destroy_pred_t pred);
 
 /** Get the first and second components of the given pair.
 */
@@ -93,6 +101,9 @@ fa_pair_t fa_pair_unassoc(fa_pair_t pair);
 /** Convert a pair to a list of two elements.
 */
 fa_list_t fa_pair_to_list(fa_pair_t pair);
+
+
+void fa_log_pair_count();
 
 /** @}
     @}

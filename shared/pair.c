@@ -2,7 +2,7 @@
 /*
     faudio
 
-    Copyright (c) DoReMIR Music Research 2012-2013
+    Copyright (c) DoReMIR Music Research 2012-2015
     All rights reserved.
 
  */
@@ -16,6 +16,8 @@ struct _fa_pair_t {
     fa_ptr_t       values[2];
 };
 
+static int gPairCount = 0;
+
 // -----------------------------------------------------------------------------
 
 fa_pair_t new_pair(fa_ptr_t first, fa_ptr_t second)
@@ -26,11 +28,13 @@ fa_pair_t new_pair(fa_ptr_t first, fa_ptr_t second)
     pair->impl = &pair_impl;
     pair->values[0]  = first;
     pair->values[1]  = second;
+    gPairCount++;
     return pair;
 }
 
 void delete_pair(fa_pair_t p)
 {
+    gPairCount--;
     fa_delete(p);
 }
 
@@ -64,8 +68,26 @@ fa_pair_t fa_pair_copy(fa_pair_t pair)
     return new_pair(pair->values[0], pair->values[1]);
 }
 
+fa_pair_t fa_pair_deep_copy(fa_pair_t pair)
+{
+    return new_pair(fa_deep_copy(pair->values[0]), fa_deep_copy(pair->values[1]));
+}
+
 void fa_pair_destroy(fa_pair_t pair)
 {
+    delete_pair(pair);
+}
+
+void fa_pair_deep_destroy(fa_pair_t pair, fa_deep_destroy_pred_t pred)
+{
+    if (!pred(pair)) return;
+    fa_ptr_t a = pair->values[0];
+    fa_ptr_t b = pair->values[1];
+    //fa_dlog_info(fa_dappend(fa_string("  destroying pair 1 "), fa_string_show(pair)));
+    if (a) fa_deep_destroy(a, pred);
+    //fa_dlog_info(fa_string("  destroying pair 2"));
+    if (b) fa_deep_destroy(b, pred);
+    //fa_dlog_info(fa_string("  destroying pair 3"));
     delete_pair(pair);
 }
 
@@ -195,9 +217,19 @@ fa_ptr_t pair_copy(fa_ptr_t a)
     return fa_pair_copy(a);
 }
 
+fa_ptr_t pair_deep_copy(fa_ptr_t a)
+{
+    return fa_pair_deep_copy(a);
+}
+
 void pair_destroy(fa_ptr_t a)
 {
     fa_pair_destroy(a);
+}
+
+void pair_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    fa_pair_deep_destroy(a, p);
 }
 
 fa_dynamic_type_repr_t pair_get_type(fa_ptr_t a)
@@ -210,8 +242,8 @@ fa_ptr_t pair_impl(fa_id_t interface)
     static fa_equal_t pair_equal_impl = { pair_equal };
     static fa_order_t pair_order_impl = { pair_less_than, pair_greater_than };
     static fa_string_show_t pair_show_impl = { pair_show };
-    static fa_copy_t pair_copy_impl = { pair_copy };
-    static fa_destroy_t pair_destroy_impl = { pair_destroy };
+    static fa_copy_t pair_copy_impl = { pair_copy, pair_deep_copy };
+    static fa_destroy_t pair_destroy_impl = { pair_destroy, pair_deep_destroy };
     static fa_dynamic_t pair_dynamic_impl = { pair_get_type };
 
     switch (interface) {
@@ -238,3 +270,7 @@ fa_ptr_t pair_impl(fa_id_t interface)
     }
 }
 
+void fa_log_pair_count()
+{
+  fa_dlog_info(fa_string_dappend(fa_string("Pairs allocated: "), fa_string_dshow(fa_i32(gPairCount))));
+}

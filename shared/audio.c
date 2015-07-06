@@ -1049,18 +1049,18 @@ void fa_audio_schedule(fa_time_t time,
 }
 
 void fa_audio_schedule_relative(fa_time_t         time,
-                                fa_action_t        action,
-                                fa_audio_stream_t  stream)
+                                fa_action_t       action,
+                                fa_audio_stream_t stream)
 {
     /* This optimization should really only be used when we have a non-compound, non-do action.
        TODO find a way to test this and restore it if needed.
      */
-    // if (fa_equal(time, fa_seconds(0)) && !fa_action_is_compound(action)) {
-    //     fa_atomic_queue_write(stream->short_controls, action);
-    // } else {
+    if (fa_time_is_zero(time) && !fa_action_is_compound(action) && !fa_action_is_do(action)) {
+         fa_atomic_queue_write(stream->short_controls, action);
+    } else {
         fa_time_t now = fa_clock_time(fa_audio_stream_clock(stream));
-        fa_audio_schedule(fa_add(now, time), action, stream);
-    // }
+        fa_audio_schedule(fa_dadd(now, time), action, stream);
+    }
 }
 
 
@@ -1093,7 +1093,7 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
                     // FIXME assure that this copying can not happen after stream has been
                     // stopped
                     fa_string_t name2 = fa_copy(name);
-                    fa_ptr_t    value2 = fa_copy(value);
+                    fa_ptr_t   value2 = fa_copy(value);
                     // fa_inform(fa_string_show(fa_pair_create(name2, value2)));
 
                     for (int j = 0; j < n; ++j) {

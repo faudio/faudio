@@ -334,13 +334,17 @@ fa_ptr_t fa_dabsolute(fa_ptr_t ptr);
 */
 typedef struct {
             fa_ptr_t (* copy)(fa_ptr_t);
+            fa_ptr_t (* deep_copy)(fa_ptr_t);
         } fa_copy_t;
+        
 
 /** Generic destruction interface.
     
 */
+typedef bool (* fa_deep_destroy_pred_t)(fa_ptr_t);
 typedef struct {
             void (* destroy)(fa_ptr_t);
+            void (* deep_destroy)(fa_ptr_t, fa_deep_destroy_pred_t);
         } fa_destroy_t;
 
 /** Copy the given value.
@@ -348,6 +352,12 @@ typedef struct {
       
 */
 fa_ptr_t fa_copy(fa_ptr_t ptr);
+
+/** Deep copy the given value.
+    @see [Copy](@ref fa_deep_t)
+      
+*/
+fa_ptr_t fa_deep_copy(fa_ptr_t ptr);
 
 /** Move the given value. This is the identity function,
     just serves as a notification.
@@ -361,6 +371,13 @@ fa_ptr_t fa_move(fa_ptr_t ptr);
       
 */
 void fa_destroy(fa_ptr_t ptr);
+
+/** Destroy the given value and contained values (in case of a collection such as a pair or list)
+    @param  Value to destroy (destroyed).
+    @see [Destroy](@ref fa_destroy_t)
+      
+*/
+void fa_deep_destroy(fa_ptr_t ptr, fa_deep_destroy_pred_t pred);
 
 /** Generic append operation interface. 
 */
@@ -415,6 +432,11 @@ void fa_print_ln(fa_ptr_t ptr);
 
 
 void fa_dprint_ln(fa_ptr_t ptr);
+
+
+bool DESTROY_ALWAYS(fa_ptr_t ptr);
+#define fa_deep_destroy_always(a)  fa_deep_destroy(a, DESTROY_ALWAYS)
+
 
 /** @}
     */

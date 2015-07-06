@@ -38,6 +38,7 @@ struct _fa_string_t {
     uint16_t        *data;          // Payload
 };
 
+static int gStringCount = 0;
 
 // --------------------------------------------------------------------------------
 
@@ -54,11 +55,13 @@ fa_string_t new_string(size_t size, uint16_t *data)
     str->size = size;
     str->data = data;
 
+    gStringCount++;
     return str;
 }
 
 void delete_string(fa_string_t str)
 {
+    gStringCount--;
     fa_delete(str);
 }
 
@@ -386,12 +389,14 @@ fa_string_t fa_string_from_utf16(fa_string_utf16_t cstr)
 
 fa_string_t fa_string_show(fa_ptr_t a)
 {
+    if (!a) return fa_string("NULL");
     assert(fa_interface(fa_string_show_i, a) && "Must implement Show");
     return ((fa_string_show_t *) fa_interface(fa_string_show_i, a))->show(a);
 }
 
 fa_string_t fa_string_dshow(fa_ptr_t a)
 {
+    if (!a) return fa_string("NULL");
     assert(fa_interface(fa_string_show_i, a) && "Must implement Show");
 	fa_string_t result = ((fa_string_show_t *) fa_interface(fa_string_show_i, a))->show(a);
 	fa_destroy(a);
@@ -433,15 +438,27 @@ fa_ptr_t jsonify(fa_ptr_t a)
     }
 }
 
-inline static
+//inline static
 fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
 {
+  void fa_log_region_count(char*);
+  printf("beginning of unjsonify\n");
+  fflush(stdout);
+  fa_log_region_count("");
+  
+  if (!a) {
+    return fa_list_empty();
+  }
+  
+  
     switch (json_value_get_type(a)) {
     case JSONError:
         *ok = false;
         return NULL;
 
     case JSONNull:
+        printf("null\n");
+        fflush(stdout);
         return fa_list_empty();
 
     case JSONString:
@@ -454,11 +471,17 @@ fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
         return fa_fb(json_value_get_boolean(a));
 
     case JSONArray: {
+        printf("array\n");
+        fflush(stdout);
         JSON_Array *ar  = json_value_get_array(a);
         size_t sz       = json_array_get_count(ar);
         fa_list_t list     = fa_list_empty();
 
         for (size_t i = sz; i > 0; --i) {
+          printf("in loop\n");
+          fa_log_region_count("");
+          fflush(stdout);
+            
             fa_ptr_t v = unjsonify(json_array_get_value(ar, i - 1), ok);
 
             if (!ok) {
@@ -467,7 +490,9 @@ fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
 
             list = fa_list_dcons(v, list);
         }
-
+        printf("end of array case\n");
+        fflush(stdout);
+        fa_log_region_count("");
         return list;
     }
 
@@ -506,8 +531,36 @@ fa_string_t fa_string_to_json(fa_ptr_t a)
 
 fa_ptr_t fa_string_from_json(fa_string_t string)
 {
+  void fa_log_region_count(char*);
+  printf("fa_string_from_json 1\n");
+  fflush(stdout);
+  fa_log_region_count("");
+  
     bool ok = true;
-    fa_ptr_t result = unjsonify(json_parse_string(fa_unstring(string)), &ok);
+    char* cstring = fa_unstring(string);
+    
+    printf("fa_string_from_json 2\n");
+    fflush(stdout);
+    fa_log_region_count("");
+    
+    JSON_Value *a = json_parse_string(cstring);
+    
+    printf("fa_string_from_json 2.5\n");
+    fflush(stdout);
+    fa_log_region_count("");
+    
+    fa_ptr_t result = unjsonify(a, &ok);
+    
+    json_value_free(a);
+    
+    printf("fa_string_from_json 3\n");
+    fflush(stdout);
+    fa_log_region_count("");
+    
+    fa_free(cstring);
+    printf("fa_string_from_json 4\n");
+    fflush(stdout);
+    fa_log_region_count("");
 
     if (!ok) {
         return (fa_ptr_t) string_error(fa_string("Malformed JSON value."));
@@ -671,9 +724,19 @@ fa_ptr_t string_copy(fa_ptr_t a)
     return fa_string_copy(a);
 }
 
+fa_ptr_t string_deep_copy(fa_ptr_t a)
+{
+    return fa_string_copy(a);
+}
+
 void string_destroy(fa_ptr_t a)
 {
     fa_string_destroy(a);
+}
+
+void string_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    if (p(a)) fa_string_destroy(a);
 }
 
 fa_dynamic_type_repr_t string_get_type(fa_ptr_t a)
@@ -684,9 +747,9 @@ fa_dynamic_type_repr_t string_get_type(fa_ptr_t a)
 fa_ptr_t string_impl(fa_id_t interface)
 {
     static fa_equal_t string_equal_impl = { string_equal };
-    static fa_copy_t string_copy_impl = { string_copy };
+    static fa_copy_t string_copy_impl = { string_copy, string_deep_copy };
     static fa_string_show_t string_show_impl = { string_show };
-    static fa_destroy_t string_destroy_impl = { string_destroy };
+    static fa_destroy_t string_destroy_impl = { string_destroy, string_deep_destroy };
     static fa_order_t string_order_impl = { string_less_than, string_greater_than };
     static fa_dynamic_t string_dynamic_impl = { string_get_type };
     static fa_semigroup_t string_semigroup_impl = { _string_append };
@@ -731,5 +794,9 @@ void string_fatal(char *msg, int error)
 
     fa_log_error_from(fa_string(msg), fa_string("Doremir.String"));
     exit(error);
+}
+
+void fa_log_string_count() {
+    fa_dlog_info(fa_string_dappend(fa_string("Strings allocated: "), fa_string_dshow(fa_i32(gStringCount))));
 }
 

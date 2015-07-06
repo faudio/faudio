@@ -138,7 +138,7 @@ void fa_log_error_from(fa_string_t string, fa_string_t string_);
 /** Write the number of allocated regions to the log.
 	 
 */
-void fa_log_region_count();
+void fa_log_region_count(char*);
 
 /** @}
     @}

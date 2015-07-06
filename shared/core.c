@@ -2,7 +2,7 @@
 /*
     faudio
 
-    Copyright (c) DoReMIR Music Research 2012-2013
+    Copyright (c) DoReMIR Music Research 2012-2015
     All rights reserved.
 
  */
@@ -342,10 +342,12 @@ fa_ptr_t fa_dadd(fa_ptr_t a, fa_ptr_t b)
 }
 
 
-GENERIC1(copy,      copy,           fa_ptr_t, fa_ptr_t);
-GENERIC1(destroy,   destroy,        fa_ptr_t, void);
-GENERIC2(semigroup, append,         fa_ptr_t, fa_ptr_t, fa_ptr_t);
-GENERIC1(monoid,    empty,          fa_ptr_t, fa_ptr_t);
+GENERIC1(copy,       copy,           fa_ptr_t, fa_ptr_t);
+GENERIC1(copy,       deep_copy,      fa_ptr_t, fa_ptr_t);
+GENERIC1(destroy,    destroy,        fa_ptr_t, void);
+GENERIC2(destroy,    deep_destroy,   fa_ptr_t, fa_deep_destroy_pred_t, void);
+GENERIC2(semigroup,  append,         fa_ptr_t, fa_ptr_t, fa_ptr_t);
+GENERIC1(monoid,     empty,          fa_ptr_t, fa_ptr_t);
 
 fa_ptr_t fa_dappend(fa_ptr_t a, fa_ptr_t b)
 {
@@ -467,11 +469,19 @@ bool fa_check(fa_ptr_t a)
     {                                                                               \
         return a;                                                                   \
     }                                                                               \
+    fa_ptr_t T##_deep_copy(fa_ptr_t a)                                              \
+    {                                                                               \
+        return a;                                                                   \
+    }                                                                               \
     fa_dynamic_type_repr_t T##_get_type(fa_ptr_t a)                                 \
     {                                                                               \
         return T##_type_repr_impl;                                                  \
     }                                                                               \
     void T##_destroy(fa_ptr_t a)                                                    \
+    {                                                                               \
+        /* nothing to do */                                                         \
+    }                                                                               \
+    void T##_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)                     \
     {                                                                               \
         /* nothing to do */                                                         \
     }
@@ -513,6 +523,10 @@ bool fa_check(fa_ptr_t a)
     {                                                                               \
         return fa_copy_##T(a);                                                      \
     }                                                                               \
+    fa_ptr_t T##_deep_copy(fa_ptr_t a)                                              \
+    {                                                                               \
+        return fa_copy_##T(a);                                                      \
+    }                                                                               \
     fa_dynamic_type_repr_t T##_get_type(fa_ptr_t a)                                 \
     {                                                                               \
         return T##_type_repr_impl;                                                  \
@@ -520,6 +534,10 @@ bool fa_check(fa_ptr_t a)
     void T##_destroy(fa_ptr_t a)                                                    \
     {                                                                               \
         fa_to_##T(a);                                                               \
+    }                                                                               \
+    void T##_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)                     \
+    {                                                                               \
+        if (p(a)) fa_to_##T(a);                                                     \
     }
 
 #define UNBOXED_SHOW_IMPL(T,F)                                                      \
@@ -556,11 +574,11 @@ bool fa_check(fa_ptr_t a)
         static fa_string_show_t    T##_show_impl    =                               \
             { T##_show };                                                           \
         static fa_copy_t    T##_copy_impl    =                                      \
-            { T##_copy };                                                           \
+            { T##_copy, T##_deep_copy };                                            \
         static fa_dynamic_t T##_dynamic_impl =                                      \
             { T##_get_type };                                                       \
         static fa_destroy_t T##_destroy_impl =                                      \
-            { T##_destroy };                                                        \
+            { T##_destroy, T##_deep_destroy };                                      \
                                                                                     \
         switch (interface)                                                          \
         {                                                                           \

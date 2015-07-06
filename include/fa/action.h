@@ -42,6 +42,8 @@
     @{
     */
 
+
+
 /** The abstract type of actions.
     
 */
@@ -81,9 +83,18 @@ fa_action_t fa_action_null();
 */
 fa_action_t fa_action_copy(fa_action_t action);
 
+/** Copy the given action recursivly.
+*/
+fa_action_t fa_action_deep_copy(fa_action_t action);
+
 /** Destroy the given action.
 */
 void fa_action_destroy(fa_action_t action);
+
+/** Destroy the given action recursivly.
+*/
+void fa_action_deep_destroy(fa_action_t action, fa_deep_destroy_pred_t pred);
+
 
 /** The `get` action reads a single global bus.
 
@@ -141,6 +152,13 @@ fa_action_t fa_action_accum(fa_action_channel_t channel,
 */
 fa_action_t fa_action_send(fa_action_name_t name,
                            fa_action_value_t value);
+
+/* Reference count */
+static inline int fa_action_retain(fa_action_t action);
+
+int fa_action_release(fa_action_t action);
+
+void fa_action_deep_release(fa_action_t action);
 
 /** Return whether the given action is a get action.
       
@@ -283,17 +301,24 @@ bool fa_action_is_simple(fa_action_t action);
 */
 bool fa_action_is_compound(fa_action_t action);
 
-/** Given a compound action, return the minimum offset to its tail.
+/** Returns whether the given action is compound or not.
 */
-fa_time_t fa_action_compound_interval(fa_action_t action);
+bool fa_action_is_do(fa_action_t action);
 
-/** Given a compound action, return its head (nullable).
-*/
-fa_action_t fa_action_compound_first(fa_action_t action);
+// /** Given a compound action, return the minimum offset to its tail.
+// */
+// fa_time_t fa_action_compound_interval(fa_action_t action);
+//
+// /** Given a compound action, return its head (nullable).
+// */
+// fa_action_t fa_action_compound_first(fa_action_t action);
+//
+// /** Given a compound action, return its tail (nullable).
+// */
+// fa_action_t fa_action_compound_rest(fa_action_t action);
 
-/** Given a compound action, return its tail (nullable).
-*/
-fa_action_t fa_action_compound_rest(fa_action_t action);
+void print_all_actions();
+void fa_log_action_count();
 
 /** @}
     @}

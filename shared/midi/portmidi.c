@@ -583,7 +583,7 @@ fa_ptr_t stream_thread_callback(fa_ptr_t x)
                         send_midi_action,
                         stream
                        );
-            fa_mark_used(now);
+            fa_destroy(now); // was mark_used
         }
 
         // Sleep

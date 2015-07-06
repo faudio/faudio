@@ -1,7 +1,7 @@
 #include <fa/fa.h>
 
-
-
+#ifndef __SERVER_GLOBALS
+#define __SERVER_GLOBALS
 
 fa_audio_session_t current_audio_session = NULL;
 fa_midi_session_t current_midi_session = NULL;
@@ -25,3 +25,5 @@ fa_list_t current_midi_input_streams = NULL;
 fa_list_t current_midi_output_streams = NULL;
 fa_ptr_t current_midi_echo_stream = NULL;
 fa_clock_t current_clock = NULL;
+
+#endif

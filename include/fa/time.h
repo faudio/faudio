@@ -181,11 +181,16 @@ fa_time_seconds_t fa_time_to_seconds(fa_time_t time);
 */
 fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t time);
 
+
+bool fa_time_is_zero(fa_time_t time);
+
 /** The system time type.
 
     This is the same as `time_t` in the standard C header `time.h`.
 */
 typedef struct _fa_time_system_t * fa_time_system_t;
+
+void fa_log_time_count();
 
 /** @}
     @}

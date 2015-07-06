@@ -19,7 +19,7 @@ typedef fa_log_func_t log_func_t;
 
 static unsigned       gInitCount    = 0;
 static long           gBytesAlloc   = 0;
-static long           gRegionCount = 0;
+static long           gRegionCount  = 0;
 static log_func_t     gLogFunc      = NULL;
 static fa_ptr_t       gLogData      = NULL;
 
@@ -117,14 +117,12 @@ void fa_initialize()
     // Audio and midi needs to be initalized last as they
     // depend on threads and other stuff.
 
-	fa_dlog_info(fa_string("Before audio initialize:"));
-	fa_log_region_count();
+	fa_log_region_count("Before audio initialize:");
 
     fa_audio_initialize();
     fa_midi_initialize();
 	
-	fa_dlog_info(fa_string("After audio initialize:"));
-	fa_log_region_count();
+	fa_log_region_count("After audio initialize:");
 
     fa_dlog_info(fa_string("Done initializing faudio"));
 
@@ -315,11 +313,17 @@ void fa_log_error_from(fa_string_t msg, fa_string_t origin)
     fa_destroy(err);
 }
 
-void fa_log_region_count()
+void fa_log_region_count(char* s)
 {
-	long count = gRegionCount;
-    fa_dlog_info(fa_string_dappend(fa_string("Regions allocated: "),
-                                   fa_string_dshow(fa_i32(count))));
-	//printf("Actually: %ld\n", gRegionCount);
+  long count = gRegionCount;
+  fa_dlog_info(fa_string_dappend(fa_string(s), fa_string_dappend(fa_string("  Regions allocated: "),
+                                 fa_string_dshow(fa_i32(count)))));
+  //printf("Actually: %ld\n", gRegionCount);
+}
+
+// TODO: move
+bool DESTROY_ALWAYS(fa_ptr_t ptr)
+{
+    return true;
 }
 

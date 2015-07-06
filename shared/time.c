@@ -15,6 +15,8 @@ struct _fa_time_t {
     double          dvalue;     //  Value in seconds
 };
 
+static int gTimeCount = 0;
+
 double to_double(fa_ratio_t x);
 static fa_ratio_t from_double(double x)
 {
@@ -30,11 +32,13 @@ inline static fa_time_t new_time(double dvalue)
     fa_time_t t     = fa_new(time);
     t->impl         = &time_impl;
     t->dvalue       = dvalue;
+    gTimeCount++;
     return t;
 }
 
 inline static void delete_time(fa_time_t time)
 {
+    gTimeCount--;
     fa_delete(time);
 }
 
@@ -128,6 +132,10 @@ fa_string_t fa_time_to_iso(fa_time_t time)
     return s;
 }
 
+bool fa_time_is_zero(fa_time_t time)
+{
+    return time->dvalue == 0.0;
+}
 
 // --------------------------------------------------------------------------------
 
@@ -196,9 +204,8 @@ fa_string_t time_show(fa_ptr_t a)
     s = fa_string_dappend(s, fa_format_integral(" %02ih", fa_time_hours(t)));
     s = fa_string_dappend(s, fa_format_integral(" %02im", fa_time_minutes(t)));
     s = fa_string_dappend(s, fa_format_integral(" %02i+", fa_time_seconds(t)));
-    s = fa_string_dappend(s, fa_string_show(fa_time_divisions(t)));
-    s = fa_string_dappend(s, fa_string("s"));
-    s = fa_string_dappend(s, fa_string(">"));
+    s = fa_string_dappend(s, fa_string_dshow(fa_time_divisions(t)));
+    s = fa_string_dappend(s, fa_string("s>"));
 
     return s;
 }
@@ -208,9 +215,19 @@ fa_ptr_t time_copy(fa_ptr_t a)
     return fa_time_copy(a);
 }
 
+fa_ptr_t time_deep_copy(fa_ptr_t a)
+{
+    return fa_time_copy(a);
+}
+
 void time_destroy(fa_ptr_t a)
 {
     fa_time_destroy(a);
+}
+
+void time_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    if (p(a)) fa_time_destroy(a);
 }
 
 fa_ptr_t time_impl(fa_id_t interface)
@@ -224,9 +241,9 @@ fa_ptr_t time_impl(fa_id_t interface)
     static fa_number_t  time_number_impl
         = { time_add, time_subtract, time_multiply, time_divide, time_absolute };
     static fa_copy_t time_copy_impl
-        = { time_copy };
+        = { time_copy, time_deep_copy };
     static fa_destroy_t time_destroy_impl
-        = { time_destroy };
+        = { time_destroy, time_deep_destroy };
 
 
     switch (interface) {
@@ -252,4 +269,10 @@ fa_ptr_t time_impl(fa_id_t interface)
         return NULL;
     }
 }
+
+void fa_log_time_count()
+{
+  fa_dlog_info(fa_string_dappend(fa_string("Times allocated: "), fa_string_dshow(fa_i32(gTimeCount))));
+}
+
 

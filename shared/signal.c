@@ -16,6 +16,7 @@
 #include <fa/dynamic.h>
 #include <fa/util.h>
 #include <fa/midi/message.h>
+#include <fa/thread.h> // temp
 
 #include "signal.h"
 #include "signal_internal.h"
@@ -1048,6 +1049,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         fa_warn(fa_string_dappend(fa_string("Compound action passed to Signal.runSimpleAction: "), fa_string_show(action)));
         return NULL;
     }
+    //fa_slog_info("run_simple_action in thread ", fa_string_format_integral("%p", (long) fa_thread_current()));
 
     if (fa_action_is_get(action)) {
         int ch = fa_action_get_channel(action);
@@ -1055,6 +1057,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         fa_ptr_t ctxt = fa_action_get_data(action);
         double x = read_samp1(ch, state);
         f(ctxt, x); // Ignore result
+        fa_action_release(action);
         return NULL;
     }
 
@@ -1062,6 +1065,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         int ch = fa_action_set_channel(action);
         double v = fa_action_set_value(action);
         write_samp1(0, ch, v, state);
+        fa_action_release(action);
         return NULL;
     }
 
@@ -1074,6 +1078,8 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         double x2 = f(ctxt, x);
 
         write_samp1(0, ch, x2, state);
+        
+        fa_action_release(action);
         return NULL;
     }
 
@@ -1081,11 +1087,15 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         fa_string_t name = fa_action_send_name(action);
         fa_ptr_t value = fa_action_send_value(action);
         custom_procs_send(state, name, value);
-
+        
+        //printf("ref_count: %d\n", fa_action_ref_count(action));
+        fa_action_release(action);
+        
         return NULL;
     }
 
     fa_warn(fa_string_dappend(fa_string("Unknown simple action passed to Signal.runSimpleAction: "), fa_string_show(action)));
+    fa_action_release(action);
     return NULL;
 }
 
@@ -1346,7 +1356,7 @@ void fa_signal_run(int count, fa_list_t controls_, fa_signal_t a, double *output
             add_custom_proc(x, state);
         }
 
-        // XXX Before this, remplace "local" buses with "global" (for custom procs)
+        // XXX Before this, replace "local" buses with "global" (for custom procs)
         a = fa_signal_simplify(a);
 
         fa_inform(fa_string_dappend(fa_string("    Signal Tree: \n"), fa_string_show(a)));
@@ -1366,6 +1376,7 @@ void fa_signal_run(int count, fa_list_t controls_, fa_signal_t a, double *output
                 run_custom_procs(custom_proc_render, 1, state);
                 output[i] = step(a, state);
                 inc_state1(state);
+                fa_destroy(now);
             }
 
             run_custom_procs(custom_proc_after, 0, state);
@@ -1988,6 +1999,7 @@ fa_ptr_t vst_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state
 #define fa_dynamic_is_fa_string(x) (fa_dynamic_get_type(x) == string_type_repr)
 #define fa_dynamic_is_bool(x)   (fa_dynamic_get_type(x) == bool_type_repr)
 #define fa_dynamic_is_pair(x)   (fa_dynamic_get_type(x) == pair_type_repr)
+#define fa_dynamic_is_list(x)   (fa_dynamic_get_type(x) == list_type_repr)
 
 void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
 

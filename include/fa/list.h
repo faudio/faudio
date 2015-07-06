@@ -114,12 +114,28 @@ fa_list_t fa_list_enumerate(int int_, int int__);
 */
 fa_list_t fa_list_copy(fa_list_t list);
 
+/** Copy the given list and all contained elements
+
+    The returned list must be destroyed by passing to a destructive function.
+
+    @par Performance
+        O(n)
+*/
+fa_list_t fa_list_deep_copy(fa_list_t list);
+
 /** Destroy the given list.
 
     @par Performance
         O(n)
 */
 void fa_list_destroy(fa_list_t list);
+
+/** Destroy the given list and all contained elements.
+
+    @par Performance
+        O(n)
+*/
+void fa_list_deep_destroy(fa_list_t list, fa_deep_destroy_pred_t pred);
 
 /** Return whether the given list is empty.
 
@@ -459,6 +475,9 @@ fa_ptr_t fa_list_dfold_left(fa_binary_t binary,
 
 
 fa_list_t fa_list_to_list(fa_list_t list);
+
+
+void fa_log_list_count();
 
 /** @}
     @}

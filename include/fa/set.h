@@ -68,7 +68,13 @@ fa_set_t fa_set_dremove(fa_ptr_t ptr, fa_set_t set);
 fa_set_t fa_set_copy(fa_set_t set);
 
 
+fa_set_t fa_set_deep_copy(fa_set_t set);
+
+
 void fa_set_destroy(fa_set_t set);
+
+
+void fa_set_deep_destroy(fa_set_t set, fa_deep_destroy_pred_t pred);
 
 
 int fa_set_size(fa_set_t set);

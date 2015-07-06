@@ -44,6 +44,8 @@ struct _fa_list_t {
     node_t          node;       //  Top-level node
 };
 
+static int gListCount = 0;
+
 
 // --------------------------------------------------------------------------------
 
@@ -79,7 +81,7 @@ inline static void release_node(node_t node)
     }
 
     node->count--;
-
+    
     if (node->count == 0) {
         release_node(node->next);
         fa_delete(node);
@@ -93,11 +95,13 @@ inline static fa_list_t new_list(node_t node)
     fa_list_t list = fa_new(list);
     list->impl = &list_impl;
     list->node = node;
+    gListCount++;
     return list;
 }
 
 inline static void delete_list(fa_list_t list)
 {
+    gListCount--;
     fa_delete(list);
 }
 
@@ -176,6 +180,12 @@ fa_list_t fa_list_copy(fa_list_t xs)
     return new_list(take_node(xs->node));
 }
 
+fa_list_t fa_list_deep_copy(fa_list_t xs)
+{
+    assert(false && "list deep copy not implemented");
+    return new_list(take_node(xs->node));
+}
+
 fa_list_t fa_list_cons(fa_ptr_t x, fa_list_t xs)
 {
     return new_list(new_node(x, take_node(xs->node)));
@@ -190,6 +200,16 @@ fa_list_t fa_list_dcons(fa_ptr_t x, fa_list_t xs)
 
 void fa_list_destroy(fa_list_t xs)
 {
+    release_node(xs->node);
+    delete_list(xs);
+}
+
+void fa_list_deep_destroy(fa_list_t xs, fa_deep_destroy_pred_t p)
+{
+    if (!p(xs)) return;
+    impl_for_each(xs, value) {
+        fa_deep_destroy(value, p);
+    }
     release_node(xs->node);
     delete_list(xs);
 }
@@ -805,9 +825,19 @@ fa_ptr_t list_copy(fa_ptr_t a)
     return fa_list_copy(a);
 }
 
+fa_ptr_t list_deep_copy(fa_ptr_t a)
+{
+  return fa_list_deep_copy(a);
+}
+
 void list_destroy(fa_ptr_t a)
 {
     fa_list_destroy(a);
+}
+
+void list_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    fa_list_deep_destroy(a, p);
 }
 
 fa_dynamic_type_repr_t list_get_type(fa_ptr_t a)
@@ -829,9 +859,9 @@ fa_ptr_t list_impl(fa_id_t interface)
     static fa_string_show_t list_show_impl
         = { list_show };
     static fa_copy_t list_copy_impl
-        = { list_copy };
+        = { list_copy, list_deep_copy };
     static fa_destroy_t list_destroy_impl
-        = { list_destroy };
+        = { list_destroy, list_deep_destroy };
     static fa_dynamic_t list_dynamic_impl
         = { list_get_type };
     static fa_semigroup_t list_semigroup_impl
@@ -849,10 +879,10 @@ fa_ptr_t list_impl(fa_id_t interface)
 
     case fa_copy_i:
         return &list_copy_impl;
-
+        
     case fa_destroy_i:
         return &list_destroy_impl;
-
+        
     case fa_dynamic_i:
         return &list_dynamic_impl;
 
@@ -862,5 +892,10 @@ fa_ptr_t list_impl(fa_id_t interface)
     default:
         return NULL;
     }
+}
+
+void fa_log_list_count()
+{
+  fa_dlog_info(fa_string_dappend(fa_string("Lists allocated: "), fa_string_dshow(fa_i32(gListCount))));
 }
 

@@ -897,6 +897,7 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
 
                 if (result < 0) {
                     fa_warn(fa_string("Could not send MIDI"));
+                    fa_action_release(action);
                     return 0;
                 }
             }
@@ -906,6 +907,7 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
 
             if (fa_buffer_size(data) > 256) {
                 fa_warn(fa_string("Too large SysEx to send, ignoring!"));
+                fa_action_release(action);
                 return 0;
             }
 
@@ -930,14 +932,17 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
 
             if (result < 0) {
                 fa_warn(fa_string("Could not send MIDI"));
+                fa_action_release(action);
                 return 0;
             }
         }
 
+        fa_action_release(action);
         return NULL;
     }
 
     fa_warn(fa_string_dappend(fa_string("Unknown simple action passed to Midi.forwardActionToMidi: "), fa_string_show(action)));
+    fa_action_release(action);
     return NULL;
 }
 

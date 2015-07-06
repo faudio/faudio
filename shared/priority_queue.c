@@ -22,7 +22,7 @@
  */
 
 typedef struct node            *node_t;
-typedef fa_priority_queue_t        queue_t;
+typedef fa_priority_queue_t    queue_t;
 
 struct node {
     fa_ptr_t        value;          // Value
@@ -162,12 +162,19 @@ void priority_queue_destroy(fa_ptr_t a)
     fa_priority_queue_destroy(a);
 }
 
+void priority_queue_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    // TODO
+    
+    fa_mark_used(p);
+    fa_priority_queue_destroy(a);
+}
 
 fa_ptr_t priority_queue_impl(fa_id_t interface)
 {
     static fa_equal_t priority_queue_equal_impl = { priority_queue_equal };
     static fa_string_show_t priority_queue_show_impl = { priority_queue_show };
-    static fa_destroy_t priority_queue_destroy_impl = { priority_queue_destroy };
+    static fa_destroy_t priority_queue_destroy_impl = { priority_queue_destroy, priority_queue_deep_destroy };
 
     switch (interface) {
     case fa_equal_i:

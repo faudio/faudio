@@ -52,6 +52,9 @@ fa_map_t fa_map(int count, ...);
 #define dconcat5(a,b,c,d,e)                 dconcat2(a,dconcat4(b,c,d,e))
 #define dconcat(...) VARARG(dconcat, __VA_ARGS__)
 
+#define pair(a,b)                           fa_pair_create(a,b)
+#define pair_left(a,b)                      fa_pair_left_create(a,b)
+
 
 #endif // _FA_UTIL_LITERALS
 

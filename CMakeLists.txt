@@ -62,7 +62,7 @@ option(BUILD_TESTS              "Build unit tests"                          True
 
 option(PROFILING                "Compile with profiler flags -pg set"       False)
 
-option(BUILD_COMPONENTS         "Build dependent components locally"        False)
+option(BUILD_COMPONENTS         "Build dependent components locally"        True)
 option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     True)
 
 
@@ -172,13 +172,14 @@ if (COMPONENTS_RESOLVED)
   find_package(Portaudio)
   find_package(Portmidi)
   find_package(Sndfile)
+  find_package(Liblo)
   if(ENABLE_HTTP)
     find_package(Curl)
   endif()
-  if(ENABLE_FLUIDSYNTH)
-    find_package(Fluidsynth)
-    find_package(Glib)
-  endif()
+  # if(ENABLE_FLUIDSYNTH)
+  #   find_package(Fluidsynth)
+  #   find_package(Glib)
+  # endif()
   if(ENABLE_OGG_VORBIS)
     find_package(Libogg)
     find_package(Libvorbis)
@@ -236,9 +237,10 @@ if (COMPONENTS_RESOLVED)
   include_directories(${PORTAUDIO_INCLUDE_DIRS})
   include_directories(${PORTMIDI_INCLUDE_DIRS})
   include_directories(${SNDFILE_INCLUDE_DIRS})
+  include_directories(${LIBLO_INCLUDE_DIRS})
   include_directories(${ICU_INCLUDE_DIRS})
-  include_directories(${FLUIDSYNTH_INCLUDE_DIRS})
-  include_directories(${GLIB_INCLUDE_DIRS})
+  # include_directories(${FLUIDSYNTH_INCLUDE_DIRS})
+  # include_directories(${GLIB_INCLUDE_DIRS})
   include_directories(${LIBOGG_INCLUDE_DIRS})
   include_directories(${LIBVORBIS_INCLUDE_DIRS})
   include_directories("external/vst")
@@ -253,9 +255,10 @@ if (COMPONENTS_RESOLVED)
     ${PORTAUDIO_LIBRARIES}
     ${PORTMIDI_LIBRARIES}
     ${SNDFILE_LIBRARIES}
+    ${LIBLO_LIBRARIES}
     ${ICU_LIBRARIES}
-    ${FLUIDSYNTH_LIBRARIES}
-    ${GLIB_LIBRARIES}
+    # ${FLUIDSYNTH_LIBRARIES}
+    # ${GLIB_LIBRARIES}
     ${LIBOGG_LIBRARIES}
     ${LIBVORBIS_LIBRARIES}
     "/c/mingw/lib"
@@ -268,8 +271,9 @@ if (COMPONENTS_RESOLVED)
   list(APPEND EXTS ${PORTAUDIO_LIBRARIES})
   list(APPEND EXTS ${PORTMIDI_LIBRARIES})
   list(APPEND EXTS ${SNDFILE_LIBRARIES})
-  list(APPEND EXTS ${FLUIDSYNTH_LIBRARIES})
-  list(APPEND EXTS ${GLIB_LIBRARIES})
+  list(APPEND EXTS ${LIBLO_LIBRARIES})
+  # list(APPEND EXTS ${FLUIDSYNTH_LIBRARIES})
+  # list(APPEND EXTS ${GLIB_LIBRARIES})
   list(APPEND EXTS ${LIBVORBIS_LIBRARIES})
   list(APPEND EXTS ${LIBOGG_LIBRARIES})
   list(APPEND EXTS ${CURL_LIBRARIES})

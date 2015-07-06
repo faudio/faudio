@@ -138,9 +138,21 @@ fa_map_t fa_map_copy(fa_map_t map)
     return new_map(fa_set_copy(map->entries));
 }
 
+fa_map_t fa_map_deep_copy(fa_map_t map)
+{
+    return new_map(fa_set_deep_copy(map->entries));
+}
+
 void fa_map_destroy(fa_map_t map)
 {
     fa_set_destroy(map->entries);
+    fa_delete(map);
+}
+
+void fa_map_deep_destroy(fa_map_t map, fa_deep_destroy_pred_t pred)
+{
+    if (!(pred(map))) return;
+    fa_set_deep_destroy(map->entries, pred);
     fa_delete(map);
 }
 
@@ -409,9 +421,19 @@ fa_ptr_t map_copy(fa_ptr_t a)
     return fa_map_copy(a);
 }
 
+fa_ptr_t map_deep_copy(fa_ptr_t a)
+{
+    return fa_map_deep_copy(a);
+}
+
 void map_destroy(fa_ptr_t a)
 {
     fa_map_destroy(a);
+}
+
+void map_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    fa_map_deep_destroy(a, p);
 }
 
 fa_dynamic_type_repr_t map_get_type(fa_ptr_t a)
@@ -423,8 +445,8 @@ fa_ptr_t map_impl(fa_id_t interface)
 {
     static fa_equal_t map_equal_impl = { map_equal };
     static fa_string_show_t map_show_impl = { map_show };
-    static fa_copy_t map_copy_impl = { map_copy };
-    static fa_destroy_t map_destroy_impl = { map_destroy };
+    static fa_copy_t map_copy_impl = { map_copy, map_deep_copy };
+    static fa_destroy_t map_destroy_impl = { map_destroy, map_deep_destroy };
     static fa_dynamic_t map_dynamic_impl = { map_get_type };
 
     switch (interface) {

@@ -8,6 +8,8 @@
 #include <fa/util/literals.h>
 #include <fa/util/macros.h>
 #include <fa/util/apply.h>
+#include <fa/util/vararg.h>
+#include <fa/util/literals.h>
 
 #include <time.h>
 
@@ -91,6 +93,7 @@
 #define fa_action_accum        fa_action_accum
 #define fa_action_send         fa_action_send
 
+#define fa_now()               fa_time_create(0,0,0,fa_ratio(0,1))
 #define fa_hms(h,m,s)          fa_time_create(0,h,m,fa_ratio(s,1))
 #define fa_days(d)             fa_time_create(d,0,0,fa_ratio(0,1))
 #define fa_hours(h)            fa_time_create(0,h,0,fa_ratio(0,1))
@@ -125,11 +128,23 @@ void fa_dlog_info(fa_string_t);
 void fa_dlog_warning(fa_string_t);
 void fa_dlog_error(fa_string_t);
 
+#define fa_slog_info0()              fa_dlog_info(fa_string_empty())
+#define fa_slog_info1(a)             fa_dlog_info(fa_string(a))
+#define fa_slog_info2(a,b)           fa_dlog_info(fa_dappend(fa_string(a), fa_string_show(b)))
+#define fa_slog_info3(a,b,c)         fa_dlog_info(fa_dappend(fa_string(a), fa_dappend(fa_string_show(b), (fa_dappend(fa_string(" "), fa_string_show(c))))))
+#define fa_slog_info4(a,b,c,d)       fa_dlog_info(fa_dappend(fa_string(a), fa_dappend(fa_string_show(b), (fa_dappend(fa_string(" "), fa_dappend(fa_string_show(c), fa_dappend(fa_string(" "), fa_string_show(d))))))));
+#define fa_slog_info5(a,b,c,d,e)     fa_dlog_info(fa_dappend(fa_string(a), fa_dappend(fa_string_show(b), (fa_dappend(fa_string(" "), fa_dappend(fa_string_show(c), fa_dappend(fa_string(" "), fa_dappend(fa_string_show(d), fa_dappend(fa_string(" "), fa_string_show(e))))))))));
+#define fa_slog_info(...) VARARG(fa_slog_info, __VA_ARGS__)
+
 #define fa_inform(s)           fa_dlog_info(s)
 // #define fa_dinform(s)          fa_dlog_info(s)
 #define fa_warn(s)             fa_dlog_warning(s)
 #define fa_fail(s)             fa_dlog_error(s)
+
+//#define fa_slog_info(s,a)      fa_dlog_info(fa_string_dappend(fa_string(s), fa_string_show(a)))
 // #define fa_log_error(e)        fa_error_log(NULL,e)
+
+
 
 #define fa_tb                  fa_to_bool
 #define fa_ti8                 fa_to_int8
