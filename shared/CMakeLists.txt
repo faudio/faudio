@@ -16,6 +16,7 @@ list(APPEND SRCS
   dynamic.c
   buffer.c
   error.c
+  func_ref.c
   io.c
   io/ogg.c
   io/endian.c
