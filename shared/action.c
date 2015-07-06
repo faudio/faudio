@@ -87,10 +87,10 @@ inline static action_t new_action(int tag)
     s->ref_count = 1;
     s->tag  = tag;
     
-    if (!all_actions) {
-        all_actions = fa_list_empty();
-    }
-    all_actions = fa_list_dcons(s, all_actions);
+    // if (!all_actions) {
+//         all_actions = fa_list_empty();
+//     }
+//     all_actions = fa_list_dcons(s, all_actions);
     
     gActionCount++;
     

@@ -34,17 +34,16 @@
     */
 
 
-typedef enum {
-            note_off,
-            note_on,
-            after_touch,
-            control_change,
-            program_change,
-            channel_pressure,
-            pitch_wheel,
-            sysex
-        } fa_midi_message_status_t;
+typedef unsigned char fa_midi_message_status_t;
 
+#define msg_note_off           0x80
+#define msg_note_on            0x90
+#define msg_after_touch        0xA0
+#define msg_control_change     0xB0
+#define msg_program_change     0xC0
+#define msg_channel_pressure   0xD0
+#define msg_pitch_wheel        0xE0
+#define msg_sysex              0xF0
 
 typedef int fa_midi_message_channel_t;
 
@@ -122,6 +121,7 @@ bool fa_midi_message_is_sysex(fa_midi_message_t message);
         Should only be used in conjunction with fa_midi_message_is_sysex.
 */
 fa_buffer_t fa_midi_message_sysex_data(fa_midi_message_t message);
+
 
 /** @}
     @}

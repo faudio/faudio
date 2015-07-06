@@ -7,6 +7,8 @@ fa_audio_session_t current_audio_session = NULL;
 fa_midi_session_t current_midi_session = NULL;
 int session_count = 0;
 
+fa_string_t synth_name = NULL;
+
 fa_device_descriptor_t selected_audio_input_device = NULL;
 fa_device_descriptor_t selected_audio_output_device = NULL;
 fa_list_t selected_midi_input_devices = NULL;
