@@ -3,6 +3,7 @@
 #include <fa/util.h>
 #include <fa/dynamic.h>
 #include <fa/string.h>
+#include <fa/func_ref.h>
 #include "common.h"
 
 #include <stdio.h>
@@ -21,6 +22,12 @@ int note_count = 0;
 bool note_pred(fa_ptr_t env, fa_ptr_t data) {
     fa_slog_info(" note_pred: ", env, data);
     return true; //(note_count++ % 2) == 0;
+}
+
+bool five_times(fa_ptr_t env, fa_ptr_t data) {
+    static int x = 0;
+    fa_slog_info(" ### five_times: ", fa_from_int16(x));
+    return x++ > 2;
 }
 
 void run_dls()
@@ -54,10 +61,12 @@ void run_dls()
     fa_thread_sleep(1000);
     
     fa_log_region_count("BEGIN");
+    fa_log_list_count();
     fa_log_time_count();
     fa_log_pair_count();
-    fa_log_list_count();
+    fa_log_pair_left_count();
     fa_log_string_count();
+    fa_log_func_ref_count();
     
     fa_thread_sleep(500);
 
@@ -68,24 +77,39 @@ void run_dls()
     //
     // fa_thread_sleep(500);
     
-    //fa_action_t action1 = fa_action_if(note_pred, NULL, fa_action_send(name, fa_midi_message_create_simple(0x90, 64, 90)));
-    //fa_action_t action2 = fa_action_if(note_pred, NULL, fa_action_send(name, fa_midi_message_create_simple(0x90, 66, 90)));
-    fa_action_t action1 = fa_action_send(name, fa_midi_message_create_simple(0x90, 68, 90));
-    fa_action_t action2 = fa_action_send(name, fa_midi_message_create_simple(0x90, 67, 90));
-    fa_action_t many_action = fa_action_if(note_pred, NULL, fa_action_many(list(pair(action1, fa_milliseconds(500)), pair(action2, fa_milliseconds(500)))));
-    //fa_action_t many_action = fa_action_many(list(pair(action1, fa_milliseconds(500)), pair(action2, fa_milliseconds(500))));
-    fa_action_t many_many_action = fa_action_many(list(pair(many_action, fa_milliseconds(20))));
+    fa_action_t action1 = fa_action_if(note_pred, NULL, fa_action_send(name, fa_midi_message_create_simple(0x90, 64, 90)));
+    fa_action_t action2 = fa_action_if(note_pred, NULL, fa_action_send(name, fa_midi_message_create_simple(0x90, 66, 90)));
+    fa_action_t action3 = fa_action_if(note_pred, NULL, fa_action_send(name, fa_midi_message_create_simple(0x90, 68, 90)));
+    fa_action_t action4 = fa_action_if(note_pred, NULL, fa_action_send(name, fa_midi_message_create_simple(0x90, 69, 90)));
+    //fa_action_t action1 = fa_action_send(name, fa_midi_message_create_simple(0x90, 68, 90));
+    //fa_action_t action2 = fa_action_send(name, fa_midi_message_create_simple(0x90, 67, 90));
+    //fa_action_t many_action = fa_action_if(note_pred, NULL, fa_action_many(list(pair(action1, fa_milliseconds(500)), pair(action2, fa_milliseconds(500)))));
+    fa_action_t many_action = fa_action_many(list(
+        pair(action1, fa_milliseconds(100)),
+        pair(action2, fa_milliseconds(100)),
+        pair(action3, fa_milliseconds(100)),
+        pair(action4, fa_milliseconds(100))));
+    fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(1000), many_action);
+    fa_action_t while_action = fa_action_until(five_times, NULL, repeat_action);
+    //fa_action_t many_many_action = fa_action_many(list(pair(many_action, fa_milliseconds(20))));
+    
+    //fa_action_t empty_many_action = fa_action_many(fa_list_empty());
+        
+    //fa_action_t while_action = fa_action_while(note_pred, NULL, many_action);
+    
         
     //print_all_actions();
     
     fa_log_region_count("Before scheduling");
+    fa_log_list_count();
     fa_log_time_count();
     fa_log_pair_count();
-    fa_log_list_count();
+    fa_log_pair_left_count();
     fa_log_string_count();
+    fa_log_func_ref_count();
     fa_log_action_count();
 
-    fa_audio_schedule_relative(fa_hms(0, 0, 0), many_many_action, st);
+    fa_audio_schedule_relative(fa_hms(0, 0, 0), while_action, st);
     
     //fa_deep_destroy_always(many_many_action);
             
@@ -125,12 +149,14 @@ void run_dls()
     // }
     fa_log_region_count("Before sleeping");
     fa_slog_info("Now sleeping...");
-    fa_thread_sleep(4000);
+    fa_thread_sleep(8000);
     fa_log_region_count("After sleeping");
+    fa_log_list_count();
     fa_log_time_count();
     fa_log_pair_count();
-    fa_log_list_count();
+    fa_log_pair_left_count();
     fa_log_string_count();
+    fa_log_func_ref_count();
     fa_log_action_count();
     //print_all_actions();
 	
@@ -152,6 +178,20 @@ int main(int argc, char const *argv[])
 	//fa_set_log_tool();
   fa_set_log_std();
   
+  
+  // fa_log_region_count("before");
+  // fa_list_t blist = list(fa_from_int8(1), fa_from_int8(2), fa_from_int8(3));
+  // fa_log_region_count("one");
+  // fa_list_t clist = fa_list_tail(blist);
+  // fa_list_t dlist = fa_list_tail(clist);
+  // fa_log_region_count("two");
+  // fa_destroy(blist);
+  // fa_log_region_count("three");
+  // fa_destroy(dlist);
+  // fa_log_region_count("four");
+  // fa_destroy(clist);
+  // fa_log_region_count("after");
+  // return 0;
   
   // fa_map_t map = fa_map_empty();
   // fa_slog_info("map 1: ", map);

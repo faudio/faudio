@@ -11,6 +11,7 @@
 #include <fa/util.h>
 #include <fa/dynamic.h>
 #include <fa/pair/left.h>
+#include <fa/func_ref.h>
 #include <fa/priority_queue.h>
 #include <fa/func_ref.h>
 
@@ -24,7 +25,7 @@ struct _fa_action_t {
 
     fa_impl_t                       impl;
     
-    int                             ref_count;
+    //int                             ref_count;
 
     enum {
         get_action,
@@ -75,7 +76,7 @@ struct _fa_action_t {
 };
 
 //static fa_map_t all_actions = NULL;
-static fa_list_t all_actions = NULL;
+//static fa_list_t all_actions = NULL;
 static int gActionCount = 0;
 
 inline static action_t new_action(int tag)
@@ -84,7 +85,7 @@ inline static action_t new_action(int tag)
 
     action_t s = fa_new(action);
     s->impl = &action_impl;
-    s->ref_count = 1;
+    //s->ref_count = 1;
     s->tag  = tag;
     
     // if (!all_actions) {
@@ -210,7 +211,7 @@ static inline fa_action_t copy_accum(fa_action_t action2)
 static inline fa_action_t copy_send(fa_action_t action2)
 {
     action_t action = new_action(send_action);
-    send_get(action, name)  = fa_copy(send_get(action2, name)); // copy name or not?
+    send_get(action, name)  = fa_copy(send_get(action2, name)); // the name string is owned by the action
     send_get(action, value) = fa_copy(send_get(action2, value));
     return action;
 }
@@ -226,7 +227,7 @@ static inline fa_action_t copy_compound(fa_action_t action2)
 {
     action_t action = new_action(compound_action);
     compound_get(action, function)  = compound_get(action2, function);
-    compound_get(action, data)      = compound_get(action2, data);
+    compound_get(action, data)      = fa_deep_copy(compound_get(action2, data));
     return action;
 }
 
@@ -234,14 +235,12 @@ static inline fa_action_t copy_compound(fa_action_t action2)
     For set, no copy needed
     For send, the scheduled value is copied using fa_copy
     For predicate/do, the closure is *not* copied
+    For compound actions, we deep copy the entire structure of the data field
 
-    For compound actions, we really should deep copy the entire structure
-    but this is not possible without a true deep_copy interface. Do
-    nothing for now (and do not free in destroy, to replace crashes with leaks).
+    NOTE: there is no difference between copying and deep-copying an action!
 */
 fa_action_t fa_action_copy(fa_action_t action)
 {
-    printf("fa_action_copy\n");
     switch (action->tag) {
     case get_action:
         return copy_get(action);
@@ -266,65 +265,61 @@ fa_action_t fa_action_copy(fa_action_t action)
     }
 }
 
-static inline fa_action_t deep_copy_send(fa_action_t action2)
-{
-    action_t action = new_action(send_action);
-    send_get(action, name)  = fa_deep_copy(send_get(action2, name));
-    send_get(action, value) = fa_deep_copy(send_get(action2, value));
-    return action;
-}
-static inline fa_action_t deep_copy_compound(fa_action_t action2)
-{
-    action_t action = new_action(compound_action);
-    compound_get(action, function)  = compound_get(action2, function);
-    compound_get(action, data)      = fa_deep_copy(compound_get(action2, data));
-    return action;
-}
+// static inline fa_action_t deep_copy_send(fa_action_t action2)
+// {
+//     action_t action = new_action(send_action);
+//     send_get(action, name)  = fa_deep_copy(send_get(action2, name));
+//     send_get(action, value) = fa_deep_copy(send_get(action2, value));
+//     return action;
+// }
+// static inline fa_action_t deep_copy_compound(fa_action_t action2)
+// {
+//     action_t action = new_action(compound_action);
+//     compound_get(action, function)  = compound_get(action2, function);
+//     compound_get(action, data)      = fa_deep_copy(compound_get(action2, data));
+//     return action;
+// }
 
 
-/*
-    For set, no copy needed
-    TODO: what about get/accum? Should the data pointer be copied?
-    For send, the scheduled value is copied using fa_copy
-    TODO: For predicate/do, the closure is *not* copied
-*/
-
-fa_action_t fa_action_deep_copy(fa_action_t action)
-{
-    switch (action->tag) {
-    case get_action:
-        return copy_get(action);  // no deep copying needed
-
-    case set_action:
-        return copy_set(action); // no deep copying needed (?)
-
-    case accum_action:
-        return copy_accum(action); // no deep copying needed (?)
-
-    case send_action:
-        return deep_copy_send(action);
-
-    case do_action:
-        return copy_do(action); // no deep copying needed? What about the closure?
-
-    case compound_action:
-        return deep_copy_compound(action);
-
-    default:
-        assert(false);
-    }
-}
-
-
+// /*
+//     For set, no copy needed
+//     TODO: what about get/accum? Should the data pointer be copied?
+//     For send, the scheduled value is copied using fa_copy
+//     TODO: For predicate/do, the closure is *not* copied
+// */
+//
+// fa_action_t fa_action_deep_copy(fa_action_t action)
+// {
+//     switch (action->tag) {
+//     case get_action:
+//         return copy_get(action);  // no deep copying needed
+//
+//     case set_action:
+//         return copy_set(action); // no deep copying needed (?)
+//
+//     case accum_action:
+//         return copy_accum(action); // no deep copying needed (?)
+//
+//     case send_action:
+//         return deep_copy_send(action);
+//
+//     case do_action:
+//         return copy_do(action); // no deep copying needed? What about the closure?
+//
+//     case compound_action:
+//         return deep_copy_compound(action);
+//
+//     default:
+//         assert(false);
+//     }
+// }
+//
+//
 
 
 static inline void destroy_get(fa_action_t action)
 {
-    //action_t action = new_action(get_action);
     fa_mark_used(action);
-    // get_get(action, channel)    = get_get(action2, channel);
-    // get_get(action, function)   = get_get(action2, function);
-    // get_get(action, data)       = get_get(action2, data);
 }
 static inline void destroy_set(fa_action_t action)
 {
@@ -337,9 +332,7 @@ static inline void destroy_accum(fa_action_t action)
 }
 static inline void destroy_send(fa_action_t action)
 {
-  //fa_print("destroying %s\n", fa_string_show(send_get(action, name)));
     fa_destroy(send_get(action, name));
-  //fa_print("destroying %s\n", fa_string_show(send_get(action, value)));
     fa_destroy(send_get(action, value));
 }
 static inline void destroy_do(fa_action_t action)
@@ -385,15 +378,18 @@ static inline void destroy_do(fa_action_t action)
 //     return b;
 // }
 
+static fa_ptr_t _repeat(fa_ptr_t data, fa_ptr_t compound);
+static fa_ptr_t _if(fa_ptr_t data, fa_ptr_t compound);
+
 static inline void destroy_compound(fa_action_t action)
 {
-    //fa_slog_info("destroy_compound", action);
-    //fa_ptr_t data = compound_get(action, data);
-    //if (data) {
-    //    fa_deep_destroy(data, is_not_action);
-	//}
+    assert(action && "No action in destroy_compound");
+    
+    fa_slog_info("destroy_compound ", action);
     fa_ptr_t data = compound_get(action, data);
-    if (data) fa_destroy(data); // TODO: is this the right depth? cannot use deep_destroy here!
+    if (data) {
+        fa_destroy(data); // TODO: is this the right depth? cannot use deep_destroy here!
+    }
 }
 
 void fa_action_destroy(fa_action_t action)
@@ -481,52 +477,29 @@ void fa_action_deep_destroy(fa_action_t action, fa_deep_destroy_pred_t pred)
     delete_action(action);
 }
 
-static inline int fa_action_retain(fa_action_t action)
-{
-    action->ref_count++;
-    //fa_slog_info("Retaining ", action);
-    return action->ref_count;
-}
-
-int fa_action_release(fa_action_t action)
-{
-    action->ref_count--;
-    if (action->ref_count <= 0) {
-        //fa_slog_info("Releasing and freeing ", action);
-        if (fa_action_is_simple(action)) {
-            fa_deep_destroy_always(action);
-        } else {
-            fa_destroy(action);
-        }
-    } else {
-        //fa_slog_info("Releasing but not freeing ", action);
-    }
-    return action->ref_count;
-}
-
-// static bool _release_actions(fa_ptr_t x) {
-//     if (is_not_action(x)) return true;
-//     fa_action_t a = (fa_action_t) x;
-//     a->ref_count--;
-//
-//     return false;
-//     if (!is_compound(a)) return true;
-//     if
+// static inline int fa_action_retain(fa_action_t action)
+// {
+//     action->ref_count++;
+//     //fa_slog_info("Retaining ", action);
+//     return action->ref_count;
 // }
 
-void fa_action_deep_release(fa_action_t action)
-{
-    if (fa_action_is_simple(action)) {
-        fa_action_release(action);
-    } else {
-        // TODO: traverse the structure of contained actions,
-        // decrementing the ref_count of all actions
-        action->ref_count--;
-        if (action->ref_count <= 0) {
-            fa_deep_destroy_always(action);
-        }
-    }
-}
+// int fa_action_release(fa_action_t action)
+// {
+//     // action->ref_count--;
+// //     if (action->ref_count <= 0) {
+// //         //fa_slog_info("Releasing and freeing ", action);
+// //         if (fa_action_is_simple(action)) {
+// //             fa_deep_destroy_always(action);
+// //         } else {
+// //             fa_destroy(action);
+// //         }
+// //     } else {
+// //         //fa_slog_info("Releasing but not freeing ", action);
+// //     }
+//     fa_destroy(action);
+//     return 0;
+// }
 
 bool fa_action_is_get(fa_action_t action)
 {
@@ -637,6 +610,7 @@ bool fa_action_is_do(fa_action_t action)
 // Render a compound action by calling its function, deconstruct the result and destroy the pairs used
 static void compound_render(fa_action_t compound, fa_action_t* first, fa_time_t* interval, fa_action_t* rest)
 {
+    assert(compound && "NULL action in compound_render");
     assert(is_compound(compound) && "Not a compound action");
     *first = NULL;
     *interval = NULL;
@@ -721,15 +695,16 @@ fa_action_t fa_action_null()
 
 #define unpair(x,y,p) fa_pair_decons((fa_ptr_t*) &x, (fa_ptr_t*) &y, p)
 
-static inline fa_ptr_t _repeat(fa_ptr_t data, fa_ptr_t compound)
+static fa_ptr_t _repeat(fa_ptr_t data, fa_ptr_t compound)
 {
     fa_time_t interval;
     action_t action;
     unpair(interval, action, data);
-    fa_action_retain(compound);
-    fa_action_retain(action);
-    // fa_slog_info("_repeat", action, compound);
-    return fa_pair_create(action, fa_pair_create(interval, compound));
+    //fa_action_retain(compound);
+    //fa_action_retain(action);
+    fa_slog_info("_repeat", action, compound, data);
+    fa_log_list_count();
+    return fa_pair_create(action, fa_pair_create(interval, fa_deep_copy(compound)));
 }
 
 fa_action_t fa_action_repeat(fa_time_t interval, fa_action_t action)
@@ -739,28 +714,33 @@ fa_action_t fa_action_repeat(fa_time_t interval, fa_action_t action)
 
 
 
-static inline fa_ptr_t _many(fa_ptr_t data, fa_ptr_t c)
+static fa_ptr_t _many(fa_ptr_t data, fa_ptr_t c)
 {
     fa_list_t timeActions = data;
     fa_action_t compound = c;
 
-    if (fa_list_is_empty(timeActions)) {
+    if (!timeActions || fa_list_is_empty(timeActions)) {
         // fa_slog_info("  IN _many  (list is empty)", compound);
         return NULL;
     } else {
-        action_t  first;
-        fa_time_t interval;
-        unpair(first, interval, fa_list_head(timeActions));
+        fa_pair_t first_interval = fa_list_head(timeActions);
+        action_t  first          = fa_pair_first(first_interval);
+        fa_time_t interval       = fa_pair_second(first_interval);
         
-        first->ref_count = compound->ref_count;
+        // Pop first element in list
+        fa_destroy(first_interval);
+        timeActions = fa_list_dtail(timeActions);
+        compound_get(compound, data) = NULL; // reset reference, to avoid double free
         
-        fa_list_t tail = fa_list_tail(timeActions);
-        // fa_slog_info("  IN _many  ", compound, first, tail);
-        if (fa_list_is_empty(tail)) {
+        // If there is only one action, return it
+        if (fa_list_is_empty(timeActions)) {
+            fa_destroy(interval);
+            fa_destroy(timeActions);
             return fa_pair_create(first, NULL);
         }
-        action_t rest = fa_action_many(tail);
-        rest->ref_count = compound->ref_count;
+        
+        // There are more actions, so return them as well for rescheduling
+        action_t rest = fa_action_many(timeActions);
         return fa_pair_create(first, fa_pair_create(interval, rest));
     }
 }
@@ -773,8 +753,9 @@ fa_action_t fa_action_many(fa_list_t timeActions)
 
 
 
-static inline fa_ptr_t _if(fa_ptr_t data, fa_ptr_t compound)
+static fa_ptr_t _if(fa_ptr_t data, fa_ptr_t c)
 {
+    fa_action_t   compound = c;
     fa_pair_t     pred_action = data;
     fa_func_ref_t pred_closure;
     fa_pred_t     pred_function;
@@ -783,22 +764,23 @@ static inline fa_ptr_t _if(fa_ptr_t data, fa_ptr_t compound)
     unpair(pred_closure, action, pred_action);
     pred_function = fa_func_ref_func(pred_closure);
     pred_data = fa_func_ref_data(pred_closure);
+    fa_destroy(pred_closure);
+    compound_get(compound, data) = NULL; // reset reference, to avoid double free
 
     if (fa_action_is_simple(action)) {
         if (pred_function(pred_data, NULL)) {
             return fa_pair_create(action, NULL);
         } else {
-            fa_action_release(action);
+            fa_action_destroy(action);
             return NULL;
         }
     } else {
-        action_t  first;    // = fa_action_compound_first(action);
-        fa_time_t interval; // = fa_action_compound_interval(action);
-        action_t  rest;     // = fa_action_compound_rest(action);
+        action_t  first;
+        fa_time_t interval;
+        action_t  rest;
         compound_render(action, &first, &interval, &rest);
-        //fa_slog_info("  IN _if    ", compound, first, rest, interval);
         
-        fa_action_release(action);
+        fa_action_destroy(action);
         
         if (!first && !rest) {
             return NULL;
@@ -807,16 +789,13 @@ static inline fa_ptr_t _if(fa_ptr_t data, fa_ptr_t compound)
         if (pred_function(pred_data, NULL)) {
             if (rest) {
                 fa_action_t new_if = fa_action_if(pred_function, pred_data, rest);
-                //fa_slog_info("     --> new_if: ", new_if);
-                new_if->ref_count = ((fa_action_t)compound)->ref_count;
                 return fa_pair_create(first, fa_pair_create(interval, new_if));
             } else {
-                if (interval) fa_destroy(interval); // (?)
+                if (interval) fa_destroy(interval);
                 return fa_pair_create(first, NULL);
             }
         } else {
-            //fa_slog_info("  -> deep_release first", first);
-            fa_action_deep_release(first);
+            fa_deep_destroy_always(first);
             if (rest) {
                 return fa_pair_create(fa_action_null(), fa_pair_create(interval, fa_action_if(pred_function, pred_data, rest)));
             } else {
@@ -828,8 +807,9 @@ static inline fa_ptr_t _if(fa_ptr_t data, fa_ptr_t compound)
     }
 }
 
-static inline fa_ptr_t _while(fa_ptr_t data, fa_ptr_t compound)
+static inline fa_ptr_t _while(fa_ptr_t data, fa_ptr_t c)
 {
+    fa_action_t   compound = c;
     fa_pair_t     pred_action = data;
     fa_func_ref_t pred_closure;
     fa_pred_t     pred_function;
@@ -838,51 +818,14 @@ static inline fa_ptr_t _while(fa_ptr_t data, fa_ptr_t compound)
     unpair(pred_closure, action, pred_action);
     pred_function = fa_func_ref_func(pred_closure);
     pred_data = fa_func_ref_data(pred_closure);
+    fa_destroy(pred_closure);
+    compound_get(compound, data) = NULL; // reset reference, to avoid double free
     
     if (fa_action_is_simple(action)) {
         if (pred_function(pred_data, NULL)) {
             return fa_pair_create(action, NULL);
         } else {
-            fa_action_release(action);
-            return NULL;
-        }
-    } else {
-        action_t  first;    // = fa_action_compound_first(action);
-        fa_time_t interval; // = fa_action_compound_interval(action);
-        action_t  rest;     // = fa_action_compound_rest(action);
-        compound_render(action, &first, &interval, &rest);
-        //fa_slog_info("  IN _while ", compound, first, rest, interval);
-        
-        fa_action_release(action);
-        
-        if (!first && !rest) {
-            return NULL;
-        }
-
-        if (pred_function(pred_data, NULL)) {
-            return fa_pair_create(first, fa_pair_create(interval, fa_action_while(pred_function, pred_data, rest)));
-        } else {
-            return NULL;
-        }
-    }
-}
-
-static inline fa_ptr_t _until(fa_ptr_t data, fa_ptr_t compound)
-{
-    fa_pair_t     pred_action = data;
-    fa_func_ref_t pred_closure;
-    fa_pred_t     pred_function;
-    fa_ptr_t      pred_data;
-    action_t      action;
-    unpair(pred_closure, action, pred_action);
-    pred_function = fa_func_ref_func(pred_closure);
-    pred_data = fa_func_ref_data(pred_closure);
-
-    if (fa_action_is_simple(action)) {
-        if (!pred_function(pred_data, NULL)) {
-            return fa_pair_create(action, NULL);
-        } else {
-            fa_action_release(action);
+            fa_action_destroy(action);
             return NULL;
         }
     } else {
@@ -890,17 +833,73 @@ static inline fa_ptr_t _until(fa_ptr_t data, fa_ptr_t compound)
         fa_time_t interval;
         action_t  rest;
         compound_render(action, &first, &interval, &rest);
-        //fa_slog_info("  IN _until ", compound, first, rest, interval);
         
-        fa_action_release(action);
+        fa_action_destroy(action);
+        
+        if (!first && !rest) {
+            return NULL;
+        }
+
+        if (pred_function(pred_data, NULL)) {
+            if (rest) {
+                return fa_pair_create(first, (fa_pair_create(interval, fa_action_while(pred_function, pred_data, rest))));
+            } else {
+                if (interval) fa_destroy(interval);
+                return fa_pair_create(first, NULL);
+            }
+        } else {
+            fa_deep_destroy_always(first);
+            if (rest) fa_deep_destroy_always(rest);
+            if (interval) fa_destroy(interval);
+            return NULL;
+        }
+    }
+}
+
+static inline fa_ptr_t _until(fa_ptr_t data, fa_ptr_t c)
+{
+    fa_action_t   compound = c;
+    fa_pair_t     pred_action = data;
+    fa_func_ref_t pred_closure;
+    fa_pred_t     pred_function;
+    fa_ptr_t      pred_data;
+    action_t      action;
+    unpair(pred_closure, action, pred_action);
+    pred_function = fa_func_ref_func(pred_closure);
+    pred_data = fa_func_ref_data(pred_closure);
+    fa_destroy(pred_closure);
+    compound_get(compound, data) = NULL; // reset reference, to avoid double free
+    
+    if (fa_action_is_simple(action)) {
+        if (!pred_function(pred_data, NULL)) {
+            return fa_pair_create(action, NULL);
+        } else {
+            fa_action_destroy(action);
+            return NULL;
+        }
+    } else {
+        action_t  first;
+        fa_time_t interval;
+        action_t  rest;
+        compound_render(action, &first, &interval, &rest);
+        
+        fa_action_destroy(action);
         
         if (!first && !rest) {
             return NULL;
         }
 
         if (!pred_function(pred_data, NULL)) {
-            return fa_pair_create(first, fa_pair_create(interval, fa_action_until(pred_function, pred_data, rest)));
+            if (rest) {
+                return fa_pair_create(first, (fa_pair_create(interval, fa_action_until(pred_function, pred_data, rest))));
+            } else {
+                if (interval) fa_destroy(interval);
+                return fa_pair_create(first, NULL);
+            }
         } else {
+            fa_deep_destroy_always(first);
+            if (rest) fa_deep_destroy_always(rest);
+            if (interval) fa_destroy(interval);
             return NULL;
         }
     }
@@ -935,7 +934,7 @@ fa_action_t fa_action_until(fa_pred_t pred, fa_ptr_t data, fa_action_t action)
  */
 void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_list_t *resched, fa_unary_t function, fa_ptr_t data)
 {
-    //fa_slog_info("run_and_resched_action ", action);
+    fa_slog_info("run_and_resched_action ", time);
     if (fa_action_is_compound(action)) {
 
         action_t  first;
@@ -946,12 +945,12 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
         //fa_slog_info("   first, rest, interval: ", first, rest, interval);
 
         if (first) {
-            run_and_resched_action(first, time, now, resched, function, data);
+            run_and_resched_action(first, fa_copy(time), now, resched, function, data);
         }
 
         if (rest && interval) {
             fa_time_t future = fa_add(time, interval);
-            fa_destroy(interval); // ?
+            fa_destroy(interval);
 
             if (fa_less_than_equal(future, now)) {
                 // Run directly
@@ -962,8 +961,9 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
                 fa_push_list(fa_pair_left_create(future, rest), *resched);
             }
         }
-        fa_action_release(action); // Shallow release?
-
+        fa_action_destroy(action); // Shallow release?
+        fa_destroy(time);
+        
         return;
     } else {
         if (is_do(action)) {
@@ -985,7 +985,9 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
             // Note: /function/ is responsible for releasing the actions when used.
             // We can't do it here, as /function/ is run in another thread.
         }
-
+        
+        fa_destroy(time);
+        
         return;
     }
 
@@ -997,7 +999,7 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
     Run all due actions in the given queue.
     @param
         controls    A priority queue of (time, action) values.
-        time        Current time (not destroyed).
+        now         Current time (not destroyed).
         function    Function to which due actions are passed.
  */
 void run_actions(fa_priority_queue_t controls, fa_time_t now, fa_unary_t function, fa_ptr_t data)
@@ -1018,15 +1020,15 @@ void run_actions(fa_priority_queue_t controls, fa_time_t now, fa_unary_t functio
             fa_priority_queue_pop(controls);
             fa_destroy(x);
             
-            //fa_slog_info("run_actions ", time, action);
+            fa_slog_info("run_actions ", time, action);
 
-            fa_list_t resched = fa_empty();
+            fa_list_t resched = fa_list_empty();
 
             // Run action, generating list of actions to reschedule
             run_and_resched_action(action, time, now, &resched, function, data); // TODO
 
             if (fa_list_is_empty(resched)) {
-                fa_destroy(time);
+                //fa_destroy(time);
             } else {
                 fa_for_each(x, resched) {
                     fa_priority_queue_insert(x, controls);
@@ -1049,7 +1051,7 @@ fa_ptr_t action_copy(fa_ptr_t a)
 
 fa_ptr_t action_deep_copy(fa_ptr_t a)
 {
-    return fa_action_deep_copy(a);
+    return fa_action_copy(a); // actions are always deep-copied
 }
 
 void action_destroy(fa_ptr_t a)
@@ -1089,7 +1091,7 @@ fa_string_t action_show(fa_ptr_t a)
     }
     //str = fa_string_dappend(str, fa_string(" "));
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) x));
-    str = fa_string_dappend(str, fa_string_format_integral(" %d", x->ref_count));
+    //str = fa_string_dappend(str, fa_string_format_integral(" %d", x->ref_count));
     str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
@@ -1151,13 +1153,13 @@ struct _fa_map_t {
 //     fa_dlog_info(fa_string_show(fa_list_map((fa_unary_t) _show_action, NULL, fa_set_to_list(all_actions->entries))));
 // }
         
-void print_all_actions()
-{
-    fa_for_each(a, all_actions) {
-        //fa_dlog_info(fa_dappend(fa_string_show(a), fa_dappend(fa_string(": "), fa_string_show(fa_i8(((fa_action_t)a)->ref_count)))));
-        fa_dlog_info(fa_string_show(a));
-     }
-}    
+// void print_all_actions()
+// {
+//     fa_for_each(a, all_actions) {
+//         //fa_dlog_info(fa_dappend(fa_string_show(a), fa_dappend(fa_string(": "), fa_string_show(fa_i8(((fa_action_t)a)->ref_count)))));
+//         fa_dlog_info(fa_string_show(a));
+//      }
+// }
 
 void fa_log_action_count()
 {

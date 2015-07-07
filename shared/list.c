@@ -45,6 +45,7 @@ struct _fa_list_t {
 };
 
 static int gListCount = 0;
+static int gNodeCount = 0;
 
 
 // --------------------------------------------------------------------------------
@@ -57,6 +58,7 @@ inline static node_t new_node(fa_ptr_t value, node_t next)
     node->count = 1;
     node->value = value;
     node->next  = next;
+    gNodeCount++;
     return node;
 }
 
@@ -85,6 +87,7 @@ inline static void release_node(node_t node)
     if (node->count == 0) {
         release_node(node->next);
         fa_delete(node);
+        gNodeCount--;
     }
 }
 
@@ -180,10 +183,33 @@ fa_list_t fa_list_copy(fa_list_t xs)
     return new_list(take_node(xs->node));
 }
 
+static inline fa_ptr_t deep_copy_unless_null(fa_ptr_t value)
+{
+    return value ? fa_deep_copy(value) : NULL;
+}
+
 fa_list_t fa_list_deep_copy(fa_list_t xs)
 {
-    assert(false && "list deep copy not implemented");
-    return new_list(take_node(xs->node));
+    if (!xs->node) return fa_list_empty();
+
+    // copy head element
+    node_t old = xs->node;
+    node_t new_head = new_node(deep_copy_unless_null(old->value), NULL);
+
+    // copy rest of the list
+    node_t new = new_head;
+    old = old->next;
+    while (old != NULL) {
+        new->next = new_node(deep_copy_unless_null(old->value), NULL);
+        old = old->next;
+        new = new->next;
+    }
+
+    return new_list(new_head);
+    
+    // impl_for_each(xs, value) {
+    //     fa_push_list(value ? fa_deep_copy(value) : NULL, new_list);
+    // }
 }
 
 fa_list_t fa_list_cons(fa_ptr_t x, fa_list_t xs)
@@ -330,7 +356,10 @@ fa_list_t fa_list_append(fa_list_t xs, fa_list_t ys)
 
 fa_list_t fa_list_reverse(fa_list_t xs)
 {
-    return revappend(xs, fa_list_empty());
+    fa_list_t empty_list = fa_list_empty();
+    fa_list_t reversed = revappend(xs, empty_list);
+    //fa_list_destroy(empty_list);
+    return reversed;
 }
 
 static inline fa_list_t merge(fa_list_t xs, fa_list_t ys)
@@ -896,6 +925,8 @@ fa_ptr_t list_impl(fa_id_t interface)
 
 void fa_log_list_count()
 {
-  fa_dlog_info(fa_string_dappend(fa_string("Lists allocated: "), fa_string_dshow(fa_i32(gListCount))));
+  fa_dlog_info(fa_string_dappend(fa_string("Lists/nodes allocated: "),
+      fa_string_dappend(fa_string_dshow(fa_i32(gListCount)),
+      fa_string_dappend(fa_string(" / "), fa_string_dshow(fa_i32(gNodeCount))))));
 }
 

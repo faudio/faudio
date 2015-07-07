@@ -140,10 +140,10 @@
     fa_for_each(x,fa_map_to_list(set))
 
 #define fa_push_list(x, xs) \
-    xs = fa_list_cons(x, xs)
+    xs = fa_list_dcons(x, xs)    // was fa_list_cons
 
-#define fa_dpush_list(x, xs) \
-    xs = fa_list_dcons(x, xs)
+// #define fa_dpush_list(x, xs) \
+//     xs = fa_list_dcons(x, xs)
 
 #define fa_write_string(s, t) \
     s = fa_string_append(s, t)

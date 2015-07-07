@@ -153,13 +153,6 @@ fa_action_t fa_action_accum(fa_action_channel_t channel,
 fa_action_t fa_action_send(fa_action_name_t name,
                            fa_action_value_t value);
 
-/* Reference count */
-static inline int fa_action_retain(fa_action_t action);
-
-int fa_action_release(fa_action_t action);
-
-void fa_action_deep_release(fa_action_t action);
-
 /** Return whether the given action is a get action.
       
 */
@@ -317,7 +310,7 @@ bool fa_action_is_do(fa_action_t action);
 // */
 // fa_action_t fa_action_compound_rest(fa_action_t action);
 
-void print_all_actions();
+//void print_all_actions();
 void fa_log_action_count();
 
 /** @}

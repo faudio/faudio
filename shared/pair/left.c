@@ -16,6 +16,8 @@ struct _fa_pair_left_t {
     fa_ptr_t       values[2];
 };
 
+static int gPairLeftCount = 0;
+
 // -----------------------------------------------------------------------------
 
 fa_pair_left_t new_pair_left(fa_ptr_t first, fa_ptr_t second)
@@ -26,11 +28,13 @@ fa_pair_left_t new_pair_left(fa_ptr_t first, fa_ptr_t second)
     pair_left->impl = &pair_left_impl;
     pair_left->values[0]  = first;
     pair_left->values[1]  = second;
+    gPairLeftCount++;
     return pair_left;
 }
 
 void delete_pair_left(fa_pair_left_t p)
 {
+    gPairLeftCount--;
     fa_delete(p);
 }
 
@@ -184,3 +188,7 @@ fa_ptr_t pair_left_impl(fa_id_t interface)
     }
 }
 
+void fa_log_pair_left_count()
+{
+  fa_dlog_info(fa_string_dappend(fa_string("Pair-lefts allocated: "), fa_string_dshow(fa_i32(gPairLeftCount))));
+}

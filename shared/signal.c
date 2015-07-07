@@ -1057,7 +1057,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         fa_ptr_t ctxt = fa_action_get_data(action);
         double x = read_samp1(ch, state);
         f(ctxt, x); // Ignore result
-        fa_action_release(action);
+        fa_action_destroy(action);
         return NULL;
     }
 
@@ -1065,7 +1065,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         int ch = fa_action_set_channel(action);
         double v = fa_action_set_value(action);
         write_samp1(0, ch, v, state);
-        fa_action_release(action);
+        fa_action_destroy(action);
         return NULL;
     }
 
@@ -1079,7 +1079,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
 
         write_samp1(0, ch, x2, state);
         
-        fa_action_release(action);
+        fa_action_destroy(action);
         return NULL;
     }
 
@@ -1089,13 +1089,13 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         custom_procs_send(state, name, value);
         
         //printf("ref_count: %d\n", fa_action_ref_count(action));
-        fa_action_release(action);
+        fa_action_destroy(action);
         
         return NULL;
     }
 
     fa_warn(fa_string_dappend(fa_string("Unknown simple action passed to Signal.runSimpleAction: "), fa_string_show(action)));
-    fa_action_release(action);
+    fa_action_destroy(action);
     return NULL;
 }
 
