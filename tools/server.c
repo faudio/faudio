@@ -21,17 +21,25 @@
 
 #define send_osc(m, s, ...) lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__)
 
+#define define_handler(name) \
+  int name ## _handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
+
 int done = 0;
 
 
 void liblo_error(int num, const char *m, const char *path);
 
 int generic_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data);
-int foo_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data);
-int quit_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data);
+int blob_test_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
+
+define_handler(quit);
+define_handler(restart);
+
 int test_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data);
+int stats_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
 int simple_midi_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data);
 int simple_note_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data);
+
 int time_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
 int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
 int current_devices_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
@@ -42,6 +50,7 @@ int program_change_handler(const char *path, const char *types, lo_arg ** argv, 
 int pitch_wheel_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
 int sustain_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
 int channel_reset_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
+
 
 int main()
 {
@@ -55,18 +64,20 @@ int main()
 
     /* add method that will match any path and args */
     lo_server_thread_add_method(st, NULL, NULL, generic_handler, NULL);
+    
+    lo_server_thread_add_method(st, "/blob", "bi", blob_test_handler, NULL);
+    
+    lo_server_thread_add_method(st, "/stats", "", stats_handler, NULL);
 
-    /* add method that will match the path /foo/bar, with two numbers, coerced
-    * to float and int */
-    lo_server_thread_add_method(st, "/foo/bar", "fi", foo_handler, NULL);
-
-    /* add method that will match the path /quit with no args */
+    /* Quit handler */
     lo_server_thread_add_method(st, "/quit", "", quit_handler, NULL);
+    lo_server_thread_add_method(st, "/restart", "", restart_handler, NULL);
+    lo_server_thread_add_method(st, "/restart", "i", restart_handler, NULL);
 
     /* add method that will match the path /test with no args */
     lo_server_thread_add_method(st, "/test", "", test_handler, s);
   
-    /* More methods */
+    /* Get info */
     lo_server_thread_add_method(st, "/time", "", time_handler, s);
     lo_server_thread_add_method(st, "/all/devices", "", all_devices_handler, s);
     lo_server_thread_add_method(st, "/current/devices", "", current_devices_handler, s);
@@ -87,27 +98,20 @@ int main()
     lo_server_thread_add_method(st, "/send/channel-reset",  "iifiifi", channel_reset_handler, s);
 
     fa_with_faudio() {
+        
+        fa_clock_initialize();
 
 #ifdef _WIN32
         synth_name   = fa_string("fluid");
-        fa_pair_t synth = fa_signal_synth(synth_name, fa_string("C:\\sf.sf2"));
 #else
         synth_name   = fa_string("dls");
-        fa_pair_t synth = fa_signal_dls(synth_name);
 #endif
 
-        fa_list_t out = fa_pair_to_list(synth);
         current_audio_session = fa_audio_begin_session();
         current_audio_output_device = fa_audio_default_output(current_audio_session);
-        current_audio_stream = fa_audio_open_stream(NULL, current_audio_output_device, just, out);
-        current_clock = fa_audio_get_clock(current_audio_stream);
-    
         current_midi_session = fa_midi_begin_session();
-
-        if (fa_check(current_audio_stream)) {
-            fa_error_log(current_audio_stream, NULL);
-        }
-
+        
+        start_streams(); // server-utils.h
 
         lo_server_thread_start(st);
     
@@ -121,14 +125,23 @@ int main()
 #endif
         }
     
-        fa_audio_close_stream(current_audio_stream);
+        stop_streams();
+        
         fa_audio_end_session(current_audio_session);
-    
         fa_midi_end_session(current_midi_session);
       
     }
 
     lo_server_thread_free(st);
+    
+    fa_log_region_count("At shutdown");
+    fa_log_list_count();
+    fa_log_time_count();
+    fa_log_pair_count();
+    fa_log_pair_left_count();
+    fa_log_string_count();
+    fa_log_func_ref_count();
+    fa_log_action_count();
 
     return 0;
 }
@@ -159,23 +172,81 @@ int argc, void *data, void *user_data)
     return 1;
 }
 
-int foo_handler(const char *path, const char *types, lo_arg ** argv,
-int argc, void *data, void *user_data)
+int blob_test_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
-    /* example showing pulling the argument values out of the argv array */
-    printf("%s <- f:%f, i:%d\n\n", path, argv[0]->f, argv[1]->i);
-    fflush(stdout);
-
+    lo_blob data = argv[0];
+    int id = argv[1]->i;
+    int data_size = lo_blob_datasize(data);
+    uint8_t* ptr = lo_blob_dataptr(data);
+    if ((data_size % 8) != 0) {
+        printf("data_size (%d) not a multiple of 8\n", data_size);
+        return 0;
+    }
+    
+    // fa_log_region_count("BEFORE");
+    // fa_log_list_count();
+    // fa_log_time_count();
+    // fa_log_pair_count();
+    // fa_log_pair_left_count();
+    // fa_log_string_count();
+    
+    fa_list_t actions = fa_list_empty();
+    int count = data_size / 8;
+    printf("%d MIDI entries:\n", count);
+    if (count == 0) return 0;
+    
+    // Collect MIDI entries from the data blob, create MIDI messages and add them to a list
+    for (int i = 0; i < count; i++) {
+        uint8_t cmd   = ptr[0];
+        uint8_t ch    = ptr[1];
+        uint8_t data1 = ptr[2];
+        uint8_t data2 = ptr[3];
+        int32_t time  = lo_otoh32(*(int32_t *) &ptr[4]);
+        //printf("  %x %x %x %x  %d\n", cmd, ch, data1, data2, time);
+        
+        fa_midi_message_t msg = fa_midi_message_create_simple(cmd + ch, data1, data2);
+        fa_action_t a = fa_action_send(synth_name, msg);
+        fa_push_list(pair(a, fa_milliseconds(time)), actions);
+        ptr += 8;
+    }
+    
+    // Convert absolute times to relative times
+    actions = times_to_delta_times(actions);
+    
+    // Send to 
+    schedule_relative(fa_now(), fa_action_many(actions), current_midi_echo_stream);
+    
+    // fa_log_region_count("AFTER");
+    // fa_log_list_count();
+    // fa_log_time_count();
+    // fa_log_pair_count();
+    // fa_log_pair_left_count();
+    // fa_log_string_count();
     return 0;
 }
 
-int quit_handler(const char *path, const char *types, lo_arg ** argv,
-int argc, void *data, void *user_data)
+
+int quit_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
 {
     done = 1;
     printf("quiting\n\n");
     fflush(stdout);
 
+    return 0;
+}
+
+int restart_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
+{
+    int restart_type = argc ? argv[1]->i : 0;
+    
+    switch (restart_type) {
+    case 0:
+        stop_streams();
+        start_streams();
+        break;
+    default:
+        fa_dlog_warning(fa_string("No such restart type!"));
+    } 
     return 0;
 }
 
@@ -243,10 +314,13 @@ int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int
         int counter = 0;
         fa_for_each (device, audio_devices) {
             //printf("device: %d %s / %s\n", counter, fa_unstring(fa_audio_host_name(device)), fa_unstring(fa_audio_name(device)));
-            send_osc(message, user_data, "/audio/device", "issiif", counter++,
-            fa_unstring(fa_audio_host_name(device)), fa_unstring(fa_audio_name(device)),
-            fa_audio_input_channels(device), fa_audio_output_channels(device),
-            fa_audio_current_sample_rate(device));
+            char *host_name = fa_unstring(fa_audio_host_name(device));
+            char *name = fa_unstring(fa_audio_name(device));
+            send_osc(message, user_data, "/audio/device", "issiif", counter++, host_name, name,
+                fa_audio_input_channels(device), fa_audio_output_channels(device),
+                fa_audio_current_sample_rate(device));
+            fa_free(host_name);
+            fa_free(name);
         }
     } else {
         send_osc(message, user_data, "/error", "s", "no-audio-session");
@@ -257,9 +331,12 @@ int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int
         send_osc(message, user_data, "/midi/devices", "i", fa_list_length(midi_devices));
         int counter = 0;
         fa_for_each (device, midi_devices) {
-            send_osc(message, user_data, "/midi/device", "issii", counter++,
-            fa_unstring(fa_midi_host_name(device)), fa_unstring(fa_midi_name(device)),
-            fa_midi_has_input(device) ? 1 : 0, fa_midi_has_output(device) ? 1 : 0);
+            char *host_name = fa_unstring(fa_midi_host_name(device));
+            char *name = fa_unstring(fa_midi_name(device));
+            send_osc(message, user_data, "/midi/device", "issii", counter++, host_name, name,
+                fa_midi_has_input(device) ? 1 : 0, fa_midi_has_output(device) ? 1 : 0);
+            fa_free(host_name);
+            fa_free(name);
         }
     } else {
         send_osc(message, user_data, "/error", "s", "no-midi-session");
@@ -274,25 +351,29 @@ int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int
 
 int current_devices_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
-    if (current_audio_input_device)
-        send_osc(message, user_data, "/current/audio/input", "ssiif",
-    fa_unstring(fa_audio_host_name(current_audio_input_device)),
-    fa_unstring(fa_audio_name(current_audio_input_device)),
-    fa_audio_input_channels(current_audio_input_device),
-    fa_audio_output_channels(current_audio_input_device),
-    fa_audio_current_sample_rate(current_audio_input_device));
-    else
+    if (current_audio_input_device) {
+        char *host_name = fa_unstring(fa_audio_host_name(current_audio_input_device));
+        char *name = fa_unstring(fa_audio_name(current_audio_input_device));
+        send_osc(message, user_data, "/current/audio/input", "ssiif", host_name, name,
+            fa_audio_input_channels(current_audio_input_device),
+            fa_audio_output_channels(current_audio_input_device),
+            fa_audio_current_sample_rate(current_audio_input_device));
+        fa_free(host_name);
+        fa_free(name);
+    } else {
         send_osc(message, user_data, "/current/audio/input", "N");
+    }
   
-    if (current_audio_output_device)
-        send_osc(message, user_data, "/current/audio/output", "issiif",
-    fa_unstring(fa_audio_host_name(current_audio_output_device)),
-    fa_unstring(fa_audio_name(current_audio_output_device)),
-    fa_audio_input_channels(current_audio_output_device),
-    fa_audio_output_channels(current_audio_output_device),
-    fa_audio_current_sample_rate(current_audio_output_device));
-    else
+    if (current_audio_output_device) {
+        char *host_name = fa_unstring(fa_audio_host_name(current_audio_output_device));
+        char *name = fa_unstring(fa_audio_name(current_audio_output_device));
+        send_osc(message, user_data, "/current/audio/output", "issiif", host_name, name,
+            fa_audio_input_channels(current_audio_output_device),
+            fa_audio_output_channels(current_audio_output_device),
+            fa_audio_current_sample_rate(current_audio_output_device));
+    } else {
         send_osc(message, user_data, "/current/audio/output", "N");
+    }
   
     return 0;
 }
@@ -305,7 +386,7 @@ int simple_midi_handler(const char *path, const char *types, lo_arg ** argv, int
 {
     fa_midi_message_t midi_message = fa_midi_message_create_simple(argv[0]->i, argv[1]->i, (argc > 2) ? argv[2]->i : 0);
     fa_action_t action = fa_action_send(synth_name, midi_message);
-    schedule_to_midi_echo_stream_relative(fa_now(), action);
+    schedule_relative(fa_now(), action, current_midi_echo_stream);
     return 0;
 }
 
@@ -329,7 +410,7 @@ int simple_note_handler(const char *path, const char *types, lo_arg ** argv, int
         fa_action_send(synth_name, fa_midi_message_create_simple(0x90 + ch, f0, 0)), fa_now()
             )
                 ));
-    schedule_to_midi_echo_stream_relative(fa_now(), action);
+    schedule_relative(fa_now(), action, current_midi_echo_stream);
     return 0;
 }
 
@@ -341,7 +422,7 @@ int main_volume_handler(const char *path, const char *types, lo_arg ** argv, int
 {
     int ch = argv[0]->i;
     int vol = argv[1]->i;
-    schedule_to_midi_echo_stream_relative(fa_now(), main_volume_action(ch, vol));
+    schedule_relative(fa_now(), main_volume_action(ch, vol), current_midi_echo_stream);
     return 0;
 }
 
@@ -353,7 +434,7 @@ int pan_handler(const char *path, const char *types, lo_arg ** argv, int argc, l
 {
     int ch = argv[0]->i;
     float pan = argv[1]->f;
-    schedule_to_midi_echo_stream_relative(fa_now(), pan_action(ch, pan));
+    schedule_relative(fa_now(), pan_action(ch, pan), current_midi_echo_stream);
     return 0;
 }
 
@@ -369,7 +450,7 @@ int program_change_handler(const char *path, const char *types, lo_arg ** argv, 
     fa_action_t action = fa_action_many(list(
         fa_pair_create(program_change_action(ch, prog), fa_now()),
         fa_pair_create(bank_select_action(ch, bank), fa_now())));
-    schedule_to_midi_echo_stream_relative(fa_now(), action);
+    schedule_relative(fa_now(), action, current_midi_echo_stream);
     return 0;
 }
 
@@ -381,7 +462,7 @@ int pitch_wheel_handler(const char *path, const char *types, lo_arg ** argv, int
 {
     int ch = argv[0]->i;
     float pitch = argv[1]->f;
-    schedule_to_midi_echo_stream_relative(fa_now(), pitch_wheel_action(ch, pitch));
+    schedule_relative(fa_now(), pitch_wheel_action(ch, pitch), current_midi_echo_stream);
     return 0;
 }
 
@@ -393,7 +474,7 @@ int sustain_handler(const char *path, const char *types, lo_arg ** argv, int arg
 {
     int ch = argv[0]->i;
     bool sustain = argv[1]->i > 0;
-    schedule_to_midi_echo_stream_relative(fa_now(), sustain_action(ch, sustain));
+    schedule_relative(fa_now(), sustain_action(ch, sustain), current_midi_echo_stream);
     return 0;
 }
 
@@ -429,6 +510,20 @@ int channel_reset_handler(const char *path, const char *types, lo_arg ** argv, i
         fa_pair_create(pitch_wheel_action(ch, pitch_wheel), fa_now()),
         fa_pair_create(sustain_action(ch, sustain), fa_now())));
 
-    schedule_to_midi_echo_stream_relative(fa_now(), action);
+    schedule_relative(fa_now(), action, current_midi_echo_stream);
+    return 0;
+}
+
+
+int stats_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    fa_log_region_count("Stats:");
+    fa_log_list_count();
+    fa_log_time_count();
+    fa_log_pair_count();
+    fa_log_pair_left_count();
+    fa_log_string_count();
+    fa_log_func_ref_count();
+    fa_log_action_count();
     return 0;
 }
