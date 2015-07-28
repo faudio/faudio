@@ -117,7 +117,7 @@ struct _fa_audio_stream_t {
         bool            stop;
     }                   controller;         // Controller thread (where scheduling runs)
 
-    fa_atomic_queue_t   before_controls;    // Non-sechedyled controls
+    fa_atomic_queue_t   before_controls;    // Non-scheduled controls
 
     fa_atomic_queue_t   in_controls;        // From scheduler to audio (AtomicQueue SomeAction)
     fa_atomic_queue_t   short_controls;     // Directly to audio (AtomicQueue SomeAction)
@@ -1080,6 +1080,11 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
         if (stream->controller.stop) {
             break;
         }
+        
+        // ////
+        // state_base_t state = (state_base_t) stream->state;
+        // printf("Time: %u  Count: %u  Total: %u\n", fa_clock_milliseconds(fa_audio_stream_clock(stream)), state->count);
+        // ////
 
         {
             fa_ptr_t nameValue;
@@ -1111,6 +1116,10 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
         // fa_with_lock(stream->controller.mutex)
         {
             fa_time_t now = fa_clock_time(fa_audio_stream_clock(stream));
+            //fa_time_t now = fa_clock_time(fa_clock_standard());
+            
+            //printf("Time: %u\n", (int32_t) fa_time_to_milliseconds(now));
+            
             // Write incoming actions
             // TODO get things from before_controls to stream->controls
             {
@@ -1136,7 +1145,9 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
             //  * Write platform-specific code
             //  * Use notifications from the audio thread (might not work at startup)
 
-            fa_thread_sleep((stream->input ? stream->input : stream->output)->session->parameters.scheduler_interval);
+            fa_thread_sleep(2);
+            // printf("-- waking up at %d\n", fa_clock_milliseconds(fa_clock_standard()));
+            //fa_thread_sleep((stream->input ? stream->input : stream->output)->session->parameters.scheduler_interval);
         }
     }
 
@@ -1476,7 +1487,6 @@ int64_t audio_stream_milliseconds(fa_ptr_t a)
 #else
         stream->last_time = ((double) state->count / (double) state->rate * 1000.0);
 #endif
-        fa_mark_used(state);
     }
 
     return stream->last_time;
@@ -1484,10 +1494,16 @@ int64_t audio_stream_milliseconds(fa_ptr_t a)
 
 fa_time_t fa_audio_stream_time(fa_ptr_t a)
 {
-    int64_t ms = audio_stream_milliseconds(a);
-    return fa_milliseconds(ms);
+    //int64_t ms = audio_stream_milliseconds(a);
+    //return fa_milliseconds(ms);
+    stream_t stream = (stream_t) a;
+    return fa_time_from_double(Pa_GetStreamTime(stream->native));
 }
 
+fa_dynamic_type_repr_t audio_stream_get_type(fa_ptr_t a)
+{
+    return audio_stream_type_repr;
+}
 
 fa_ptr_t audio_stream_impl(fa_id_t interface)
 {
@@ -1499,6 +1515,8 @@ fa_ptr_t audio_stream_impl(fa_id_t interface)
         = { audio_stream_equal };
     static fa_destroy_t audio_stream_destroy_impl
         = { audio_stream_destroy };
+    static fa_dynamic_t audio_stream_dynamic_impl
+        = { audio_stream_get_type };
 
     switch (interface) {
 
@@ -1513,6 +1531,9 @@ fa_ptr_t audio_stream_impl(fa_id_t interface)
 
     case fa_destroy_i:
         return &audio_stream_destroy_impl;
+        
+    case fa_dynamic_i:
+        return &audio_stream_dynamic_impl;
 
     default:
         return NULL;

@@ -20,7 +20,7 @@
 
 #include "au.h"
 
-struct au_context {                     
+struct au_context {
     double *outputs;
     fa_string_t name;
     int channels;

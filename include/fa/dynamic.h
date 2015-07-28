@@ -32,7 +32,9 @@ typedef enum {
             string_type_repr,
             ratio_type_repr,
             midi_message_type_repr,
-            action_type_repr
+            action_type_repr,
+            audio_stream_type_repr,
+            midi_stream_type_repr
         } fa_dynamic_type_repr_t;
 
 /** Dynamic typing interface.
