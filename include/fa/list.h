@@ -43,6 +43,8 @@
 
 typedef struct _fa_list_t * fa_list_t;
 
+typedef bool (* fa_sort_fn_t)(fa_ptr_t, fa_ptr_t);
+
 /** Create an empty list.
 
     The returned list must be destroyed by passing to a destructive function.
@@ -220,13 +222,19 @@ fa_list_t fa_list_dreverse(fa_list_t list);
     @par Performance
         O(n log n)
 */
-fa_list_t fa_list_sort(fa_list_t list);
+fa_list_t fa_list_sort(fa_list_t list, fa_sort_fn_t fn);
 
 /** Return the given list sorted.
     @par Performance
         O(n log n)
 */
-fa_list_t fa_list_dsort(fa_list_t list);
+fa_list_t fa_list_sort_ascending(fa_list_t list);
+
+/** Return the given list sorted.
+    @par Performance
+        O(n log n)
+*/
+fa_list_t fa_list_dsort(fa_list_t list, fa_sort_fn_t fn);
 
 /** Return the *n* leading elements of the given list.
     @par Performance
