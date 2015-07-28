@@ -24,7 +24,9 @@
 
         - Only 16-bit, extended range not supported
 
-        - Slow copying
+        - fa_copy uses reference counting, so "copying" is O(1) (Note that copy-on-write is not needed, as fa_strings are immutable)
+
+        - Deep copying is relatively slow
 
         - Reasonable dappend (using realloc)
  */
@@ -36,6 +38,7 @@ struct _fa_string_t {
     fa_impl_t       impl;           // Dispatcher
     size_t          size;           // Character count
     uint16_t        *data;          // Payload
+    size_t          count;          // Reference count
 };
 
 static int gStringCount = 0;
@@ -54,6 +57,7 @@ fa_string_t new_string(size_t size, uint16_t *data)
     str->impl = &string_impl;
     str->size = size;
     str->data = data;
+    str->count = 1;
 
     gStringCount++;
     return str;
@@ -83,16 +87,30 @@ fa_string_t fa_string_single(fa_char16_t chr)
 
 fa_string_t fa_string_repeat(int times, fa_char16_t chr)
 {
+    /*
+    // Canonic but inefficient implementation
     fa_string_t s = fa_string("");
 
     for (int i = 0; i < times; ++i) {
-        fa_write_string(s, fa_string_single(chr));
+        s = fa_string_dappend(s, fa_string_single(chr));
+    }*/
+
+    // Less elegant, but much faster
+    fa_string_t s = new_string(times, fa_malloc(times * kStandardCodeSize));
+    for (int i = 0; i < times; ++i) {
+        s->data[i] = chr;
     }
 
     return s;
 }
 
 fa_string_t fa_string_copy(fa_string_t str)
+{
+    str->count++;
+    return str;
+}
+
+fa_string_t fa_string_deep_copy(fa_string_t str)
 {
     fa_string_t pst = new_string(str->size, NULL);
     pst->data = fa_malloc(str->size * kStandardCodeSize);
@@ -117,6 +135,15 @@ fa_string_t fa_string_append(fa_string_t str1,
 fa_string_t fa_string_dappend(fa_string_t str1,
                               fa_string_t str2)
 {
+    // If str1 is referenced from > 1 places, we can't change it in place
+    if (str1->count > 1) {
+        fa_string_t str = fa_string_append(str1, str2);
+        fa_string_destroy(str1);
+        fa_string_destroy(str2);
+        return str;
+    }
+    
+    // Destructive variant
     size_t oldSize = str1->size;
 
     str1->size = str1->size + str2->size;
@@ -124,14 +151,17 @@ fa_string_t fa_string_dappend(fa_string_t str1,
 
     memcpy(str1->data + oldSize, str2->data, str2->size * kStandardCodeSize);
 
-    fa_destroy(str2);
+    fa_string_destroy(str2);
     return str1;
 }
 
 void fa_string_destroy(fa_string_t str)
 {
-    fa_free(str->data);
-    delete_string(str);
+    str->count--;
+    if (str->count == 0) {
+        fa_free(str->data);
+        delete_string(str);
+    }
 }
 
 int fa_string_length(fa_string_t str)
@@ -639,9 +669,7 @@ static bool string_equal(fa_ptr_t as, fa_ptr_t bs)
     if (cs->size != ds->size) {
         return false;
     } else {
-        for (size_t i = 0;
-                i < cs->size && i < ds->size;
-                ++i) {
+        for (size_t i = 0; i < cs->size; ++i) {
             if (cs->data[i] != ds->data[i]) {
                 return false;
             }
@@ -726,7 +754,7 @@ fa_ptr_t string_copy(fa_ptr_t a)
 
 fa_ptr_t string_deep_copy(fa_ptr_t a)
 {
-    return fa_string_copy(a);
+    return fa_string_deep_copy(a);
 }
 
 void string_destroy(fa_ptr_t a)
