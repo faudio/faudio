@@ -385,7 +385,7 @@ static inline void destroy_compound(fa_action_t action)
 {
     assert(action && "No action in destroy_compound");
     
-    fa_slog_info("destroy_compound ", action);
+    //fa_slog_info("destroy_compound ", action);
     fa_ptr_t data = compound_get(action, data);
     if (data) {
         fa_destroy(data); // TODO: is this the right depth? cannot use deep_destroy here!
@@ -934,7 +934,7 @@ fa_action_t fa_action_until(fa_pred_t pred, fa_ptr_t data, fa_action_t action)
  */
 void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_list_t *resched, fa_unary_t function, fa_ptr_t data)
 {
-    fa_slog_info("run_and_resched_action ", time);
+    //fa_slog_info("run_and_resched_action ", time);
     if (fa_action_is_compound(action)) {
 
         action_t  first;
@@ -995,6 +995,9 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
 }
 
 
+//static int32_t last_time = 0;
+//static int32_t last_now = 0;
+
 /**
     Run all due actions in the given queue.
     @param
@@ -1004,6 +1007,7 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
  */
 void run_actions(fa_priority_queue_t controls, fa_time_t now, fa_unary_t function, fa_ptr_t data)
 {
+    //printf("run_actions %lld\n", (int64_t) fa_time_to_milliseconds(now));
     while (1) {
         fa_pair_t x = fa_priority_queue_peek(controls);
 
@@ -1012,15 +1016,19 @@ void run_actions(fa_priority_queue_t controls, fa_time_t now, fa_unary_t functio
             break;
         }
 
-        fa_time_t time       = fa_pair_first(x);
-        action_t action      = fa_pair_second(x);
+        fa_time_t time  = fa_pair_first(x);
+        action_t action = fa_pair_second(x);
 
         // Assure the next action is due
         if (fa_less_than_equal(time, now)) {
             fa_priority_queue_pop(controls);
             fa_destroy(x);
             
-            fa_slog_info("run_actions ", time, action);
+            // printf("  run_actions  %lld  %lld    %d  %d\n", (int64_t) fa_time_to_milliseconds(time), (int64_t) fa_time_to_milliseconds(now),
+            //   (int32_t) fa_time_to_milliseconds(now) - last_now,
+            //   (int32_t) fa_time_to_milliseconds(time) - last_time);
+            // last_now = (int32_t) fa_time_to_milliseconds(now);
+            // last_time = (int32_t) fa_time_to_milliseconds(time);
 
             fa_list_t resched = fa_list_empty();
 
