@@ -341,6 +341,13 @@ fa_ptr_t fa_dadd(fa_ptr_t a, fa_ptr_t b)
     return res;
 }
 
+fa_ptr_t fa_dsubtract(fa_ptr_t a, fa_ptr_t b)
+{
+    fa_ptr_t res = fa_subtract(a, b);
+    fa_destroy(a);
+    fa_destroy(b);
+    return res;
+}
 
 GENERIC1(copy,       copy,           fa_ptr_t, fa_ptr_t);
 GENERIC1(copy,       deep_copy,      fa_ptr_t, fa_ptr_t);
