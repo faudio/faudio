@@ -776,21 +776,30 @@ void midi_stream_destroy(fa_ptr_t a)
     fa_midi_close_stream(a);
 }
 
+fa_dynamic_type_repr_t midi_stream_get_type(fa_ptr_t a)
+{
+    return midi_stream_type_repr;
+}
+
 fa_ptr_t midi_stream_impl(fa_id_t interface)
 {
     static fa_string_show_t midi_stream_show_impl
         = { midi_stream_show };
     static fa_destroy_t midi_stream_destroy_impl
         = { midi_stream_destroy };
+    static fa_dynamic_t midi_stream_dynamic_impl
+        = { midi_stream_get_type };
 
     switch (interface) {
-
 
     case fa_string_show_i:
         return &midi_stream_show_impl;
 
     case fa_destroy_i:
         return &midi_stream_destroy_impl;
+        
+    case fa_dynamic_i:
+        return &midi_stream_dynamic_impl;
 
     default:
         return NULL;

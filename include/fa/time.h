@@ -98,6 +98,8 @@ fa_time_t fa_time_create(fa_time_days_t days,
                          fa_time_minutes_t minutes,
                          fa_ratio_t ratio);
 
+fa_time_t fa_time_from_double(double dvalue);
+
 /**
     Copy the given time value.
 */

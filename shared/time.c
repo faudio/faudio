@@ -52,6 +52,11 @@ fa_time_t fa_time_create(int32_t days, int32_t hours, int32_t minutes, fa_ratio_
     return new_time(whole + fraction);
 }
 
+fa_time_t fa_time_from_double(double dvalue)
+{
+    return new_time(dvalue);
+}
+
 fa_time_t fa_time_copy(fa_time_t time)
 {
     return new_time(time->dvalue);

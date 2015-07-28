@@ -1053,9 +1053,8 @@ void fa_midi_schedule_relative(fa_time_t        time,
                                fa_action_t       action,
                                fa_midi_stream_t  stream)
 {
-    if (fa_equal(time, fa_seconds(0)) && !fa_action_is_compound(action)) {
+    if (fa_time_is_zero(time) && !fa_action_is_compound(action) && !fa_action_is_do(action)) {
         // Pass directly to output
-        // TODO is this still needed
         fa_atomic_queue_write(stream->short_controls, action);
     } else {
         fa_time_t now = fa_clock_time(stream->clock);
@@ -1168,21 +1167,30 @@ void midi_stream_destroy(fa_ptr_t a)
     fa_midi_close_stream(a);
 }
 
+fa_dynamic_type_repr_t midi_stream_get_type(fa_ptr_t a)
+{
+    return midi_stream_type_repr;
+}
+
 fa_ptr_t midi_stream_impl(fa_id_t interface)
 {
     static fa_string_show_t midi_stream_show_impl
         = { midi_stream_show };
     static fa_destroy_t midi_stream_destroy_impl
         = { midi_stream_destroy };
+    static fa_dynamic_t midi_stream_dynamic_impl
+        = { midi_stream_get_type };
 
     switch (interface) {
-
 
     case fa_string_show_i:
         return &midi_stream_show_impl;
 
     case fa_destroy_i:
         return &midi_stream_destroy_impl;
+        
+    case fa_dynamic_i:
+        return &midi_stream_dynamic_impl;
 
     default:
         return NULL;
