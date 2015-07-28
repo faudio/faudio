@@ -1152,7 +1152,7 @@ double step(fa_signal_t signal, state_t state)
     case output_signal: {
         int         n         = output_get(signal, n);
         int         c         = output_get(signal, c);
-        fa_signal_t    a         = output_get(signal, a);
+        fa_signal_t a         = output_get(signal, a);
 
         double      xa        = step(a, state);
         write_samp1(n, c, xa, state);
@@ -1229,8 +1229,8 @@ void step_vector(fa_signal_t signal, state_t state, int count, double *out)
     }
 
     case input_signal: {
-        int         c         = input_get(signal, c);
-        double *xs = read_samp(c, state);
+        int         c = input_get(signal, c);
+        double    *xs = read_samp(c, state);
 
         for (int i = 0; i < count; ++i) {
             out[i] = xs[i];
@@ -1359,10 +1359,10 @@ void fa_signal_run(int count, fa_list_t controls_, fa_signal_t a, double *output
         // XXX Before this, replace "local" buses with "global" (for custom procs)
         a = fa_signal_simplify(a);
 
-        fa_inform(fa_string_dappend(fa_string("    Signal Tree: \n"), fa_string_show(a)));
+        fa_inform(fa_string_dappend(fa_string("    Signal Tree 1: \n"), fa_string_show(a)));
         a = fa_signal_route_processors(proc_map, a);
 
-        fa_inform(fa_string_dappend(fa_string("    Signal Tree: \n"), fa_string_show(a)));
+        fa_inform(fa_string_dappend(fa_string("    Signal Tree 2: \n"), fa_string_show(a)));
         a = fa_signal_doptimize(a);
         a = fa_signal_dverify(a);
 

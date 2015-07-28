@@ -134,7 +134,10 @@ fa_signal_t fa_signal_delay(int int_, fa_signal_t signal);
 
 
 typedef struct {
-            double * buffer; fa_ptr_t dummy; int count; double rate;
+            double * buffer;
+            fa_ptr_t dummy;
+            int count;
+            double rate;
         } fa_signal_state_t;
 
 /** Type of names.
