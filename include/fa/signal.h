@@ -336,6 +336,8 @@ fa_signal_t fa_signal_trigger(fa_string_t name, double init);
 */
 fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t signal);
 
+fa_pair_t fa_signal_play_buffer(fa_string_t name);
+
 /**
     Index a buffer at the given sample and returns the written value.
 

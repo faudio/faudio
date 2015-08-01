@@ -107,5 +107,4 @@ fa_pair_t fa_signal_dls(fa_string_t name)
     fa_signal_t right = fa_signal_input_with_custom(proc, 1);
     fa_signal_t left2 = fa_signal_custom(proc, left);
     return fa_pair_create(left2, right);
-    fa_mark_used(left2);
 }

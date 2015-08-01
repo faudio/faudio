@@ -1299,7 +1299,7 @@ fa_map_t pointer_list_to_custom_proc_map(fa_list_t xs)
 
 fa_ptr_t lookup_proc_offset(fa_map_t proc_map, intptr_t x)
 {
-    return fa_map_get(fa_from_int64(x), proc_map);
+    return fa_map_dget(fa_from_int64(x), proc_map);
 }
 
 inline static
@@ -1329,7 +1329,6 @@ fa_map_t build_proc_map(fa_list_t procs)
     // Now remove duplicates, then build a map (ProcId => BusIndexOffset)
     fa_map_t proc_map = pointer_list_to_custom_proc_map(procs2);
 
-    fa_mark_used(proc_map);
     fa_for_each(x, procs) {
         // printf("%lu\n", (unsigned long) x);
         fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) x);
@@ -2297,6 +2296,136 @@ fa_signal_t fa_signal_trigger(fa_string_t name, double init)
     proc->data    = context;
 
     return fa_signal_custom(proc, fa_signal_input_with_custom(proc, 0));
+}
+
+// --------------------------------------------------------------------------------
+
+struct _play_buffer_context {
+    fa_string_t name;
+    fa_buffer_t buffer;
+    size_t pos;
+    size_t max_pos;
+    uint8_t channels;
+    bool playing;
+};
+
+typedef struct _play_buffer_context play_buffer_context;
+
+fa_ptr_t play_buffer_before_(fa_ptr_t x, int count, fa_signal_state_t *state)
+{
+    return x;
+}
+fa_ptr_t play_buffer_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
+{
+    return x;
+}
+fa_ptr_t play_buffer_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
+{
+    play_buffer_context *context = x;
+
+    if (!kVectorMode) {
+        if (context->playing) {
+            if (context->pos < context->max_pos) {
+                size_t buffer_pos = context->pos * context->channels;
+                //printf("buffer_pos: %zu, pos: %zu, max_pos: %zu, size: %zu\n", buffer_pos, context->pos, context->max_pos, fa_buffer_size(context->buffer));
+                state->buffer[(offset + 0)*kMaxVectorSize] = fa_buffer_get_double(context->buffer, buffer_pos + 0);
+                if (context->channels > 1) {
+                    state->buffer[(offset + 1)*kMaxVectorSize] = fa_buffer_get_double(context->buffer, buffer_pos + 1);
+                } else {
+                    state->buffer[(offset + 1)*kMaxVectorSize] = fa_buffer_get_double(context->buffer, buffer_pos + 0);
+                }
+                context->pos++;
+            } else {
+                state->buffer[(offset + 0)*kMaxVectorSize] = 0;
+                state->buffer[(offset + 1)*kMaxVectorSize] = 0;
+                context->playing = false;
+                context->pos = 0;
+            }
+        } else {
+            state->buffer[(offset + 0)*kMaxVectorSize] = 0;
+            state->buffer[(offset + 1)*kMaxVectorSize] = 0;
+        }
+    } else {
+        assert(false && "Not supported yet");
+    }
+
+    return x;
+}
+fa_ptr_t play_buffer_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+{
+    play_buffer_context *context = x;
+
+    if (fa_equal(n, context->name)) {
+        
+        fa_dynamic_type_repr_t msg_type = fa_dynamic_get_type(msg);
+        switch (msg_type) {
+            case buffer_type_repr:
+            {
+                fa_buffer_t buffer = msg;
+                context->playing = false;
+                context->pos = 0;
+                context->buffer = buffer;
+                context->channels = fa_peek_number(fa_buffer_get_meta(buffer, fa_string("channels")));
+                size_t size = fa_buffer_size(buffer);
+                context->max_pos = (size / ((sizeof(double)) * context->channels)) - 1;
+                break;
+            }
+            
+            case i8_type_repr:
+            case i16_type_repr:
+            case i32_type_repr:
+            case i64_type_repr:
+            {
+                uint64_t new_pos = fa_peek_integer(msg);
+                if (new_pos > context->max_pos) new_pos = context->max_pos;
+                context->pos = new_pos;
+                fa_destroy(msg);
+                break;
+            }
+            
+            case string_type_repr:
+            {
+                if (fa_dequal(fa_copy(msg), fa_string("play"))) {
+                    context->playing = true;
+                }
+                else if (fa_dequal(fa_copy(msg), fa_string("stop"))) {
+                    context->playing = false;
+                }
+                fa_destroy(msg);
+                break;
+            }
+
+            default:
+            break;
+        }
+    }
+
+    return x;
+}
+
+fa_pair_t fa_signal_play_buffer(fa_string_t name)
+{
+    play_buffer_context *context = fa_malloc(sizeof(play_buffer_context));
+    context->name = fa_copy(name);
+    context->buffer = NULL;
+    context->pos = 0;
+    context->max_pos = 0;
+    context->playing = false;
+
+    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
+    proc->before  = play_buffer_before_;
+    proc->after   = play_buffer_after_;
+    proc->render  = play_buffer_render_;
+    proc->receive = play_buffer_receive_;
+    proc->send    = NULL;
+    proc->destroy = NULL; // TODO
+    proc->data    = context;
+
+    fa_signal_t left  = fa_signal_input_with_custom(proc, 0);
+    fa_signal_t right = fa_signal_input_with_custom(proc, 1);
+    fa_signal_t left2 = fa_signal_custom(proc, left);
+    fa_pair_t result = fa_pair_create(left2, right);
+    return result;
 }
 
 // --------------------------------------------------------------------------------
