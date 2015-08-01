@@ -19,8 +19,6 @@
 #include "server-globals.h"
 #include "server-utils.h"
 
-#define send_osc(m, s, ...) lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__)
-
 #define define_handler(name) \
   int name ## _handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
 
@@ -29,27 +27,33 @@ int done = 0;
 
 void liblo_error(int num, const char *m, const char *path);
 
-int generic_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data);
-int blob_test_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
+define_handler(generic);
+define_handler(blob_test);
 
 define_handler(quit);
 define_handler(restart);
+define_handler(settings);
 
-int test_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data);
-int stats_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
-int simple_midi_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data);
-int simple_note_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data);
+define_handler(test);
+define_handler(stats);
+define_handler(simple_midi);
+define_handler(simple_note);
+define_handler(play_audio);
+define_handler(stop);
 
-int time_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
-int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
-int current_devices_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
+define_handler(time);
+define_handler(all_devices);
+define_handler(current_devices);
 
-int main_volume_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
-int pan_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
-int program_change_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
-int pitch_wheel_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
-int sustain_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
-int channel_reset_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data);
+define_handler(load_audio_file);
+define_handler(close_audio_file);
+
+define_handler(main_volume);
+define_handler(pan);
+define_handler(program_change);
+define_handler(pitch_wheel);
+define_handler(sustain);
+define_handler(channel_reset);
 
 
 int main()
@@ -60,52 +64,69 @@ int main()
   
     /* start a new server on port 7770 */
     lo_server_thread st = lo_server_thread_new_with_proto(port, LO_TCP, liblo_error);
-    lo_server s = lo_server_thread_get_server(st);
+    server = lo_server_thread_get_server(st);
 
     /* add method that will match any path and args */
-    lo_server_thread_add_method(st, NULL, NULL, generic_handler, NULL);
+    lo_server_thread_add_method(st, NULL, NULL, generic_handler, server);
     
-    lo_server_thread_add_method(st, "/blob", "bi", blob_test_handler, NULL);
+    lo_server_thread_add_method(st, "/stop", "i", stop_handler, server);
     
-    lo_server_thread_add_method(st, "/stats", "", stats_handler, NULL);
+    lo_server_thread_add_method(st, "/stats", "", stats_handler, server);
 
-    /* Quit handler */
-    lo_server_thread_add_method(st, "/quit", "", quit_handler, NULL);
-    lo_server_thread_add_method(st, "/restart", "", restart_handler, NULL);
-    lo_server_thread_add_method(st, "/restart", "i", restart_handler, NULL);
-
-    /* add method that will match the path /test with no args */
-    lo_server_thread_add_method(st, "/test", "", test_handler, s);
-  
+    /* Quitting, restart */
+    lo_server_thread_add_method(st, "/quit", "", quit_handler, server);
+    lo_server_thread_add_method(st, "/restart", "", restart_handler, server);
+    lo_server_thread_add_method(st, "/restart", "i", restart_handler, server);
+    
+    /* Settings */
+    lo_server_thread_add_method(st, "/set/latency",            "f", settings_handler, "latency");
+    lo_server_thread_add_method(st, "/set/input-latency",      "f", settings_handler, "input-latency");
+    lo_server_thread_add_method(st, "/set/output-latency",     "f", settings_handler, "output-latency");
+    lo_server_thread_add_method(st, "/set/sample-rate",        "f", settings_handler, "sample-rate");
+    lo_server_thread_add_method(st, "/set/vector-size",        "i", settings_handler, "vector-size");
+    lo_server_thread_add_method(st, "/set/scheduler-interval", "i", settings_handler, "scheduler-interval");
+    lo_server_thread_add_method(st, "/set/exclusive",          "T", settings_handler, "exclusive");
+    lo_server_thread_add_method(st, "/set/exclusive",          "F", settings_handler, "exclusive");
+    lo_server_thread_add_method(st, "/set/exclusive",          "N", settings_handler, "exclusive");
+      
     /* Get info */
-    lo_server_thread_add_method(st, "/time", "", time_handler, s);
-    lo_server_thread_add_method(st, "/all/devices", "", all_devices_handler, s);
-    lo_server_thread_add_method(st, "/current/devices", "", current_devices_handler, s);
+    lo_server_thread_add_method(st, "/time", "", time_handler, server);
+    lo_server_thread_add_method(st, "/all/devices", "", all_devices_handler, server);
+    lo_server_thread_add_method(st, "/current/devices", "", current_devices_handler, server);
 
     /* Send raw midi messages */
-    lo_server_thread_add_method(st, "/send/midi", "ii",  simple_midi_handler, s);
-    lo_server_thread_add_method(st, "/send/midi", "iii", simple_midi_handler, s);
+    lo_server_thread_add_method(st, "/send/midi", "ii",  simple_midi_handler, server);
+    lo_server_thread_add_method(st, "/send/midi", "iii", simple_midi_handler, server);
     /* Send note immediately */
-    lo_server_thread_add_method(st, "/send/note", "iii", simple_note_handler, s); // f0, velocity, length (ms)
-    lo_server_thread_add_method(st, "/send/note", "iiii", simple_note_handler, s); // f0, velocity, length (ms), channel
+    lo_server_thread_add_method(st, "/send/note", "iii", simple_note_handler, server); // f0, velocity, length (ms)
+    lo_server_thread_add_method(st, "/send/note", "iiii", simple_note_handler, server); // f0, velocity, length (ms), channel
+    
+    /* Audio files */
+    lo_server_thread_add_method(st, "/play/audio", "ii", play_audio_handler, server);
+    lo_server_thread_add_method(st, "/load/audio-file", "is", load_audio_file_handler, server);
+    lo_server_thread_add_method(st, "/close/audio-file", "i", close_audio_file_handler, server);
+    
     /* Send midi control messages */
-    lo_server_thread_add_method(st, "/send/main-volume",    "ii", main_volume_handler, s);
-    lo_server_thread_add_method(st, "/send/pan",            "if", pan_handler, s);
-    lo_server_thread_add_method(st, "/send/program-change", "iii", program_change_handler, s);
-    lo_server_thread_add_method(st, "/send/pitch-wheel",    "if", pitch_wheel_handler, s);
-    lo_server_thread_add_method(st, "/send/sustain",        "ii", sustain_handler, s); // ch, sustain (0=up or 1=down)
-    lo_server_thread_add_method(st, "/send/channel-reset",  "i", channel_reset_handler, s);
-    lo_server_thread_add_method(st, "/send/channel-reset",  "iifiifi", channel_reset_handler, s);
+    lo_server_thread_add_method(st, "/send/main-volume",    "ii", main_volume_handler, server);
+    lo_server_thread_add_method(st, "/send/pan",            "if", pan_handler, server);
+    lo_server_thread_add_method(st, "/send/program-change", "iii", program_change_handler, server);
+    lo_server_thread_add_method(st, "/send/pitch-wheel",    "if", pitch_wheel_handler, server);
+    lo_server_thread_add_method(st, "/send/sustain",        "ii", sustain_handler, server); // ch, sustain (0=up or 1=down)
+    lo_server_thread_add_method(st, "/send/channel-reset",  "i", channel_reset_handler, server);
+    lo_server_thread_add_method(st, "/send/channel-reset",  "iifiifi", channel_reset_handler, server);
 
     fa_with_faudio() {
         
         fa_clock_initialize();
+        
+        init_globals();
 
 #ifdef _WIN32
         synth_name   = fa_string("fluid");
 #else
         synth_name   = fa_string("dls");
 #endif
+        audio_name   = fa_string("buffer");
 
         current_audio_session = fa_audio_begin_session();
         current_audio_output_device = fa_audio_default_output(current_audio_session);
@@ -129,6 +150,8 @@ int main()
         
         fa_audio_end_session(current_audio_session);
         fa_midi_end_session(current_midi_session);
+        
+        destroy_globals();
       
     }
 
@@ -155,8 +178,12 @@ void liblo_error(int num, const char *msg, const char *path)
 /* catch any incoming messages and display them. returning 1 means that the
 * message has not been fully handled and the server should try other methods */
 int generic_handler(const char *path, const char *types, lo_arg ** argv,
-int argc, void *data, void *user_data)
+int argc, lo_message message, void *user_data)
 {
+    if (!last_address) {
+        last_address = lo_address_new_from_copy(lo_message_get_source(message));
+    }
+    
     //fa_log_region_count("In generic_handler");
     int i;
 
@@ -170,6 +197,19 @@ int argc, void *data, void *user_data)
     fflush(stdout);
   
     return 1;
+}
+
+fa_ptr_t _playback_started(fa_ptr_t context, fa_time_t time)
+{
+    send_osc_async("/playback/started", "ih", peek_oid(context), (int64_t)fa_time_to_milliseconds(time));
+    return NULL;
+}
+
+fa_ptr_t _playback_stopped(fa_ptr_t context, fa_time_t time)
+{
+    send_osc_async("/playback/stopped", "ihT", peek_oid(context), (int64_t)fa_time_to_milliseconds(time));
+    stop_time_echo();
+    return NULL;
 }
 
 int blob_test_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
@@ -196,12 +236,14 @@ int blob_test_handler(const char *path, const char *types, lo_arg ** argv, int a
     if (count == 0) return 0;
     
     // Collect MIDI entries from the data blob, create MIDI messages and add them to a list
+    int32_t max_time = 0;
     for (int i = 0; i < count; i++) {
         uint8_t cmd   = ptr[0];
         uint8_t ch    = ptr[1];
         uint8_t data1 = ptr[2];
         uint8_t data2 = ptr[3];
         int32_t time  = lo_otoh32(*(int32_t *) &ptr[4]);
+        max_time = MAX(time, max_time);
         //printf("  %x %x %x %x  %d\n", cmd, ch, data1, data2, time);
         
         fa_midi_message_t msg = fa_midi_message_create_simple(cmd + ch, data1, data2);
@@ -210,11 +252,20 @@ int blob_test_handler(const char *path, const char *types, lo_arg ** argv, int a
         ptr += 8;
     }
     
+    //lo_message_get_source(m), (lo_server)s
+    fa_push_list(pair(fa_action_do_with_time(_playback_started, wrap_oid(id)), fa_milliseconds(0)), actions);
+    fa_push_list(pair(fa_action_do_with_time(_playback_stopped, wrap_oid(id)), fa_milliseconds(max_time + 10)), actions);
+    
     // Convert absolute times to relative times
     actions = times_to_delta_times(actions);
     
-    // Send to 
-    schedule_relative(fa_now(), fa_action_many(actions), current_midi_echo_stream);
+    // 
+    add_playback_semaphore(id);
+    fa_action_t while_action = fa_action_while(check_playback_semaphore, wrap_oid(id), fa_action_many(actions));
+        
+    // Send to scheduler
+    schedule_relative(fa_now(), while_action, current_midi_echo_stream);
+    start_time_echo();
     
     // fa_log_region_count("AFTER");
     // fa_log_list_count();
@@ -222,6 +273,15 @@ int blob_test_handler(const char *path, const char *types, lo_arg ** argv, int a
     // fa_log_pair_count();
     // fa_log_pair_left_count();
     // fa_log_string_count();
+    return 0;
+}
+
+int stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
+    //printf("Stopping playback %d\n", argv[0]->i);
+    if (remove_playback_semaphore(argv[0]->i)) {
+        send_osc(message, user_data, "/playback/stopped", "ihF", argv[0]->i, fa_clock_milliseconds(current_clock));
+        stop_time_echo();
+    }
     return 0;
 }
 
@@ -242,52 +302,66 @@ int restart_handler(const char *path, const char *types, lo_arg ** argv, int arg
     switch (restart_type) {
     case 0:
         stop_streams();
+        remove_all_playback_semaphores();
         start_streams();
         break;
     default:
-        fa_dlog_warning(fa_string("No such restart type!"));
+        fa_log_warning(fa_string("No such restart type!"));
     } 
     return 0;
 }
 
-
-int test_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
+int settings_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
 {
-  
-    lo_message message = (lo_message)data;
-    lo_address address = lo_message_get_source(message);
-    lo_server server = (lo_server)user_data;
-    const char *host = lo_address_get_hostname(address);
-    const char *port = lo_address_get_port(address);
-
-    //printf("in midi handler\n");
-
-    if (!address) {
-        printf("Couldn't get message source, quitting.\n");
-        done = 1;
-        return 0;
+    fa_string_t parameter = fa_string(user_data);
+    fa_ptr_t value = create_fa_value(types[0], argv[0]);
+    fa_slog_info("settings handler: ", parameter, value);
+    if (value && current_audio_session) {
+        fa_audio_set_parameter(parameter, value, current_audio_session);
     }
-
-    int r = lo_send_from(address, server, LO_TT_IMMEDIATE, "/answer", "i", 1);
-    if (r < 0)
-        printf("Error sending back message, socket may have closed.\n");
-    else
-        printf("Sent %d bytes to %s:%s.\n", r, host, port);
-    
-  
-    fa_action_t chord = fa_action_many(list(
-        fa_pair_create(
-            fa_action_send(synth_name, fa_midi_message_create_simple(0x90, 64 + ((5 % 12) * 3), 90)), fa_hms(0, 0, 1)
-                ),
-    fa_pair_create(
-        fa_action_send(synth_name, fa_midi_message_create_simple(0x90, 61 + ((5 % 12) * 3), 90)), fa_hms(0, 0, 1)
-            )
-                ));
-    // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
-    fa_audio_schedule_relative(fa_hms(0, 0, 0), chord, current_audio_stream);
-  
+    if (value) fa_destroy(value);
+    fa_destroy(parameter);
     return 0;
 }
+
+
+// int test_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
+// {
+//
+//     lo_message message = (lo_message)data;
+//     lo_address address = lo_message_get_source(message);
+//     lo_server server = (lo_server)user_data;
+//     const char *host = lo_address_get_hostname(address);
+//     const char *port = lo_address_get_port(address);
+//
+//     //printf("in midi handler\n");
+//
+//     if (!address) {
+//         printf("Couldn't get message source, quitting.\n");
+//         done = 1;
+//         return 0;
+//     }
+//
+//     int r = lo_send_from(address, server, LO_TT_IMMEDIATE, "/answer", "i", 1);
+//     if (r < 0)
+//         printf("Error sending back message, socket may have closed.\n");
+//     else
+//         printf("Sent %d bytes to %s:%s.\n", r, host, port);
+//
+//
+//     fa_action_t chord = fa_action_many(list(
+//         fa_pair_create(
+//             fa_action_send(synth_name, fa_midi_message_create_simple(0x90, 64 + ((5 % 12) * 3), 90)), fa_hms(0, 0, 1)
+//                 ),
+//     fa_pair_create(
+//         fa_action_send(synth_name, fa_midi_message_create_simple(0x90, 61 + ((5 % 12) * 3), 90)), fa_hms(0, 0, 1)
+//             )
+//                 ));
+//     // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
+//     fa_audio_schedule_relative(fa_hms(0, 0, 0), chord, current_audio_stream);
+//
+//     return 0;
+// }
 
 /***************************
 *   /time
@@ -414,6 +488,57 @@ int simple_note_handler(const char *path, const char *types, lo_arg ** argv, int
     return 0;
 }
 
+#define safe_peek(ptr) (ptr ? (int32_t) fa_peek_number(ptr) : 0)
+
+int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
+    oid_t id = argv[0]->i;
+    fa_string_t file_path = fa_string_from_utf8(&argv[1]->s);
+    fa_buffer_t buffer = fa_buffer_read_audio(file_path);
+    if (fa_check(buffer)) {
+        fa_error_log(NULL, (fa_error_t) buffer);
+        fa_destroy(file_path);
+        send_osc(message, user_data, "/load/audio-file", "ii", id, -1);
+        return 0;
+    }
+    fa_buffer_set_meta(buffer, fa_string("file_path"), file_path);
+    fa_with_lock(audio_files_mutex) {
+        audio_files = fa_map_dset(wrap_oid(id), buffer, audio_files);
+    }
+    fa_ptr_t sample_rate = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
+    fa_ptr_t channels    = fa_buffer_get_meta(buffer, fa_string("channels"));
+    send_osc(message, user_data, "/load/audio-file", "iiii", id,
+        fa_buffer_size(buffer), safe_peek(sample_rate), safe_peek(channels));
+    
+    return 0;
+}
+
+int close_audio_file_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
+    oid_t id = argv[0]->i;
+    fa_with_lock(audio_files_mutex) {
+        fa_buffer_t buffer = fa_map_dget(wrap_oid(id), audio_files);
+        if (buffer) {
+            fa_destroy(buffer);
+            audio_files = fa_map_dremove(wrap_oid(id), audio_files);
+            send_osc(message, user_data, "/close/audio-file", "i", id);
+        }
+    }
+    return 0;
+}
+
+int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
+    oid_t id = argv[0]->i;
+    fa_buffer_t buffer = NULL;
+    fa_with_lock(audio_files_mutex) {
+        buffer = fa_map_dget(wrap_oid(id), audio_files);
+    }
+    if (buffer) {
+        schedule_relative(fa_now(), fa_action_send_retain(audio_name, buffer), current_audio_stream);
+        schedule_relative(fa_now(), fa_action_send(audio_name, fa_string("play")), current_audio_stream);
+    }
+    return 0;
+}
+
+
 /***************************
 *   /send/main-volume channel volume (0-16383)
 */
@@ -525,5 +650,6 @@ int stats_handler(const char *path, const char *types, lo_arg ** argv, int argc,
     fa_log_string_count();
     fa_log_func_ref_count();
     fa_log_action_count();
+    fa_log_map_count();
     return 0;
 }

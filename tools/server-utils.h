@@ -31,6 +31,9 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
+#define send_osc(m, s, ...) lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__)
+#define send_osc_async(...) if (last_address) lo_send_from(last_address, server, LO_TT_IMMEDIATE, __VA_ARGS__)
+
 void schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
     if (stream) {
         switch (fa_dynamic_get_type(stream)) {
@@ -143,13 +146,21 @@ bool _action_sort(fa_ptr_t a, fa_ptr_t b)
 // suited for action_many.
 // 
 // The passed in list is destroyed.
-fa_list_t times_to_delta_times(fa_list_t timeActions)
+fa_list_t times_to_delta_times(fa_list_t timeActions) //, fa_action_t before, fa_action_t after)
 {
-    fa_log_list_count();
+    //fa_log_list_count();
     timeActions = fa_list_dsort(timeActions, _action_sort);
-    fa_log_list_count();
+    // if (before) {
+    //     fa_push_list(pair(before, fa_now()), timeActions);
+    // }
+    //fa_log_list_count();
     timeActions = fa_list_dreverse(timeActions);
-    fa_log_list_count();
+    // if (after) {
+    //     fa_push_list(pair(after, fa_copy(fa_pair_second(fa_list_head(timeActions)))), timeActions);
+    // }
+    
+    
+    //fa_log_list_count();
     fa_time_t last_time = NULL;
     fa_list_t rel_actions = fa_list_empty();
     while (!fa_list_is_empty(timeActions)) {
@@ -181,14 +192,32 @@ fa_list_t times_to_delta_times(fa_list_t timeActions)
 
 
 fa_list_t construct_output_signal_tree() {
+    
+    // Synth
     #ifdef _WIN32
     fa_pair_t synth = fa_signal_synth(synth_name, fa_string("C:\\sf.sf2"));
     #else
     fa_pair_t synth = fa_signal_dls(synth_name);
     #endif
     
-    fa_list_t tree = fa_pair_to_list(synth);
+    fa_slog_info("synth: ", synth);
+    
+    fa_signal_t synth_left = fa_pair_first(synth);
+    fa_signal_t synth_right = fa_pair_second(synth);
     fa_destroy(synth); // only destroys the pair
+    
+    // Audio buffer playback
+    fa_pair_t play_buffer = fa_signal_play_buffer(audio_name);
+    printf("pointer is now %p\n", play_buffer);
+
+    fa_slog_info("play_buffer: ", play_buffer);
+    
+    fa_signal_t play_buffer_left = fa_pair_first(play_buffer);
+    fa_signal_t play_buffer_right = fa_pair_second(play_buffer);
+    fa_destroy(play_buffer); // only destroys the pair
+    
+    fa_list_t tree = list(fa_signal_add(synth_left, play_buffer_left),
+                          fa_signal_add(synth_right, play_buffer_right));
     
     return tree;
 }
@@ -209,7 +238,7 @@ void start_streams() {
         fa_list_t out_signal = construct_output_signal_tree();
         fa_audio_stream_t stream = fa_audio_open_stream(NULL, current_audio_output_device, just, out_signal);
         if (fa_check(stream)) {
-            fa_dlog_error(fa_string("Could not start audio stream!"));
+            fa_log_error(fa_string("Could not start audio stream!"));
             fa_error_log(stream, NULL);
             return;
         }
@@ -219,7 +248,138 @@ void start_streams() {
             current_midi_echo_stream = stream;
         }
     } else {
-        fa_dlog_warning(fa_string("No audio output device, won't start an audio stream"));
+        fa_log_warning(fa_string("No audio output device, won't start an audio stream"));
     }
+}
+
+fa_ptr_t create_fa_value(lo_type type, void *data) {
+    
+    typedef union {
+        int32_t i;
+        float f;
+        char c;
+        uint32_t nl;
+    } lo_pcast32;
+
+    typedef union {
+        int64_t i;
+        double f;
+        uint64_t nl;
+    } lo_pcast64;
+    
+    lo_pcast32 val32;
+    lo_pcast64 val64;
+    int size;
+    bool bigendian = 0; // from message.c in liblo
+
+    size = lo_arg_size(type, data);
+    if (size == 4 || type == LO_BLOB) {
+        if (bigendian) {
+            val32.nl = lo_otoh32(*(int32_t *) data);
+        } else {
+            val32.nl = *(int32_t *) data;
+        }
+    } else if (size == 8) {
+        if (bigendian) {
+            val64.nl = lo_otoh64(*(int64_t *) data);
+        } else {
+            val64.nl = *(int64_t *) data;
+        }
+    }
+    
+    switch (type) {
+    case LO_INT32:      return fa_from_int32(val32.i);
+    case LO_FLOAT:      return fa_from_float(val32.f);
+    case LO_STRING:     return fa_string((char *) data);
+    case LO_BLOB:       assert(false && "creating buffers from blobs not yet supported");
+    case LO_INT64:      return fa_from_int64(val64.i);
+    case LO_DOUBLE:     return fa_from_double(val64.f);
+    case LO_SYMBOL:     return fa_string((char *) data);
+    case LO_TRUE:       return fa_from_bool(true);
+    case LO_FALSE:      return fa_from_bool(false);
+    case LO_NIL:        return fa_from_bool(false);
+    default:
+        fprintf(stderr, "warning in create_fa_value: unhandled type: %c\n", type);
+        return NULL;
+    }
+}
+
+void add_playback_semaphore(oid_t id) {
+    //bool* a_bool = fa_malloc(sizeof(bool));
+    //*a_bool = true;
+    fa_ptr_t a_bool = fa_from_bool(true);
+    fa_with_lock(playback_semaphore_mutex) {
+        playback_semaphores = fa_map_dset(wrap_oid(id), a_bool, playback_semaphores);
+    }
+    //return a_bool;
+}
+
+bool check_playback_semaphore(fa_ptr_t context, fa_ptr_t dummy)
+{
+    // bool* bool_ref = context;
+    // return *bool_ref;
+    //bool* bool_ref = fa_map_get(context, playback_semaphores);
+    fa_ptr_t a_bool = fa_map_get(context, playback_semaphores);
+    return (a_bool && fa_peek_bool(a_bool));
+}
+
+bool remove_playback_semaphore(oid_t id) {
+    //bool* bool_ref = fa_map_dget(wrap_oid(id), playback_semaphores);
+    //if (bool_ref) {
+        //fa_free(bool_ref);
+        
+    bool removed = false;
+    fa_with_lock(playback_semaphore_mutex) {
+        fa_ptr_t s = fa_map_dget(wrap_oid(id), playback_semaphores);
+        if (s) {
+            playback_semaphores = fa_map_dremove(wrap_oid(id), playback_semaphores);
+            removed = true;
+        }
+    }
+    return removed;
+}
+
+static inline void remove_all_playback_semaphores() {
+    fa_with_lock(playback_semaphore_mutex) {
+        fa_map_t old_semaphores = playback_semaphores;
+        playback_semaphores = fa_map_empty();
+        fa_destroy(old_semaphores);
+    }
+}
+
+fa_ptr_t _echo_time(fa_ptr_t context, fa_time_t time) {
+    send_osc_async("/time", "h", fa_time_to_milliseconds(time));
+    return NULL;
+}
+
+bool _echo_time_p(fa_ptr_t context, fa_ptr_t dummy) {
+    return time_echo > 0;
+}
+
+int start_time_echo()
+{
+    int new_value;
+    fa_with_lock(playback_semaphore_mutex) {
+        if (!time_echo) {
+            time_echo++;
+            fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), fa_action_do_with_time(_echo_time, NULL));
+            fa_action_t while_action = fa_action_while(_echo_time_p, NULL, repeat_action);
+            schedule_relative(fa_now(), while_action, current_midi_echo_stream);
+        } else {
+            time_echo++;
+        }
+        new_value = time_echo;
+    }
+    return new_value;
+}
+
+int stop_time_echo()
+{
+    int new_value;
+    fa_with_lock(playback_semaphore_mutex) {
+        time_echo--;
+        new_value = time_echo;
+    }
+    return new_value;
 }
 
