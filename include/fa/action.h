@@ -153,6 +153,11 @@ fa_action_t fa_action_accum(fa_action_channel_t channel,
 fa_action_t fa_action_send(fa_action_name_t name,
                            fa_action_value_t value);
 
+ /** Like fa_action_send, but the value is not destroyed with the action.
+ */
+fa_action_t fa_action_send_retain(fa_action_name_t name, fa_action_value_t value);
+
+
 /** Return whether the given action is a get action.
       
 */

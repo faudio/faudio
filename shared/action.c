@@ -57,6 +57,7 @@ struct _fa_action_t {
         struct {
             name_t                  name;
             fa_ptr_t                value;
+            bool                    retain;
         }                           send;
 
         struct {
@@ -156,6 +157,16 @@ fa_action_t fa_action_send(fa_action_name_t name, fa_ptr_t value)
     action_t action = new_action(send_action);
     send_get(action, name)  = fa_copy(name);
     send_get(action, value) = value;
+    send_get(action, retain) = false;
+    return action;
+}
+
+fa_action_t fa_action_send_retain(fa_action_name_t name, fa_action_value_t value)
+{
+    action_t action = new_action(send_action);
+    send_get(action, name)  = fa_copy(name);
+    send_get(action, value) = value;
+    send_get(action, retain) = true;
     return action;
 }
 
@@ -333,7 +344,9 @@ static inline void destroy_accum(fa_action_t action)
 static inline void destroy_send(fa_action_t action)
 {
     fa_destroy(send_get(action, name));
-    fa_destroy(send_get(action, value));
+    if (!send_get(action, retain)) {
+        fa_destroy(send_get(action, value));
+    }
 }
 static inline void destroy_do(fa_action_t action)
 {
@@ -1171,5 +1184,5 @@ struct _fa_map_t {
 
 void fa_log_action_count()
 {
-    fa_dlog_info(fa_string_dappend(fa_string("Actions allocated: "), fa_string_dshow(fa_i32(gActionCount))));
+    fa_log_info(fa_string_dappend(fa_string("Actions allocated: "), fa_string_dshow(fa_i32(gActionCount))));
 }
