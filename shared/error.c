@@ -36,8 +36,8 @@ fa_error_t fa_error_create_simple(
     simple_fa_error_t e  = fa_new_struct(simple_error);
     e->impl     = &simple_error_impl;
     e->severity = severity;
-    e->message  = fa_copy(message);
-    e->origin   = origin ? fa_copy(origin) : NULL;
+    e->message  = message;
+    e->origin   = origin;
     return (fa_error_t) e;
 }
 

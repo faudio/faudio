@@ -231,6 +231,7 @@ void fa_list_destroy(fa_list_t xs)
     delete_list(xs);
 }
 
+// FIXME: check reference count!
 void fa_list_deep_destroy(fa_list_t xs, fa_deep_destroy_pred_t p)
 {
     if (!p(xs)) return;
@@ -935,7 +936,7 @@ fa_ptr_t list_impl(fa_id_t interface)
 
 void fa_log_list_count()
 {
-  fa_dlog_info(fa_string_dappend(fa_string("Lists/nodes allocated: "),
+  fa_log_info(fa_string_dappend(fa_string("Lists/nodes allocated: "),
       fa_string_dappend(fa_string_dshow(fa_i32(gListCount)),
       fa_string_dappend(fa_string(" / "), fa_string_dshow(fa_i32(gNodeCount))))));
 }

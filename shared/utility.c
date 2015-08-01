@@ -97,16 +97,16 @@ void fa_initialize()
     gBytesAlloc = 0;
     gRegionCount = 0;
 	
-    fa_dlog_info(fa_string(""));
+    fa_log_info(fa_string(""));
 
-    fa_dlog_info(fa_dappend(
-                 fa_string("Initializing faudio "),
-                 fa_string_dappend(fa_version_string(),
-                                   fa_string_dappend(fa_string(""),
+    fa_log_info(fa_dappend(
+                fa_string("Initializing faudio "),
+                fa_string_dappend(fa_version_string(),
+                                  fa_string_dappend(fa_string(""),
 #ifdef FAUDIO_DEBUG
-                                                     fa_string(" (debug build)")))
+                                                    fa_string(" (debug build)")))
 #else
-                                                     fa_string(" (release build)")))
+                                                    fa_string(" (release build)")))
 #endif
                 ));
 
@@ -124,7 +124,7 @@ void fa_initialize()
 	
 	fa_log_region_count("After audio initialize:");
 
-    fa_dlog_info(fa_string("Done initializing faudio"));
+    fa_log_info(fa_string("Done initializing faudio"));
 
     gInitCount++;
 }
@@ -138,15 +138,15 @@ void fa_terminate()
         fa_clock_terminate();
         fa_device_terminate();
 
-        fa_dlog_info(fa_string_dappend(fa_string("Total bytes allocated: "),
-                                       fa_string_dshow(fa_i32(gBytesAlloc))));
+        fa_log_info(fa_string_dappend(fa_string("Total bytes allocated: "),
+                                      fa_string_dshow(fa_i32(gBytesAlloc))));
 
-        fa_dlog_info(fa_string_dappend(fa_string("Regions leaked: "),
-                                       fa_string_dshow(fa_i32(gRegionCount))));
+        fa_log_info(fa_string_dappend(fa_string("Regions leaked: "),
+                                      fa_string_dshow(fa_i32(gRegionCount))));
 
-        fa_dlog_info(fa_string("Terminated faudio"));
+        fa_log_info(fa_string("Terminated faudio"));
     } else {
-        fa_dlog_warning(fa_string("Could not terminate faudio: inconsistent state"));
+        fa_log_warning(fa_string("Could not terminate faudio: inconsistent state"));
     }
 }
 
@@ -250,74 +250,59 @@ void fa_log(fa_ptr_t data, fa_error_t e)
     if (gLogFunc) {
         gLogFunc(gLogData, (fa_ptr_t) time(NULL), e);
     }
-}
-
-void fa_dlog(fa_ptr_t data, fa_error_t e)
-{
-    fa_log(data, e);
     fa_destroy(e);
 }
-
 
 void fa_log_info(fa_string_t msg)
 {
     fa_log_info_from(msg, NULL);
 }
 
-void fa_dlog_info(fa_string_t msg)
-{
-    fa_log_info(msg);
-    fa_destroy(msg);
-}
+// void fa_dlog_info(fa_string_t msg)
+// {
+//     fa_log_info(msg);
+//     fa_destroy(msg);
+// }
 
 void fa_log_warning(fa_string_t msg)
 {
     fa_log_warning_from(msg, NULL);
 }
 
-void fa_dlog_warning (fa_string_t msg)
-{
-	fa_log_warning(msg);
-	fa_destroy(msg);
-}
+// void fa_dlog_warning (fa_string_t msg)
+// {
+//     fa_log_warning(msg);
+//     fa_destroy(msg);
+// }
 
 void fa_log_error(fa_string_t msg)
 {
     fa_log_error_from(msg, NULL);
 }
 
-void fa_dlog_error(fa_string_t msg)
-{
-	fa_log_error(msg);
-	fa_destroy(msg);
-}
-
 void fa_log_info_from(fa_string_t msg, fa_string_t origin)
 {
     fa_error_t err = fa_error_create_simple(info, msg, origin);
     fa_log(NULL, err);
-    fa_destroy(err);
 }
 
 void fa_log_warning_from(fa_string_t msg, fa_string_t origin)
 {
     fa_error_t err = fa_error_create_simple(warning, msg, origin);
     fa_log(NULL, err);
-    fa_destroy(err);
 }
 
 void fa_log_error_from(fa_string_t msg, fa_string_t origin)
 {
     fa_error_t err = fa_error_create_simple(error, msg, origin);
     fa_log(NULL, err);
-    fa_destroy(err);
 }
 
 void fa_log_region_count(char* s)
 {
   long count = gRegionCount;
-  fa_dlog_info(fa_string_dappend(fa_string(s), fa_string_dappend(fa_string("  Regions allocated: "),
-                                 fa_string_dshow(fa_i32(count)))));
+  fa_log_info(fa_string_dappend(fa_string(s), fa_string_dappend(fa_string("  Regions allocated: "),
+                                fa_string_dshow(fa_i32(count)))));
   //printf("Actually: %ld\n", gRegionCount);
 }
 

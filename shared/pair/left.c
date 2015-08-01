@@ -190,5 +190,5 @@ fa_ptr_t pair_left_impl(fa_id_t interface)
 
 void fa_log_pair_left_count()
 {
-  fa_dlog_info(fa_string_dappend(fa_string("Pair-lefts allocated: "), fa_string_dshow(fa_i32(gPairLeftCount))));
+  fa_log_info(fa_string_dappend(fa_string("Pair-lefts allocated: "), fa_string_dshow(fa_i32(gPairLeftCount))));
 }

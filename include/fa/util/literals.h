@@ -34,7 +34,7 @@ fa_map_t fa_map(int count, ...);
 #define map3(a,b,c)                         fa_map(3,a,b,c)
 #define map4(a,b,c,d)                       fa_map(4,a,b,c,d)
 #define map5(a,b,c,d,e)                     fa_map(5,a,b,c,d,e)
-// #define map6(a,b,c,d,e,f)                   fa_map(6,a,b,c,d,e,f)
+#define map6(a,b,c,d,e,f)                   fa_map(6,a,b,c,d,e,f)
 #define map(...) VARARG(map, __VA_ARGS__)
 
 #define concat0()                           fa_string_empty()
