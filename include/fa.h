@@ -114,6 +114,17 @@ bool fa_is_double(fa_ptr_t ptr);
 */
 bool fa_is_ref(fa_ptr_t ptr);
 
+/** Return whether the given value is of an integer type (int8, int16, int32 or int64).
+    @see [Value references](@ref ValueReferences) 
+*/
+bool fa_is_integer(fa_ptr_t ptr);
+
+/** Return whether the given value is of a numeric type (int8, int16, int32, int64, float or double).
+    @see [Value references](@ref ValueReferences) 
+*/
+bool fa_is_number(fa_ptr_t ptr);
+
+
 /** Unwrap a referece to a @bool@ and destroy the reference. 
     @see [Value references](@ref ValueReferences) 
 */
@@ -184,6 +195,18 @@ float fa_peek_float(fa_ptr_t ptr);
 */
 double fa_peek_double(fa_ptr_t ptr);
 
+/** Unwrap a referece to an integer (int8, int16, int32 or int64) without destroying the reference.
+    The result is promoted to an int64.
+    @see [Value references](@ref ValueReferences) 
+*/
+int64_t fa_peek_integer(fa_ptr_t a);
+
+/** Unwrap a referece to a number (int8, int16, int32, int64, float or double) without destroying the reference.
+    The result is promoted to a double.
+    @see [Value references](@ref ValueReferences) 
+*/
+double fa_peek_number(fa_ptr_t a);
+
 /** Create a new referece to a @bool@ value.
     The returned reference must be destroyed by the caller.
     @see [Value references](@ref ValueReferences) 
@@ -252,6 +275,12 @@ typedef struct {
 
 /** Return whether the given values are equal.
     @see [Equal](@ref fa_equal_t)
+        
+    NOTE that
+    * NULL == NULL
+    * Identical pointers return true, regardless of type (this means that non-wrapped values may be passed to fa_equal)
+    * Numerical values are compared numerically (regardless of the underlying number type)
+    * Other values will generally have to be the same type, unless overridden by their implementation of fa_equal_t
       
 */
 bool fa_equal(fa_ptr_t ptr, fa_ptr_t ptr_);
@@ -261,6 +290,12 @@ bool fa_equal(fa_ptr_t ptr, fa_ptr_t ptr_);
       
 */
 bool fa_not_equal(fa_ptr_t ptr, fa_ptr_t ptr_);
+
+/** Return whether the given values are equal, and destroys the passed values before returning.
+    @see [Equal](@ref fa_equal_t)
+      
+*/
+bool fa_dequal(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 /** Less-than comparison interface.
     

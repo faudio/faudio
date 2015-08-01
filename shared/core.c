@@ -80,6 +80,14 @@ bool fa_is_ref(fa_ptr_t x)
 {
     return (((intptr_t) x) & 0x7) == 0x0;
 }
+bool fa_is_number(fa_ptr_t x)
+{
+    return ((((intptr_t) x) & 0x7) >= 0x1 && (((intptr_t) x) & 0x7) <= 0x6);
+}
+bool fa_is_integer(fa_ptr_t x)
+{
+    return ((((intptr_t) x) & 0x7) >= 0x3 && (((intptr_t) x) & 0x7) <= 0x6);
+}
 
 
 // --------------------------------------------------------------------------------
@@ -283,6 +291,32 @@ fa_ptr_t fa_from_double(double a)
 
 // --------------------------------------------------------------------------------
 
+int64_t fa_peek_integer(fa_ptr_t a)
+{
+    switch (fa_type(a)) {
+        case 0x3: return fa_peek_int64(a);
+        case 0x4: return fa_peek_int32(a);
+        case 0x5: return fa_peek_int16(a);
+        case 0x6: return fa_peek_int8(a);
+        default: assert(false && "Not an integer type!");
+    }
+}
+
+double fa_peek_number(fa_ptr_t a)
+{
+    switch (fa_type(a)) {
+        case 0x1: return fa_peek_double(a);
+        case 0x2: return fa_peek_float(a);
+        case 0x3: return fa_peek_int64(a);
+        case 0x4: return fa_peek_int32(a);
+        case 0x5: return fa_peek_int16(a);
+        case 0x6: return fa_peek_int8(a);
+        default: assert(false && "Not a numeric type!");
+    }
+}
+
+// --------------------------------------------------------------------------------
+
 #define GENERIC1(I,F,A,B) \
     B fa_##F(A a)                                                               \
     {                                                                           \
@@ -298,13 +332,46 @@ fa_ptr_t fa_from_double(double a)
     }
 
 
-GENERIC2(equal,     equal,          fa_ptr_t, fa_ptr_t, bool);
+//GENERIC2(equal,     equal,          fa_ptr_t, fa_ptr_t, bool); // use special implementaion for equal
 GENERIC2(order,     less_than,      fa_ptr_t, fa_ptr_t, bool);
 GENERIC2(order,     greater_than,   fa_ptr_t, fa_ptr_t, bool);
+
+bool fa_equal(fa_ptr_t a, fa_ptr_t b)
+{
+    // This may seem overly complicated, but it is needed to get nice handling
+    // of the numeric types, since it would be ridiculus if we couldn't compare
+    // e.g. an int16 to an int32. Also, it is nice to be able to handle NULL values.
+    
+    // Same object is always considered equal (this also implies that NULL == NULL)
+    if (a == b) return true;
+    // NULL is never equal to anything except NULL
+    if (a == NULL || b == NULL) return false;
+    // If both values are of integral types, compare them as int64
+    if (fa_is_integer(a) && fa_is_integer(b)) {
+        return (fa_peek_integer(a) == fa_peek_integer(b));
+    }
+    // If both values are numiercal, compare them as doubles.
+    // Also, a number can never equal a non-number
+    if (fa_is_number(a)) {
+        if (!fa_is_number(b)) return false;
+        return (fa_peek_number(a) == fa_peek_number(b));
+    }
+    // Dispatch to interface
+    assert(fa_interface(fa_equal_i, a) && "Must implement equal");
+    return ((fa_equal_t*) fa_interface(fa_equal_i, a))->equal(a, b);
+}
 
 bool fa_not_equal(fa_ptr_t a, fa_ptr_t b)
 {
     return !fa_equal(a, b);
+}
+
+bool fa_dequal(fa_ptr_t a, fa_ptr_t b)
+{
+    bool res = fa_equal(a, b);
+    if (a) fa_destroy(a);
+    if (b) fa_destroy(b);
+    return res;
 }
 
 bool fa_less_than_equal(fa_ptr_t a, fa_ptr_t b)
