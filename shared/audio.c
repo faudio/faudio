@@ -68,7 +68,7 @@ struct _fa_audio_session_t {
         int             vector_size;
         int             scheduler_interval; // Scheduling interval in milliseconds
         bool            exclusive;          // Use exclusive mode (if available)
-    }                   parameters;         // Parameters, which may be updated by set_parameters
+    }                   parameters;         // Parameters, which may be updated by set_parameter
 
     struct {
         int                         count;
@@ -416,7 +416,7 @@ void fa_audio_set_parameter(fa_string_t name,
                             fa_ptr_t value,
                             session_t session)
 {
-    if (fa_equal(name, fa_string("sample-rate"))) {
+    if (fa_dequal(fa_copy(name), fa_string("sample-rate"))) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -438,9 +438,10 @@ void fa_audio_set_parameter(fa_string_t name,
         }
 
         session->parameters.sample_rate = x;
+        return;
     }
 
-    if (fa_equal(name, fa_string("scheduler-interval"))) {
+    if (fa_dequal(fa_copy(name), fa_string("scheduler-interval"))) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -462,9 +463,10 @@ void fa_audio_set_parameter(fa_string_t name,
         }
 
         session->parameters.scheduler_interval = x;
+        return;
     }
 
-    if (fa_equal(name, fa_string("latency"))) {
+    if (fa_dequal(fa_copy(name), fa_string("latency"))) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -487,9 +489,10 @@ void fa_audio_set_parameter(fa_string_t name,
 
         session->parameters.latency[0] = x;
         session->parameters.latency[1] = x;
+        return;
     }
 
-    if (fa_equal(name, fa_string("input-latency"))) {
+    if (fa_dequal(fa_copy(name), fa_string("input-latency"))) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -511,9 +514,10 @@ void fa_audio_set_parameter(fa_string_t name,
         }
 
         session->parameters.latency[0] = x;
+        return;
     }
 
-    if (fa_equal(name, fa_string("output-latency"))) {
+    if (fa_dequal(fa_copy(name), fa_string("output-latency"))) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -535,9 +539,10 @@ void fa_audio_set_parameter(fa_string_t name,
         }
 
         session->parameters.latency[1] = x;
+        return;
     }
 
-    if (fa_equal(name, fa_string("vector-size"))) {
+    if (fa_dequal(fa_copy(name), fa_string("vector-size"))) {
         int x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -563,9 +568,10 @@ void fa_audio_set_parameter(fa_string_t name,
         } else {
             fa_warn(fa_string_format_integral("Vector size %d too large, ignoring parameter.", x));
         }
+        return;
     }
 
-    if (fa_equal(name, fa_string("exclusive"))) {
+    if (fa_dequal(fa_copy(name), fa_string("exclusive"))) {
         bool x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -587,7 +593,9 @@ void fa_audio_set_parameter(fa_string_t name,
         }
 
         session->parameters.exclusive = x;
+        return;
     }
+    fa_warn(fa_dappend(fa_string("Unknown setting: "), fa_copy(name)));
 }
 
 fa_list_t fa_audio_current_sessions()
@@ -1477,19 +1485,21 @@ void audio_stream_destroy(fa_ptr_t a)
 int64_t audio_stream_milliseconds(fa_ptr_t a)
 {
     stream_t stream = (stream_t) a;
+    if (!stream->native) return 0;
+    return Pa_GetStreamTime(stream->native) * 1000.0;
 
-    if (stream->state) {
-        // We cache time in the stream in case the stream state has been freed
-        state_base_t state = (state_base_t) stream->state;
-
-#ifdef kAllowVirtualTime
-        stream->last_time = ((double) state->elapsed_time * 1000.0);
-#else
-        stream->last_time = ((double) state->count / (double) state->rate * 1000.0);
-#endif
-    }
-
-    return stream->last_time;
+    // if (stream->state) {
+//         // We cache time in the stream in case the stream state has been freed
+//         state_base_t state = (state_base_t) stream->state;
+//
+// #ifdef kAllowVirtualTime
+//         stream->last_time = ((double) state->elapsed_time * 1000.0);
+// #else
+//         stream->last_time = ((double) state->count / (double) state->rate * 1000.0);
+// #endif
+//     }
+//
+//     return stream->last_time;
 }
 
 fa_time_t fa_audio_stream_time(fa_ptr_t a)
