@@ -38,30 +38,36 @@
 
 typedef struct _fa_map_t * fa_map_t;
 
+typedef void (* fa_destructor_t)(fa_ptr_t);
 
 typedef fa_ptr_t fa_map_key_t;
 
-/** Create an empty list. 
+
+/** Create an empty map.
 */
 fa_map_t fa_map_empty();
 
-/** Copy the given list. 
+/** Copy the given map. 
 */
 fa_map_t fa_map_copy(fa_map_t map);
 
-/** Destroy the given list. 
+/** Destroy the given map. 
 */
 void fa_map_destroy(fa_map_t map);
 
-/** Return the number of elements in the given list. 
+/** Set the destructor for the given map. (Tip: use fa_destroy)
+*/
+void fa_map_set_value_destructor(fa_map_t map, fa_destructor_t fn);
+
+/** Return the number of entries in the given map. 
 */
 int fa_map_size(fa_map_t map);
 
-/** Return whether the given list is empty. 
+/** Return whether the given map is empty. 
 */
 bool fa_map_is_empty(fa_map_t map);
 
-/** Return whether the given list has a single element. 
+/** Return whether the given map has a single entry. 
 */
 bool fa_map_is_single(fa_map_t map);
 
@@ -89,69 +95,33 @@ fa_map_t fa_map_dset(fa_map_key_t key, fa_ptr_t ptr, fa_map_t map);
 */
 fa_map_t fa_map_dremove(fa_map_key_t key, fa_map_t map);
 
-/** Add an element to the map if not present. 
-*/
-fa_map_t fa_map_add_entry(fa_pair_t pair, fa_map_t map);
-
-/** Add an element to the map, replacing if already present. 
-*/
-fa_map_t fa_map_set_entry(fa_pair_t pair, fa_map_t map);
-
-/** Remove the given key if present. 
-*/
-fa_map_t fa_map_remove_entry(fa_pair_t pair, fa_map_t map);
-
 /** Return the element stored at the given key, or `null` if the key does not exist. 
 */
 fa_ptr_t fa_map_get(fa_map_key_t key, fa_map_t map);
 
-/** Return whether the given key exists in the given map. 
+/** Return the element stored at the given key, or `null` if the key does not exist.
+    The key is destroyed.
 */
-bool fa_map_has_key(fa_map_key_t key, fa_map_t map);
-
-/** Return whether the given element exists in the given map. 
-*/
-bool fa_map_has_elem(fa_ptr_t ptr, fa_map_t map);
-
-/** Return whether the given $(key, element)$ pair element exists in the given map. 
-*/
-bool fa_map_has_entry(fa_pair_t pair, fa_map_t map);
-
-/** Whether the first of the given maps is a submap of the second. 
-*/
-bool fa_map_is_submap_of(fa_map_t map, fa_map_t map_);
-
-/** Whether the first of the given maps is a proper submap of the second. 
-*/
-bool fa_map_is_proper_submap_of(fa_map_t map, fa_map_t map_);
+fa_ptr_t fa_map_dget(fa_map_key_t key, fa_map_t map);
 
 /** Sum or union of the given maps. 
 */
 fa_map_t fa_map_sum(fa_map_t map, fa_map_t map_);
 
-/** Cartesian product of the given maps. 
-*/
-fa_map_t fa_map_product(fa_map_t map, fa_map_t map_);
-
-/** Symmetric difference of the given maps. 
-*/
-fa_map_t fa_map_difference(fa_map_t map, fa_map_t map_);
-
-/** Return the result of applying the given function to all elements of the given list. 
-*/
-fa_map_t fa_map_map(fa_unary_t unary, fa_ptr_t ptr, fa_map_t map);
-
-/** Convert the given pair to a map. 
-*/
-fa_map_t fa_map_from_pair(fa_pair_t pair);
-
 /** Convert the given list to a map. 
 */
 fa_map_t fa_map_from_list(fa_list_t list);
 
+/** Convert the given list to a map. 
+*/
+fa_map_t fa_map_dfrom_list(fa_list_t list);
+
 /** Convert the given map to a list. 
 */
 fa_list_t fa_map_to_list(fa_map_t map);
+
+
+void fa_log_map_count();
 
 /** @}
     @}
