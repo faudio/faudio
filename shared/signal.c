@@ -2362,18 +2362,18 @@ fa_ptr_t play_buffer_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_
 
     if (fa_equal(n, context->name)) {
         
-        fa_slog_info("play_buffer_receive_ ", msg);
+        // fa_slog_info("play_buffer_receive_ ", msg);
         
         fa_dynamic_type_repr_t msg_type = fa_dynamic_get_type(msg);
         switch (msg_type) {
             case buffer_type_repr:
             {
+                context->playing = false;
                 if (context->buffer) {
                     fa_buffer_release_reference(context->buffer);
                 }
                 fa_buffer_t buffer = msg;
                 fa_buffer_take_reference(buffer);
-                context->playing = false;
                 context->pos = 0;
                 context->buffer = buffer;
                 context->channels = fa_peek_number(fa_buffer_get_meta(buffer, fa_string("channels")));
