@@ -69,6 +69,7 @@ int main()
     /* add method that will match any path and args */
     lo_server_thread_add_method(st, NULL, NULL, generic_handler, server);
     
+    lo_server_thread_add_method(st, "/blob", "bi", blob_test_handler, NULL);
     lo_server_thread_add_method(st, "/stop", "i", stop_handler, server);
     
     lo_server_thread_add_method(st, "/stats", "", stats_handler, server);
@@ -103,6 +104,7 @@ int main()
     
     /* Audio files */
     lo_server_thread_add_method(st, "/play/audio", "ii", play_audio_handler, server);
+    lo_server_thread_add_method(st, "/play/audio", "iif", play_audio_handler, server);
     lo_server_thread_add_method(st, "/load/audio-file", "is", load_audio_file_handler, server);
     lo_server_thread_add_method(st, "/close/audio-file", "i", close_audio_file_handler, server);
     
@@ -207,8 +209,11 @@ fa_ptr_t _playback_started(fa_ptr_t context, fa_time_t time)
 
 fa_ptr_t _playback_stopped(fa_ptr_t context, fa_time_t time)
 {
-    send_osc_async("/playback/stopped", "ihT", peek_oid(context), (int64_t)fa_time_to_milliseconds(time));
-    stop_time_echo();
+    oid_t id = peek_oid(context);
+    if (remove_playback_semaphore(id)) {
+        send_osc_async("/playback/stopped", "ihT", id, (int64_t)fa_time_to_milliseconds(time));
+        stop_time_echo();
+    }
     return NULL;
 }
 
@@ -216,6 +221,7 @@ int blob_test_handler(const char *path, const char *types, lo_arg ** argv, int a
 {
     lo_blob data = argv[0];
     int id = argv[1]->i;
+    check_id(id);
     int data_size = lo_blob_datasize(data);
     uint8_t* ptr = lo_blob_dataptr(data);
     if ((data_size % 8) != 0) {
@@ -260,7 +266,7 @@ int blob_test_handler(const char *path, const char *types, lo_arg ** argv, int a
     actions = times_to_delta_times(actions);
     
     // 
-    add_playback_semaphore(id);
+    add_playback_semaphore(id, NULL);
     fa_action_t while_action = fa_action_while(check_playback_semaphore, wrap_oid(id), fa_action_many(actions));
         
     // Send to scheduler
@@ -492,6 +498,7 @@ int simple_note_handler(const char *path, const char *types, lo_arg ** argv, int
 
 int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
     oid_t id = argv[0]->i;
+    check_id(id);
     fa_string_t file_path = fa_string_from_utf8(&argv[1]->s);
     fa_buffer_t buffer = fa_buffer_read_audio(file_path);
     if (fa_check(buffer)) {
@@ -517,7 +524,11 @@ int close_audio_file_handler(const char *path, const char *types, lo_arg ** argv
     fa_with_lock(audio_files_mutex) {
         fa_buffer_t buffer = fa_map_dget(wrap_oid(id), audio_files);
         if (buffer) {
+            
+            // TODO: if the buffer is loaded into the play_buffer signal,
+            // there will likely be a segmentation fault at some point!
             fa_destroy(buffer);
+            
             audio_files = fa_map_dremove(wrap_oid(id), audio_files);
             send_osc(message, user_data, "/close/audio-file", "i", id);
         }
@@ -527,13 +538,33 @@ int close_audio_file_handler(const char *path, const char *types, lo_arg ** argv
 
 int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
     oid_t id = argv[0]->i;
+    check_id(id);
+    oid_t audio_id = argv[1]->i;
+    double start_time = argc >= 3 ? argv[2]->f : 0;
     fa_buffer_t buffer = NULL;
     fa_with_lock(audio_files_mutex) {
-        buffer = fa_map_dget(wrap_oid(id), audio_files);
+        buffer = fa_map_dget(wrap_oid(audio_id), audio_files);
     }
     if (buffer) {
-        schedule_relative(fa_now(), fa_action_send_retain(audio_name, buffer), current_audio_stream);
-        schedule_relative(fa_now(), fa_action_send(audio_name, fa_string("play")), current_audio_stream);
+        add_playback_semaphore(id, audio_name);
+        fa_slog_info("Starting audio playback");
+        fa_list_t actions = fa_list_empty();
+        fa_ptr_t sample_rate = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
+        fa_ptr_t channels    = fa_buffer_get_meta(buffer, fa_string("channels"));
+        double max_time = ((double)fa_buffer_size(buffer)) / ((double)sizeof(double) *
+            fa_peek_number(sample_rate) * fa_peek_number(channels)); // seconds
+        max_time -= start_time;
+        start_time *= fa_peek_number(sample_rate);
+        
+        // Schedule
+        fa_push_list(pair(fa_action_send_retain(audio_name, buffer), fa_milliseconds(0)), actions);
+        fa_push_list(pair(fa_action_send(audio_name, fa_from_double(start_time)), fa_milliseconds(0)), actions);
+        fa_push_list(pair(fa_action_send(audio_name, fa_string("play")), fa_milliseconds(0)), actions);
+        fa_push_list(pair(fa_action_do_with_time(_playback_started, wrap_oid(id)), fa_milliseconds(0)), actions);
+        fa_push_list(pair(fa_action_do_with_time(_playback_stopped, wrap_oid(id)), fa_time_from_double(max_time + 0.010)), actions);
+        actions = times_to_delta_times(actions); // Convert absolute times to relative times
+        schedule_relative(fa_now(), fa_action_many(actions), current_audio_stream);
+        start_time_echo();
     }
     return 0;
 }

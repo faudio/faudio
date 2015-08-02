@@ -21,6 +21,12 @@
       and its closure.
 
     * The create/destroy functions uses the standard fa_malloc/fa_free allocator.
+
+    * Buffers have a reference count, modified with @ref fa_buffer_take_reference and
+      @ref fa_buffer_release_reference. If the reference count is not zero,
+      fa_destroy only marks for future destruction, and the
+      real destruction happens when the reference count reaches zero.
+    
  */
 
 #define kMaxPrintSize 80
@@ -36,6 +42,9 @@ struct _fa_buffer_t {
     fa_ptr_t        destroy_data;
 
     fa_map_t        meta;
+    
+    size_t          ref_count;
+    bool            marked_for_destruction;
 };
 
 
@@ -56,6 +65,8 @@ fa_buffer_t fa_buffer_create(size_t size)
     buffer->impl = &buffer_impl;
     buffer->size = size;
     buffer->data = fa_malloc(size);
+    buffer->ref_count = 0;
+    buffer->marked_for_destruction = false;
     
     //fa_slog_info("fa_buffer_create ", fa_i32(size));
 
@@ -231,12 +242,9 @@ fa_buffer_t fa_buffer_resample(double new_rate, fa_buffer_t buffer)
     assert(false);
 }
 
-
-
-void fa_buffer_destroy(fa_buffer_t buffer)
+static inline void do_destroy_buffer(fa_buffer_t buffer)
 {
-    //fa_slog_info("fa_buffer_destroy");
-    
+    fa_slog_info("do_destroy_buffer");
     if (buffer->destroy_function) {
         buffer->destroy_function(buffer->destroy_data, buffer->data);
     }
@@ -245,6 +253,29 @@ void fa_buffer_destroy(fa_buffer_t buffer)
 
     buffer_warn(fa_string("Buffer destroyed"));
     fa_delete(buffer);
+}
+
+void fa_buffer_destroy(fa_buffer_t buffer)
+{
+    fa_slog_info("fa_buffer_destroy");
+    if (buffer->ref_count == 0) {
+        do_destroy_buffer(buffer);
+    } else {
+        buffer->marked_for_destruction = true;
+    }
+}
+
+void fa_buffer_take_reference(fa_buffer_t buffer)
+{
+    buffer->ref_count++;
+}
+
+void fa_buffer_release_reference(fa_buffer_t buffer)
+{
+    buffer->ref_count--;
+    if (buffer->ref_count == 0 && buffer->marked_for_destruction) {
+        do_destroy_buffer(buffer);
+    }
 }
 
 size_t fa_buffer_size(fa_buffer_t buffer)

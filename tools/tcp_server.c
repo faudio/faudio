@@ -66,7 +66,7 @@ int main(int argc, char const *argv[])
 	int run = 1;
 		
 	fa_set_log_tool();
-	fa_dlog_info(fa_string("Listening..."));
+	fa_log_info(fa_string("Listening..."));
 		
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0) {
@@ -118,7 +118,7 @@ int main(int argc, char const *argv[])
 				fa_string_t str = fa_string(buffer);
 				fa_ptr_t msg = fa_string_from_json(str);
 					
-				fa_dlog_info(fa_string_show(msg));
+				fa_log_info(fa_string_show(msg));
 				
 				processMessage(msg);
 				
@@ -137,6 +137,6 @@ int main(int argc, char const *argv[])
 		}
 	}
 	
-	fa_dlog_info(fa_string("Stopped listening"));	
+	fa_log_info(fa_string("Stopped listening"));	
 }
 

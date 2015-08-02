@@ -713,10 +713,6 @@ static fa_ptr_t _repeat(fa_ptr_t data, fa_ptr_t compound)
     fa_time_t interval;
     action_t action;
     unpair(interval, action, data);
-    //fa_action_retain(compound);
-    //fa_action_retain(action);
-    fa_slog_info("_repeat", action, compound, data);
-    fa_log_list_count();
     return fa_pair_create(action, fa_pair_create(interval, fa_deep_copy(compound)));
 }
 

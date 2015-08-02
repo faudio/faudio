@@ -34,6 +34,15 @@
 #define send_osc(m, s, ...) lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__)
 #define send_osc_async(...) if (last_address) lo_send_from(last_address, server, LO_TT_IMMEDIATE, __VA_ARGS__)
 
+#define check_id(id) \
+if (id > last_used_id) {    \
+    last_used_id = id;      \
+} else {                    \
+    fa_fail(fa_string_dappend(fa_string_format_integral("ID %zu is lower than", id), \
+                              fa_string_format_integral(" last used ID (%zu)", last_used_id))); \
+    return 0; \
+}
+
 void schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
     if (stream) {
         switch (fa_dynamic_get_type(stream)) {
@@ -304,12 +313,10 @@ fa_ptr_t create_fa_value(lo_type type, void *data) {
     }
 }
 
-void add_playback_semaphore(oid_t id) {
-    //bool* a_bool = fa_malloc(sizeof(bool));
-    //*a_bool = true;
-    fa_ptr_t a_bool = fa_from_bool(true);
+void add_playback_semaphore(oid_t id, fa_string_t signal_name) {
+    if (!signal_name) signal_name = fa_from_bool(true);
     fa_with_lock(playback_semaphore_mutex) {
-        playback_semaphores = fa_map_dset(wrap_oid(id), a_bool, playback_semaphores);
+        playback_semaphores = fa_map_dset(wrap_oid(id), signal_name, playback_semaphores);
     }
     //return a_bool;
 }
@@ -320,7 +327,7 @@ bool check_playback_semaphore(fa_ptr_t context, fa_ptr_t dummy)
     // return *bool_ref;
     //bool* bool_ref = fa_map_get(context, playback_semaphores);
     fa_ptr_t a_bool = fa_map_get(context, playback_semaphores);
-    return (a_bool && fa_peek_bool(a_bool));
+    return (a_bool != NULL);
 }
 
 bool remove_playback_semaphore(oid_t id) {
@@ -332,6 +339,9 @@ bool remove_playback_semaphore(oid_t id) {
     fa_with_lock(playback_semaphore_mutex) {
         fa_ptr_t s = fa_map_dget(wrap_oid(id), playback_semaphores);
         if (s) {
+            if (fa_dynamic_get_type(s) == string_type_repr) {
+                schedule_relative(fa_now(), fa_action_send(s, fa_string("free")), current_audio_stream);
+            }
             playback_semaphores = fa_map_dremove(wrap_oid(id), playback_semaphores);
             removed = true;
         }

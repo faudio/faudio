@@ -32,6 +32,9 @@ bool five_times(fa_ptr_t env, fa_ptr_t data) {
 
 void run_dls()
 {
+    
+    fa_clock_initialize();
+    
 #ifndef _WIN32
 	fa_string_t name   = fa_string("dls");
 	fa_pair_t synth = fa_signal_dls(name);
@@ -149,7 +152,7 @@ void run_dls()
     // }
     fa_log_region_count("Before sleeping");
     fa_slog_info("Now sleeping...");
-    fa_thread_sleep(8000);
+    fa_thread_sleep(6000);
     fa_log_region_count("After sleeping");
     fa_log_list_count();
     fa_log_time_count();
@@ -173,10 +176,88 @@ bool DESTROY_NEVER(fa_ptr_t ptr)
     return false;
 }
 
+bool _action_sort(fa_ptr_t a, fa_ptr_t b)
+{
+    return fa_less_than(fa_pair_second(a), fa_pair_second(b));
+}
+
 int main(int argc, char const *argv[])
 {
 	//fa_set_log_tool();
   fa_set_log_std();
+  
+  fa_log_region_count(" 0: ");
+  fa_map_t map = fa_map_empty();
+  fa_map_set_value_destructor(map, fa_destroy);
+  fa_log_region_count(" 1: ");
+  map = fa_map_dadd(fa_string("ape1"), fa_string("nisse"), map);
+  fa_slog_info("map is now: ", map);
+  fa_log_region_count(" 2: ");
+  map = fa_map_dset(fa_string("ape2"), fa_string("kalle"), map);
+  map = fa_map_dset(fa_i16(43), fa_string("hopp"), map);
+  map = fa_map_dset(fa_i32(32), fa_string("tomte"), map);
+  fa_log_region_count(" 5: ");
+  fa_slog_info("map is now: ", map);
+  map = fa_map_dremove(fa_i16(43), map);
+  fa_slog_info("after removal: ", map);
+  fa_ptr_t val = fa_map_dget(fa_string("ape"), map);
+  fa_log_region_count(" 8: ");
+  fa_slog_info("Got val: ", val);
+  
+  fa_log_region_count("10: ");
+  
+  //fa_deep_destroy_always(map);
+  fa_destroy(map);
+  fa_log_region_count("15: ");
+  
+  bool a_bool = false;
+  
+  fa_map_t map1 = map(fa_i16(1), &a_bool, fa_i32(2), NULL);
+  //fa_map_t map2 = map(fa_i16(2), NULL, fa_i16(1), &a_bool);
+  
+  bool* bool_ref = fa_map_dget(fa_from_float(1.0), map1);
+  printf("&a_bool = %p  bool_ref = %p\n", &a_bool, bool_ref);
+  fa_slog_info("1 is: ", fa_from_bool(*bool_ref));
+  a_bool = true;
+  //bool_ref = fa_map_dget(fa_i16(1), map1);
+  fa_slog_info("1 is: ", fa_from_bool(*bool_ref));
+  
+  fa_destroy(map1);
+  
+  fa_log_region_count("20: ");
+  
+  //fa_slog_info("map1: ", map1);
+  //fa_slog_info("map2: ", map2);
+  //fa_slog_info("equal: ", fa_from_bool(fa_equal(map1, map2)));
+  
+  return 0;
+  
+  
+  // fa_string_t name = fa_string("str");
+  // fa_action_t ac1 = fa_action_if(note_pred, NULL, fa_action_send(name, fa_midi_message_create_simple(0x90, 64, 90)));
+  // fa_action_t ac2 = fa_action_if(note_pred, NULL, fa_action_send(name, fa_midi_message_create_simple(0x90, 66, 90)));
+  // fa_action_t ac3 = fa_action_if(note_pred, NULL, fa_action_send(name, fa_midi_message_create_simple(0x90, 68, 90)));
+  // fa_action_t ac4 = fa_action_if(note_pred, NULL, fa_action_send(name, fa_midi_message_create_simple(0x90, 69, 90)));
+  // //fa_action_t action1 = fa_action_send(name, fa_midi_message_create_simple(0x90, 68, 90));
+  // //fa_action_t action2 = fa_action_send(name, fa_midi_message_create_simple(0x90, 67, 90));
+  // //fa_action_t many_action = fa_action_if(note_pred, NULL, fa_action_many(list(pair(action1, fa_milliseconds(500)), pair(action2, fa_milliseconds(500)))));
+  // fa_list_t actions = list(
+  //   pair(ac1, fa_milliseconds(200)),
+  //   pair(ac2, fa_milliseconds(100)),
+  //   pair(ac3, fa_milliseconds(400)),
+  //   pair(ac4, fa_milliseconds(300)));
+  //
+  //   fa_destroy(name);
+  //
+  // fa_log_region_count("Before sort");
+  // fa_log_list_count();
+  //
+  // actions = fa_list_dsort(actions, _action_sort);
+  //
+  // fa_log_region_count("After sort");
+  // fa_log_list_count();
+  //
+  // return 0;
   
   
   // fa_log_region_count("before");
@@ -286,11 +367,11 @@ int main(int argc, char const *argv[])
     }
     
     fa_log_region_count("");
-    fa_dlog_info(fa_string("destroying data"));
+    fa_log_info(fa_string("destroying data"));
     fa_deep_destroy_always(data);
     
     fa_log_region_count("");
-    fa_dlog_info(fa_string("destroying json_string"));
+    fa_log_info(fa_string("destroying json_string"));
     fa_deep_destroy_always(json_string);
 	
 	
@@ -333,19 +414,19 @@ int main(int argc, char const *argv[])
 	fa_deep_destroy_always(str);
 	fa_log_region_count("");
 	
-    fa_dlog_info(fa_string("-------------------"));
+    fa_log_info(fa_string("-------------------"));
     fa_log_region_count("");
 	//fa_log_region_count();
 	//fa_dlog_info(fa_string("ape"));
 	fa_midi_message_t msg1 = fa_midi_message_create_simple(5, 7, 8);
 	//fa_midi_message_t msg2 = fa_midi_message_create_simple(7, 8, 9);
 	//fa_midi_message_t msg3 = fa_midi_message_create_simple(7, 8, 10);
-  fa_dlog_info(fa_string("Before creating action"));
+  fa_log_info(fa_string("Before creating action"));
   fa_log_region_count("");
   fa_string_t action_name = fa_string("ape");
   fa_action_t action1 = fa_action_send(action_name, msg1);
   fa_destroy(action_name);
-  fa_dlog_info(fa_string("After creating action"));
+  fa_log_info(fa_string("After creating action"));
   fa_log_region_count("");
 	// fa_destroy(msg1);
 	// fa_destroy(msg2);
@@ -355,10 +436,10 @@ int main(int argc, char const *argv[])
 	//fa_log_region_count();
 	//fa_destroy(msg1);
 	//fa_log_region_count();
-  fa_dlog_info(fa_string("Before destroying action"));
+  fa_log_info(fa_string("Before destroying action"));
   fa_log_region_count("");
   fa_deep_destroy_always(action1);
-  fa_dlog_info(fa_string("After destroying action"));
+  fa_log_info(fa_string("After destroying action"));
   fa_log_region_count("");
 	//fa_deep_destroy_always(msg2);
 	//fa_deep_destroy_always(msg3);

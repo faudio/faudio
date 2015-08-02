@@ -925,7 +925,7 @@ void test_list()
         as = fa_list_reverse(as);
         as = fa_list_dmap(apply1, fa_i32, as);
 
-        fa_list_t bs = fa_list_sort(as);
+        fa_list_t bs = fa_list_sort(as, fa_less_than);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("sort(as)                     ==> %s\n", bs);

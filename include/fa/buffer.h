@@ -25,9 +25,10 @@
     - `buffer(size)` 
 
     @par Implements 
-    - fa_copy_t
-    - fa_destroy_t
-    - fa_string_show_t
+    - @ref fa_copy_t
+    - @ref fa_destroy_t
+    - @ref fa_string_show_t
+    - @ref fa_dynamic_t
 
     @see 
     - [Data structures](@ref DataStructures)
@@ -87,11 +88,22 @@ fa_buffer_t fa_buffer_resize(size_t size_, fa_buffer_t buffer);
 */
 fa_buffer_t fa_buffer_dresize(size_t size_, fa_buffer_t buffer);
 
-/** Destroy the given buffer.
+/** Destroy the given buffer. If the reference count is greater than zero,
+    the actual destruction is postponed until the reference count reaches
+    zero. See @ref fa_buffer_take_reference and @ref fa_buffer_release_reference
+
     @note
         O(n)
 */
 void fa_buffer_destroy(fa_buffer_t buffer);
+
+/** Take a reference to the buffer, i.e. increase its reference count.
+*/
+void fa_buffer_take_reference(fa_buffer_t buffer);
+
+/** Release a reference to the buffer, i.e. decrease its reference count.
+*/
+void fa_buffer_release_reference(fa_buffer_t buffer);
 
 /** Return the size of the buffer.
     @note
@@ -101,7 +113,7 @@ size_t fa_buffer_size(fa_buffer_t buffer);
 
 /** Get the value of some meta-data attribute of the given buffer.
     @param buffer The buffer.
-    @param string Attribute name.
+    @param string Attribute name (will be destroyed)
     @returns 
         The value (implementing @ref fa_dynamic).
 */
@@ -111,6 +123,11 @@ fa_ptr_t fa_buffer_get_meta(fa_buffer_t buffer, fa_string_t string);
     @param buffer The buffer.
     @param string Attribute name.
     @param The value (implementing @ref fa_dynamic).
+
+    @note
+        Both the name and the value will be automatically destroyed
+        when the buffer is destroyed or when the key is removed from
+        the map.
     
 */
 void fa_buffer_set_meta(fa_buffer_t buffer,
@@ -118,7 +135,7 @@ void fa_buffer_set_meta(fa_buffer_t buffer,
                         fa_ptr_t ptr);
 
 /** Get all meta-data as a map from strings to values.
-    @returns A map of meta-data.
+    @returns A @ref map of meta-data.
 */
 fa_map_t fa_buffer_meta(fa_buffer_t buffer);
 

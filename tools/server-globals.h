@@ -3,6 +3,8 @@
 #ifndef __SERVER_GLOBALS
 #define __SERVER_GLOBALS
 
+oid_t last_used_id = 0;
+
 fa_audio_session_t current_audio_session = NULL;
 fa_midi_session_t current_midi_session = NULL;
 int session_count = 0;

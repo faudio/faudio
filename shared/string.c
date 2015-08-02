@@ -461,7 +461,8 @@ fa_ptr_t jsonify(fa_ptr_t a)
         return fa_list_map(apply1, jsonify, a);
 
     case map_type_repr:
-        return fa_map_map(apply1, jsonify, a);
+        assert(false && "Not implemented yet");
+        //return fa_map_map(apply1, jsonify, a);
 
     default:
         return a;
@@ -662,6 +663,7 @@ inline static fa_string_t escape(fa_string_t string)
 
 static bool string_equal(fa_ptr_t as, fa_ptr_t bs)
 {
+    if (as == bs) return true; // May be more common than one would think, since strings are reference counted
     fa_string_t cs, ds;
     cs = (fa_string_t) as;
     ds = (fa_string_t) bs;
@@ -825,6 +827,6 @@ void string_fatal(char *msg, int error)
 }
 
 void fa_log_string_count() {
-    fa_dlog_info(fa_string_dappend(fa_string("Strings allocated: "), fa_string_dshow(fa_i32(gStringCount))));
+    fa_log_info(fa_string_dappend(fa_string("Strings allocated: "), fa_string_dshow(fa_i32(gStringCount))));
 }
 

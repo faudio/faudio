@@ -140,20 +140,24 @@ fa_action_t fa_action_accum(fa_action_channel_t channel,
                             fa_ptr_t ptr);
 
 /** The `send` action sends a message, the type of which depends on
-    the type of receiver. Often this is @ref fa_midi_message_t or 
+    the type of receiver. Often this is a @ref fa_midi_message_t or 
     a value implementing @ref fa_dynamic_t.
 
-    The resulting action must be destroyed by the caller.
+    The resulting action must be destroyed by the caller (or passed to
+    the scheduler). Note that the value is destroyed with the action,
+    to avoid that, use @ref fa_action_send_retain instead. Note also
+    that the name is not destroyed.
     
     @param name
-        Name of receiver.
+        Name that identifies the receiver.
     @param value
         Value to send.
 */
 fa_action_t fa_action_send(fa_action_name_t name,
                            fa_action_value_t value);
 
- /** Like fa_action_send, but the value is not destroyed with the action.
+ /** Identical to @ref fa_action_send, except that the value is not destroyed
+     when the action is destroyed.
  */
 fa_action_t fa_action_send_retain(fa_action_name_t name, fa_action_value_t value);
 

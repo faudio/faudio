@@ -336,6 +336,19 @@ fa_signal_t fa_signal_trigger(fa_string_t name, double init);
 */
 fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t signal);
 
+/** A signal that plays an audio buffer.
+    
+    Control the signal by sending one of the following to it (using @ref fa_action_send):
+    - A @ref fa_buffer_t -- the buffer is loaded into the signal
+    - The string "play" -- start playback
+    - The string "stop" -- stop playback
+    - A (wrapped) number -- move to the corresponding frame
+    
+    @param name
+        A name to identify the signal, use with @ref fa_action_send
+    @return
+        A pair of @ref fa_signal_t (left and right output).
+*/
 fa_pair_t fa_signal_play_buffer(fa_string_t name);
 
 /**

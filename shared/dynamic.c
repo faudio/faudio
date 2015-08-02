@@ -18,6 +18,8 @@ bool fa_dynamic_check(fa_ptr_t a)
 
 fa_dynamic_type_repr_t fa_dynamic_get_type(fa_ptr_t a)
 {
+    if (!a) return null_type_repr;
+    
     assert(fa_interface(fa_dynamic_i, a) && "Must implement Dynamic");
 
     return ((fa_dynamic_t *)

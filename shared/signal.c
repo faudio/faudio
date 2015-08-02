@@ -2303,7 +2303,9 @@ fa_signal_t fa_signal_trigger(fa_string_t name, double init)
 struct _play_buffer_context {
     fa_string_t name;
     fa_buffer_t buffer;
-    size_t pos;
+    double stream_sample_rate;
+    double pos;
+    double speed;
     size_t max_pos;
     uint8_t channels;
     bool playing;
@@ -2313,6 +2315,8 @@ typedef struct _play_buffer_context play_buffer_context;
 
 fa_ptr_t play_buffer_before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
+    play_buffer_context *context = x;
+    context->stream_sample_rate = state->rate;
     return x;
 }
 fa_ptr_t play_buffer_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
@@ -2326,15 +2330,16 @@ fa_ptr_t play_buffer_render_(fa_ptr_t x, int offset, int count, fa_signal_state_
     if (!kVectorMode) {
         if (context->playing) {
             if (context->pos < context->max_pos) {
-                size_t buffer_pos = context->pos * context->channels;
-                //printf("buffer_pos: %zu, pos: %zu, max_pos: %zu, size: %zu\n", buffer_pos, context->pos, context->max_pos, fa_buffer_size(context->buffer));
-                state->buffer[(offset + 0)*kMaxVectorSize] = fa_buffer_get_double(context->buffer, buffer_pos + 0);
+                // TODO: interpolating samples for non-integer positions would improve sound quality
+                size_t buffer_pos = ((size_t)context->pos) * context->channels;
+                double left = fa_buffer_get_double(context->buffer, buffer_pos + 0);
+                state->buffer[(offset + 0)*kMaxVectorSize] = left;
                 if (context->channels > 1) {
                     state->buffer[(offset + 1)*kMaxVectorSize] = fa_buffer_get_double(context->buffer, buffer_pos + 1);
                 } else {
-                    state->buffer[(offset + 1)*kMaxVectorSize] = fa_buffer_get_double(context->buffer, buffer_pos + 0);
+                    state->buffer[(offset + 1)*kMaxVectorSize] = left;
                 }
-                context->pos++;
+                context->pos += context->speed;
             } else {
                 state->buffer[(offset + 0)*kMaxVectorSize] = 0;
                 state->buffer[(offset + 1)*kMaxVectorSize] = 0;
@@ -2357,17 +2362,25 @@ fa_ptr_t play_buffer_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_
 
     if (fa_equal(n, context->name)) {
         
+        fa_slog_info("play_buffer_receive_ ", msg);
+        
         fa_dynamic_type_repr_t msg_type = fa_dynamic_get_type(msg);
         switch (msg_type) {
             case buffer_type_repr:
             {
+                if (context->buffer) {
+                    fa_buffer_release_reference(context->buffer);
+                }
                 fa_buffer_t buffer = msg;
+                fa_buffer_take_reference(buffer);
                 context->playing = false;
                 context->pos = 0;
                 context->buffer = buffer;
                 context->channels = fa_peek_number(fa_buffer_get_meta(buffer, fa_string("channels")));
                 size_t size = fa_buffer_size(buffer);
                 context->max_pos = (size / ((sizeof(double)) * context->channels)) - 1;
+                double buffer_rate = fa_peek_number(fa_buffer_get_meta(buffer, fa_string("sample-rate")));
+                context->speed = buffer_rate / context->stream_sample_rate;
                 break;
             }
             
@@ -2375,11 +2388,12 @@ fa_ptr_t play_buffer_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_
             case i16_type_repr:
             case i32_type_repr:
             case i64_type_repr:
+            case f32_type_repr:
+            case f64_type_repr:
             {
-                uint64_t new_pos = fa_peek_integer(msg);
+                double new_pos = fa_peek_number(msg);
                 if (new_pos > context->max_pos) new_pos = context->max_pos;
                 context->pos = new_pos;
-                fa_destroy(msg);
                 break;
             }
             
@@ -2391,7 +2405,15 @@ fa_ptr_t play_buffer_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_
                 else if (fa_dequal(fa_copy(msg), fa_string("stop"))) {
                     context->playing = false;
                 }
-                fa_destroy(msg);
+                else if (fa_dequal(fa_copy(msg), fa_string("free"))) {
+                    if (context->buffer) {
+                        fa_buffer_t buffer = context->buffer;
+                        context->playing = false;
+                        context->pos = 0;
+                        context->buffer = NULL;
+                        fa_buffer_release_reference(buffer);
+                    }
+                }
                 break;
             }
 
@@ -2411,6 +2433,8 @@ fa_pair_t fa_signal_play_buffer(fa_string_t name)
     context->pos = 0;
     context->max_pos = 0;
     context->playing = false;
+    context->speed = 1.0;
+    context->stream_sample_rate = 0;
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = play_buffer_before_;

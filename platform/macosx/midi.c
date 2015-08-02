@@ -18,6 +18,7 @@
 #include <fa/time.h>
 #include <fa/clock.h>
 #include <fa/util/macros.h>
+#include <fa/dynamic.h>
 
 #define NO_THREAD_T
 #include <fa/util.h>

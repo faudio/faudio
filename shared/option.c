@@ -80,13 +80,13 @@ fa_pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
                 fa_pair_t result = maybe_parse(optc, optv, argv[i - 1] + 1, NULL, argv[i]);
 
                 if (result) {
-                    args = fa_map_add_entry(result, args);
+                    args = fa_map_dadd(fa_pair_first(result), fa_pair_second(result), args);
                 }
             } else if (prev_elem_type == long_name) {
                 fa_pair_t result = maybe_parse(optc, optv, NULL, argv[i - 2] + 1, argv[i]);
 
                 if (result) {
-                    args = fa_map_add_entry(result, args);
+                    args = fa_map_dadd(fa_pair_first(result), fa_pair_second(result), args);
                 }
             } else {
                 fa_push_back_list(anon_args, fa_string((char *) argv[i]));

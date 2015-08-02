@@ -83,11 +83,11 @@ void fa_pair_deep_destroy(fa_pair_t pair, fa_deep_destroy_pred_t pred)
     if (!pred(pair)) return;
     fa_ptr_t a = pair->values[0];
     fa_ptr_t b = pair->values[1];
-    //fa_dlog_info(fa_dappend(fa_string("  destroying pair 1 "), fa_string_show(pair)));
+    //fa_log_info(fa_dappend(fa_string("  destroying pair 1 "), fa_string_show(pair)));
     if (a) fa_deep_destroy(a, pred);
-    //fa_dlog_info(fa_string("  destroying pair 2"));
+    //fa_log_info(fa_string("  destroying pair 2"));
     if (b) fa_deep_destroy(b, pred);
-    //fa_dlog_info(fa_string("  destroying pair 3"));
+    //fa_log_info(fa_string("  destroying pair 3"));
     delete_pair(pair);
 }
 
@@ -272,5 +272,5 @@ fa_ptr_t pair_impl(fa_id_t interface)
 
 void fa_log_pair_count()
 {
-  fa_dlog_info(fa_string_dappend(fa_string("Pairs allocated: "), fa_string_dshow(fa_i32(gPairCount))));
+  fa_log_info(fa_string_dappend(fa_string("Pairs allocated: "), fa_string_dshow(fa_i32(gPairCount))));
 }
