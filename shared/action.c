@@ -1178,7 +1178,7 @@ struct _fa_map_t {
 //      }
 // }
 
-void fa_log_action_count()
+void fa_action_log_count()
 {
     fa_log_info(fa_string_dappend(fa_string("Actions allocated: "), fa_string_dshow(fa_i32(gActionCount))));
 }

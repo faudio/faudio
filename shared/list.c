@@ -364,7 +364,7 @@ fa_list_t fa_list_reverse(fa_list_t xs)
     return reversed;
 }
 
-static inline fa_list_t dmerge(fa_list_t xs, fa_list_t ys, fa_sort_fn_t fn)
+static inline fa_list_t dmerge(fa_list_t xs, fa_list_t ys, fa_list_sort_fn_t fn)
 {
     begin_node(node, next);
 
@@ -399,7 +399,7 @@ static inline fa_list_t dmerge(fa_list_t xs, fa_list_t ys, fa_sort_fn_t fn)
     return new_list(node);
 }
 
-static inline fa_list_t dmerge_sort(fa_list_t xs, fa_sort_fn_t fn)
+static inline fa_list_t dmerge_sort(fa_list_t xs, fa_list_sort_fn_t fn)
 {
     int len, mid;
     fa_list_t left, right;
@@ -424,17 +424,17 @@ static inline fa_list_t dmerge_sort(fa_list_t xs, fa_sort_fn_t fn)
     }
 }
 
-fa_list_t fa_list_sort(fa_list_t xs, fa_sort_fn_t fn)
+fa_list_t fa_list_sort(fa_list_t xs, fa_list_sort_fn_t fn)
 {
     return dmerge_sort(fa_list_copy(xs), fn);
 }
 
-fa_list_t fa_list_dsort(fa_list_t xs, fa_sort_fn_t fn)
+fa_list_t fa_list_dsort(fa_list_t xs, fa_list_sort_fn_t fn)
 {
     return dmerge_sort(xs, fn);
 }
 
-fa_list_t fa_list_sort_ascending(fa_list_t xs)
+fa_list_t fa_list_dsort_ascending(fa_list_t xs)
 {
     return fa_list_sort(xs, fa_less_than);
 }
@@ -934,7 +934,7 @@ fa_ptr_t list_impl(fa_id_t interface)
     }
 }
 
-void fa_log_list_count()
+void fa_list_log_count()
 {
   fa_log_info(fa_string_dappend(fa_string("Lists/nodes allocated: "),
       fa_string_dappend(fa_string_dshow(fa_i32(gListCount)),

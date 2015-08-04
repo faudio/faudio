@@ -743,3 +743,10 @@ fa_ptr_t fa_interface(fa_id_t type, fa_ptr_t pointer)
         return ((struct fa_impl_disp *) pointer)->impl(type);
     }
 }
+
+bool DESTROY_ALWAYS(fa_ptr_t ptr) {
+    return true;
+}
+void fa_deep_destroy_always(fa_ptr_t ptr) {
+    fa_deep_destroy(ptr, DESTROY_ALWAYS);
+}

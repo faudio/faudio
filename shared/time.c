@@ -275,7 +275,7 @@ fa_ptr_t time_impl(fa_id_t interface)
     }
 }
 
-void fa_log_time_count()
+void fa_time_log_count()
 {
   fa_log_info(fa_string_dappend(fa_string("Times allocated: "), fa_string_dshow(fa_i32(gTimeCount))));
 }

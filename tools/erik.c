@@ -63,13 +63,13 @@ void run_dls()
     
     fa_thread_sleep(1000);
     
-    fa_log_region_count("BEGIN");
-    fa_log_list_count();
-    fa_log_time_count();
-    fa_log_pair_count();
-    fa_log_pair_left_count();
-    fa_log_string_count();
-    fa_log_func_ref_count();
+    fa_log_region_count(fa_string("BEGIN"));
+    fa_list_log_count();
+    fa_time_log_count();
+    fa_pair_log_count();
+    fa_pair_left_log_count();
+    fa_string_log_count();
+    fa_func_ref_log_count();
     
     fa_thread_sleep(500);
 
@@ -103,14 +103,14 @@ void run_dls()
         
     //print_all_actions();
     
-    fa_log_region_count("Before scheduling");
-    fa_log_list_count();
-    fa_log_time_count();
-    fa_log_pair_count();
-    fa_log_pair_left_count();
-    fa_log_string_count();
-    fa_log_func_ref_count();
-    fa_log_action_count();
+    fa_log_region_count(fa_string("Before scheduling"));
+    fa_list_log_count();
+    fa_time_log_count();
+    fa_pair_log_count();
+    fa_pair_left_log_count();
+    fa_string_log_count();
+    fa_func_ref_log_count();
+    fa_action_log_count();
 
     fa_audio_schedule_relative(fa_hms(0, 0, 0), while_action, st);
     
@@ -150,17 +150,17 @@ void run_dls()
     //     }
     //     fa_log_region_count();
     // }
-    fa_log_region_count("Before sleeping");
+    fa_log_region_count(fa_string("Before sleeping"));
     fa_slog_info("Now sleeping...");
     fa_thread_sleep(6000);
-    fa_log_region_count("After sleeping");
-    fa_log_list_count();
-    fa_log_time_count();
-    fa_log_pair_count();
-    fa_log_pair_left_count();
-    fa_log_string_count();
-    fa_log_func_ref_count();
-    fa_log_action_count();
+    fa_log_region_count(fa_string("After sleeping"));
+    fa_list_log_count();
+    fa_time_log_count();
+    fa_pair_log_count();
+    fa_pair_left_log_count();
+    fa_string_log_count();
+    fa_func_ref_log_count();
+    fa_action_log_count();
     //print_all_actions();
 	
     fa_destroy(name);
@@ -186,29 +186,29 @@ int main(int argc, char const *argv[])
 	//fa_set_log_tool();
   fa_set_log_std();
   
-  fa_log_region_count(" 0: ");
+  fa_log_region_count(fa_string(" 0: "));
   fa_map_t map = fa_map_empty();
   fa_map_set_value_destructor(map, fa_destroy);
-  fa_log_region_count(" 1: ");
+  fa_log_region_count(fa_string(" 1: "));
   map = fa_map_dadd(fa_string("ape1"), fa_string("nisse"), map);
   fa_slog_info("map is now: ", map);
-  fa_log_region_count(" 2: ");
+  fa_log_region_count(fa_string(" 2: "));
   map = fa_map_dset(fa_string("ape2"), fa_string("kalle"), map);
   map = fa_map_dset(fa_i16(43), fa_string("hopp"), map);
   map = fa_map_dset(fa_i32(32), fa_string("tomte"), map);
-  fa_log_region_count(" 5: ");
+  fa_log_region_count(fa_string(" 5: "));
   fa_slog_info("map is now: ", map);
   map = fa_map_dremove(fa_i16(43), map);
   fa_slog_info("after removal: ", map);
   fa_ptr_t val = fa_map_dget(fa_string("ape"), map);
-  fa_log_region_count(" 8: ");
+  fa_log_region_count(fa_string(" 8: "));
   fa_slog_info("Got val: ", val);
   
-  fa_log_region_count("10: ");
+  fa_log_region_count(fa_string("10: "));
   
   //fa_deep_destroy_always(map);
   fa_destroy(map);
-  fa_log_region_count("15: ");
+  fa_log_region_count(fa_string("15: "));
   
   bool a_bool = false;
   
@@ -224,7 +224,7 @@ int main(int argc, char const *argv[])
   
   fa_destroy(map1);
   
-  fa_log_region_count("20: ");
+  fa_log_region_count(fa_string("20: "));
   
   //fa_slog_info("map1: ", map1);
   //fa_slog_info("map2: ", map2);
@@ -288,7 +288,7 @@ int main(int argc, char const *argv[])
 
   return 0;
   
-  fa_log_region_count("begin 1");
+  fa_log_region_count(fa_string("begin 1"));
   fa_string_t aname = fa_string("ape");
   fa_action_t a1 = fa_action_send(aname, fa_midi_message_create_simple(1, 2, 3));
   fa_action_t a2 = fa_action_send(aname, fa_midi_message_create_simple(5, 7, 8));
@@ -300,42 +300,42 @@ int main(int argc, char const *argv[])
        );
   fa_action_t many = fa_action_many(alist);
   
-  fa_log_region_count("middle");
+  fa_log_region_count(fa_string("middle"));
   
   
-  fa_deep_destroy(many, DESTROY_ALWAYS);
+  fa_deep_destroy_always(many);
   
-  fa_log_region_count("after destroying many");
+  fa_log_region_count(fa_string("after destroying many"));
   
 	
-  fa_log_region_count("Begin:");
+  fa_log_region_count(fa_string("Begin:"));
   
   fa_string_t hej = fa_string("hej");
-  fa_log_region_count("");
+  fa_log_region_count(NULL);
   char* chej = fa_unstring(hej);
-  fa_log_region_count("");
+  fa_log_region_count(NULL);
   fa_free(chej);
-  fa_log_region_count("");
+  fa_log_region_count(NULL);
   fa_deep_destroy_always(hej);
 
-  fa_log_region_count("After strings:");
+  fa_log_region_count(fa_string("After strings:"));
   
   fa_list_t list = list();
   printf("Has a list\n");
   fa_print("list  ==> %s\n", list);
-  fa_log_region_count("");
+  fa_log_region_count(NULL);
   list = fa_list_dcons(fa_i32(1), list);
   list = fa_list_dcons(fa_i32(2), list);
   fa_print("list  ==> %s\n", list);
-  fa_log_region_count("");
+  fa_log_region_count(NULL);
   fa_deep_destroy_always(list);
-  fa_log_region_count("");
+  fa_log_region_count(NULL);
   
   
 	fa_string_t json_string = fa_string("[1, 2, 3]");
 	fa_log_info(json_string);
   
-    fa_log_region_count("");
+    fa_log_region_count(NULL);
 	
 	//JSON_Value *json = json_parse_string(fa_unstring(string));
 	
@@ -343,7 +343,7 @@ int main(int argc, char const *argv[])
     fa_print("data  ==> %s\n", data);
     //fa_print("head  ==> %s\n", fa_list_head(data));
     
-    fa_log_region_count("");
+    fa_log_region_count(NULL);
 	
     switch (fa_dynamic_get_type(data)) {
     case pair_type_repr:
@@ -366,11 +366,11 @@ int main(int argc, char const *argv[])
         printf("it's something else!\n");
     }
     
-    fa_log_region_count("");
+    fa_log_region_count(NULL);
     fa_log_info(fa_string("destroying data"));
     fa_deep_destroy_always(data);
     
-    fa_log_region_count("");
+    fa_log_region_count(NULL);
     fa_log_info(fa_string("destroying json_string"));
     fa_deep_destroy_always(json_string);
 	
@@ -406,28 +406,28 @@ int main(int argc, char const *argv[])
 	// fa_dlog_info(fa_string_dshow(ratio));
 	// fa_log_region_count();
 	
-	fa_log_region_count("");
+	fa_log_region_count(NULL);
 	fa_string_t str = fa_string("nisse");
 	fa_print("ape 1 %s", str);
-	fa_log_region_count("");
+	fa_log_region_count(NULL);
 	fa_print("ape 2 %s", str);
 	fa_deep_destroy_always(str);
-	fa_log_region_count("");
+	fa_log_region_count(NULL);
 	
     fa_log_info(fa_string("-------------------"));
-    fa_log_region_count("");
+    fa_log_region_count(NULL);
 	//fa_log_region_count();
 	//fa_dlog_info(fa_string("ape"));
 	fa_midi_message_t msg1 = fa_midi_message_create_simple(5, 7, 8);
 	//fa_midi_message_t msg2 = fa_midi_message_create_simple(7, 8, 9);
 	//fa_midi_message_t msg3 = fa_midi_message_create_simple(7, 8, 10);
   fa_log_info(fa_string("Before creating action"));
-  fa_log_region_count("");
+  fa_log_region_count(NULL);
   fa_string_t action_name = fa_string("ape");
   fa_action_t action1 = fa_action_send(action_name, msg1);
   fa_destroy(action_name);
   fa_log_info(fa_string("After creating action"));
-  fa_log_region_count("");
+  fa_log_region_count(NULL);
 	// fa_destroy(msg1);
 	// fa_destroy(msg2);
 	// fa_destroy(msg3);
@@ -437,10 +437,10 @@ int main(int argc, char const *argv[])
 	//fa_destroy(msg1);
 	//fa_log_region_count();
   fa_log_info(fa_string("Before destroying action"));
-  fa_log_region_count("");
+  fa_log_region_count(NULL);
   fa_deep_destroy_always(action1);
   fa_log_info(fa_string("After destroying action"));
-  fa_log_region_count("");
+  fa_log_region_count(NULL);
 	//fa_deep_destroy_always(msg2);
 	//fa_deep_destroy_always(msg3);
   //fa_dlog_info(fa_string("After destroying messages"));

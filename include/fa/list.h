@@ -43,7 +43,9 @@
 
 typedef struct _fa_list_t * fa_list_t;
 
-typedef bool (* fa_sort_fn_t)(fa_ptr_t, fa_ptr_t);
+/** A sort predicate function. Should return true if a < b
+*/
+typedef bool (* fa_list_sort_fn_t)(fa_ptr_t a, fa_ptr_t b);
 
 /** Create an empty list.
 
@@ -116,12 +118,11 @@ fa_list_t fa_list_enumerate(int int_, int int__);
 */
 fa_list_t fa_list_copy(fa_list_t list);
 
-/** Copy the given list and all contained elements
+/** Copy the given list and all contained elements recursivly.
 
-    The returned list must be destroyed by passing to a destructive function.
-
-    @par Performance
-        O(n)
+      @par Performance
+    O(n)
+    
 */
 fa_list_t fa_list_deep_copy(fa_list_t list);
 
@@ -136,8 +137,10 @@ void fa_list_destroy(fa_list_t list);
 
     @par Performance
         O(n)
+    
 */
-void fa_list_deep_destroy(fa_list_t list, fa_deep_destroy_pred_t pred);
+void fa_list_deep_destroy(fa_list_t list,
+                          fa_deep_destroy_pred_t deepDestroyPred);
 
 /** Return whether the given list is empty.
 
@@ -218,23 +221,27 @@ fa_list_t fa_list_reverse(fa_list_t list);
 */
 fa_list_t fa_list_dreverse(fa_list_t list);
 
-/** Return the given list sorted.
+/** Return a sorted version of the given list, according to the given sort function.
+    The passed list is unchanged.
     @par Performance
         O(n log n)
 */
-fa_list_t fa_list_sort(fa_list_t list, fa_sort_fn_t fn);
+fa_list_t fa_list_sort(fa_list_t list, fa_list_sort_fn_t sortFn);
 
-/** Return the given list sorted.
+/** Sort the given list in place, according to the given sort function. Returns the list.
     @par Performance
         O(n log n)
 */
-fa_list_t fa_list_sort_ascending(fa_list_t list);
+fa_list_t fa_list_dsort(fa_list_t list, fa_list_sort_fn_t sortFn);
 
-/** Return the given list sorted.
+/** Sort the given list ascending in place. Returns the list.
+    fa_list_sort_ascending(x) == fa_list_sort(x, fa_less_than)
+    
     @par Performance
         O(n log n)
+    
 */
-fa_list_t fa_list_dsort(fa_list_t list, fa_sort_fn_t fn);
+fa_list_t fa_list_dsort_ascending(fa_list_t list);
 
 /** Return the *n* leading elements of the given list.
     @par Performance
@@ -485,7 +492,7 @@ fa_ptr_t fa_list_dfold_left(fa_binary_t binary,
 fa_list_t fa_list_to_list(fa_list_t list);
 
 
-void fa_log_list_count();
+void fa_list_log_count();
 
 /** @}
     @}

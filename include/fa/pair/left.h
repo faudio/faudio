@@ -74,7 +74,7 @@ fa_pair_left_t fa_pair_left_from_pair(fa_pair_t pair);
 fa_list_t fa_pair_left_to_list(fa_pair_left_t left);
 
 
-void fa_log_pair_left_count();
+void fa_pair_left_log_count();
 
 /** @}
     @}

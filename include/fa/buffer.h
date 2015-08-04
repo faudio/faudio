@@ -25,10 +25,9 @@
     - `buffer(size)` 
 
     @par Implements 
-    - @ref fa_copy_t
-    - @ref fa_destroy_t
-    - @ref fa_string_show_t
-    - @ref fa_dynamic_t
+    - fa_copy_t
+    - fa_destroy_t
+    - fa_string_show_t
 
     @see 
     - [Data structures](@ref DataStructures)
@@ -90,18 +89,20 @@ fa_buffer_t fa_buffer_dresize(size_t size_, fa_buffer_t buffer);
 
 /** Destroy the given buffer. If the reference count is greater than zero,
     the actual destruction is postponed until the reference count reaches
-    zero. See @ref fa_buffer_take_reference and @ref fa_buffer_release_reference
-
+    zero. See @ref fa_buffer_take_reference and @ref fa_buffer_release_reference.
+    
     @note
         O(n)
 */
 void fa_buffer_destroy(fa_buffer_t buffer);
 
 /** Take a reference to the buffer, i.e. increase its reference count.
+    
 */
 void fa_buffer_take_reference(fa_buffer_t buffer);
 
 /** Release a reference to the buffer, i.e. decrease its reference count.
+    
 */
 void fa_buffer_release_reference(fa_buffer_t buffer);
 
@@ -123,11 +124,11 @@ fa_ptr_t fa_buffer_get_meta(fa_buffer_t buffer, fa_string_t string);
     @param buffer The buffer.
     @param string Attribute name.
     @param The value (implementing @ref fa_dynamic).
-
+    
     @note
         Both the name and the value will be automatically destroyed
-        when the buffer is destroyed or when the key is removed from
-        the map.
+        when the buffer is destroyed or the key is removed from the map.
+    
     
 */
 void fa_buffer_set_meta(fa_buffer_t buffer,

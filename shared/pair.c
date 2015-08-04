@@ -270,7 +270,7 @@ fa_ptr_t pair_impl(fa_id_t interface)
     }
 }
 
-void fa_log_pair_count()
+void fa_pair_log_count()
 {
   fa_log_info(fa_string_dappend(fa_string("Pairs allocated: "), fa_string_dshow(fa_i32(gPairCount))));
 }

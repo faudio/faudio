@@ -155,14 +155,14 @@ int main()
 
     lo_server_thread_free(st);
     
-    fa_log_region_count("At shutdown");
-    fa_log_list_count();
-    fa_log_time_count();
-    fa_log_pair_count();
-    fa_log_pair_left_count();
-    fa_log_string_count();
-    fa_log_func_ref_count();
-    fa_log_action_count();
+    fa_log_region_count(fa_string("At shutdown"));
+    fa_list_log_count();
+    fa_time_log_count();
+    fa_pair_log_count();
+    fa_pair_left_log_count();
+    fa_string_log_count();
+    fa_func_ref_log_count();
+    fa_action_log_count();
 
     return 0;
 }
@@ -702,14 +702,14 @@ int channel_reset_handler(const char *path, const char *types, lo_arg ** argv, i
 
 int stats_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
-    fa_log_region_count("Stats:");
-    fa_log_list_count();
-    fa_log_time_count();
-    fa_log_pair_count();
-    fa_log_pair_left_count();
-    fa_log_string_count();
-    fa_log_func_ref_count();
-    fa_log_action_count();
-    fa_log_map_count();
+    fa_log_region_count(fa_string("Stats:"));
+    fa_list_log_count();
+    fa_time_log_count();
+    fa_pair_log_count();
+    fa_pair_left_log_count();
+    fa_string_log_count();
+    fa_func_ref_log_count();
+    fa_action_log_count();
+    fa_map_log_count();
     return 0;
 }

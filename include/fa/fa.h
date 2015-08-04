@@ -96,48 +96,34 @@ void fa_set_log(fa_log_func_t logFunc, fa_ptr_t ptr);
 */
 void fa_log(fa_ptr_t ptr, fa_error_t error);
 
-/** Write an informative message to the log.
+/** Write an informative message to the log. The argument is destroyed.
 */
 void fa_log_info(fa_string_t string);
 
-/** Write a warning to the log.
+/** Write a warning to the log. The argument is destroyed.
 */
 void fa_log_warning(fa_string_t string);
 
-/** Write an error to the log.
+/** Write an error to the log. The argument is destroyed.
 */
 void fa_log_error(fa_string_t string);
 
-// /** Write an informative message to the log and destroy the argument.
-//
-// */
-// void fa_dlog_info(fa_string_t string);
-//
-// /** Write a warning to the log and destroy the argument.
-//
-// */
-// void fa_dlog_warning(fa_string_t string);
-//
-// /** Write an error to the log and destroy the argument.
-// */
-// void fa_dlog_error(fa_string_t string);
-
-/** Write an informative message to the log.
+/** Write an informative message to the log. The arguments are destroyed.
 */
 void fa_log_info_from(fa_string_t string, fa_string_t string_);
 
-/** Write a warning to the log.
+/** Write a warning to the log. The arguments are destroyed.
 */
 void fa_log_warning_from(fa_string_t string, fa_string_t string_);
 
-/** Write an error to the log.
+/** Write an error to the log. The arguments are destroyed.
 */
 void fa_log_error_from(fa_string_t string, fa_string_t string_);
 
-/** Write the number of allocated regions to the log.
+/** Write the number of allocated regions to the log, with an optional string prepended. The argument is destroyed.
 	 
 */
-void fa_log_region_count(char*);
+void fa_log_region_count(fa_string_t string);
 
 /** @}
     @}

@@ -472,10 +472,10 @@ fa_ptr_t jsonify(fa_ptr_t a)
 //inline static
 fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
 {
-  void fa_log_region_count(char*);
+  void fa_log_region_count(fa_string_t);
   printf("beginning of unjsonify\n");
   fflush(stdout);
-  fa_log_region_count("");
+  fa_log_region_count(NULL);
   
   if (!a) {
     return fa_list_empty();
@@ -510,7 +510,7 @@ fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
 
         for (size_t i = sz; i > 0; --i) {
           printf("in loop\n");
-          fa_log_region_count("");
+          fa_log_region_count(NULL);
           fflush(stdout);
             
             fa_ptr_t v = unjsonify(json_array_get_value(ar, i - 1), ok);
@@ -523,7 +523,7 @@ fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
         }
         printf("end of array case\n");
         fflush(stdout);
-        fa_log_region_count("");
+        fa_log_region_count(NULL);
         return list;
     }
 
@@ -562,23 +562,23 @@ fa_string_t fa_string_to_json(fa_ptr_t a)
 
 fa_ptr_t fa_string_from_json(fa_string_t string)
 {
-  void fa_log_region_count(char*);
+  void fa_log_region_count(fa_string_t);
   printf("fa_string_from_json 1\n");
   fflush(stdout);
-  fa_log_region_count("");
+  fa_log_region_count(NULL);
   
     bool ok = true;
     char* cstring = fa_unstring(string);
     
     printf("fa_string_from_json 2\n");
     fflush(stdout);
-    fa_log_region_count("");
+    fa_log_region_count(NULL);
     
     JSON_Value *a = json_parse_string(cstring);
     
     printf("fa_string_from_json 2.5\n");
     fflush(stdout);
-    fa_log_region_count("");
+    fa_log_region_count(NULL);
     
     fa_ptr_t result = unjsonify(a, &ok);
     
@@ -586,12 +586,12 @@ fa_ptr_t fa_string_from_json(fa_string_t string)
     
     printf("fa_string_from_json 3\n");
     fflush(stdout);
-    fa_log_region_count("");
+    fa_log_region_count(NULL);
     
     fa_free(cstring);
     printf("fa_string_from_json 4\n");
     fflush(stdout);
-    fa_log_region_count("");
+    fa_log_region_count(NULL);
 
     if (!ok) {
         return (fa_ptr_t) string_error(fa_string("Malformed JSON value."));
@@ -826,7 +826,7 @@ void string_fatal(char *msg, int error)
     exit(error);
 }
 
-void fa_log_string_count() {
+void fa_string_log_count() {
     fa_log_info(fa_string_dappend(fa_string("Strings allocated: "), fa_string_dshow(fa_i32(gStringCount))));
 }
 

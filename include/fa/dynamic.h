@@ -18,27 +18,27 @@
 
 
 typedef enum {
-    null_type_repr = 0, // for convenience
-    bool_type_repr,
-    i8_type_repr,
-    i16_type_repr,
-    i32_type_repr,
-    i64_type_repr,
-    f32_type_repr,
-    f64_type_repr,
-    pair_type_repr,
-    list_type_repr,
-    set_type_repr,
-    map_type_repr,
-    string_type_repr,
-    ratio_type_repr,
-    midi_message_type_repr,
-    action_type_repr,
-    audio_stream_type_repr,
-    midi_stream_type_repr,
-    buffer_type_repr,
-    atomic_ring_buffer_type_repr
-} fa_dynamic_type_repr_t;
+            null_type_repr,
+            bool_type_repr,
+            i8_type_repr,
+            i16_type_repr,
+            i32_type_repr,
+            i64_type_repr,
+            f32_type_repr,
+            f64_type_repr,
+            pair_type_repr,
+            list_type_repr,
+            set_type_repr,
+            map_type_repr,
+            string_type_repr,
+            ratio_type_repr,
+            midi_message_type_repr,
+            action_type_repr,
+            audio_stream_type_repr,
+            midi_stream_type_repr,
+            buffer_type_repr,
+            atomic_ring_buffer_type_repr
+        } fa_dynamic_type_repr_t;
 
 /** Dynamic typing interface.
 */

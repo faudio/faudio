@@ -188,7 +188,7 @@ fa_ptr_t pair_left_impl(fa_id_t interface)
     }
 }
 
-void fa_log_pair_left_count()
+void fa_pair_left_log_count()
 {
   fa_log_info(fa_string_dappend(fa_string("Pair-lefts allocated: "), fa_string_dshow(fa_i32(gPairLeftCount))));
 }

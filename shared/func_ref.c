@@ -114,7 +114,7 @@ fa_ptr_t func_ref_impl(fa_id_t interface)
     }
 }
 
-void fa_log_func_ref_count()
+void fa_func_ref_log_count()
 {
   fa_log_info(fa_string_dappend(fa_string("FuncRefs allocated: "), fa_string_dshow(fa_i32(gFuncRefCount))));
 }

@@ -88,7 +88,7 @@ typedef int64_t fa_time_milliseconds_t;
         Number of hours.
     @param minutes
         Number of minutes.
-    @param ratio
+    @param seconds
         Number of seconds (destroyed).
     @return
         A new time value.
@@ -96,12 +96,12 @@ typedef int64_t fa_time_milliseconds_t;
 fa_time_t fa_time_create(fa_time_days_t days,
                          fa_time_hours_t hours,
                          fa_time_minutes_t minutes,
-                         fa_ratio_t ratio);
+                         fa_ratio_t seconds);
 
 /** Construct a time value from a double.
     @param dvalue
         Number of seconds
- */
+*/
 fa_time_t fa_time_from_double(double dvalue);
 
 /**
@@ -187,7 +187,8 @@ fa_time_seconds_t fa_time_to_seconds(fa_time_t time);
 */
 fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t time);
 
-
+/** Return true if the time equals 0. 
+*/
 bool fa_time_is_zero(fa_time_t time);
 
 /** The system time type.
@@ -197,8 +198,7 @@ bool fa_time_is_zero(fa_time_t time);
 typedef struct _fa_time_system_t * fa_time_system_t;
 
 
-
-void fa_log_time_count();
+void fa_time_log_count();
 
 /** @}
     @}

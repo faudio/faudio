@@ -279,7 +279,7 @@ fa_string_t fa_string_format_integral(char *, long long_);
 fa_string_t fa_string_format_floating(char *, double double_);
 
 
-void fa_log_string_count();
+void fa_string_log_count();
 
 /** @}
     @}

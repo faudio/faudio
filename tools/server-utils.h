@@ -290,6 +290,7 @@ void start_streams() {
                                      pair(fa_action_set(kMonitorLeft, monitor_volume), fa_now()),
                                      pair(fa_action_set(kMonitorRight, monitor_volume), fa_now()));
             schedule_relative(fa_now(), fa_action_many(actions), current_audio_stream);
+        }
     } else {
         fa_log_warning(fa_string("No audio output device, won't start an audio stream"));
     }

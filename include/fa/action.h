@@ -42,8 +42,6 @@
     @{
     */
 
-
-
 /** The abstract type of actions.
     
 */
@@ -93,8 +91,8 @@ void fa_action_destroy(fa_action_t action);
 
 /** Destroy the given action recursivly.
 */
-void fa_action_deep_destroy(fa_action_t action, fa_deep_destroy_pred_t pred);
-
+void fa_action_deep_destroy(fa_action_t action,
+                            fa_deep_destroy_pred_t deepDestroyPred);
 
 /** The `get` action reads a single global bus.
 
@@ -156,11 +154,16 @@ fa_action_t fa_action_accum(fa_action_channel_t channel,
 fa_action_t fa_action_send(fa_action_name_t name,
                            fa_action_value_t value);
 
- /** Identical to @ref fa_action_send, except that the value is not destroyed
-     when the action is destroyed.
- */
-fa_action_t fa_action_send_retain(fa_action_name_t name, fa_action_value_t value);
-
+/** Identical to @ref fa_action_send, except that the value is not destroyed
+    when the action is destroyed.
+    
+    @param name
+        Name that identifies the receiver.
+    @param value
+        Value to send.
+*/
+fa_action_t fa_action_send_retain(fa_action_name_t name,
+                                  fa_action_value_t value);
 
 /** Return whether the given action is a get action.
       
@@ -255,35 +258,6 @@ fa_action_t fa_action_until(fa_pred_t pred,
                             fa_ptr_t predData,
                             fa_action_t action);
 
-/** Creates a derived action from the given action that executes íf and only given predicate holds.
-    The predicate function is called for every occurence.
-    
-    This is exactly like @ref fa_action_if, except that it also includes time.
-*/
-fa_action_t fa_action_if_with_time(fa_action_pred_with_time_t pred,
-                                   fa_ptr_t predData,
-                                   fa_action_t action);
-
-/** Creates a derived action from the given action that executes as long as the given predicate holds.
-    The predicate function is called for every occurence.
-    
-    This is exactly like @ref fa_action_while, except that it also includes time.
-*/
-fa_action_t fa_action_while_with_time(fa_action_pred_with_time_t pred,
-                                      fa_ptr_t predData,
-                                      fa_action_t action);
-
-/** Creates a derived action from the given action that executes as long as the given predicate
-    does *not* hold.
-    
-    The predicate function is called for every occurence.
-
-    This is exactly like @ref fa_action_until, except that it also includes time.
-*/
-fa_action_t fa_action_until_with_time(fa_action_pred_with_time_t pred,
-                                      fa_ptr_t predData,
-                                      fa_action_t action);
-
 /** Convert a unary function to an action.
 */
 fa_action_t fa_action_do(fa_nullary_t nullary, fa_ptr_t ptr);
@@ -303,12 +277,13 @@ bool fa_action_is_simple(fa_action_t action);
 */
 bool fa_action_is_compound(fa_action_t action);
 
-/** Returns whether the given action is compound or not.
+/** Returns whether the given action is a do action or not.
 */
 bool fa_action_is_do(fa_action_t action);
 
-
-void fa_log_action_count();
+/** Log the number of allocated actions (for debugging).
+*/
+void fa_action_log_count();
 
 /** @}
     @}

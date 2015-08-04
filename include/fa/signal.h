@@ -134,10 +134,7 @@ fa_signal_t fa_signal_delay(int int_, fa_signal_t signal);
 
 
 typedef struct {
-            double * buffer;
-            fa_ptr_t dummy;
-            int count;
-            double rate;
+            double * buffer; fa_ptr_t dummy; int count; double rate;
         } fa_signal_state_t;
 
 /** Type of names.
@@ -348,6 +345,11 @@ fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t signal);
         A name to identify the signal, use with @ref fa_action_send
     @return
         A pair of @ref fa_signal_t (left and right output).
+    
+    @note
+        This custom signal is provided for convenience. An equivalent signal could be
+        constructed from combinations of play, count and trigger signals.
+    
 */
 fa_pair_t fa_signal_play_buffer(fa_string_t name);
 

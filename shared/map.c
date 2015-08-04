@@ -28,9 +28,9 @@ struct entry {
 typedef struct entry *entry_t;
 
 struct _fa_map_t {
-    fa_impl_t       impl;       //  Interface dispatcher
-    entry_t         entry;      //  Top-level entry
-    fa_destructor_t value_dest; //  Value destructor
+    fa_impl_t           impl;       //  Interface dispatcher
+    entry_t             entry;      //  Top-level entry
+    fa_map_destructor_t value_dest; //  Value destructor
 };
 
 static int gEntryCount = 0;
@@ -56,7 +56,7 @@ inline static void delete_entry(entry_t entry)
     fa_delete(entry);
 }
     
-inline static void destroy_entries(entry_t entry, fa_destructor_t value_destructor)
+inline static void destroy_entries(entry_t entry, fa_map_destructor_t value_destructor)
 {
     if (!entry) {
         return;
@@ -72,7 +72,7 @@ inline static void destroy_entries(entry_t entry, fa_destructor_t value_destruct
 
 fa_ptr_t map_impl(fa_id_t interface);
 
-inline static fa_map_t new_map(entry_t entry, fa_destructor_t value_destructor)
+inline static fa_map_t new_map(entry_t entry, fa_map_destructor_t value_destructor)
 {
     fa_map_t map = fa_new(map);
     map->impl = &map_impl;
@@ -218,7 +218,7 @@ void fa_map_deep_destroy(fa_map_t xs, fa_deep_destroy_pred_t p)
     delete_map(xs);
 }
 
-void fa_map_set_value_destructor(fa_map_t map, fa_destructor_t fn)
+void fa_map_set_value_destructor(fa_map_t map, fa_map_destructor_t fn)
 {
     map->value_dest = fn;
 }
@@ -270,7 +270,7 @@ fa_map_t fa_map_dset(fa_ptr_t key, fa_ptr_t value, fa_map_t map)
 {
     impl_for_each_entry(map, entry) {
         if (fa_equal(key, entry->key)) {
-            fa_destructor_t destructor = map->value_dest;
+            fa_map_destructor_t destructor = map->value_dest;
             if (destructor) {
                 destructor(entry->value);
             }
@@ -292,7 +292,7 @@ fa_map_t fa_map_set(fa_ptr_t key, fa_ptr_t value, fa_map_t map)
 
 fa_map_t fa_map_dadd(fa_ptr_t key, fa_ptr_t value, fa_map_t map)
 {
-    fa_destructor_t destructor = map->value_dest;
+    fa_map_destructor_t destructor = map->value_dest;
     impl_for_each_entry(map, entry) {
         if (fa_equal(key, entry->key)) {
             fa_destroy(key);
@@ -309,7 +309,7 @@ fa_map_t fa_map_dadd(fa_ptr_t key, fa_ptr_t value, fa_map_t map)
 
 fa_map_t fa_map_dremove(fa_ptr_t key, fa_map_t map)
 {
-    fa_destructor_t destructor = map->value_dest;
+    fa_map_destructor_t destructor = map->value_dest;
     entry_t last_entry = NULL;
     impl_for_each_entry(map, entry) {
         if (fa_equal(key, entry->key)) {
@@ -507,7 +507,7 @@ fa_ptr_t map_impl(fa_id_t interface)
     }
 }
 
-void fa_log_map_count()
+void fa_map_log_count()
 {
   fa_log_info(fa_string_dappend(fa_string("maps/entrys allocated: "),
       fa_string_dappend(fa_string_dshow(fa_i32(gMapCount)),

@@ -38,12 +38,13 @@
 
 typedef struct _fa_map_t * fa_map_t;
 
-typedef void (* fa_destructor_t)(fa_ptr_t);
 
 typedef fa_ptr_t fa_map_key_t;
 
 
-/** Create an empty map.
+typedef void (* fa_map_destructor_t)(fa_ptr_t);
+
+/** Create an empty map. 
 */
 fa_map_t fa_map_empty();
 
@@ -56,8 +57,10 @@ fa_map_t fa_map_copy(fa_map_t map);
 void fa_map_destroy(fa_map_t map);
 
 /** Set the destructor for the given map. (Tip: use fa_destroy)
+    
 */
-void fa_map_set_value_destructor(fa_map_t map, fa_destructor_t fn);
+void fa_map_set_value_destructor(fa_map_t map,
+                                 fa_map_destructor_t destructor);
 
 /** Return the number of entries in the given map. 
 */
@@ -87,7 +90,7 @@ fa_map_t fa_map_remove(fa_map_key_t key, fa_map_t map);
 */
 fa_map_t fa_map_dadd(fa_map_key_t key, fa_ptr_t ptr, fa_map_t map);
 
-/** Add an element to the map, replacing if already present. 
+/** Add an element to the map, replacing if already present.
 */
 fa_map_t fa_map_dset(fa_map_key_t key, fa_ptr_t ptr, fa_map_t map);
 
@@ -100,28 +103,24 @@ fa_map_t fa_map_dremove(fa_map_key_t key, fa_map_t map);
 fa_ptr_t fa_map_get(fa_map_key_t key, fa_map_t map);
 
 /** Return the element stored at the given key, or `null` if the key does not exist.
-    The key is destroyed.
+    The key is destroyed. 
 */
 fa_ptr_t fa_map_dget(fa_map_key_t key, fa_map_t map);
-
-/** Sum or union of the given maps. 
-*/
-fa_map_t fa_map_sum(fa_map_t map, fa_map_t map_);
 
 /** Convert the given list to a map. 
 */
 fa_map_t fa_map_from_list(fa_list_t list);
 
-/** Convert the given list to a map. 
+/** Convert the given list to a map. The list is destroyed. 
 */
-fa_map_t fa_map_dfrom_list(fa_list_t list);
+fa_map_t fa_map_from_list(fa_list_t list);
 
 /** Convert the given map to a list. 
 */
 fa_list_t fa_map_to_list(fa_map_t map);
 
 
-void fa_log_map_count();
+void fa_map_log_count();
 
 /** @}
     @}

@@ -100,8 +100,8 @@ typedef void (* fa_error_callback_t)(fa_ptr_t, fa_error_t);
             [Error](@ref fa_error_interface_t),
             [Copy](@ref fa_copy_t) and
             [Destroy](@ref fa_destroy_t)
-
-    NOTE: consumes the argument strings
+    @note
+        Consumes the argument strings.
 */
 fa_error_t fa_error_create_simple(fa_error_severity_t severity,
                                   fa_string_t string,

@@ -11,7 +11,7 @@
 
     Provides real-time audio.
     
-    These device run processors on the input and output
+    These devices run processors on the input and output
     the underlying system, typically physical audio interfaces. A running audio
     computation is represented by a *stream*. Access to the current device setups
     is provided by *sessions*.

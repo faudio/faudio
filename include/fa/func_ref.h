@@ -44,7 +44,7 @@ void* fa_func_ref_func(fa_func_ref_t func_ref);
 fa_ptr_t fa_func_ref_data(fa_func_ref_t func_ref);
 
 
-void fa_log_func_ref_count();
+void fa_func_ref_log_count();
 
 /** @}
     @}
