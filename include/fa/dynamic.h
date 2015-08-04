@@ -36,7 +36,8 @@ typedef enum {
     action_type_repr,
     audio_stream_type_repr,
     midi_stream_type_repr,
-    buffer_type_repr
+    buffer_type_repr,
+    atomic_ring_buffer_type_repr
 } fa_dynamic_type_repr_t;
 
 /** Dynamic typing interface.

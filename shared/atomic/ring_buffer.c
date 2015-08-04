@@ -11,6 +11,7 @@
 #include <fa/atomic.h>
 #include <fa/buffer.h>
 #include <fa/string.h>
+#include <fa/dynamic.h>
 #include <fa/util.h>
 
 /**
@@ -261,11 +262,15 @@ void atomic_ring_buffer_destroy(fa_ptr_t a)
     fa_atomic_ring_buffer_destroy(a);
 }
 
+fa_dynamic_type_repr_t atomic_ring_buffer_get_type(fa_ptr_t a) {
+    return atomic_ring_buffer_type_repr;
+}
 
 fa_ptr_t atomic_ring_buffer_impl(fa_id_t interface)
 {
     static fa_string_show_t atomic_ring_buffer_show_impl = { atomic_ring_buffer_show };
     static fa_destroy_t atomic_ring_buffer_destroy_impl = { atomic_ring_buffer_destroy };
+    static fa_dynamic_t atomic_ring_buffer_dynamic_impl = { atomic_ring_buffer_get_type };
 
     switch (interface) {
     case fa_string_show_i:
@@ -273,6 +278,9 @@ fa_ptr_t atomic_ring_buffer_impl(fa_id_t interface)
 
     case fa_destroy_i:
         return &atomic_ring_buffer_destroy_impl;
+        
+    case fa_dynamic_i:
+        return &atomic_ring_buffer_dynamic_impl;
 
     default:
         return NULL;

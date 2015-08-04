@@ -416,11 +416,11 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
     sf_count_t written = sf_write_double(file, ptr, size);
 
     if (written != size) {
-        return (fa_pair_t) fa_error_create_simple(error, fa_string("To few bytes written"), fa_string("Doremir.Buffer"));
+        return fa_error_create_simple(error, fa_string("To few bytes written"), fa_string("Doremir.Buffer"));
     }
 
     if (sf_close(file)) {
-        return (fa_pair_t) fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Buffer"));
+        return fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Buffer"));
     }
 
     return NULL;

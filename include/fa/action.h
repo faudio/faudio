@@ -307,19 +307,7 @@ bool fa_action_is_compound(fa_action_t action);
 */
 bool fa_action_is_do(fa_action_t action);
 
-// /** Given a compound action, return the minimum offset to its tail.
-// */
-// fa_time_t fa_action_compound_interval(fa_action_t action);
-//
-// /** Given a compound action, return its head (nullable).
-// */
-// fa_action_t fa_action_compound_first(fa_action_t action);
-//
-// /** Given a compound action, return its tail (nullable).
-// */
-// fa_action_t fa_action_compound_rest(fa_action_t action);
 
-//void print_all_actions();
 void fa_log_action_count();
 
 /** @}

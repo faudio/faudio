@@ -253,7 +253,7 @@ fa_pair_t fa_buffer_unzip(fa_buffer_t buffer);
     @return
         A new buffer.
 */
-fa_buffer_t fa_buffer_read_raw(fa_string_t string);
+fa_buffer_t fa_buffer_read_raw(fa_string_t path);
 
 /**
     Write a buffer to a file.
@@ -261,7 +261,7 @@ fa_buffer_t fa_buffer_read_raw(fa_string_t string);
     @param path
         Path to the file to write.
 */
-void fa_buffer_write_raw(fa_string_t string, fa_buffer_t buffer);
+void fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer);
 
 /**
     Read an audio file.
@@ -271,7 +271,7 @@ void fa_buffer_write_raw(fa_string_t string, fa_buffer_t buffer);
     @return
         A buffer or an error value.
 */
-fa_buffer_t fa_buffer_read_audio(fa_string_t string);
+fa_buffer_t fa_buffer_read_audio(fa_string_t path);
 
 /**
     Write an audio file.
@@ -283,7 +283,7 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t string);
     @return
         The null pointer or an error value.
 */
-fa_ptr_t fa_buffer_write_audio(fa_string_t string,
+fa_ptr_t fa_buffer_write_audio(fa_string_t path,
                                fa_buffer_t buffer);
 
 /** Resample the given buffer to the given rate (nullable).

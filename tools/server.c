@@ -47,6 +47,7 @@ define_handler(current_devices);
 
 define_handler(load_audio_file);
 define_handler(close_audio_file);
+define_handler(save_audio_file);
 
 define_handler(main_volume);
 define_handler(pan);
@@ -103,10 +104,12 @@ int main()
     lo_server_thread_add_method(st, "/send/note", "iiii", simple_note_handler, server); // f0, velocity, length (ms), channel
     
     /* Audio files */
-    lo_server_thread_add_method(st, "/play/audio", "ii", play_audio_handler, server);
-    lo_server_thread_add_method(st, "/play/audio", "iif", play_audio_handler, server);
-    lo_server_thread_add_method(st, "/load/audio-file", "is", load_audio_file_handler, server);
-    lo_server_thread_add_method(st, "/close/audio-file", "i", close_audio_file_handler, server);
+    lo_server_thread_add_method(st, "/play/audio", "ii", play_audio_handler, server);  // id, audio id
+    lo_server_thread_add_method(st, "/play/audio", "iif", play_audio_handler, server); // id, audio id, start-time (sec)
+    lo_server_thread_add_method(st, "/audio-file/load", "is", load_audio_file_handler, server);  // audio id, path
+    lo_server_thread_add_method(st, "/audio-file/close", "i", close_audio_file_handler, server); // audio id
+    lo_server_thread_add_method(st, "/audio-file/save", "i", save_audio_file_handler, server);   // audio id
+    lo_server_thread_add_method(st, "/audio-file/save", "is", save_audio_file_handler, server);  // audio id, path
     
     /* Send midi control messages */
     lo_server_thread_add_method(st, "/send/main-volume",    "ii", main_volume_handler, server);
@@ -122,13 +125,6 @@ int main()
         fa_clock_initialize();
         
         init_globals();
-
-#ifdef _WIN32
-        synth_name   = fa_string("fluid");
-#else
-        synth_name   = fa_string("dls");
-#endif
-        audio_name   = fa_string("buffer");
 
         current_audio_session = fa_audio_begin_session();
         current_audio_output_device = fa_audio_default_output(current_audio_session);
@@ -502,9 +498,9 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
     fa_string_t file_path = fa_string_from_utf8(&argv[1]->s);
     fa_buffer_t buffer = fa_buffer_read_audio(file_path);
     if (fa_check(buffer)) {
-        fa_error_log(NULL, (fa_error_t) buffer);
+        fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
         fa_destroy(file_path);
-        send_osc(message, user_data, "/load/audio-file", "ii", id, -1);
+        send_osc(message, user_data, "/audio-file/load", "iF", id);
         return 0;
     }
     fa_buffer_set_meta(buffer, fa_string("file_path"), file_path);
@@ -513,7 +509,7 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
     }
     fa_ptr_t sample_rate = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
     fa_ptr_t channels    = fa_buffer_get_meta(buffer, fa_string("channels"));
-    send_osc(message, user_data, "/load/audio-file", "iiii", id,
+    send_osc(message, user_data, "/audio-file/load", "iTiii", id,
         fa_buffer_size(buffer), safe_peek(sample_rate), safe_peek(channels));
     
     return 0;
@@ -524,17 +520,50 @@ int close_audio_file_handler(const char *path, const char *types, lo_arg ** argv
     fa_with_lock(audio_files_mutex) {
         fa_buffer_t buffer = fa_map_dget(wrap_oid(id), audio_files);
         if (buffer) {
-            
-            // TODO: if the buffer is loaded into the play_buffer signal,
-            // there will likely be a segmentation fault at some point!
-            fa_destroy(buffer);
-            
+            fa_destroy(buffer); // this is safe, since the actual destruction is delayed if the buffer is in use
             audio_files = fa_map_dremove(wrap_oid(id), audio_files);
-            send_osc(message, user_data, "/close/audio-file", "i", id);
+            send_osc(message, user_data, "/audio-file/close", "iT", id);
+        } else {
+            send_osc(message, user_data, "/audio-file/close", "iF", id);
         }
     }
     return 0;
 }
+
+int save_audio_file_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
+    oid_t id = argv[0]->i;
+    fa_buffer_t buffer = NULL;
+    fa_with_lock(audio_files_mutex) {
+        buffer = fa_map_dget(wrap_oid(id), audio_files);
+    }
+    if (!buffer) {
+        fa_fail(fa_format_integral("There is no audio file with ID %zu", id));
+        send_osc(message, user_data, "/audio-file/save", "iF", id);
+        return 0;
+    }
+    fa_string_t file_path = fa_buffer_get_meta(buffer, fa_string("file_path"));
+    if (argc >= 2) {
+        file_path = fa_string(&argv[1]->s);
+    } else if (file_path) {
+        file_path = fa_copy(file_path);
+    } else {
+        fa_fail(fa_format_integral("Audio file %zu has no path", id));
+        send_osc(message, user_data, "/audio-file/save", "iF", id);
+        return 0;
+    }
+    fa_ptr_t error = fa_buffer_write_audio(file_path, buffer);
+    if (error) {
+        fa_error_log(NULL, error);
+        send_osc(message, user_data, "/audio-file/save", "iF", id);
+        fa_destroy(file_path);
+        return 0;
+    }
+    fa_slog_info("Saved audio file at ", file_path);
+    fa_buffer_set_meta(buffer, fa_string("file_path"), file_path);
+    send_osc(message, user_data, "/audio-file/save", "iT", id);
+    return 0;
+}
+
 
 int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
     oid_t id = argv[0]->i;

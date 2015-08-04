@@ -199,17 +199,34 @@ fa_list_t times_to_delta_times(fa_list_t timeActions) //, fa_action_t before, fa
     return rel_actions;
 }
 
+#define sig_add2(a, b) fa_signal_add(a, b)
+#define sig_add3(a, b, c) fa_signal_add(a, fa_signal_add(b, c))
+#define sig_add4(a, b, c, d) fa_signal_add(a, fa_signal_add(b, fa_signal_add(c, d)))
+#define sig_add(...) VARARG(sig_add, __VA_ARGS__)
+
+#define sig_mul2(a, b) fa_signal_multiply(a, b)
+#define sig_mul3(a, b, c) fa_signal_multiply(a, fa_signal_multiply(b, c))
+#define sig_mul4(a, b, c, d) fa_signal_multiply(a, fa_signal_multiply(b, fa_signal_multiply(c, d)))
+#define sig_mul(...) VARARG(sig_mul, __VA_ARGS__)
+
+fa_signal_t _low_pass (fa_ptr_t x, fa_signal_t s1) {
+    fa_signal_t s2 = x;
+    return sig_add(sig_mul(s1, fa_signal_constant(0.999)),
+                   sig_mul(s2, fa_signal_constant(0.001)));
+}
+
+fa_signal_t low_pass(fa_signal_t sig) {
+    return fa_signal_loop(_low_pass, sig);
+}
 
 fa_list_t construct_output_signal_tree() {
     
     // Synth
     #ifdef _WIN32
-    fa_pair_t synth = fa_signal_synth(synth_name, fa_string("C:\\sf.sf2"));
+    fa_pair_t synth = fa_signal_synth(synth_name, fa_string("C:\\sf.sf2")); // TODO
     #else
     fa_pair_t synth = fa_signal_dls(synth_name);
     #endif
-    
-    fa_slog_info("synth: ", synth);
     
     fa_signal_t synth_left = fa_pair_first(synth);
     fa_signal_t synth_right = fa_pair_second(synth);
@@ -217,16 +234,24 @@ fa_list_t construct_output_signal_tree() {
     
     // Audio buffer playback
     fa_pair_t play_buffer = fa_signal_play_buffer(audio_name);
-    printf("pointer is now %p\n", play_buffer);
-
-    fa_slog_info("play_buffer: ", play_buffer);
-    
     fa_signal_t play_buffer_left = fa_pair_first(play_buffer);
     fa_signal_t play_buffer_right = fa_pair_second(play_buffer);
     fa_destroy(play_buffer); // only destroys the pair
-    
-    fa_list_t tree = list(fa_signal_add(synth_left, play_buffer_left),
-                          fa_signal_add(synth_right, play_buffer_right));
+        
+    fa_list_t tree =
+        list(sig_add(sig_mul(synth_left, fa_signal_input(kSynthLeft)),
+                     sig_mul(play_buffer_left, fa_signal_input(kAudioLeft)),
+                     sig_mul(fa_signal_input(kMonitorLeft),
+                             fa_signal_former(fa_signal_record_external(record_left_name, fa_signal_input(kInputLeft)),
+                                              fa_signal_output(0, kLevelLeft,
+                                                               low_pass(fa_signal_input(kInputLeft)))))),
+                             
+             sig_add(sig_mul(synth_right, fa_signal_input(kSynthRight)),
+                     sig_mul(play_buffer_right, fa_signal_input(kAudioRight)),
+                     sig_mul(fa_signal_input(kMonitorRight),
+                             fa_signal_former(fa_signal_record_external(record_right_name, fa_signal_input(kInputRight)),
+                                              fa_signal_output(0, kLevelRight,
+                                                               low_pass(fa_signal_input(kInputRight)))))));
     
     return tree;
 }
@@ -256,6 +281,15 @@ void start_streams() {
         if (selected_midi_echo == FA_ECHO_AUDIO) {
             current_midi_echo_stream = stream;
         }
+        // Set volumes
+        if (current_audio_stream) {
+            fa_list_t actions = list(pair(fa_action_set(kSynthLeft, synth_volume), fa_now()),
+                                     pair(fa_action_set(kSynthRight, synth_volume), fa_now()),
+                                     pair(fa_action_set(kAudioLeft, audio_volume), fa_now()),
+                                     pair(fa_action_set(kAudioRight, audio_volume), fa_now()),
+                                     pair(fa_action_set(kMonitorLeft, monitor_volume), fa_now()),
+                                     pair(fa_action_set(kMonitorRight, monitor_volume), fa_now()));
+            schedule_relative(fa_now(), fa_action_many(actions), current_audio_stream);
     } else {
         fa_log_warning(fa_string("No audio output device, won't start an audio stream"));
     }
@@ -315,7 +349,7 @@ fa_ptr_t create_fa_value(lo_type type, void *data) {
 
 void add_playback_semaphore(oid_t id, fa_string_t signal_name) {
     if (!signal_name) signal_name = fa_from_bool(true);
-    fa_with_lock(playback_semaphore_mutex) {
+    fa_with_lock(playback_semaphores_mutex) {
         playback_semaphores = fa_map_dset(wrap_oid(id), signal_name, playback_semaphores);
     }
     //return a_bool;
@@ -336,7 +370,7 @@ bool remove_playback_semaphore(oid_t id) {
         //fa_free(bool_ref);
         
     bool removed = false;
-    fa_with_lock(playback_semaphore_mutex) {
+    fa_with_lock(playback_semaphores_mutex) {
         fa_ptr_t s = fa_map_dget(wrap_oid(id), playback_semaphores);
         if (s) {
             if (fa_dynamic_get_type(s) == string_type_repr) {
@@ -350,7 +384,7 @@ bool remove_playback_semaphore(oid_t id) {
 }
 
 static inline void remove_all_playback_semaphores() {
-    fa_with_lock(playback_semaphore_mutex) {
+    fa_with_lock(playback_semaphores_mutex) {
         fa_map_t old_semaphores = playback_semaphores;
         playback_semaphores = fa_map_empty();
         fa_destroy(old_semaphores);
@@ -369,7 +403,7 @@ bool _echo_time_p(fa_ptr_t context, fa_ptr_t dummy) {
 int start_time_echo()
 {
     int new_value;
-    fa_with_lock(playback_semaphore_mutex) {
+    fa_with_lock(time_echo_mutex) {
         if (!time_echo) {
             time_echo++;
             fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), fa_action_do_with_time(_echo_time, NULL));
@@ -386,10 +420,45 @@ int start_time_echo()
 int stop_time_echo()
 {
     int new_value;
-    fa_with_lock(playback_semaphore_mutex) {
+    fa_with_lock(time_echo_mutex) {
         time_echo--;
         new_value = time_echo;
     }
     return new_value;
 }
 
+fa_ptr_t _echo_level(fa_ptr_t context, fa_time_t time) {
+    send_osc_async("/level", "f", fa_time_to_milliseconds(time));
+    return NULL;
+}
+
+bool _echo_level_p(fa_ptr_t context, fa_ptr_t dummy) {
+    return level_echo > 0;
+}
+
+int start_level_echo()
+{
+    int new_value;
+    fa_with_lock(level_echo_mutex) {
+        if (!level_echo) {
+            level_echo++;
+            fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), fa_action_do_with_time(_echo_level, NULL));
+            fa_action_t while_action = fa_action_while(_echo_level_p, NULL, repeat_action);
+            schedule_relative(fa_now(), while_action, current_midi_echo_stream);
+        } else {
+            level_echo++;
+        }
+        new_value = level_echo;
+    }
+    return new_value;
+}
+
+int stop_level_echo()
+{
+    int new_value;
+    fa_with_lock(level_echo_mutex) {
+        level_echo--;
+        new_value = level_echo;
+    }
+    return new_value;
+}

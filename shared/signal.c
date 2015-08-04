@@ -554,7 +554,7 @@ fa_signal_t simplify(part_t *part, fa_list_t *procs, fa_signal_t signal2)
 
     case loop_signal: {
         fixpoint_t fix      = loop_get(signal2, function);
-        fa_ptr_t      fix_data = loop_get(signal2, data);
+        fa_ptr_t   fix_data = loop_get(signal2, data);
 
         int channel;
         part_t part1;
@@ -569,7 +569,7 @@ fa_signal_t simplify(part_t *part, fa_list_t *procs, fa_signal_t signal2)
 
     case delay_signal: {
         fa_signal_t a              = delay_get(signal2, a);
-        int samples             = delay_get(signal2, n);
+        int samples                = delay_get(signal2, n);
 
         int channel;
         part_t part1;
@@ -1594,17 +1594,17 @@ struct rec_external {
     fa_atomic_ring_buffer_t buffer;
 };
 
-fa_ptr_t record_extrenal_before_(fa_ptr_t x, int count, fa_signal_state_t *state)
+static fa_ptr_t record_external_before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
 
-fa_ptr_t record_extrenal_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
+static fa_ptr_t record_external_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
 
-fa_ptr_t record_extrenal_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
+static fa_ptr_t record_external_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 {
     struct rec_external *ext = (struct rec_external *) x;
 
@@ -1627,13 +1627,9 @@ fa_ptr_t record_extrenal_render_(fa_ptr_t x, int offset, int count, fa_signal_st
     return x;
 }
 
-fa_ptr_t record_extrenal_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+static fa_ptr_t record_external_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     struct rec_external *ext = (struct rec_external *) x;
-
-    // inform(fa_string("Recorder, comparing names: "));
-    // inform(n);
-    // inform(ext->name);
 
     if (fa_equal(ext->name, n)) {
         if (ext->buffer) {
@@ -1641,12 +1637,12 @@ fa_ptr_t record_extrenal_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_mess
             fa_atomic_ring_buffer_close(ext->buffer);
         }
 
-        // TODO assert it is actually a ring buffer
-        ext->buffer = msg;
+        if (!msg || (fa_dynamic_get_type(msg) == atomic_ring_buffer_type_repr)) {
+            ext->buffer = msg;
+        } else {
+            assert(false && "Strange value sent to record_ext");
+        }
         // ext->bytes_written = 0;
-    } else {
-        // fa_warn(fa_string_dappend(fa_string("Unknown message to external recorder: "), fa_copy(ext->name)));
-        // no assert!
     }
 
     return x;
@@ -1661,10 +1657,10 @@ fa_signal_t fa_signal_record_external(fa_string_t name,
     ext->buffer = NULL;
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
-    proc->before  = record_extrenal_before_;
-    proc->after   = record_extrenal_after_;
-    proc->render  = record_extrenal_render_;
-    proc->receive = record_extrenal_receive_;
+    proc->before  = record_external_before_;
+    proc->after   = record_external_after_;
+    proc->render  = record_external_render_;
+    proc->receive = record_external_receive_;
     proc->send    = NULL;
     proc->destroy = NULL;
     proc->data    = ext;
@@ -2321,6 +2317,11 @@ fa_ptr_t play_buffer_before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 }
 fa_ptr_t play_buffer_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
+    play_buffer_context *context = x;
+    if (context->buffer) {
+        fa_buffer_release_reference(context->buffer);
+        context->buffer = NULL;
+    }
     return x;
 }
 fa_ptr_t play_buffer_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
