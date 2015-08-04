@@ -53,6 +53,10 @@ module Fa
     */
     type Pred   = ((Ptr, Ptr) -> Bool)*;
 
+    /** A predicate used for testing an object for deep destruction.
+    */
+    type DeepDestroyPred  = (Ptr -> Bool)*;
+
 
     // Character types
 
@@ -98,6 +102,14 @@ module Fa
     /** Return whether the given value is a reference ("object") type. 
         @see [Value references](@ref ValueReferences) */
     isRef      : Ptr -> Bool;
+    
+    /** Return whether the given value is of an integer type (int8, int16, int32 or int64).
+        @see [Value references](@ref ValueReferences) */
+    isInteger  : Ptr -> Bool;
+
+    /** Return whether the given value is of a numeric type (int8, int16, int32, int64, float or double).
+        @see [Value references](@ref ValueReferences) */
+    isNumber   : Ptr -> Bool;
 
     /** Unwrap a referece to a @bool@ and destroy the reference. 
         @see [Value references](@ref ValueReferences) */
@@ -154,6 +166,18 @@ module Fa
     /** Unwrap a referece to a @double@ without destroying the reference. 
         @see [Value references](@ref ValueReferences) */
     peekDouble   : Ptr -> Double;
+    
+    /** Unwrap a referece to an integer (int8, int16, int32 or int64) without destroying the reference.
+        The result is promoted to an int64.
+        @see [Value references](@ref ValueReferences) 
+    */
+    peekInteger  : Ptr -> Int64;
+
+    /** Unwrap a referece to a number (int8, int16, int32, int64, float or double) without destroying the reference.
+        The result is promoted to a double.
+        @see [Value references](@ref ValueReferences) 
+    */
+    peekNumber   : Ptr -> Double;
 
     /** Create a new referece to a @bool@ value.
         The returned reference must be destroyed by the caller.
@@ -218,12 +242,25 @@ module Fa
 
     /** Return whether the given values are equal.
         @see [Equal](@ref fa_equal_t)
+        
+        @note
+          * NULL == NULL
+          * Identical pointers return true, regardless of type (this means that non-wrapped values may be passed to fa_equal)
+          * Numerical values are compared numerically (regardless of the underlying number type)
+          * Other values will generally have to be the same type, unless overridden by their implementation of fa_equal_t
       */
     equal            : (Ptr, Ptr) -> Bool;
+    
     /** Return whether the given values are unequal.
         @see [Equal](@ref fa_equal_t)
       */
     notEqual         : (Ptr, Ptr) -> Bool;
+    
+    /** Identical to @ref fa_equal, but destroys both arguments (unless they are NULL).
+        @see [Equal](@ref fa_equal_t)
+        @see @ref fa_equal
+    */
+    dequal            : (Ptr, Ptr) -> Bool;
 
     /** Less-than comparison interface.
     */
@@ -263,19 +300,28 @@ module Fa
     /** Generic copying interface.
     */
     type Copy   = struct {
-        copy : (Ptr -> Ptr)*
+        copy : (Ptr -> Ptr)*,
+        deepCopy : (Ptr -> Ptr)*
     };
 
     /** Generic destruction interface.
     */
     type Destroy   = struct {
-        destroy : (Ptr -> Void)*
+        destroy : (Ptr -> Void)*,
+        deepDestroy : ((Ptr, DeepDestroyPred) -> Void)*
     };
 
     /** Copy the given value.
         @see [Copy](@ref fa_copy_t)
       */
     copy    : Ptr -> Ptr;
+    
+    /** Deep copy the given value.
+        @see [Copy](@ref fa_deep_t)
+      
+    */
+    deepCopy : Ptr -> Ptr;
+    
     /** Move the given value. This is the identity function,
         just serves as a notification.
       */
@@ -286,7 +332,15 @@ module Fa
         @see [Destroy](@ref fa_destroy_t)
       */
     destroy : Ptr -> Void;
-    // TODO deepDestroy : Ptr -> Void;
+
+    /** Destroy the given value and contained values (in case of a collection such as a pair or list).
+        @param  Value to destroy (destroyed).
+        @param  Predicate function
+        @see [Destroy](@ref fa_destroy_t)
+      */
+    deepDestroy : (Ptr, DeepDestroyPred) -> Void;
+    
+    deepDestroyAlways : Ptr -> Void;
 
     /** Generic append operation interface. */
     type Semigroup = struct {

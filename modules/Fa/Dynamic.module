@@ -9,7 +9,8 @@ module Fa.Dynamic
     import Fa;
     import Fa.String;
 
-    type TypeRepr = enum {                   
+    type TypeRepr = enum {
+        NullTypeRepr,
         BoolTypeRepr, 
         I8TypeRepr, 
         I16TypeRepr, 
@@ -23,7 +24,12 @@ module Fa.Dynamic
         MapTypeRepr, 
         StringTypeRepr,
         RatioTypeRepr,
-        MidiMessageTypeRepr
+        MidiMessageTypeRepr,
+        ActionTypeRepr,
+        AudioStreamTypeRepr,
+        MidiStreamTypeRepr,
+        BufferTypeRepr,
+        AtomicRingBufferTypeRepr
     };
 
     /** Dynamic typing interface.

@@ -33,6 +33,10 @@ module Fa.List
     import Fa;
 
     type List   = opaque;
+    
+    /** A sort predicate function. Should return true if a < b
+     */
+    type SortFn = ((a : Ptr, b : Ptr) -> Bool)*;
 
     // Constructors
 
@@ -106,6 +110,13 @@ module Fa.List
             O(1)
      */
     copy : List -> List;
+    
+    /** Copy the given list and all contained elements recursivly.
+
+      @par Performance
+        O(n)
+    */
+    deepCopy : List -> List;
 
     /** Destroy the given list.
 
@@ -113,6 +124,13 @@ module Fa.List
             O(n)
      */
     destroy : List -> Void;
+    
+    /** Destroy the given list and all contained elements.
+
+        @par Performance
+            O(n)
+    */
+    deepDestroy : (List, DeepDestroyPred) -> Void;
 
 
     // Predicates
@@ -202,17 +220,26 @@ module Fa.List
      */
     dreverse : List -> List;
     
-    /** Return the given list sorted.
+    /** Return a sorted version of the given list, according to the given sort function.
+        The passed list is unchanged.
         @par Performance
             O(n log n)
      */
-    sort : List -> List;
-
-    /** Return the given list sorted.
+    sort : (List, SortFn) -> List;
+    
+    /** Sort the given list in place, according to the given sort function. Returns the list.
         @par Performance
             O(n log n)
      */
-    dsort : List -> List;
+    dsort : (List, SortFn) -> List;
+    
+    /** Sort the given list ascending in place. Returns the list.
+        fa_list_sort_ascending(x) == fa_list_sort(x, fa_less_than)
+        
+        @par Performance
+            O(n log n)
+    */
+    dsortAscending : List -> List;
 
     
     // Random access
@@ -445,5 +472,8 @@ module Fa.List
     // Conversions
     
     toList : List -> List;
+    
+    
+    logCount : () -> Void;
 }
 

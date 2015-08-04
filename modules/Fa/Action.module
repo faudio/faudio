@@ -66,9 +66,17 @@ module Fa.Action
      */
     copy : Action -> Action;
     
+    /** Copy the given action recursivly.
+     */
+    deep_copy : Action -> Action;
+    
     /** Destroy the given action.
      */
     destroy : Action -> Void;
+    
+    /** Destroy the given action recursivly.
+     */
+    deep_destroy : (Action, DeepDestroyPred) -> Void;
 
     /** The `get` action reads a single global bus.
 
@@ -109,17 +117,30 @@ module Fa.Action
     accum : (Channel, UnaryDouble, Ptr) -> Action;
 
     /** The `send` action sends a message, the type of which depends on
-        the type of receiver. Often this is @ref fa_midi_message_t or 
+        the type of receiver. Often this is a @ref fa_midi_message_t or 
         a value implementing @ref fa_dynamic_t.
 
-        The resulting action must be destroyed by the caller.
+        The resulting action must be destroyed by the caller (or passed to
+        the scheduler). Note that the value is destroyed with the action,
+        to avoid that, use @ref fa_action_send_retain instead. Note also
+        that the name is not destroyed.
         
         @param name
-            Name of receiver.
+            Name that identifies the receiver.
         @param value
             Value to send.
      */
     send : (Name, Value) -> Action;
+    
+    /** Identical to @ref fa_action_send, except that the value is not destroyed
+        when the action is destroyed.
+        
+        @param name
+            Name that identifies the receiver.
+        @param value
+            Value to send.
+     */
+    sendRetain : (Name, Value) -> Action;
 
 
     /** Return whether the given action is a get action.
@@ -209,28 +230,28 @@ module Fa.Action
      */
     until : (pred : Pred, predData : Ptr, action : Action) -> Action;
 
-    /** Creates a derived action from the given action that executes íf and only given predicate holds.
-        The predicate function is called for every occurence.
-        
-        This is exactly like @ref fa_action_if, except that it also includes time.
-     */
-    ifWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
-
-    /** Creates a derived action from the given action that executes as long as the given predicate holds.
-        The predicate function is called for every occurence.
-        
-        This is exactly like @ref fa_action_while, except that it also includes time.
-     */
-    whileWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
-
-    /** Creates a derived action from the given action that executes as long as the given predicate
-        does *not* hold.
-        
-        The predicate function is called for every occurence.
-
-        This is exactly like @ref fa_action_until, except that it also includes time.
-     */
-    untilWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
+    // /** Creates a derived action from the given action that executes íf and only given predicate holds.
+    //     The predicate function is called for every occurence.
+    //
+    //     This is exactly like @ref fa_action_if, except that it also includes time.
+    //  */
+    // ifWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
+    //
+    // /** Creates a derived action from the given action that executes as long as the given predicate holds.
+    //     The predicate function is called for every occurence.
+    //
+    //     This is exactly like @ref fa_action_while, except that it also includes time.
+    //  */
+    // whileWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
+    //
+    // /** Creates a derived action from the given action that executes as long as the given predicate
+    //     does *not* hold.
+    //
+    //     The predicate function is called for every occurence.
+    //
+    //     This is exactly like @ref fa_action_until, except that it also includes time.
+    //  */
+    // untilWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
 
     /** Convert a unary function to an action.
      */
@@ -242,9 +263,6 @@ module Fa.Action
      */
     doWithTime : (NullaryWithTime, Ptr) -> Action;
 
-
-
-
     /** Returns whether the given action is simple or not.
      */
     isSimple : Action -> Bool;
@@ -252,17 +270,13 @@ module Fa.Action
     /** Returns whether the given action is compound or not.
      */
     isCompound : Action -> Bool;
-    
-    /** Given a compound action, return the minimum offset to its tail.
-     */
-    compoundInterval : Action -> Time;
 
-    /** Given a compound action, return its head (nullable).
+    /** Returns whether the given action is a do action or not.
      */
-    compoundFirst : Action -> Action; // Nullable
+    isDo : Action -> Bool;
 
-    /** Given a compound action, return its tail (nullable).
-     */
-    compoundRest : Action -> Action; // Nullable
+    /** Log the number of allocated actions (for debugging).
+     */    
+    logCount : () -> Void;
 }
 

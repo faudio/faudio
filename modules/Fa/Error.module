@@ -87,6 +87,8 @@ module Fa.Error
                 [Error](@ref fa_error_interface_t),
                 [Copy](@ref fa_copy_t) and
                 [Destroy](@ref fa_destroy_t)
+        @note
+            Consumes the argument strings.
      */
     createSimple : (Severity, String, String) -> Error;
 }

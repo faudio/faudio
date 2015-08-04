@@ -254,5 +254,7 @@ module Fa.String
             A new formatted string.
      */
     formatFloating : (Char*, Double) -> String;
+    
+    logCount : () -> Void;
 }
 

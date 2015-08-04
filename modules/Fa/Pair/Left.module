@@ -39,5 +39,7 @@ module Fa.Pair.Left
     fromPair : Pair -> Left;
 
     toList : Left -> List;
+    
+    logCount : () -> Void;
 }
 

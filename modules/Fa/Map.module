@@ -29,24 +29,30 @@ module Fa.Map
     
     type Map = opaque;
     type Key = Ptr;
+    
+    type Destructor = (Ptr -> Void)*;
 
-    /** Create an empty list. */
+    /** Create an empty map. */
     empty : () -> Map;
     
-    /** Copy the given list. */
+    /** Copy the given map. */
     copy : Map -> Map;
     
-    /** Destroy the given list. */
+    /** Destroy the given map. */
     destroy : Map -> Void;
+    
+    /** Set the destructor for the given map. (Tip: use fa_destroy)
+    */
+    setValueDestructor : (Map, Destructor) -> Void;
 
     // Size
-    /** Return the number of elements in the given list. */
+    /** Return the number of entries in the given map. */
     size : Map -> Int;
     
-    /** Return whether the given list is empty. */
+    /** Return whether the given map is empty. */
     isEmpty : Map -> Bool;
     
-    /** Return whether the given list has a single element. */
+    /** Return whether the given map has a single entry. */
     isSingle : Map -> Bool;
 
     // Lookup function
@@ -62,62 +68,29 @@ module Fa.Map
     /** Add an element to the map if not present. */
     dadd : (Key, Ptr, Map) -> Map;
     
-    /** Add an element to the map, replacing if already present. */
+    /** Add an element to the map, replacing if already present.*/
     dset : (Key, Ptr, Map) -> Map;
     
     /** Remove the given key if present. */
     dremove : (Key, Map) -> Map;
     
-    /** Add an element to the map if not present. */
-    addEntry : (Pair, Map) -> Map;
-    
-    /** Add an element to the map, replacing if already present. */
-    setEntry : (Pair, Map) -> Map;
-    
-    /** Remove the given key if present. */
-    removeEntry : (Pair, Map) -> Map;
-
     // Predicates
     /** Return the element stored at the given key, or `null` if the key does not exist. */
     get : (Key, Map) -> Ptr;
     
-    /** Return whether the given key exists in the given map. */
-    hasKey : (Key, Map) -> Bool;
-    
-    /** Return whether the given element exists in the given map. */
-    hasElem : (Ptr, Map) -> Bool;
-    
-    /** Return whether the given $(key, element)$ pair element exists in the given map. */
-    hasEntry : (Pair, Map) -> Bool;
-    
-    /** Whether the first of the given maps is a submap of the second. */
-    isSubmapOf : (Map, Map) -> Bool;
-    
-    /** Whether the first of the given maps is a proper submap of the second. */
-    isProperSubmapOf : (Map, Map) -> Bool;
-
-    // Set operations
-    /** Sum or union of the given maps. */
-    sum : (Map, Map) -> Map;
-    
-    /** Cartesian product of the given maps. */
-    product : (Map, Map) -> Map;
-    
-    /** Symmetric difference of the given maps. */
-    difference : (Map, Map) -> Map;
-
-    // Functor
-    /** Return the result of applying the given function to all elements of the given list. */
-    map : (Unary, Ptr, Map) -> Map;
-
-    // Conversions   
-    /** Convert the given pair to a map. */
-    fromPair : Pair -> Map;
-    
+    /** Return the element stored at the given key, or `null` if the key does not exist.
+        The key is destroyed. */
+    dget : (Key, Map) -> Ptr;
+        
     /** Convert the given list to a map. */
     fromList : List -> Map;
     
+    /** Convert the given list to a map. The list is destroyed. */
+    fromList : List -> Map;
+        
     /** Convert the given map to a list. */
     toList : Map -> List;
+    
+    logCount : () -> Void;
 }
 

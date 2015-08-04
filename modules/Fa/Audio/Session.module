@@ -2,7 +2,7 @@
 /**
     Provides real-time audio.
     
-    These device run processors on the input and output
+    These devices run processors on the input and output
     the underlying system, typically physical audio interfaces. A running audio
     computation is represented by a *stream*. Access to the current device setups
     is provided by *sessions*.
@@ -82,7 +82,7 @@ module "transient" Fa.Audio.Session
         `output-latency`     | Suggested latency for both input and output in seconds (integer or floating-point).
         `sample-rate`        | Suggested sample rate in Hertz (floating-point).
         `vector-size`        | Suggested internal vector size (integer).
-        `scheduler-interval` | Scheduler update interval in milliseconds (integer or floating-point).
+        `scheduler-interval` | Scheduler update interval in milliseconds (integer).
         `exclusive`          | Use exclusive mode if available (boolean or integer). This will force `faudio` to claim exclusive access to each audio device it uses.
         
         @param name     Name of parameter to set.
