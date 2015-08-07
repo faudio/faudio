@@ -152,62 +152,62 @@ module Fa.Buffer
         @note
             O(1)
      */
-    getInt16 : (Buffer, Size) -> Int16;
+    getInt16 : (Buffer, index : Size) -> Int16;
     
     /** Get a value from the buffer.
         @note
             O(1)
      */
-    getInt32 : (Buffer, Size) -> Int32;
+    getInt32 : (Buffer, index : Size) -> Int32;
     
     /** Get a value from the buffer.
         @note
             O(1)
      */
-    getInt64 : (Buffer, Size) -> Int64;
+    getInt64 : (Buffer, index : Size) -> Int64;
     
     /** Get a value from the buffer.
         @note
             O(1)
      */
-    getFloat : (Buffer, Size) -> Float;
+    getFloat : (Buffer, index : Size) -> Float;
     
     /** Get a value from the buffer.
         @note
             O(1)
      */
-    getDouble : (Buffer, Size) -> Double;
+    getDouble : (Buffer, index : Size) -> Double;
 
     
     /** Update a value in the buffer.
         @note
             O(1)
      */
-    setInt16 : (Buffer, Size, Int16) -> Void;
+    setInt16 : (Buffer, index : Size, Int16) -> Void;
     
     /** Update a value in the buffer.
         @note
             O(1)
      */
-    setInt32 : (Buffer, Size, Int32) -> Void;
+    setInt32 : (Buffer, index: Size, value : Int32) -> Void;
     
     /** Update a value in the buffer.
         @note
             O(1)
      */
-    setInt64 : (Buffer, Size, Int64) -> Void;    
+    setInt64 : (Buffer, index: Size, value : Int64) -> Void;    
     
     /** Update a value in the buffer.
         @note
             O(1)
      */
-    setFloat : (Buffer, Size, Float) -> Void;
+    setFloat : (Buffer, index : Size, value : Float) -> Void;
     
     /** Update a value in the buffer.
         @note
             O(1)
      */
-    setDouble : (Buffer, Size, Double) -> Void;    
+    setDouble : (Buffer, index : Size, value : Double) -> Void;    
 
 
     zip : (Buffer, Buffer) -> Buffer;

@@ -97,6 +97,11 @@ module Fa.Time
     fromDouble : (dvalue : Double) -> Time;
     
     /**
+        Return a time as a double (number of seconds)
+     */
+    toDouble : Time -> Double;
+    
+    /**
         Copy the given time value.
      */
     copy : Time -> Time;

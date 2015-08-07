@@ -278,5 +278,9 @@ module Fa.Action
     /** Log the number of allocated actions (for debugging).
      */    
     logCount : () -> Void;
+    
+    /** TODO: document
+     */
+    flattenCompound : Action -> List;
 }
 

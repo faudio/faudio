@@ -18,6 +18,7 @@
 #include <fa/thread.h>
 #include <fa/util.h>
 #include <fa/time.h>
+#include <pthread.h>
 
 #include <portaudio.h>
 #include <pa_win_wasapi.h>
@@ -105,6 +106,7 @@ struct _fa_audio_stream_t {
     fa_signal_t         signals[kMaxSignals];
     state_t             state;              // DSP state
     int64_t             last_time;          // Cached time in milliseconds
+    int64_t             start_time;
 
     unsigned            input_channels, output_channels;
     double              sample_rate;
@@ -280,6 +282,7 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
     stream->max_buffer_size = max_buffer_size;
     stream->state           = NULL;
     stream->last_time       = 0;
+    stream->start_time      = 0;
 
     stream->signal_count    = 0;
     stream->pa_flags        = 0;
@@ -817,6 +820,8 @@ fa_list_t apply_processor(proc_t proc, fa_ptr_t proc_data, fa_list_t inputs)
     }
 }
 
+int64_t audio_stream_milliseconds(fa_ptr_t a);
+
 stream_t fa_audio_open_stream(device_t input,
                               device_t output,
                               proc_t proc,
@@ -921,6 +926,8 @@ stream_t fa_audio_open_stream(device_t input,
          */
         before_processing(stream);
 
+        stream->start_time = audio_stream_milliseconds(stream);
+
         status = Pa_StartStream(stream->native);
 
         if (status != paNoError) {
@@ -928,6 +935,8 @@ stream_t fa_audio_open_stream(device_t input,
             // after_failed_processing(stream);
             return (stream_t) audio_device_error_with(fa_string("Could not start stream"), status);
         }
+        
+        //stream->start_time = audio_stream_milliseconds(stream);
     }
     {
         /*
@@ -1061,20 +1070,48 @@ void fa_audio_schedule_relative(fa_time_t         time,
                                 fa_audio_stream_t stream)
 {
     /* This optimization should really only be used when we have a non-compound, non-do action.
-       TODO find a way to test this and restore it if needed.
      */
-    if (fa_time_is_zero(time) && !fa_action_is_compound(action) && !fa_action_is_do(action)) {
-         fa_atomic_queue_write(stream->short_controls, action);
-    } else {
+    // if (fa_time_is_zero(time) && !fa_action_is_compound(action) && !fa_action_is_do(action)) {
+    //     printf("audio shortcut!\n");
+    //     fa_atomic_queue_write(stream->short_controls, action);
+    // } else {
         fa_time_t now = fa_clock_time(fa_audio_stream_clock(stream));
         fa_audio_schedule(fa_dadd(now, time), action, stream);
+    // }
+}
+
+void fa_audio_schedule_now(fa_action_t action, fa_audio_stream_t stream)
+{
+    if (fa_action_is_compound(action)) {
+        fa_list_t actions = fa_action_flatten_compound(action);
+        if (actions) {
+            fa_for_each(a, actions) {
+                if (!fa_action_is_compound(a) && !fa_action_is_do(a)) {
+                    fa_atomic_queue_write(stream->short_controls, a);
+                } else {
+                    fa_warn(fa_string("Nested compound or do action passed to fa_audio_schedule_now"));
+                    fa_deep_destroy_always(a);
+                }
+            }
+            fa_destroy(actions);
+        } else {
+            fa_warn(fa_string("Non-simple action passed to fa_audio_schedule_now"));
+        }
+    } else {
+        fa_atomic_queue_write(stream->short_controls, action);
     }
 }
 
 
-fa_ptr_t forward_action_to_audio_thread(fa_ptr_t x, fa_ptr_t action)
+fa_ptr_t forward_action_to_audio_thread(fa_ptr_t x, fa_ptr_t action, fa_ptr_t t)
 {
     stream_t stream = x;
+    fa_time_t time = t;
+    //printf("  forward: %lld\n", fa_clock_milliseconds(fa_audio_stream_clock(stream)));
+    //state_base_t state = (state_base_t) stream->state;
+    double offset_seconds = fa_time_to_double(time) - (double)(stream->start_time / 1000.0);
+    fa_action_timestamp_set(action, offset_seconds * stream->sample_rate); //) + 5000);
+    //printf("Timestamp is: %llu\n", fa_action_timestamp(action));
     fa_atomic_queue_write(stream->in_controls, action);
     return NULL;
 }
@@ -1083,6 +1120,8 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
     stream_t stream = x;
 
     fa_inform(fa_string("    Audio control thread active"));
+
+    //printf("Audio control thread active %p\n", pthread_self());
 
     while (true) {
         if (stream->controller.stop) {
@@ -1126,8 +1165,6 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
             fa_time_t now = fa_clock_time(fa_audio_stream_clock(stream));
             //fa_time_t now = fa_clock_time(fa_clock_standard());
             
-            //printf("Time: %u\n", (int32_t) fa_time_to_milliseconds(now));
-            
             // Write incoming actions
             // TODO get things from before_controls to stream->controls
             {
@@ -1153,7 +1190,7 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
             //  * Write platform-specific code
             //  * Use notifications from the audio thread (might not work at startup)
 
-            fa_thread_sleep(2);
+            fa_thread_sleep(1);
             // printf("-- waking up at %d\n", fa_clock_milliseconds(fa_clock_standard()));
             //fa_thread_sleep((stream->input ? stream->input : stream->output)->session->parameters.scheduler_interval);
         }
@@ -1251,13 +1288,13 @@ void handle_outgoing_message(fa_ptr_t x, fa_string_t name, fa_ptr_t value)
 void during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
     state_base_t state = (state_base_t) stream->state;
-    {
-        fa_ptr_t action;
-
-        while ((action = fa_atomic_queue_read(stream->in_controls))) {
-            run_simple_action2(stream->state, action);
-        }
-    }
+    // {
+    //     fa_ptr_t action;
+    //
+    //     while ((action = fa_atomic_queue_read(stream->in_controls))) {
+    //         run_simple_action2(stream->state, action);
+    //     }
+    // }
     {
         fa_ptr_t action;
 
@@ -1272,7 +1309,25 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
     }
 
     if (!kVectorMode) {
+        //printf("during_processing %u\n", count);
+
+        fa_ptr_t next_action = NULL;
         for (int i = 0; i < count; ++ i) {
+            {
+                while (1) {
+                    next_action = fa_atomic_queue_peek(stream->in_controls);
+                    //if (next_action) {
+                    //    printf("timestamp: %llu   count: %llu\n", fa_action_timestamp(next_action), state->count);
+                    //}
+                    if (next_action && fa_action_timestamp(next_action) <= state->count) {
+                        next_action = fa_atomic_queue_read(stream->in_controls);
+                        run_simple_action2(stream->state, next_action);
+                    } else {
+                        break;
+                    }
+                }
+            }
+                        
             run_custom_procs(custom_proc_render, count, stream->state);
 
             if (stream->input) {
@@ -1485,6 +1540,13 @@ void audio_stream_destroy(fa_ptr_t a)
 int64_t audio_stream_milliseconds(fa_ptr_t a)
 {
     stream_t stream = (stream_t) a;
+    
+    // if (stream->state) {
+   //      state_base_t state = (state_base_t) stream->state;
+   //      return ((double) state->count / (double) state->rate * 1000.0);
+   //  }
+    
+    
     if (!stream->native) return 0;
     return Pa_GetStreamTime(stream->native) * 1000.0;
 
@@ -1504,8 +1566,8 @@ int64_t audio_stream_milliseconds(fa_ptr_t a)
 
 fa_time_t fa_audio_stream_time(fa_ptr_t a)
 {
-    //int64_t ms = audio_stream_milliseconds(a);
-    //return fa_milliseconds(ms);
+    // int64_t ms = audio_stream_milliseconds(a);
+    // return fa_milliseconds(ms);
     stream_t stream = (stream_t) a;
     return fa_time_from_double(Pa_GetStreamTime(stream->native));
 }

@@ -186,26 +186,26 @@ int32_t fa_buffer_get_int32(fa_buffer_t buffer, size_t size_);
     @note
         O(1)
 */
-int64_t fa_buffer_get_int64(fa_buffer_t buffer, size_t size_);
+int64_t fa_buffer_get_int64(fa_buffer_t buffer, size_t index);
 
 /** Get a value from the buffer.
     @note
         O(1)
 */
-float fa_buffer_get_float(fa_buffer_t buffer, size_t size_);
+float fa_buffer_get_float(fa_buffer_t buffer, size_t index);
 
 /** Get a value from the buffer.
     @note
         O(1)
 */
-double fa_buffer_get_double(fa_buffer_t buffer, size_t size_);
+double fa_buffer_get_double(fa_buffer_t buffer, size_t index);
 
 /** Update a value in the buffer.
     @note
         O(1)
 */
 void fa_buffer_set_int16(fa_buffer_t buffer,
-                         size_t size_,
+                         size_t index,
                          int16_t int16_);
 
 /** Update a value in the buffer.
@@ -213,16 +213,16 @@ void fa_buffer_set_int16(fa_buffer_t buffer,
         O(1)
 */
 void fa_buffer_set_int32(fa_buffer_t buffer,
-                         size_t size_,
-                         int32_t int32_);
+                         size_t index,
+                         int32_t value);
 
 /** Update a value in the buffer.
     @note
         O(1)
 */
 void fa_buffer_set_int64(fa_buffer_t buffer,
-                         size_t size_,
-                         int64_t int64_);
+                         size_t index,
+                         int64_t value);
 
 /** Update a value in the buffer.
     @note

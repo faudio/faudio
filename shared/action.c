@@ -14,6 +14,7 @@
 #include <fa/func_ref.h>
 #include <fa/priority_queue.h>
 #include <fa/func_ref.h>
+#include <pthread.h>
 
 typedef fa_action_t                 action_t;               // 
 typedef fa_action_channel_t         channel_t;              // int
@@ -71,9 +72,10 @@ struct _fa_action_t {
             fa_unary_t              function;
             fa_ptr_t                data;
         }                           compound;
-
-
+        
     }                               fields;
+    
+    uint64_t timestamp; // Eriks test
 };
 
 //static fa_map_t all_actions = NULL;
@@ -222,8 +224,13 @@ static inline fa_action_t copy_accum(fa_action_t action2)
 static inline fa_action_t copy_send(fa_action_t action2)
 {
     action_t action = new_action(send_action);
-    send_get(action, name)  = fa_copy(send_get(action2, name)); // the name string is owned by the action
-    send_get(action, value) = fa_copy(send_get(action2, value));
+    send_get(action, name)   = fa_copy(send_get(action2, name)); // the name string is owned by the action
+    if (send_get(action2, retain)) {
+        send_get(action, value) = send_get(action2, value);
+    } else {
+        send_get(action, value) = fa_copy(send_get(action2, value));
+    }
+    send_get(action, retain) = send_get(action2, retain);
     return action;
 }
 static inline fa_action_t copy_do(fa_action_t action2)
@@ -237,8 +244,12 @@ static inline fa_action_t copy_do(fa_action_t action2)
 static inline fa_action_t copy_compound(fa_action_t action2)
 {
     action_t action = new_action(compound_action);
-    compound_get(action, function)  = compound_get(action2, function);
-    compound_get(action, data)      = fa_deep_copy(compound_get(action2, data));
+    compound_get(action, function) = compound_get(action2, function);
+    if (compound_get(action2, data)) {
+        compound_get(action, data) = fa_deep_copy(compound_get(action2, data));
+    } else {
+        compound_get(action, data) = NULL; // Important! new_action does not allocate nulled memory
+    }
     return action;
 }
 
@@ -398,6 +409,9 @@ static inline void destroy_compound(fa_action_t action)
 {
     assert(action && "No action in destroy_compound");
     
+    //fa_slog_info("destroy_compound: ", action);
+    //fa_slog_info("destroy_compound  in thread:   ", fa_string_format_integral("%p", (long) pthread_self()));
+    
     //fa_slog_info("destroy_compound ", action);
     fa_ptr_t data = compound_get(action, data);
     if (data) {
@@ -408,6 +422,7 @@ static inline void destroy_compound(fa_action_t action)
 void fa_action_destroy(fa_action_t action)
 {
     //fa_slog_info("fa_action_destroy ", action);
+    //fa_slog_info("destroy_action    in thread:   ", fa_string_format_integral("%p", (long) pthread_self()));
     switch (action->tag) {
     case get_action:
         destroy_get(action);
@@ -445,7 +460,9 @@ void fa_action_destroy(fa_action_t action)
 static inline void deep_destroy_send(fa_action_t action, fa_deep_destroy_pred_t pred)
 {
     fa_deep_destroy(send_get(action, name), pred);
-    fa_deep_destroy(send_get(action, value), pred);
+    if (!send_get(action, retain)) {
+        fa_deep_destroy(send_get(action, value), pred);
+    }
 }
 static inline void deep_destroy_compound(fa_action_t action, fa_deep_destroy_pred_t pred)
 {
@@ -490,29 +507,13 @@ void fa_action_deep_destroy(fa_action_t action, fa_deep_destroy_pred_t pred)
     delete_action(action);
 }
 
-// static inline int fa_action_retain(fa_action_t action)
-// {
-//     action->ref_count++;
-//     //fa_slog_info("Retaining ", action);
-//     return action->ref_count;
-// }
+uint64_t fa_action_timestamp(fa_action_t action) {
+    return action->timestamp;
+}
 
-// int fa_action_release(fa_action_t action)
-// {
-//     // action->ref_count--;
-// //     if (action->ref_count <= 0) {
-// //         //fa_slog_info("Releasing and freeing ", action);
-// //         if (fa_action_is_simple(action)) {
-// //             fa_deep_destroy_always(action);
-// //         } else {
-// //             fa_destroy(action);
-// //         }
-// //     } else {
-// //         //fa_slog_info("Releasing but not freeing ", action);
-// //     }
-//     fa_destroy(action);
-//     return 0;
-// }
+void fa_action_timestamp_set(fa_action_t action, uint64_t timestamp) {
+    action->timestamp = timestamp;
+}
 
 bool fa_action_is_get(fa_action_t action)
 {
@@ -713,7 +714,12 @@ static fa_ptr_t _repeat(fa_ptr_t data, fa_ptr_t compound)
     fa_time_t interval;
     action_t action;
     unpair(interval, action, data);
-    return fa_pair_create(action, fa_pair_create(interval, fa_deep_copy(compound)));
+    //printf("About to copy\n");
+    //fa_slog_info("  object: ", compound);
+    //fa_slog_info("repeat            in thread:   ", fa_string_format_integral("%p", (long) pthread_self()));
+    fa_action_t copy = fa_deep_copy(compound);
+    //printf("Copied!\n");
+    return fa_pair_create(action, fa_pair_create(interval, copy));
 }
 
 fa_action_t fa_action_repeat(fa_time_t interval, fa_action_t action)
@@ -760,7 +766,22 @@ fa_action_t fa_action_many(fa_list_t timeActions)
     return fa_action_compound(_many, timeActions);
 }
 
-
+fa_list_t fa_action_flatten_compound(fa_action_t action) {
+    if (fa_action_is_compound(action) && compound_get(action, function) == _many) {
+        fa_list_t result = fa_list_empty();
+        fa_for_each(x, compound_get(action, data)) {
+            fa_action_t a = fa_pair_first(x);
+            fa_destroy(fa_pair_second(x)); // the time
+            fa_destroy(x); // the pair
+            fa_push_list(a, result);
+        }
+        fa_destroy(action); // this will destroy the list as well
+        return result;
+    } else {
+        fa_deep_destroy_always(action);
+        return NULL;
+    }
+}
 
 static fa_ptr_t _if(fa_ptr_t data, fa_ptr_t c)
 {
@@ -932,6 +953,9 @@ fa_action_t fa_action_until(fa_pred_t pred, fa_ptr_t data, fa_action_t action)
 }
 
 
+static inline bool is_due (fa_time_t time, fa_time_t now) {
+    return fa_time_to_milliseconds(now) > (fa_time_to_milliseconds(time) - 100);
+}
 
 /**
     Run a single or compound action, pushing to the given rescheduling list of needed.
@@ -941,9 +965,11 @@ fa_action_t fa_action_until(fa_pred_t pred, fa_ptr_t data, fa_action_t action)
         resched A list to which a (time, action) values is pushed for each rescheduled action.
         state   State to run action on.
  */
-void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_list_t *resched, fa_unary_t function, fa_ptr_t data)
+void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_list_t *resched, fa_binary_t function, fa_ptr_t data)
 {
     //fa_slog_info("run_and_resched_action ", time);
+    //fa_slog_info("run_and_resched   in thread:   ", fa_string_format_integral("%p", (long) pthread_self()));
+    //printf("run_and_resched   %p\n", pthread_self());
     if (fa_action_is_compound(action)) {
 
         action_t  first;
@@ -952,6 +978,8 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
         compound_render(action, &first, &interval, &rest);
 
         //fa_slog_info("   first, rest, interval: ", first, rest, interval);
+        
+        //fa_slog_info("run_and_resched ", fa_string_format_integral("%p", (long) fa_thread_current()));
 
         if (first) {
             run_and_resched_action(first, fa_copy(time), now, resched, function, data);
@@ -961,7 +989,7 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
             fa_time_t future = fa_add(time, interval);
             fa_destroy(interval);
 
-            if (fa_less_than_equal(future, now)) {
+            if (is_due(future, now)) {
                 // Run directly
                 run_and_resched_action(rest, future, now, resched, function, data);
             } else {
@@ -970,7 +998,7 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
                 fa_push_list(fa_pair_left_create(future, rest), *resched);
             }
         }
-        fa_action_destroy(action); // Shallow release?
+        fa_action_destroy(action); // Shallow destroy, only the compound
         fa_destroy(time);
         
         return;
@@ -989,8 +1017,8 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
             }
         } else {
             //fa_slog_info("Running action ", action);
-            //fa_slog_info("in thread ", fa_string_format_integral("%p", (long) fa_thread_current()));
-            function(data, action);
+            //fa_slog_info("Running action  ", fa_string_format_integral("%p", (long) fa_thread_current()));
+            function(data, action, time);
             // Note: /function/ is responsible for releasing the actions when used.
             // We can't do it here, as /function/ is run in another thread.
         }
@@ -1014,9 +1042,9 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
         now         Current time (not destroyed).
         function    Function to which due actions are passed.
  */
-void run_actions(fa_priority_queue_t controls, fa_time_t now, fa_unary_t function, fa_ptr_t data)
+void run_actions(fa_priority_queue_t controls, fa_time_t now, fa_binary_t function, fa_ptr_t data)
 {
-    //printf("run_actions %lld\n", (int64_t) fa_time_to_milliseconds(now));
+    //printf("run_actions %lld\n", (int64_t) fa_time_to_milliseconds(now));    
     while (1) {
         fa_pair_t x = fa_priority_queue_peek(controls);
 
@@ -1029,14 +1057,15 @@ void run_actions(fa_priority_queue_t controls, fa_time_t now, fa_unary_t functio
         action_t action = fa_pair_second(x);
 
         // Assure the next action is due
-        if (fa_less_than_equal(time, now)) {
+        if (is_due(time, now)) {
             fa_priority_queue_pop(controls);
             fa_destroy(x);
             
-            // printf("  run_actions  %lld  %lld    %d  %d\n", (int64_t) fa_time_to_milliseconds(time), (int64_t) fa_time_to_milliseconds(now),
+            //printf("  run_actions  %lld  %lld\n", (int64_t) fa_time_to_milliseconds(time), (int64_t) fa_time_to_milliseconds(now));
+            //printf("run_actions %p\n", pthread_self());
             //   (int32_t) fa_time_to_milliseconds(now) - last_now,
             //   (int32_t) fa_time_to_milliseconds(time) - last_time);
-            // last_now = (int32_t) fa_time_to_milliseconds(now);
+            //last_now = (int32_t) fa_time_to_milliseconds(now);
             // last_time = (int32_t) fa_time_to_milliseconds(time);
 
             fa_list_t resched = fa_list_empty();

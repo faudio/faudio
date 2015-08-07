@@ -16,7 +16,7 @@
 #include <fa/dynamic.h>
 #include <fa/util.h>
 #include <fa/midi/message.h>
-#include <fa/thread.h> // temp
+#include <pthread.h> // temp
 
 #include "signal.h"
 #include "signal_internal.h"
@@ -776,7 +776,7 @@ struct _state_t {
     double     *inputs;                 // Current input values (TODO should not be called inputs as they are also outputs...)
     double     *buses;                  // Current and future bus values
 
-    int         count;                  // Number of processed samples
+    uint64_t    count;                  // Number of processed samples
     double      rate;                   // Sample rate (immutable during processing)
     double      speed;
     double      elapsed_time;
@@ -1012,6 +1012,8 @@ void run_custom_procs(custom_proc_when_t when, int count, state_t state)
     }
 }
 
+uint64_t last_count = 0;
+
 // typedef void(* fa_signal_message_callback_t)(fa_ptr_t, fa_signal_name_t, fa_signal_message_t)
 void custom_procs_send(state_t state, fa_string_t name, fa_ptr_t value)
 {
@@ -1019,6 +1021,8 @@ void custom_procs_send(state_t state, fa_string_t name, fa_ptr_t value)
         custom_proc_t proc = state->custom_procs[i];
 
         if (proc->receive) {
+            //printf("custom_procs_send, count: %llu  (diff: %llu)\n", state->count, state->count - last_count);
+            last_count = state->count;
             proc->receive(proc->data, name, value);
         }
     }
@@ -1050,6 +1054,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         return NULL;
     }
     //fa_slog_info("run_simple_action in thread ", fa_string_format_integral("%p", (long) fa_thread_current()));
+    //printf("run_simple_action %p\n", pthread_self());
 
     if (fa_action_is_get(action)) {
         int ch = fa_action_get_channel(action);
@@ -1086,6 +1091,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
     if (fa_action_is_send(action)) {
         fa_string_t name = fa_action_send_name(action);
         fa_ptr_t value = fa_action_send_value(action);
+        //printf("timestamp: %llu\n", fa_action_timestamp(action));
         custom_procs_send(state, name, value);
         
         //printf("ref_count: %d\n", fa_action_ref_count(action));
@@ -1261,7 +1267,7 @@ void step_vector(fa_signal_t signal, state_t state, int count, double *out)
     assert(false);
 }
 
-fa_ptr_t run_simple_action_(fa_ptr_t x, fa_ptr_t a)
+fa_ptr_t run_simple_action_(fa_ptr_t x, fa_ptr_t a, fa_ptr_t ignored_time)
 {
     return run_simple_action(x, a);
 }
@@ -1514,11 +1520,11 @@ fa_signal_t fa_signal_counter()
 
 inline static double _impulses(fa_ptr_t n, double x)
 {
-    int n2 = (int) n;
+    size_t n2 = (size_t) n;
     int x2 = (int) x;
     return (x2 % n2) == 0 ? 1 : 0;
 }
-fa_signal_t fa_signal_impulses(int n)
+fa_signal_t fa_signal_impulses(size_t n)
 {
     return fa_signal_lift(fa_string("mkImps"), _impulses, (fa_ptr_t) n, fa_signal_counter());
 }
@@ -1794,10 +1800,10 @@ fa_signal_t fa_signal_xor(fa_signal_t x, fa_signal_t y)
     return fa_signal_lift2(fa_string("(^)"), _xor, NULL, x, y);
 }
 
-inline static double _eq(fa_ptr_t _, double x, double y)
-{
-    return x == y;
-}
+// inline static double _eq(fa_ptr_t _, double x, double y)
+// {
+//     return x == y;
+// }
 fa_signal_t fa_signal_equal(fa_signal_t x, fa_signal_t y)
 {
     assert(false && "Not implemented");
@@ -2330,6 +2336,10 @@ fa_ptr_t play_buffer_render_(fa_ptr_t x, int offset, int count, fa_signal_state_
 
     if (!kVectorMode) {
         if (context->playing) {
+
+            //context->pos = state->count % 4410; // TEST!
+            //context->pos =  % 4410; // TEST!
+
             if (context->pos < context->max_pos) {
                 // TODO: interpolating samples for non-integer positions would improve sound quality
                 size_t buffer_pos = ((size_t)context->pos) * context->channels;
@@ -2370,18 +2380,20 @@ fa_ptr_t play_buffer_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_
             case buffer_type_repr:
             {
                 context->playing = false;
-                if (context->buffer) {
-                    fa_buffer_release_reference(context->buffer);
-                }
-                fa_buffer_t buffer = msg;
-                fa_buffer_take_reference(buffer);
                 context->pos = 0;
-                context->buffer = buffer;
-                context->channels = fa_peek_number(fa_buffer_get_meta(buffer, fa_string("channels")));
-                size_t size = fa_buffer_size(buffer);
-                context->max_pos = (size / ((sizeof(double)) * context->channels)) - 1;
-                double buffer_rate = fa_peek_number(fa_buffer_get_meta(buffer, fa_string("sample-rate")));
-                context->speed = buffer_rate / context->stream_sample_rate;
+                fa_buffer_t buffer = msg;
+                if (buffer != context->buffer) {
+                    fa_buffer_take_reference(buffer);
+                    if (context->buffer) {
+                        fa_buffer_release_reference(context->buffer);
+                    }
+                    context->buffer = buffer;
+                    context->channels = fa_peek_number(fa_buffer_get_meta(buffer, fa_string("channels")));
+                    size_t size = fa_buffer_size(buffer);
+                    context->max_pos = (size / ((sizeof(double)) * context->channels)) - 1;
+                    double buffer_rate = fa_peek_number(fa_buffer_get_meta(buffer, fa_string("sample-rate")));
+                    context->speed = buffer_rate / context->stream_sample_rate;
+                }
                 break;
             }
             

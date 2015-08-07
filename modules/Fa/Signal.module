@@ -415,7 +415,7 @@ module Fa.Signal
         
         For example if the sample rate is 44100, `fa_signal_impulses(44100)` generates an impulse every second.
      */
-    impulses : (Int) -> Signal;
+    impulses : (samples : Size) -> Signal;
                            
     // isVariable : Signal -> Bool;
     // isConstant : Signal -> Bool;

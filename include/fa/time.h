@@ -105,6 +105,11 @@ fa_time_t fa_time_create(fa_time_days_t days,
 fa_time_t fa_time_from_double(double dvalue);
 
 /**
+    Return a time as a double (number of seconds)
+ */
+double fa_time_to_double(fa_time_t time);
+
+/**
     Copy the given time value.
 */
 fa_time_t fa_time_copy(fa_time_t time);

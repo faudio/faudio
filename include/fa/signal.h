@@ -134,7 +134,7 @@ fa_signal_t fa_signal_delay(int int_, fa_signal_t signal);
 
 
 typedef struct {
-            double * buffer; fa_ptr_t dummy; int count; double rate;
+            double * buffer; fa_ptr_t dummy; uint64_t count; double rate;
         } fa_signal_state_t;
 
 /** Type of names.
@@ -526,7 +526,7 @@ fa_signal_t fa_signal_counter();
     
     For example if the sample rate is 44100, `fa_signal_impulses(44100)` generates an impulse every second.
 */
-fa_signal_t fa_signal_impulses(int int_);
+fa_signal_t fa_signal_impulses(size_t samples);
 
 /** Run a signal through an external VST plug-in.
     

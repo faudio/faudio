@@ -186,51 +186,53 @@ int main(int argc, char const *argv[])
 	//fa_set_log_tool();
   fa_set_log_std();
   
-  fa_log_region_count(fa_string(" 0: "));
-  fa_map_t map = fa_map_empty();
-  fa_map_set_value_destructor(map, fa_destroy);
-  fa_log_region_count(fa_string(" 1: "));
-  map = fa_map_dadd(fa_string("ape1"), fa_string("nisse"), map);
-  fa_slog_info("map is now: ", map);
-  fa_log_region_count(fa_string(" 2: "));
-  map = fa_map_dset(fa_string("ape2"), fa_string("kalle"), map);
-  map = fa_map_dset(fa_i16(43), fa_string("hopp"), map);
-  map = fa_map_dset(fa_i32(32), fa_string("tomte"), map);
-  fa_log_region_count(fa_string(" 5: "));
-  fa_slog_info("map is now: ", map);
-  map = fa_map_dremove(fa_i16(43), map);
-  fa_slog_info("after removal: ", map);
-  fa_ptr_t val = fa_map_dget(fa_string("ape"), map);
-  fa_log_region_count(fa_string(" 8: "));
-  fa_slog_info("Got val: ", val);
   
-  fa_log_region_count(fa_string("10: "));
-  
-  //fa_deep_destroy_always(map);
-  fa_destroy(map);
-  fa_log_region_count(fa_string("15: "));
-  
-  bool a_bool = false;
-  
-  fa_map_t map1 = map(fa_i16(1), &a_bool, fa_i32(2), NULL);
-  //fa_map_t map2 = map(fa_i16(2), NULL, fa_i16(1), &a_bool);
-  
-  bool* bool_ref = fa_map_dget(fa_from_float(1.0), map1);
-  printf("&a_bool = %p  bool_ref = %p\n", &a_bool, bool_ref);
-  fa_slog_info("1 is: ", fa_from_bool(*bool_ref));
-  a_bool = true;
-  //bool_ref = fa_map_dget(fa_i16(1), map1);
-  fa_slog_info("1 is: ", fa_from_bool(*bool_ref));
-  
-  fa_destroy(map1);
-  
-  fa_log_region_count(fa_string("20: "));
-  
-  //fa_slog_info("map1: ", map1);
-  //fa_slog_info("map2: ", map2);
-  //fa_slog_info("equal: ", fa_from_bool(fa_equal(map1, map2)));
-  
-  return 0;
+  // // Map test
+  // fa_log_region_count(fa_string(" 0: "));
+  // fa_map_t map = fa_map_empty();
+  // fa_map_set_value_destructor(map, fa_destroy);
+  // fa_log_region_count(fa_string(" 1: "));
+  // map = fa_map_dadd(fa_string("ape1"), fa_string("nisse"), map);
+  // fa_slog_info("map is now: ", map);
+  // fa_log_region_count(fa_string(" 2: "));
+  // map = fa_map_dset(fa_string("ape2"), fa_string("kalle"), map);
+  // map = fa_map_dset(fa_i16(43), fa_string("hopp"), map);
+  // map = fa_map_dset(fa_i32(32), fa_string("tomte"), map);
+  // fa_log_region_count(fa_string(" 5: "));
+  // fa_slog_info("map is now: ", map);
+  // map = fa_map_dremove(fa_i16(43), map);
+  // fa_slog_info("after removal: ", map);
+  // fa_ptr_t val = fa_map_dget(fa_string("ape"), map);
+  // fa_log_region_count(fa_string(" 8: "));
+  // fa_slog_info("Got val: ", val);
+  //
+  // fa_log_region_count(fa_string("10: "));
+  //
+  // //fa_deep_destroy_always(map);
+  // fa_destroy(map);
+  // fa_log_region_count(fa_string("15: "));
+  //
+  // bool a_bool = false;
+  //
+  // fa_map_t map1 = map(fa_i16(1), &a_bool, fa_i32(2), NULL);
+  // //fa_map_t map2 = map(fa_i16(2), NULL, fa_i16(1), &a_bool);
+  //
+  // bool* bool_ref = fa_map_dget(fa_from_float(1.0), map1);
+  // printf("&a_bool = %p  bool_ref = %p\n", &a_bool, bool_ref);
+  // fa_slog_info("1 is: ", fa_from_bool(*bool_ref));
+  // a_bool = true;
+  // //bool_ref = fa_map_dget(fa_i16(1), map1);
+  // fa_slog_info("1 is: ", fa_from_bool(*bool_ref));
+  //
+  // fa_destroy(map1);
+  //
+  // fa_log_region_count(fa_string("20: "));
+  //
+  // //fa_slog_info("map1: ", map1);
+  // //fa_slog_info("map2: ", map2);
+  // //fa_slog_info("equal: ", fa_from_bool(fa_equal(map1, map2)));
+  //
+  // return 0;
   
   
   // fa_string_t name = fa_string("str");

@@ -12,6 +12,7 @@
 #include <fa/action.h>
 #include <fa/midi/message.h>
 #include <fa/util.h>
+#include <pthread.h>
 
 #include "au.h"
 #include "../shared/signal.h"
@@ -50,6 +51,10 @@ fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
         if (state->count % freq == 0) {
             au_render(context, state->count, freq, NULL);
         }
+        
+        // if (state->count % 44100 == 0) {
+        //     printf("render_ (DLS) %p\n", pthread_self());
+        // }
 
         state->buffer[(offset + 0)*kMaxVectorSize] = context->outputs[freq * 0 + (state->count % freq)];
         state->buffer[(offset + 1)*kMaxVectorSize] = context->outputs[freq * 1 + (state->count % freq)];
@@ -70,6 +75,8 @@ fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     au_context_t context = x;
+    
+    //printf("receive_ (DLS) %p\n", pthread_self());
     
     if (fa_equal(n, context->name)) {
         if (!fa_midi_message_is_simple(msg)) {

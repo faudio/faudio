@@ -165,6 +165,9 @@ fa_action_t fa_action_send(fa_action_name_t name,
 fa_action_t fa_action_send_retain(fa_action_name_t name,
                                   fa_action_value_t value);
 
+uint64_t fa_action_timestamp(fa_action_t action);
+void fa_action_timestamp_set(fa_action_t action, uint64_t timestamp);
+
 /** Return whether the given action is a get action.
       
 */
@@ -284,6 +287,8 @@ bool fa_action_is_do(fa_action_t action);
 /** Log the number of allocated actions (for debugging).
 */
 void fa_action_log_count();
+
+fa_list_t fa_action_flatten_compound(fa_action_t action);
 
 /** @}
     @}

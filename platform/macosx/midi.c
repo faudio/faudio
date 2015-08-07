@@ -855,7 +855,7 @@ static inline bool is_two_byte_message(uint8_t status)
     return ((status & 0xF0) == 0xC0) || ((status & 0xF0) == 0xD0);
 }
 
-fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
+fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action, fa_ptr_t time)
 {
     stream_t stream = x;
 
@@ -954,7 +954,7 @@ fa_ptr_t midi_stream_callback(fa_ptr_t x)
     fa_ptr_t val;
 
     while ((val = fa_atomic_queue_read(stream->short_controls))) {
-        forward_action_to_midi(stream, val);
+        forward_action_to_midi(stream, val, NULL);
     }
 
     while ((val = fa_atomic_queue_read(stream->in_controls))) {
@@ -1054,12 +1054,34 @@ void fa_midi_schedule_relative(fa_time_t        time,
                                fa_action_t       action,
                                fa_midi_stream_t  stream)
 {
-    if (fa_time_is_zero(time) && !fa_action_is_compound(action) && !fa_action_is_do(action)) {
-        // Pass directly to output
-        fa_atomic_queue_write(stream->short_controls, action);
-    } else {
+    // if (fa_time_is_zero(time) && !fa_action_is_compound(action) && !fa_action_is_do(action)) {
+    //     // Pass directly to output
+    //     fa_atomic_queue_write(stream->short_controls, action);
+    // } else {
         fa_time_t now = fa_clock_time(stream->clock);
-        fa_midi_schedule(fa_add(now, time), action, stream);
+        fa_midi_schedule(fa_dadd(now, time), action, stream);
+    // }
+}
+
+void fa_midi_schedule_now(fa_action_t action, fa_midi_stream_t stream)
+{
+    if (fa_action_is_compound(action)) {
+        fa_list_t actions = fa_action_flatten_compound(action);
+        if (actions) {
+            fa_for_each(a, actions) {
+                if (!fa_action_is_compound(a) && !fa_action_is_do(a)) {
+                    fa_atomic_queue_write(stream->short_controls, a);
+                } else {
+                    fa_warn(fa_string("Nested compound or do action passed to fa_midi_schedule_now"));
+                    fa_deep_destroy_always(a);
+                }
+            }
+            fa_destroy(actions);
+        } else {
+            fa_warn(fa_string("Non-simple action passed to fa_midi_schedule_now"));
+        }
+    } else {
+        fa_atomic_queue_write(stream->short_controls, action);
     }
 }
 

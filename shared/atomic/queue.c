@@ -158,6 +158,15 @@ fa_ptr_t fa_atomic_queue_read(fa_atomic_queue_t queue)
     }
 }
 
+fa_ptr_t fa_atomic_queue_peek(fa_atomic_queue_t queue)
+{
+    if (get_node(queue->div) == get_node(queue->last)) {
+        return NULL;
+    } else {
+        return get_node(queue->div)->value;
+    }
+}
+
 // --------------------------------------------------------------------------------
 
 fa_string_t atomic_queue_show(fa_ptr_t v)

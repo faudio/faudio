@@ -70,7 +70,8 @@ fa_pair_t fa_pair_copy(fa_pair_t pair)
 
 fa_pair_t fa_pair_deep_copy(fa_pair_t pair)
 {
-    return new_pair(fa_deep_copy(pair->values[0]), fa_deep_copy(pair->values[1]));
+    return new_pair(pair->values[0] ? fa_deep_copy(pair->values[0]) : NULL,
+                    pair->values[1] ? fa_deep_copy(pair->values[1]) : NULL);
 }
 
 void fa_pair_destroy(fa_pair_t pair)

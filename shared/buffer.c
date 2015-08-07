@@ -313,7 +313,10 @@ void fa_buffer_set(fa_buffer_t buffer, size_t index, uint8_t value)
 #define BUFFER_PRIM_GET_SET(NAME,TYPE) \
     TYPE fa_buffer_get_##NAME(fa_buffer_t buffer, size_t index)                     \
     {                                                                               \
-        assert(index * sizeof(TYPE) < buffer->size && "Buffer overflow");           \
+        if (index * sizeof(TYPE) >= buffer->size) { \
+            printf("overflow, %zu >= %zu\n", index, buffer->size); \
+            return 0; \
+        } \
         return ((TYPE *) buffer->data)[index];                                      \
     }                                                                               \
                                                                                     \

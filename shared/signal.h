@@ -1,10 +1,10 @@
 
 struct _state_base_t {
-    double *inputs;
-    void   *_;
+    double      *inputs;
+    void        *_;
 
-    int     count;
-    double  rate;
+    uint64_t    count;
+    double      rate;
 
     double      speed;
     double      elapsed_time;

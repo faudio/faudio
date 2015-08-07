@@ -82,6 +82,7 @@ struct _fa_midi_stream_t {
 
     fa_clock_t          clock;              // Clock used for scheduler and incoming events
     fa_atomic_queue_t   in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
+    fa_atomic_queue_t   short_controls;     // Controls to run directly (optimization)
     fa_priority_queue_t controls;           // Scheduled controls (Time, (Channel, Ptr))
 
     // fa_list_t           incoming;
@@ -204,6 +205,7 @@ inline static stream_t new_stream(device_t device)
 
     stream->clock           = fa_clock_standard(); // TODO change
     stream->in_controls     = fa_atomic_queue();
+    stream->short_controls  = fa_atomic_queue();
     stream->controls        = fa_priority_queue();
 
     return stream;
@@ -211,6 +213,10 @@ inline static stream_t new_stream(device_t device)
 
 inline static void delete_stream(stream_t stream)
 {
+    // TODO flush pending events
+    fa_destroy(stream->controls);
+    fa_destroy(stream->in_controls);
+    fa_destroy(stream->short_controls);
     fa_delete(stream);
 }
 
@@ -517,7 +523,7 @@ void fa_midi_with_stream(device_t           device,
 
 
 void receive_midi(stream_t stream, PmEvent *dest);
-fa_ptr_t send_midi_action(fa_ptr_t stream, fa_ptr_t action);
+fa_ptr_t send_midi_action(fa_ptr_t stream, fa_ptr_t action, fa_ptr_t time);
 
 
 
@@ -572,7 +578,11 @@ fa_ptr_t stream_thread_callback(fa_ptr_t x)
         // Outputs
         if (stream->native_output) {
             fa_ptr_t val;
-
+            
+            while ((val = fa_atomic_queue_read(stream->short_controls))) {
+                forward_action_to_midi(stream, val, NULL);
+            }
+            
             while ((val = fa_atomic_queue_read(stream->in_controls))) {
                 fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
             }
@@ -593,7 +603,7 @@ fa_ptr_t stream_thread_callback(fa_ptr_t x)
     assert(false && "Unreachable");
 }
 
-fa_ptr_t send_midi_action(fa_ptr_t stream, fa_ptr_t action)
+fa_ptr_t send_midi_action(fa_ptr_t stream, fa_ptr_t action, fa_ptr_t time)
 {
     if (fa_action_is_send(action)) {
         // fa_string_t name = fa_action_send_name(action);
@@ -674,8 +684,35 @@ void fa_midi_schedule_relative(fa_time_t        time,
                                fa_action_t       action,
                                fa_midi_stream_t  stream)
 {
-    fa_time_t now = fa_clock_time(stream->clock);
-    fa_midi_schedule(fa_add(now, time), action, stream);
+    // if (fa_time_is_zero(time) && !fa_action_is_compound(action) && !fa_action_is_do(action)) {
+    //     // Pass directly to output
+    //     fa_atomic_queue_write(stream->short_controls, action);
+    // } else {
+        fa_time_t now = fa_clock_time(stream->clock);
+        fa_midi_schedule(fa_dadd(now, time), action, stream);
+    // }
+}
+
+void fa_midi_schedule_now(fa_action_t action, fa_midi_stream_t stream)
+{
+    if (fa_action_is_compound(action)) {
+        fa_list_t actions = fa_action_flatten_compound(action);
+        if (actions) {
+            fa_for_each(a, actions) {
+                if (!fa_action_is_compound(a) && !fa_action_is_do(a)) {
+                    fa_atomic_queue_write(stream->short_controls, a);
+                } else {
+                    fa_warn(fa_string("Nested compound or do action passed to fa_midi_schedule_now"));
+                    fa_deep_destroy_always(a);
+                }
+            }
+            fa_destroy(actions);
+        } else {
+            fa_warn(fa_string("Non-simple action passed to fa_midi_schedule_now"));
+        }
+    } else {
+        fa_atomic_queue_write(stream->short_controls, action);
+    }
 }
 
 void fa_midi_set_clock(fa_midi_stream_t stream, fa_clock_t clock)

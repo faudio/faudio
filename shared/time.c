@@ -107,6 +107,10 @@ int32_t fa_time_to_seconds(fa_time_t time)
            + fa_time_seconds(time);
 }
 
+double fa_time_to_double(fa_time_t time) {
+    return time->dvalue;
+}
+
 #define approx_millis(r) ( (int32_t) ( ((double) fa_ratio_num(r)) / ((double) fa_ratio_denom(r)) * 1000 ) )
 
 /** Convert the time to milliseconds.
@@ -167,7 +171,7 @@ bool time_greater_than(fa_ptr_t a, fa_ptr_t b)
 
 fa_ptr_t time_add(fa_ptr_t a, fa_ptr_t b)
 {
-    fa_ratio_t fa_ratio_add_safe(fa_ratio_t x, fa_ratio_t y);
+    //fa_ratio_t fa_ratio_add_safe(fa_ratio_t x, fa_ratio_t y);
     fa_time_t x = (fa_time_t) a;
     fa_time_t y = (fa_time_t) b;
     return new_time(x->dvalue + y->dvalue);

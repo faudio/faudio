@@ -50,6 +50,8 @@ void fa_atomic_queue_destroy(fa_atomic_queue_t queue);
 */
 fa_ptr_t fa_atomic_queue_read(fa_atomic_queue_t queue);
 
+fa_ptr_t fa_atomic_queue_peek(fa_atomic_queue_t queue);
+
 /** Write the given value to the given queue.
     @param queuer   Queue.
     @param value    Value to write (optional).

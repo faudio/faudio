@@ -152,4 +152,19 @@ module "transient" Fa.Audio.Stream
         stream clock.
      */
     scheduleRelative : (time : Time, action : Action, stream : Stream) -> Void;
+    
+    /**
+        Schedule an action to be run immediately.
+
+        Can be used with non-compound, non-do actions.
+        As a special case, non-nested compound actions can also
+        be passed, note however that the contained actions
+        will all be executed immediately, regardless of their
+        specified timing. The order is still guaranteed though.
+    
+        Note also that actions scheduled this way may be run before actions
+        scheduled using fa_schedule_relative(fa_now(), ...)
+     */
+    scheduleNow : (Action, Stream) -> Void;
+    
 }

@@ -31,6 +31,8 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
+uint8_t min_uint8(uint8_t a, uint8_t b) { return a < b ? a : b; }
+
 #define send_osc(m, s, ...) lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__)
 #define send_osc_async(...) if (last_address) lo_send_from(last_address, server, LO_TT_IMMEDIATE, __VA_ARGS__)
 
@@ -42,6 +44,8 @@ if (id > last_used_id) {    \
                               fa_string_format_integral(" last used ID (%zu)", last_used_id))); \
     return 0; \
 }
+
+#define safe_peek_i32(ptr) (ptr ? (int32_t) fa_peek_number(ptr) : 0)
 
 void schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
     if (stream) {
@@ -71,6 +75,22 @@ void schedule_relative(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
         default:
             fa_slog_info("Strange stream sent to schedule_relative: ", stream);
             assert(false && "Unknown object sent to schedule_relative");
+        }
+    }
+}
+
+void schedule_now(fa_action_t action, fa_ptr_t stream) {
+    if (stream) {
+        switch (fa_dynamic_get_type(stream)) {
+        case audio_stream_type_repr:
+            fa_audio_schedule_now(action, stream);
+            break;
+        case midi_stream_type_repr:
+            fa_midi_schedule_now(action, stream);
+            break;
+        default:
+            fa_slog_info("Strange stream sent to schedule_now: ", stream);
+            assert(false && "Unknown object sent to schedule_now");
         }
     }
 }
@@ -407,9 +427,9 @@ int start_time_echo()
     fa_with_lock(time_echo_mutex) {
         if (!time_echo) {
             time_echo++;
-            fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), fa_action_do_with_time(_echo_time, NULL));
-            fa_action_t while_action = fa_action_while(_echo_time_p, NULL, repeat_action);
-            schedule_relative(fa_now(), while_action, current_midi_echo_stream);
+            //fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), fa_action_do_with_time(_echo_time, NULL));
+            //fa_action_t while_action = fa_action_while(_echo_time_p, NULL, repeat_action);
+            //schedule_relative(fa_now(), while_action, current_midi_echo_stream);
         } else {
             time_echo++;
         }
@@ -463,3 +483,57 @@ int stop_level_echo()
     }
     return new_value;
 }
+
+double audio_file_peak(fa_buffer_t buffer)
+{
+    // Try cache first
+    fa_ptr_t peak = fa_buffer_get_meta(buffer, fa_string("peak-level"));
+    if (peak) return fa_peek_double(peak);
+    
+    double max_value = 0;
+    // Go through all samples regardless of channel
+    for(int i = 0; i < (fa_buffer_size(buffer) / sizeof(double)); i++) {
+        double value = fa_buffer_get_double(buffer, i);
+        if (value > max_value) max_value = value;
+    }
+    // Store in cache
+    fa_buffer_set_meta(buffer, fa_string("peak-level"), fa_from_double(max_value));
+    return max_value;
+}
+
+lo_blob audio_curve(fa_buffer_t buffer)
+{
+    fa_ptr_t sr = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
+    fa_ptr_t ch = fa_buffer_get_meta(buffer, fa_string("channels"));
+    if (!sr || !ch) return NULL;
+    size_t sample_rate = fa_peek_number(sr);
+    size_t channels = fa_peek_integer(ch);
+    size_t curve_rate = 200;
+    double rel_rate = sample_rate / curve_rate;
+    size_t size = fa_buffer_size(buffer) / (rel_rate * channels * sizeof(double));
+    uint8_t *curve = fa_malloc(size);
+    //printf("Curve needs %zu bytes\n", size);
+    if (channels == 1) {
+        //double last_value = 0;
+        
+        for(int i = 0; i < size; i++) {
+            size_t frame = i * rel_rate;
+            //double value = fabs(fa_buffer_get_double(buffer, frame * channels + 0));
+            //value = (value * 0.01) + (last_value * 0.99);
+            //curve[i] = min_uint8(0xFF, 0xFF * value);
+            //last_value = value;
+            curve[i] = min_uint8(0xFF, 0xFF * fabs(fa_buffer_get_double(buffer, frame * channels + 0)));
+        }
+    } else {
+        for(int i = 0; i < size; i++) {
+            size_t frame = i * rel_rate;
+            double left  = fabs(fa_buffer_get_double(buffer, frame * channels + 0));
+            double right = fabs(fa_buffer_get_double(buffer, frame * channels + 1));
+            curve[i] = min_uint8(0xFF, 0xFF * ((left + right) / 2));
+        }
+    }
+    lo_blob blob = lo_blob_new(size, curve);
+    fa_free(curve);
+    return blob;
+}
+
