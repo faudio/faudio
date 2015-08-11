@@ -28,6 +28,9 @@ int done = 0;
 
 void liblo_error(int num, const char *m, const char *path);
 
+int bundle_start_handler(lo_timetag time, void *user_data);
+int bundle_end_handler(void *user_data);
+
 define_handler(generic);
 
 define_handler(quit);
@@ -75,9 +78,12 @@ int main()
     lo_server_thread st = lo_server_thread_new_with_proto(port, LO_TCP, liblo_error);
     server = lo_server_thread_get_server(st);
 
+    /* add bundle handlers */
+    lo_server_add_bundle_handlers(server, bundle_start_handler, bundle_end_handler, NULL);
+
     /* add method that will match any path and args */
     lo_server_thread_add_method(st, NULL, NULL, generic_handler, server);
-        
+    
     lo_server_thread_add_method(st, "/stats", "", stats_handler, server);
 
     /* Quitting, restart */
@@ -148,13 +154,24 @@ int main()
 
     fa_with_faudio() {
         
+        void fa_clock_initialize();
         fa_clock_initialize();
         
         init_globals();
 
+        // Audio
         current_audio_session = fa_audio_begin_session();
         current_audio_output_device = fa_audio_default_output(current_audio_session);
+        current_audio_input_device = fa_audio_default_input(current_audio_session);
+        // MIDI
         current_midi_session = fa_midi_begin_session();
+        fa_list_t midi_devices = fa_midi_all(current_midi_session);
+        fa_for_each(device, midi_devices) {
+            if (fa_midi_has_input(device)) fa_push_list(device, current_midi_input_devices);
+            if (fa_midi_has_output(device)) fa_push_list(device, current_midi_output_devices);
+        }
+        fa_destroy(midi_devices);
+        
         
         start_streams(); // server-utils.h
 
@@ -199,6 +216,41 @@ void liblo_error(int num, const char *msg, const char *path)
     fflush(stdout);
 }
 
+int bundle_start_handler(lo_timetag time, void *user_data) {
+    if (in_bundle) {
+        fa_warn(fa_string("Cannot currently handle nested bundles, sent bundles will be flattened"));
+    }
+    in_bundle++;
+    bundle_time = fa_time_from_double(timetag_to_double(time));
+    //printf("Time: %f\n", timetag_to_double(time));
+    return 0;
+}
+
+int bundle_end_handler(void *user_data) {
+    assert(in_bundle);
+    in_bundle--;
+    if (in_bundle == 0) {
+        if (!fa_list_is_empty(bundle_actions)) {
+            //fa_slog_info("end handler: ", bundle_actions);
+            fa_action_t action = fa_action_many(fa_list_dreverse(bundle_actions)); // preserve original order
+            if (fa_time_is_zero(bundle_time)) {
+                if (fa_action_is_flat(action)) {
+                    do_schedule_now(action, bundle_stream);
+                } else {
+                    do_schedule_relative(fa_now(), action, bundle_stream);
+                }
+                fa_destroy(bundle_time);
+            } else {
+                do_schedule(bundle_time, action, bundle_stream);
+            }
+            bundle_actions = fa_list_empty();
+        }
+        bundle_stream = NULL;
+        bundle_time = NULL;
+    }
+    return 0;
+}
+
 /* catch any incoming messages and display them. returning 1 means that the
 * message has not been fully handled and the server should try other methods */
 int generic_handler(const char *path, const char *types, lo_arg ** argv,
@@ -223,17 +275,17 @@ int argc, lo_message message, void *user_data)
     return 1;
 }
 
-fa_ptr_t _playback_started(fa_ptr_t context, fa_time_t time)
+fa_ptr_t _playback_started(fa_ptr_t context, fa_time_t time, fa_time_t now)
 {
-    send_osc_async("/playback/started", "ih", peek_oid(context), (int64_t)fa_time_to_milliseconds(time));
+    send_osc_async("/playback/started", "ih", peek_oid(context), (int64_t)fa_time_to_milliseconds(now));
     return NULL;
 }
 
-fa_ptr_t _playback_stopped(fa_ptr_t context, fa_time_t time)
+fa_ptr_t _playback_stopped(fa_ptr_t context, fa_time_t time, fa_time_t now)
 {
     oid_t id = peek_oid(context);
     if (remove_playback_semaphore(id)) {
-        send_osc_async("/playback/stopped", "ihT", id, (int64_t)fa_time_to_milliseconds(time));
+        send_osc_async("/playback/stopped", "ihT", id, (int64_t)fa_time_to_milliseconds(now));
         stop_time_echo();
     }
     return NULL;
@@ -271,8 +323,8 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
         fa_push_list(pair(fa_action_send(audio_name, fa_from_double(skip)), fa_milliseconds(0)), actions);
         fa_push_list(pair(fa_action_send(audio_name, fa_string("play")), fa_milliseconds(0)), actions);
         if (repeat_interval == 0) {
-            //fa_push_list(pair(fa_action_do_with_time(_playback_started, wrap_oid(id)), fa_milliseconds(0)), actions);
-            //fa_push_list(pair(fa_action_do_with_time(_playback_stopped, wrap_oid(id)), fa_time_from_double(max_time + 0.010)), actions);
+            fa_push_list(pair(fa_action_do_with_time(_playback_started, wrap_oid(id)), fa_milliseconds(0)), actions);
+            fa_push_list(pair(fa_action_do_with_time(_playback_stopped, wrap_oid(id)), fa_time_from_double(max_time + 0.010)), actions);
         }
         actions = times_to_delta_times(actions); // Convert absolute times to relative times
         
@@ -282,7 +334,7 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
                 fa_action_many(
                     list(pair(fa_action_do_with_time(_playback_started, wrap_oid(id)), fa_milliseconds(0)),
                          pair(fa_action_while(check_playback_semaphore, wrap_oid(id),
-                                              fa_action_repeat(fa_time_from_double(repeat_interval), fa_action_many(actions))),
+                                              fa_action_repeat(fa_time_from_double(repeat_interval), 0, fa_action_many(actions))),
                               fa_milliseconds(0))));
         } else {
             main_action = fa_action_many(actions);
@@ -312,12 +364,6 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
         printf("data_size (%d) not a multiple of 8\n", data_size);
         return 0;
     }
-    // fa_log_region_count("BEFORE");
-    // fa_log_list_count();
-    // fa_log_time_count();
-    // fa_log_pair_count();
-    // fa_log_pair_left_count();
-    // fa_log_string_count();
     
     fa_list_t actions = fa_list_empty();
     int count = data_size / 8;
@@ -361,7 +407,7 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
                 list(pair(fa_action_do_with_time(_playback_started, wrap_oid(id)),
                           fa_milliseconds(0)),
                      pair(fa_action_while(check_playback_semaphore, wrap_oid(id),   
-                                          fa_action_repeat(fa_time_from_double(repeat_interval), fa_action_many(actions))),
+                                          fa_action_repeat(fa_time_from_double(repeat_interval), 0, fa_action_many(actions))),
                           fa_milliseconds(0))));
     } else {
         main_action = fa_action_while(check_playback_semaphore, wrap_oid(id), fa_action_many(actions));
@@ -376,12 +422,6 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
     
     start_time_echo();
     
-    // fa_log_region_count("AFTER");
-    // fa_log_list_count();
-    // fa_log_time_count();
-    // fa_log_pair_count();
-    // fa_log_pair_left_count();
-    // fa_log_string_count();
     return 0;
 }
 

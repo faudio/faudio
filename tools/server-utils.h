@@ -45,9 +45,17 @@ if (id > last_used_id) {    \
     return 0; \
 }
 
+#define error_check(_obj, _msg)     \
+if (fa_check(_obj)) {               \
+    fa_log_error(fa_string(_msg));  \
+    fa_error_log(_obj, NULL);       \
+    return;                         \
+}
+
+
 #define safe_peek_i32(ptr) (ptr ? (int32_t) fa_peek_number(ptr) : 0)
 
-void schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
+void do_schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
     if (stream) {
         switch (fa_dynamic_get_type(stream)) {
         case audio_stream_type_repr:
@@ -63,7 +71,7 @@ void schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
     }
 }
 
-void schedule_relative(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
+void do_schedule_relative(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
     if (stream) {
         switch (fa_dynamic_get_type(stream)) {
         case audio_stream_type_repr:
@@ -79,7 +87,7 @@ void schedule_relative(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
     }
 }
 
-void schedule_now(fa_action_t action, fa_ptr_t stream) {
+void do_schedule_now(fa_action_t action, fa_ptr_t stream) {
     if (stream) {
         switch (fa_dynamic_get_type(stream)) {
         case audio_stream_type_repr:
@@ -94,6 +102,124 @@ void schedule_now(fa_action_t action, fa_ptr_t stream) {
         }
     }
 }
+
+void schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
+    if (in_bundle) {
+        if (bundle_stream) {
+            assert(bundle_stream == stream && "Cannot send to different streams in same bundle");
+        } else {
+            bundle_stream = stream;
+        }
+        fa_push_list(pair(action, time), bundle_actions);
+    } else {
+        do_schedule(time, action, stream);
+    }
+}
+
+void schedule_relative(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
+    if (in_bundle) {
+        if (bundle_stream) {
+            assert(bundle_stream == stream && "Cannot send to different streams in same bundle");
+        } else {
+            bundle_stream = stream;
+        }
+        fa_push_list(pair(action, time), bundle_actions);
+    } else {
+        do_schedule_relative(time, action, stream);
+    }
+}
+
+void schedule_now(fa_action_t action, fa_ptr_t stream) {
+    if (in_bundle) {
+        if (bundle_stream) {
+            assert(bundle_stream == stream && "Cannot send to different streams in same bundle");
+        } else {
+            bundle_stream = stream;
+        }
+        fa_push_list(pair(action, fa_now()), bundle_actions);
+    } else {
+        do_schedule_now(action, stream);
+    }
+    
+}
+
+
+static inline bool timetag_is_now(lo_timetag tt) {
+    return (tt.sec == 0 && tt.frac == 1);
+}
+
+double timetag_to_double(lo_timetag tt) {
+    if (timetag_is_now(tt)) return 0;
+    return (double) tt.sec + (double) tt.frac * 0.00000000023283064365; // from timetag.c in liblo
+}
+
+fa_ptr_t create_fa_value(lo_type type, void *data) {
+    
+    typedef union {
+        int32_t i;
+        float f;
+        char c;
+        uint32_t nl;
+    } lo_pcast32;
+
+    typedef union {
+        int64_t i;
+        double f;
+        uint64_t nl;
+    } lo_pcast64;
+    
+    lo_pcast32 val32;
+    lo_pcast64 val64;
+    int size;
+    bool bigendian = 0; // from message.c in liblo
+
+    size = lo_arg_size(type, data);
+    if (size == 4 || type == LO_BLOB) {
+        if (bigendian) {
+            val32.nl = lo_otoh32(*(int32_t *) data);
+        } else {
+            val32.nl = *(int32_t *) data;
+        }
+    } else if (size == 8) {
+        if (bigendian) {
+            val64.nl = lo_otoh64(*(int64_t *) data);
+        } else {
+            val64.nl = *(int64_t *) data;
+        }
+    }
+    
+    switch (type) {
+    case LO_INT32:      return fa_from_int32(val32.i);
+    case LO_FLOAT:      return fa_from_float(val32.f);
+    case LO_STRING:     return fa_string((char *) data);
+    //case LO_BLOB:     return fa_buffer_wrap(data + 4, val32.i, NULL, NULL); // TODO: copy memory
+    case LO_BLOB:       assert(false && "creating buffers from blobs not yet supported");
+    case LO_INT64:      return fa_from_int64(val64.i);
+    case LO_DOUBLE:     return fa_from_double(val64.f);
+    case LO_SYMBOL:     return fa_string((char *) data);
+    case LO_CHAR:       return fa_string_single(val32.c); // Encoding beyond ascii?
+    //case LO_MIDI: 
+    case LO_TRUE:       return fa_from_bool(true);
+    case LO_FALSE:      return fa_from_bool(false);
+    case LO_NIL:        return NULL; // ?
+    default:
+        fa_fail(fa_string("liblo_to_faudio: Cannot handle that type"));
+        return NULL;
+    }
+}
+
+lo_timetag timetag_from_double(double dtime) {
+    lo_timetag tt;
+    tt.sec = (uint32_t) dtime;
+    tt.frac = (uint32_t) ((dtime - tt.sec) * 4294967296.);
+    return tt;
+}
+
+lo_timetag timetag_from_time(fa_time_t time) {
+    return timetag_from_double(fa_time_to_double(time));
+}
+
+
 
 
 // void schedule_to_midi_echo_stream(fa_time_t time, fa_action_t action)
@@ -276,31 +402,71 @@ fa_list_t construct_output_signal_tree() {
     return tree;
 }
 
+fa_ptr_t _incoming_midi(fa_ptr_t x, fa_ptr_t time_message)
+{
+    // fa_print_ln(fa_string_show(timeMessage));
+    fa_time_t time         = fa_pair_first(time_message);
+    fa_midi_message_t msg  = fa_pair_second(time_message);
+    fa_destroy(time_message);
+    
+    uint8_t status, data1, data2;
+    bool simple = fa_midi_message_is_simple(msg);
+    if (simple) fa_midi_message_decons(msg, &status, &data1, &data2);
+    
+    //fa_slog_info("Received MIDI message: ", msg);
+    
+    if (current_midi_echo_stream) {
+        do_schedule_now(fa_action_send(synth_name, msg), current_midi_echo_stream);
+    } else {
+        fa_destroy(msg);
+    }
+    
+    if (simple) {     // don't forward SYSEX via OSC for now
+        send_osc_async("/receive/midi", "tiii", timetag_from_time(time), status, data1, data2);
+    }
+
+    fa_destroy(time);
+    return NULL;
+}
+
 void stop_streams() {
     fa_slog_info("Stopping streams...");
+    current_midi_echo_stream = NULL;
+    // MIDI input streams
+    fa_for_each(stream, current_midi_input_streams) {
+        fa_midi_close_stream(stream);
+    }
+    fa_destroy(current_midi_input_streams);
+    current_midi_input_streams = fa_list_empty();
+    // MIDI output streams
+    fa_for_each(stream, current_midi_output_streams) {
+        fa_midi_close_stream(stream);
+    }
+    fa_destroy(current_midi_output_streams);
+    current_midi_output_streams = fa_list_empty();
+    // Audio stream
     if (current_audio_stream) {
         fa_audio_close_stream(current_audio_stream);
         current_audio_stream = NULL;
-        current_midi_echo_stream = NULL;
-        current_clock = fa_clock_standard();
     }
+    current_clock = fa_clock_standard();
 }
 
 void start_streams() {
     fa_slog_info("Starting streams...");
+    
+    // Start audio stream first
     if (current_audio_output_device) {
         fa_list_t out_signal = construct_output_signal_tree();
-        fa_audio_stream_t stream = fa_audio_open_stream(NULL, current_audio_output_device, just, out_signal);
-        if (fa_check(stream)) {
-            fa_log_error(fa_string("Could not start audio stream!"));
-            fa_error_log(stream, NULL);
-            return;
-        }
-        current_audio_stream = stream;
-        current_clock = fa_audio_get_clock(stream);
+        fa_audio_stream_t audio_stream =
+            fa_audio_open_stream(current_audio_input_device, current_audio_output_device, just, out_signal);
+        error_check(audio_stream, "Could not start audio stream!");
+        current_audio_stream = audio_stream;
+        current_clock = fa_audio_get_clock(audio_stream);
         if (selected_midi_echo == FA_ECHO_AUDIO) {
-            current_midi_echo_stream = stream;
+            current_midi_echo_stream = audio_stream;
         }
+                
         // Set volumes
         if (current_audio_stream) {
             fa_list_t actions = list(pair(fa_action_set(kSynthLeft, synth_volume), fa_now()),
@@ -309,62 +475,45 @@ void start_streams() {
                                      pair(fa_action_set(kAudioRight, audio_volume), fa_now()),
                                      pair(fa_action_set(kMonitorLeft, monitor_volume), fa_now()),
                                      pair(fa_action_set(kMonitorRight, monitor_volume), fa_now()));
-            schedule_relative(fa_now(), fa_action_many(actions), current_audio_stream);
+            do_schedule_now(fa_action_many(actions), current_audio_stream);
         }
     } else {
         fa_log_warning(fa_string("No audio output device, won't start an audio stream"));
     }
-}
-
-fa_ptr_t create_fa_value(lo_type type, void *data) {
     
-    typedef union {
-        int32_t i;
-        float f;
-        char c;
-        uint32_t nl;
-    } lo_pcast32;
-
-    typedef union {
-        int64_t i;
-        double f;
-        uint64_t nl;
-    } lo_pcast64;
-    
-    lo_pcast32 val32;
-    lo_pcast64 val64;
-    int size;
-    bool bigendian = 0; // from message.c in liblo
-
-    size = lo_arg_size(type, data);
-    if (size == 4 || type == LO_BLOB) {
-        if (bigendian) {
-            val32.nl = lo_otoh32(*(int32_t *) data);
-        } else {
-            val32.nl = *(int32_t *) data;
-        }
-    } else if (size == 8) {
-        if (bigendian) {
-            val64.nl = lo_otoh64(*(int64_t *) data);
-        } else {
-            val64.nl = *(int64_t *) data;
-        }
+    // Start one MIDI input stream for each device in current_midi_input_devices
+    // Add a listener (message callback) to each stream
+    size_t midi_input_count = 0;
+    fa_for_each(device, current_midi_input_devices) {
+        fa_midi_stream_t midi_stream = fa_midi_open_stream(device);
+        error_check(midi_stream, "Could not start MIDI input stream!");
+        fa_midi_set_clock(midi_stream, current_clock);
+        fa_midi_add_message_callback(_incoming_midi, NULL, midi_stream);
+        fa_push_list(midi_stream, current_midi_input_streams);
+        midi_input_count++;
     }
     
-    switch (type) {
-    case LO_INT32:      return fa_from_int32(val32.i);
-    case LO_FLOAT:      return fa_from_float(val32.f);
-    case LO_STRING:     return fa_string((char *) data);
-    case LO_BLOB:       assert(false && "creating buffers from blobs not yet supported");
-    case LO_INT64:      return fa_from_int64(val64.i);
-    case LO_DOUBLE:     return fa_from_double(val64.f);
-    case LO_SYMBOL:     return fa_string((char *) data);
-    case LO_TRUE:       return fa_from_bool(true);
-    case LO_FALSE:      return fa_from_bool(false);
-    case LO_NIL:        return fa_from_bool(false);
-    default:
-        fprintf(stderr, "warning in create_fa_value: unhandled type: %c\n", type);
-        return NULL;
+    // Start one MIDI output stream for each device in current_midi_output_devices
+    size_t midi_output_count = 0;
+    fa_for_each(device, current_midi_output_devices) {
+        fa_midi_stream_t midi_stream = fa_midi_open_stream(device);
+        error_check(midi_stream, "Could not start MIDI output stream!");
+        fa_midi_set_clock(midi_stream, current_clock);
+        if (selected_midi_echo == FA_ECHO_DEVICE && device == selected_midi_echo_device) {
+            current_midi_echo_stream = midi_stream;
+        }
+        fa_push_list(midi_stream, current_midi_output_streams);
+        midi_output_count++;
+    }
+    fa_log_info(fa_string_dappend(fa_format_integral("%d MIDI inputs, ", midi_input_count),
+                                  fa_format_integral("%d MIDI outputs", midi_output_count)));
+                                  
+    // Turn off reverb for all channels
+    if (current_midi_echo_stream) {
+        for(uint8_t ch = 0; ch < 16; ch++) {
+            fa_midi_message_t msg = fa_midi_message_create_simple(msg_control_change + ch, 0x5B, 0);
+            do_schedule_now(fa_action_send(synth_name, msg), current_midi_echo_stream);
+        }
     }
 }
 
@@ -412,8 +561,9 @@ static inline void remove_all_playback_semaphores() {
     }
 }
 
-fa_ptr_t _echo_time(fa_ptr_t context, fa_time_t time) {
-    send_osc_async("/time", "h", fa_time_to_milliseconds(time));
+fa_ptr_t _echo_time(fa_ptr_t context, fa_time_t time, fa_time_t now) {
+    //send_osc_async("/time", "h", fa_time_to_milliseconds(time));
+    send_osc_async("/time", "t", timetag_from_time(time));
     return NULL;
 }
 
@@ -427,9 +577,9 @@ int start_time_echo()
     fa_with_lock(time_echo_mutex) {
         if (!time_echo) {
             time_echo++;
-            //fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), fa_action_do_with_time(_echo_time, NULL));
-            //fa_action_t while_action = fa_action_while(_echo_time_p, NULL, repeat_action);
-            //schedule_relative(fa_now(), while_action, current_midi_echo_stream);
+            fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), 0, fa_action_do_with_time(_echo_time, NULL));
+            fa_action_t while_action = fa_action_while(_echo_time_p, NULL, repeat_action);
+            schedule_relative(fa_now(), while_action, current_midi_echo_stream);
         } else {
             time_echo++;
         }
@@ -448,7 +598,7 @@ int stop_time_echo()
     return new_value;
 }
 
-fa_ptr_t _echo_level(fa_ptr_t context, fa_time_t time) {
+fa_ptr_t _echo_level(fa_ptr_t context, fa_time_t time, fa_time_t now) {
     send_osc_async("/level", "f", fa_time_to_milliseconds(time));
     return NULL;
 }
@@ -463,7 +613,7 @@ int start_level_echo()
     fa_with_lock(level_echo_mutex) {
         if (!level_echo) {
             level_echo++;
-            fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), fa_action_do_with_time(_echo_level, NULL));
+            fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), 0, fa_action_do_with_time(_echo_level, NULL));
             fa_action_t while_action = fa_action_while(_echo_level_p, NULL, repeat_action);
             schedule_relative(fa_now(), while_action, current_midi_echo_stream);
         } else {

@@ -5,6 +5,11 @@
 
 oid_t last_used_id = 0;
 
+int in_bundle = 0;
+fa_list_t bundle_actions = NULL;
+fa_time_t bundle_time = NULL;
+fa_ptr_t bundle_stream = NULL;
+
 fa_audio_session_t current_audio_session = NULL;
 fa_midi_session_t current_midi_session = NULL;
 int session_count = 0;
@@ -79,14 +84,25 @@ static inline void init_globals() {
     record_left_name     = fa_string("rbl");
     record_right_name    = fa_string("rbr");
     
+    bundle_actions = fa_list_empty();
+    
     playback_semaphores = fa_map_empty();
     playback_semaphores_mutex = fa_thread_create_mutex();
     time_echo_mutex = fa_thread_create_mutex();
     audio_files = fa_map_empty();
     audio_files_mutex = fa_thread_create_mutex();
+    
+    selected_midi_input_devices  = fa_list_empty();
+    selected_midi_output_devices = fa_list_empty();
+    current_midi_input_devices   = fa_list_empty();
+    current_midi_output_devices  = fa_list_empty();
+    current_midi_input_streams   = fa_list_empty();
+    current_midi_output_streams  = fa_list_empty();
 }
 
 static inline void destroy_globals() {
+    fa_destroy(bundle_actions);
+    
     fa_destroy(playback_semaphores);
     fa_destroy(playback_semaphores_mutex);
     fa_destroy(time_echo_mutex);
@@ -97,6 +113,13 @@ static inline void destroy_globals() {
     fa_destroy(audio_name);
     fa_destroy(record_left_name);
     fa_destroy(record_right_name);
+    
+    fa_destroy(selected_midi_input_devices);
+    fa_destroy(selected_midi_output_devices);
+    fa_destroy(current_midi_input_devices);
+    fa_destroy(current_midi_output_devices);
+    fa_destroy(current_midi_input_streams);
+    fa_destroy(current_midi_output_streams);
 }
 
 #endif

@@ -103,7 +103,7 @@ bool fa_midi_message_is_sysex(fa_midi_message_t midi_message)
     return midi_message->is_sysex;
 }
 
-void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2)
+void fa_midi_message_decons(fa_midi_message_t midi_message, uint8_t *statusCh, uint8_t *data1, uint8_t *data2)
 {
     *statusCh = midi_message->data.simple[0];
     *data1    = midi_message->data.simple[1];

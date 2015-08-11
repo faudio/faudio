@@ -109,7 +109,7 @@ void run_midi()
                                                           fa_pair_create(fa_action_if(pred1, NULL, note1), fa_milliseconds(1000)),
                                                           fa_pair_create(fa_action_if(pred1, NULL,
                                                                   fa_action_while(pred2, NULL,
-                                                                          fa_action_repeat(fa_milliseconds(1000), note2)
+                                                                          fa_action_repeat(fa_milliseconds(1000), 0, note2)
                                                                                  )), fa_milliseconds(1000))
                                                                  ))
                                                  )

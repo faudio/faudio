@@ -123,6 +123,10 @@ bool fa_midi_message_is_sysex(fa_midi_message_t message);
 fa_buffer_t fa_midi_message_sysex_data(fa_midi_message_t message);
 
 
+void fa_midi_message_decons(fa_midi_message_t midi_message, uint8_t *statusCh, uint8_t *data1, uint8_t *data2);
+
+
+
 /** @}
     @}
     @}

@@ -38,13 +38,14 @@ module Fa.Action
     */
     type Action = opaque;
 
-    /** A nullary function that also receives time.
+    /** A nullary function that also receives time
+        (scheduled time and current time, respectively)
      */
-    type NullaryWithTime = ((Ptr, Time) -> Ptr)*;
+    type NullaryWithTime = ((Ptr, Time, Time) -> Ptr)*;
 
-    /** A predicate that also receives time.
-     */
-    type PredWithTime = ((Ptr, Time, Ptr) -> Bool)*;
+    // /** A predicate that also receives time.
+    //  */
+    // type PredWithTime = ((Ptr, Time, Ptr) -> Bool)*;
 
     /** Channel on which to carry out the action.
     */
@@ -204,9 +205,10 @@ module Fa.Action
 
 
     
-    /** Repeat the given action indefinitely.
+    /** Repeat the given action a given number of times.
+        If times is 0, repeat indefinitely (wrap in a while action to stop it)
      */
-    repeat : (interval : Time, action : Action) -> Action;
+    repeat : (interval : Time, times : Size, action : Action) -> Action;
 
     /** Join a list of actions into a single compond action.
         TODO document
@@ -225,7 +227,6 @@ module Fa.Action
 
     /** Creates a derived action from the given action that executes as long as the given predicate
         does *not* hold.
-        
         The predicate function is called for every occurence.
      */
     until : (pred : Pred, predData : Ptr, action : Action) -> Action;

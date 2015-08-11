@@ -695,23 +695,14 @@ void fa_midi_schedule_relative(fa_time_t        time,
 
 void fa_midi_schedule_now(fa_action_t action, fa_midi_stream_t stream)
 {
-    if (fa_action_is_compound(action)) {
-        fa_list_t actions = fa_action_flatten_compound(action);
-        if (actions) {
-            fa_for_each(a, actions) {
-                if (!fa_action_is_compound(a) && !fa_action_is_do(a)) {
-                    fa_atomic_queue_write(stream->short_controls, a);
-                } else {
-                    fa_warn(fa_string("Nested compound or do action passed to fa_midi_schedule_now"));
-                    fa_deep_destroy_always(a);
-                }
-            }
-            fa_destroy(actions);
-        } else {
-            fa_warn(fa_string("Non-simple action passed to fa_midi_schedule_now"));
+    if (fa_action_is_flat(action)) {
+        fa_list_t actions = fa_action_flat_to_list(action);
+        fa_for_each(a, actions) {
+            fa_atomic_queue_write(stream->short_controls, a);
         }
+        fa_destroy(actions);
     } else {
-        fa_atomic_queue_write(stream->short_controls, action);
+        fa_warn(fa_string("Non-flat action passed to fa_midi_schedule_now"));
     }
 }
 

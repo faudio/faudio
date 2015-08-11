@@ -69,27 +69,27 @@ fa_func_ref_t fa_func_ref_copy(fa_func_ref_t func_ref)
 
 // --------------------------------------------------------------------------------
 
-fa_ptr_t func_ref_copy(fa_ptr_t a)
+static fa_ptr_t func_ref_copy(fa_ptr_t a)
 {
     return fa_func_ref_copy(a);
 }
 
-fa_ptr_t func_ref_deep_copy(fa_ptr_t a)
+static fa_ptr_t func_ref_deep_copy(fa_ptr_t a)
 {
     return fa_func_ref_copy(a); // nothing to deep-copy
 }
 
-fa_string_t func_ref_show(fa_ptr_t a)
+static fa_string_t func_ref_show(fa_ptr_t a)
 {
     return fa_string_dappend(fa_string("<FuncRef "), fa_string_format_integral("%p>", (long) a));
 }
 
-void func_ref_destroy(fa_ptr_t a)
+static void func_ref_destroy(fa_ptr_t a)
 {
     fa_func_ref_destroy(a);
 }
 
-void func_ref_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+static void func_ref_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
 {
     if (p(a)) fa_func_ref_destroy(a);
 }

@@ -17,6 +17,8 @@ Erik's test file
 */
 
 
+void fa_clock_initialize();
+
 int note_count = 0;
 
 bool note_pred(fa_ptr_t env, fa_ptr_t data) {
@@ -92,7 +94,7 @@ void run_dls()
         pair(action2, fa_milliseconds(100)),
         pair(action3, fa_milliseconds(100)),
         pair(action4, fa_milliseconds(100))));
-    fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(1000), many_action);
+    fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(1000), 0, many_action);
     fa_action_t while_action = fa_action_until(five_times, NULL, repeat_action);
     //fa_action_t many_many_action = fa_action_many(list(pair(many_action, fa_milliseconds(20))));
     

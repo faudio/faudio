@@ -2002,8 +2002,6 @@ fa_ptr_t vst_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state
 #define fa_dynamic_is_pair(x)   (fa_dynamic_get_type(x) == pair_type_repr)
 #define fa_dynamic_is_list(x)   (fa_dynamic_get_type(x) == list_type_repr)
 
-void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
-
 // Used by vst.cc
 void vst_log(const char *msg)
 {
@@ -2047,7 +2045,7 @@ fa_ptr_t vst_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
             fa_warn(fa_string("Unknown message to VST plug"));
             return x;
         } else {
-            int status, data1, data2;
+            uint8_t status, data1, data2;
             fa_midi_message_decons(msg, &status, &data1, &data2);
 
             VstMidiEvent event;

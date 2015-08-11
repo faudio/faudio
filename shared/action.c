@@ -16,6 +16,20 @@
 #include <fa/func_ref.h>
 #include <pthread.h>
 
+// Scheduled events are forwarded to the audio thread in advance. This is the
+// threshold value in milliseconds. A too low value may cause actions to be
+// executed too late, if the scheduler is busy or for some other reason cannot
+// forward the actions in time. A higher value minimizes that risk, but actions
+// that have been forwarded to the audio thread cannot be cancelled, so a very
+// high value will make e.g. stop playback appear sluggish. Also, action_do
+// (and action_do_with_time) is executed in the audio control thread rather
+// than the audio thread, which means that they will be executed (more) too early.
+#define kScheduleLookahead 50
+
+// Actions 
+#define kScheduleMaxAge    5000
+
+
 typedef fa_action_t                 action_t;               // 
 typedef fa_action_channel_t         channel_t;              // int
 typedef fa_action_name_t            name_t;                 // fa_string_t
@@ -26,8 +40,6 @@ struct _fa_action_t {
 
     fa_impl_t                       impl;
     
-    //int                             ref_count;
-
     enum {
         get_action,
         set_action,
@@ -75,7 +87,8 @@ struct _fa_action_t {
         
     }                               fields;
     
-    uint64_t timestamp; // Eriks test
+    //uint64_t timestamp; // Eriks test
+    double timestamp; // Eriks test
 };
 
 //static fa_map_t all_actions = NULL;
@@ -507,11 +520,11 @@ void fa_action_deep_destroy(fa_action_t action, fa_deep_destroy_pred_t pred)
     delete_action(action);
 }
 
-uint64_t fa_action_timestamp(fa_action_t action) {
+double fa_action_timestamp(fa_action_t action) {
     return action->timestamp;
 }
 
-void fa_action_timestamp_set(fa_action_t action, uint64_t timestamp) {
+void fa_action_timestamp_set(fa_action_t action, double timestamp) {
     action->timestamp = timestamp;
 }
 
@@ -709,22 +722,50 @@ fa_action_t fa_action_null()
 
 #define unpair(x,y,p) fa_pair_decons((fa_ptr_t*) &x, (fa_ptr_t*) &y, p)
 
-static fa_ptr_t _repeat(fa_ptr_t data, fa_ptr_t compound)
+static fa_ptr_t _repeat(fa_ptr_t data, fa_ptr_t c)
 {
-    fa_time_t interval;
+    fa_action_t compound = c;
+    fa_pair_t interval_times;
     action_t action;
-    unpair(interval, action, data);
+    fa_time_t interval;
+    fa_ptr_t times;
+    unpair(interval_times, action, data);
+    unpair(interval, times, interval_times);
+    
     //printf("About to copy\n");
     //fa_slog_info("  object: ", compound);
     //fa_slog_info("repeat            in thread:   ", fa_string_format_integral("%p", (long) pthread_self()));
-    fa_action_t copy = fa_deep_copy(compound);
+    
     //printf("Copied!\n");
-    return fa_pair_create(action, fa_pair_create(interval, copy));
+    if (fa_peek_int16(times) == 0) {
+        fa_action_t copy = fa_deep_copy(compound);
+        fa_destroy(data); // only the pair
+        fa_destroy(interval_times);
+        compound_get(compound, data) = NULL; // reset reference, to avoid double free
+        return fa_pair_create(action, pair(interval, copy));
+    } else {
+        times = fa_dsubtract(times, fa_from_int16(1));
+        if (fa_peek_int16(times) == 0) {
+            fa_destroy(data); // only the pair
+            fa_destroy(interval_times);
+            fa_destroy(interval);
+            compound_get(compound, data) = NULL; // reset reference, to avoid double free
+            return fa_pair_create(action, NULL);
+        } else {
+            // TODO: decrement times in the copy
+            fa_action_t copy = fa_deep_copy(compound);
+            fa_destroy(data); // only the pair
+            fa_destroy(interval_times);
+            compound_get(compound, data) = NULL; // reset reference, to avoid double free
+            return fa_pair_create(action, pair(interval, copy));
+        }
+    }
 }
 
-fa_action_t fa_action_repeat(fa_time_t interval, fa_action_t action)
+fa_action_t fa_action_repeat(fa_time_t interval, size_t times, fa_action_t action)
 {
-    return fa_action_compound(_repeat, fa_pair_create(interval, action));
+    assert(times == 0 && "Not implemented");
+    return fa_action_compound(_repeat, pair(pair(interval, fa_from_int16(times)), action));
 }
 
 
@@ -763,24 +804,49 @@ static fa_ptr_t _many(fa_ptr_t data, fa_ptr_t c)
 // [(Action, Time)] -> Action
 fa_action_t fa_action_many(fa_list_t timeActions)
 {
+    // // DEBUG
+    // assert(fa_dynamic_get_type(timeActions) == list_type_repr);
+    // fa_for_each(x, timeActions) {
+    //     assert(fa_dynamic_get_type(x) == pair_type_repr);
+    //     assert(fa_dynamic_get_type(fa_pair_first(x)) == action_type_repr);
+    //     //assert(fa_dynamic_get_type(fa_pair_second(x)) == time_type_repr);
+    // }
+    // // END DEBUG
+    
     return fa_action_compound(_many, timeActions);
 }
 
-fa_list_t fa_action_flatten_compound(fa_action_t action) {
-    if (fa_action_is_compound(action) && compound_get(action, function) == _many) {
-        fa_list_t result = fa_list_empty();
-        fa_for_each(x, compound_get(action, data)) {
-            fa_action_t a = fa_pair_first(x);
-            fa_destroy(fa_pair_second(x)); // the time
-            fa_destroy(x); // the pair
-            fa_push_list(a, result);
-        }
-        fa_destroy(action); // this will destroy the list as well
-        return result;
+static void _flatten(fa_action_t action, fa_list_t *alist) {
+    if (fa_action_is_simple(action)) {
+        fa_push_list(action, *alist);
     } else {
-        fa_deep_destroy_always(action);
-        return NULL;
+        if (compound_get(action, function) == _many) {
+            assert(fa_dynamic_get_type(compound_get(action, data)) == list_type_repr);
+            fa_for_each(x, compound_get(action, data)) {
+                _flatten(fa_pair_first(x), alist);
+                fa_destroy(fa_pair_second(x)); // the time
+                fa_destroy(x);  // the pair
+            }
+            fa_destroy(action); // including the list
+        } else {
+            fa_deep_destroy_always(action);
+        }
     }
+}
+
+fa_list_t fa_action_flat_to_list(fa_action_t action) {
+    fa_list_t alist = fa_list_empty();
+    _flatten(action, &alist);
+    return fa_list_dreverse(alist);
+}
+
+bool fa_action_is_flat(fa_action_t action) {
+    if (fa_action_is_simple(action)) return true;
+    if (compound_get(action, function) != _many) return false;
+    fa_for_each(x, compound_get(action, data)) {
+        if (!fa_action_is_flat(fa_pair_first(x)) || !fa_time_is_zero(fa_pair_second(x))) return false;
+    }
+    return true;
 }
 
 static fa_ptr_t _if(fa_ptr_t data, fa_ptr_t c)
@@ -954,7 +1020,11 @@ fa_action_t fa_action_until(fa_pred_t pred, fa_ptr_t data, fa_action_t action)
 
 
 static inline bool is_due (fa_time_t time, fa_time_t now) {
-    return fa_time_to_milliseconds(now) > (fa_time_to_milliseconds(time) - 100);
+    return fa_time_to_milliseconds(now) > (fa_time_to_milliseconds(time) - kScheduleLookahead);
+}
+
+static inline bool is_too_old (fa_time_t time, fa_time_t now) {
+    return fa_time_to_milliseconds(now) > (fa_time_to_milliseconds(time) + kScheduleMaxAge);
 }
 
 /**
@@ -989,7 +1059,11 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
             fa_time_t future = fa_add(time, interval);
             fa_destroy(interval);
 
-            if (is_due(future, now)) {
+            if (is_too_old(future, now)) {
+                // Discard
+                fa_slog_info("Too old, discarding", future, now);
+                fa_deep_destroy_always(rest);
+            } else if (is_due(future, now)) {
                 // Run directly
                 run_and_resched_action(rest, future, now, resched, function, data);
             } else {
@@ -1013,7 +1087,7 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
             }
 
             if (do_function_with_time) {
-                do_function_with_time(do_data, time);
+                do_function_with_time(do_data, time, now);
             }
         } else {
             //fa_slog_info("Running action ", action);
@@ -1060,6 +1134,13 @@ void run_actions(fa_priority_queue_t controls, fa_time_t now, fa_binary_t functi
         if (is_due(time, now)) {
             fa_priority_queue_pop(controls);
             fa_destroy(x);
+            
+            if (is_too_old(time, now)) {
+                fa_slog_info("Too old, discarding ", time, now);
+                fa_deep_destroy_always(action);
+                fa_destroy(time);
+                continue;
+            }
             
             //printf("  run_actions  %lld  %lld\n", (int64_t) fa_time_to_milliseconds(time), (int64_t) fa_time_to_milliseconds(now));
             //printf("run_actions %p\n", pthread_self());
@@ -1130,6 +1211,10 @@ fa_string_t action_show(fa_ptr_t a)
             str = fa_string_dappend(str, fa_string("repeat"));
         } else if (compound_get(x, function) == _if) {
             str = fa_string_dappend(str, fa_string("if"));
+        } else if (compound_get(x, function) == _while) {
+            str = fa_string_dappend(str, fa_string("while"));
+        } else if (compound_get(x, function) == _until) {
+            str = fa_string_dappend(str, fa_string("until"));
         } else {
             str = fa_string_dappend(str, fa_dappend(fa_string("other compound "), fa_string_show(compound_get(x, data))));
         }

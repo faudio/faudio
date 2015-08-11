@@ -847,9 +847,6 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
     fa_destroy(time);
 }
 
-void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
-
-
 static inline bool is_two_byte_message(uint8_t status)
 {
     return ((status & 0xF0) == 0xC0) || ((status & 0xF0) == 0xD0);
@@ -869,7 +866,7 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action, fa_ptr_t time)
         fa_ptr_t message     = fa_action_send_value(action);
 
         if (fa_midi_message_is_simple(message)) {
-            int sc, d1, d2;
+            uint8_t sc, d1, d2;
             fa_midi_message_decons(message, &sc, &d1, &d2);
 
             {
@@ -1065,23 +1062,14 @@ void fa_midi_schedule_relative(fa_time_t        time,
 
 void fa_midi_schedule_now(fa_action_t action, fa_midi_stream_t stream)
 {
-    if (fa_action_is_compound(action)) {
-        fa_list_t actions = fa_action_flatten_compound(action);
-        if (actions) {
-            fa_for_each(a, actions) {
-                if (!fa_action_is_compound(a) && !fa_action_is_do(a)) {
-                    fa_atomic_queue_write(stream->short_controls, a);
-                } else {
-                    fa_warn(fa_string("Nested compound or do action passed to fa_midi_schedule_now"));
-                    fa_deep_destroy_always(a);
-                }
-            }
-            fa_destroy(actions);
-        } else {
-            fa_warn(fa_string("Non-simple action passed to fa_midi_schedule_now"));
+    if (fa_action_is_flat(action)) {
+        fa_list_t actions = fa_action_flat_to_list(action);
+        fa_for_each(a, actions) {
+            fa_atomic_queue_write(stream->short_controls, a);
         }
+        fa_destroy(actions);
     } else {
-        fa_atomic_queue_write(stream->short_controls, action);
+        fa_warn(fa_string("Non-flat action passed to fa_midi_schedule_now"));
     }
 }
 

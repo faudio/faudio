@@ -105,6 +105,6 @@ module Fa.Midi.Message
             Fails if the given message is not a sysex message.
             Should only be used in conjunction with fa_midi_message_is_sysex.
      */
-    sysexData     : Message -> Buffer;    
+    sysexData     : Message -> Buffer;
 }
 

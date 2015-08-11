@@ -96,7 +96,7 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
         } else {
 
 
-            int status_channel, data1, data2;
+            uint8_t status_channel, data1, data2;
             fa_midi_message_decons(msg, &status_channel, &data1, &data2);
 
             int channel = status_channel        & 0x0f;

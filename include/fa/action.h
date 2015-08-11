@@ -47,9 +47,11 @@
 */
 typedef struct _fa_action_t * fa_action_t;
 
-/** A nullary function that also receives time.
-*/
+/** A nullary function that also receives time
+    (scheduled time and current time, respectively)
+ */
 typedef fa_ptr_t (* fa_action_nullary_with_time_t)(fa_ptr_t,
+                                                   fa_time_t,
                                                    fa_time_t);
 
 /** A predicate that also receives time.
@@ -165,8 +167,8 @@ fa_action_t fa_action_send(fa_action_name_t name,
 fa_action_t fa_action_send_retain(fa_action_name_t name,
                                   fa_action_value_t value);
 
-uint64_t fa_action_timestamp(fa_action_t action);
-void fa_action_timestamp_set(fa_action_t action, uint64_t timestamp);
+double fa_action_timestamp(fa_action_t action);
+void fa_action_timestamp_set(fa_action_t action, double timestamp);
 
 /** Return whether the given action is a get action.
       
@@ -228,9 +230,11 @@ fa_action_name_t fa_action_send_name(fa_action_t action);
 */
 fa_action_value_t fa_action_send_value(fa_action_t action);
 
-/** Repeat the given action indefinitely.
-*/
+/** Repeat the given action a given number of times.
+    If times is 0, repeat indefinitely (wrap in a while action to stop it)
+ */
 fa_action_t fa_action_repeat(fa_time_t interval,
+                             size_t times,
                              fa_action_t action);
 
 /** Join a list of actions into a single compond action.
@@ -288,7 +292,8 @@ bool fa_action_is_do(fa_action_t action);
 */
 void fa_action_log_count();
 
-fa_list_t fa_action_flatten_compound(fa_action_t action);
+bool fa_action_is_flat(fa_action_t action);
+fa_list_t fa_action_flat_to_list(fa_action_t action);
 
 /** @}
     @}
