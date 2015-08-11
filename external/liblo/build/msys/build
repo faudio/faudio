@@ -1,8 +1,8 @@
 #!/bin/bash
-git submodule init   external/libogg/source;
-git submodule update external/libogg/source;
+git submodule init   external/liblo/source;
+git submodule update external/liblo/source;
 
-pushd external/libogg/source;
+pushd external/liblo/source;
 
 ./configure \
 	  --prefix=`pwd`/../result \
