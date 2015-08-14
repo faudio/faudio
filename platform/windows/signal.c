@@ -8,7 +8,7 @@
 
 #include <fluidsynth.h>
 
-fa_pair_t fa_signal_dls()
+fa_pair_t fa_signal_dls(fa_string_t name)
 {
     assert(false && "Not available on this platform");
 }
@@ -75,8 +75,6 @@ fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 
     return NULL;
 }
-
-void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
 
 fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
