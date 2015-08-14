@@ -18,6 +18,8 @@
 #include <fa/time.h>
 #include <fa/clock.h>
 #include <fa/util.h>
+#include <fa/dynamic.h>
+#include <fa/action.h>
 
 #include <portmidi.h>
 
@@ -580,7 +582,7 @@ fa_ptr_t stream_thread_callback(fa_ptr_t x)
             fa_ptr_t val;
             
             while ((val = fa_atomic_queue_read(stream->short_controls))) {
-                forward_action_to_midi(stream, val, NULL);
+                send_midi_action(stream, val, NULL);
             }
             
             while ((val = fa_atomic_queue_read(stream->in_controls))) {
