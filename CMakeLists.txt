@@ -176,10 +176,10 @@ if (COMPONENTS_RESOLVED)
   if(ENABLE_HTTP)
     find_package(Curl)
   endif()
-  # if(ENABLE_FLUIDSYNTH)
-  #   find_package(Fluidsynth)
-  #   find_package(Glib)
-  # endif()
+  if(ENABLE_FLUIDSYNTH)
+    find_package(Fluidsynth)
+    find_package(Glib)
+  endif()
   if(ENABLE_OGG_VORBIS)
     find_package(Libogg)
     find_package(Libvorbis)
@@ -257,8 +257,8 @@ if (COMPONENTS_RESOLVED)
     ${SNDFILE_LIBRARIES}
     ${LIBLO_LIBRARIES}
     ${ICU_LIBRARIES}
-    # ${FLUIDSYNTH_LIBRARIES}
-    # ${GLIB_LIBRARIES}
+    ${FLUIDSYNTH_LIBRARIES}
+    ${GLIB_LIBRARIES}
     ${LIBOGG_LIBRARIES}
     ${LIBVORBIS_LIBRARIES}
     "/c/mingw/lib"
@@ -272,8 +272,8 @@ if (COMPONENTS_RESOLVED)
   list(APPEND EXTS ${PORTMIDI_LIBRARIES})
   list(APPEND EXTS ${SNDFILE_LIBRARIES})
   list(APPEND EXTS ${LIBLO_LIBRARIES})
-  # list(APPEND EXTS ${FLUIDSYNTH_LIBRARIES})
-  # list(APPEND EXTS ${GLIB_LIBRARIES})
+  list(APPEND EXTS ${FLUIDSYNTH_LIBRARIES})
+  list(APPEND EXTS ${GLIB_LIBRARIES})
   list(APPEND EXTS ${LIBVORBIS_LIBRARIES})
   list(APPEND EXTS ${LIBOGG_LIBRARIES})
   list(APPEND EXTS ${CURL_LIBRARIES})
