@@ -282,6 +282,10 @@ module Fa.Action
     
     /** TODO: document
      */
-    flattenCompound : Action -> List;
+    isFlat : Action -> Bool;
+    
+    /** TODO: document
+     */
+    flatToList : (Action) -> List;
 }
 

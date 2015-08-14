@@ -841,6 +841,7 @@ fa_list_t fa_action_flat_to_list(fa_action_t action) {
 }
 
 bool fa_action_is_flat(fa_action_t action) {
+    if (is_do(action)) return false;
     if (fa_action_is_simple(action)) return true;
     if (compound_get(action, function) != _many) return false;
     fa_for_each(x, compound_get(action, data)) {

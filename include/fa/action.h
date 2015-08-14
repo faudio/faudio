@@ -292,7 +292,12 @@ bool fa_action_is_do(fa_action_t action);
 */
 void fa_action_log_count();
 
+/** TODO: document
+ */
 bool fa_action_is_flat(fa_action_t action);
+
+/** TODO: document
+ */
 fa_list_t fa_action_flat_to_list(fa_action_t action);
 
 /** @}
