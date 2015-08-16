@@ -83,6 +83,8 @@ lo_address lo_address_new_with_proto(int proto, const char *host, const char *po
  */
 lo_address lo_address_new_from_url(const char *url);
 
+lo_address lo_address_new_from_copy(lo_address source);
+
 /**
  * \brief Free the memory used by the lo_address object
  */ 

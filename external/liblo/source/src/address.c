@@ -100,6 +100,17 @@ lo_address lo_address_new(const char *host, const char *port)
     return lo_address_new_with_proto(LO_UDP, host, port);
 }
 
+lo_address lo_address_new_from_copy(lo_address source)
+{
+    lo_address a = calloc(1, sizeof(struct _lo_address));
+    if (a == NULL)
+        return NULL;
+    
+    lo_address_copy(a, source);
+    
+    return a;
+}
+
 lo_address lo_address_new_from_url(const char *url)
 {
     lo_address a;
