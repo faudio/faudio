@@ -121,7 +121,7 @@ void run_midi()
 #ifndef _WIN32
     fa_pair_t synth = fa_signal_dls(fa_string("dls"));
 #else
-    fa_pair_t synth = fa_signal_synth(fa_string("C:\\sf.sf2"));
+    fa_pair_t synth = fa_signal_synth(fa_string("fluid"), fa_string("C:\\sf.sf2"));
 #endif
     fa_list_t out              = fa_list_map(louder, NULL, fa_pair_to_list(synth));
     fa_audio_set_parameter(fa_string("sample-rate"), fa_f64(48000), as);
