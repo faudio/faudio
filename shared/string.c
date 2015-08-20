@@ -11,6 +11,7 @@
 #include <fa/error.h>
 #include <fa/dynamic.h>
 #include <fa/util.h>
+#include <fa/atomic.h>
 
 #include "string/trex.h"
 #include "string/parson.h"
@@ -38,7 +39,7 @@ struct _fa_string_t {
     fa_impl_t       impl;           // Dispatcher
     size_t          size;           // Character count
     uint16_t        *data;          // Payload
-    size_t          count;          // Reference count
+    fa_atomic_t     count;          // Reference count
 };
 
 static int gStringCount = 0;
@@ -57,7 +58,9 @@ fa_string_t new_string(size_t size, uint16_t *data)
     str->impl = &string_impl;
     str->size = size;
     str->data = data;
-    str->count = 1;
+    str->count = fa_atomic_create();
+    
+    fa_atomic_set(str->count, (fa_ptr_t) 1);
 
     gStringCount++;
     return str;
@@ -66,6 +69,7 @@ fa_string_t new_string(size_t size, uint16_t *data)
 void delete_string(fa_string_t str)
 {
     gStringCount--;
+    fa_destroy(str->count);
     fa_delete(str);
 }
 
@@ -106,7 +110,7 @@ fa_string_t fa_string_repeat(int times, fa_char16_t chr)
 
 fa_string_t fa_string_copy(fa_string_t str)
 {
-    str->count++;
+    fa_atomic_add(str->count, 1);
     return str;
 }
 
@@ -136,7 +140,7 @@ fa_string_t fa_string_dappend(fa_string_t str1,
                               fa_string_t str2)
 {
     // If str1 is referenced from > 1 places, we can't change it in place
-    if (str1->count > 1) {
+    if ((int)fa_atomic_get(str1->count) > 1) {
         fa_string_t str = fa_string_append(str1, str2);
         fa_string_destroy(str1);
         fa_string_destroy(str2);
@@ -157,8 +161,8 @@ fa_string_t fa_string_dappend(fa_string_t str1,
 
 void fa_string_destroy(fa_string_t str)
 {
-    str->count--;
-    if (str->count == 0) {
+    fa_atomic_add(str->count, -1);
+    if (fa_atomic_get(str->count) == 0) {
         fa_free(str->data);
         delete_string(str);
     }
