@@ -1,13 +1,12 @@
 #!/bin/bash
-git submodule init   external/libogg/source;
-git submodule update external/libogg/source;
+git submodule init   external/curl/source;
+git submodule update external/curl/source;
 
-pushd external/libogg/source;
+pushd external/curl/source;
 
 ./configure \
-	  --prefix=`pwd`/../result \
-	  && make \
-		&& make install \
-		&& cp -R include/ ../result/
+    --prefix=`pwd`/../result \
+    && make \
+    && make install
 
-popd;                                                 
+popd;
