@@ -16,3 +16,6 @@
 [submodule "external/libogg/source"]
 	path = external/libogg/source
 	url = git@github.com:faudio/libogg.git
+[submodule "external/curl/source"]
+	path = external/curl/source
+	url = https://github.com/faudio/curl
