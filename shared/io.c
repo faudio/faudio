@@ -188,9 +188,9 @@ void write_filter_destroy(fa_ptr_t x)
     fa_warn(fa_string("Unimplemented IO destroy"));
 }
 
-fa_string_t  write_filter_show(fa_ptr_t x)
+fa_string_t write_filter_show(fa_ptr_t x)
 {
-    return fa_string("<StdOutSink>");
+    return fa_string("<WriteSink>");
 }
 
 void write_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
@@ -202,7 +202,9 @@ void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 
     if (buffer) {
         fa_string_t path = /*fa_copy*/(((struct filter_base *) x)->data1);
-        FILE *fp = fopen(fa_unstring(path), "ab");
+        char* _path = fa_unstring(path);
+        FILE *fp = fopen(_path, "ab");
+        fa_free(_path);
 
         if (!fp) {
             fa_fail(fa_string_dappend(fa_string("Could not write file: "), path));
@@ -227,7 +229,7 @@ void read_filter_destroy(fa_ptr_t x)
 
 fa_string_t  read_filter_show(fa_ptr_t x)
 {
-    return fa_string("<StdOutSink>");
+    return fa_string("<ReadSource>");
 }
 
 void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
@@ -295,7 +297,7 @@ void identity_destroy(fa_ptr_t x)
 
 fa_string_t identity_show(fa_ptr_t x)
 {
-    return fa_string("<Ref>");
+    return fa_string("<Id>");
 }
 
 void identity_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
@@ -352,6 +354,10 @@ void composed_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffe
     fa_io_filter_t f2 = ((struct filter_base *) x)->data2;
 
     fa_buffer_t buffer2;
+//     fa_io_push_through((fa_io_sink_t) fa_io_ref_filter(&buffer2), f1, buffer);
+//     fa_slog_info("buffer2 is now ", buffer2);
+//     fa_io_push_through(f2, downstream, buffer2);
+    
     fa_io_push_through(f1, (fa_io_sink_t) fa_io_ref_filter(&buffer2), buffer);
     fa_io_push_through(f2, downstream, buffer2);
 }
@@ -367,7 +373,7 @@ void simple_filter_destroy(fa_ptr_t x)
 
 fa_string_t simple_filter_show(fa_ptr_t x)
 {
-    return fa_string("<Ref>");
+    return fa_string("<Simple>");
 }
 
 void _simple_filter_pull1(fa_ptr_t y, fa_buffer_t buffer)
@@ -580,6 +586,40 @@ fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t rbuffer)
 }
 
 
+
+void pull_buffer(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
+{
+    size_t chunk_size = 256;
+    fa_buffer_t buffer = x;
+    size_t size = fa_buffer_size(buffer);
+    size_t chunks = size / chunk_size; // TODO: remaining bytes
+    byte_t *raw_source = fa_buffer_unsafe_address(buffer);
+    
+    for (int chunk = 0; chunk < chunks; chunk++) {
+        fa_buffer_t buf = fa_buffer_create(chunk_size);
+        byte_t *raw_dest = fa_buffer_unsafe_address(buf);
+        memcpy(raw_dest, raw_source + (chunk * chunk_size), chunk_size);
+        cb(data, buf);
+        fa_destroy(buf);
+    }
+    
+    size_t remaining_bytes = size - (chunk_size * chunks);
+    if (remaining_bytes > kMaxDrainSpill) {
+        remaining_bytes = kMaxDrainSpill * (remaining_bytes / kMaxDrainSpill);
+        fa_buffer_t buf = fa_buffer_create(remaining_bytes);
+        byte_t *raw_dest = fa_buffer_unsafe_address(buf);
+        memcpy(raw_dest, raw_source + (chunks * chunk_size), remaining_bytes);
+        cb(data, buf);
+        fa_destroy(buf);
+    }
+
+    // Nothing more to read, close downstream and finish
+    cb(data, NULL);
+}
+
+fa_io_source_t fa_io_from_buffer(fa_buffer_t buffer) {
+    return (fa_io_source_t) fa_io_create_simple_filter(NULL, pull_buffer, buffer);
+}
 
 
 

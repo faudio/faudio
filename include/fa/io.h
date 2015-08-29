@@ -129,7 +129,7 @@ fa_io_filter_t fa_io_split(fa_io_sink_t sink);
 */
 fa_io_source_t fa_io_read_file(fa_string_t string);
 
-/** Create source that writes to a file. 
+/** Create sink that writes to a file. 
 */
 fa_io_sink_t fa_io_write_file(fa_string_t string);
 
@@ -137,9 +137,13 @@ fa_io_sink_t fa_io_write_file(fa_string_t string);
 */
 fa_io_source_t fa_io_standard_in();
 
-/** Create source that reads to the standard output. 
+/** Create sink that writes to the standard output. 
 */
 fa_io_sink_t fa_io_standard_out();
+
+/** Create a source from a buffer. 
+*/
+fa_io_source_t fa_io_from_buffer(fa_buffer_t buffer);
 
 /** Create a source from a ring buffer. 
 */
