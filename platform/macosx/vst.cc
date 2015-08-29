@@ -111,7 +111,7 @@ VstIntPtr VSTCALLBACK hostCallback(
 
 
     // TODO
-    return NULL;
+    return 0;
 }
 
 
