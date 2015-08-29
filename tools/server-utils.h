@@ -289,6 +289,18 @@ fa_action_t bank_select_action(int ch, int bank)
     return fa_action_send(synth_name, fa_midi_message_create_simple(0xB0 + ch, 0x00, bank));
 }
 
+fa_action_t all_notes_off_action()
+{
+    fa_list_t actions = fa_list_empty();
+    for(uint8_t ch = 0; ch < 16; ch++) {
+        for(uint8_t f0 = 0; f0 < 128; f0++) {
+            fa_midi_message_t msg = fa_midi_message_create_simple(msg_note_off + ch, f0, 0);
+            fa_push_list(pair(fa_action_send(synth_name, msg), fa_now()), actions);
+        }
+    }
+    return fa_action_many(actions);
+}
+
 
 // Helper for absolute_to_relative_times
 bool _action_sort(fa_ptr_t a, fa_ptr_t b)
@@ -301,21 +313,11 @@ bool _action_sort(fa_ptr_t a, fa_ptr_t b)
 // suited for action_many.
 // 
 // The passed in list is destroyed.
-fa_list_t times_to_delta_times(fa_list_t timeActions) //, fa_action_t before, fa_action_t after)
+fa_list_t times_to_delta_times(fa_list_t timeActions)
 {
-    //fa_log_list_count();
     timeActions = fa_list_dsort(timeActions, _action_sort);
-    // if (before) {
-    //     fa_push_list(pair(before, fa_now()), timeActions);
-    // }
-    //fa_log_list_count();
     timeActions = fa_list_dreverse(timeActions);
-    // if (after) {
-    //     fa_push_list(pair(after, fa_copy(fa_pair_second(fa_list_head(timeActions)))), timeActions);
-    // }
-    
-    
-    //fa_log_list_count();
+
     fa_time_t last_time = NULL;
     fa_list_t rel_actions = fa_list_empty();
     while (!fa_list_is_empty(timeActions)) {
@@ -355,10 +357,11 @@ fa_list_t times_to_delta_times(fa_list_t timeActions) //, fa_action_t before, fa
 #define sig_mul4(a, b, c, d) fa_signal_multiply(a, fa_signal_multiply(b, fa_signal_multiply(c, d)))
 #define sig_mul(...) VARARG(sig_mul, __VA_ARGS__)
 
-fa_signal_t _low_pass (fa_ptr_t x, fa_signal_t s1) {
-    fa_signal_t s2 = x;
-    return sig_add(sig_mul(s1, fa_signal_constant(0.999)),
-                   sig_mul(s2, fa_signal_constant(0.001)));
+fa_signal_t _low_pass (fa_ptr_t curr, fa_signal_t prev) {
+    fa_signal_t c = curr;
+    return fa_signal_max(sig_add(sig_mul(fa_signal_absolute(prev), fa_signal_constant(0.9995)),
+                                 sig_mul(fa_signal_absolute(curr), fa_signal_constant(0.0005))),
+                         c);
 }
 
 fa_signal_t low_pass(fa_signal_t sig) {
@@ -402,13 +405,8 @@ fa_list_t construct_output_signal_tree() {
     return tree;
 }
 
-fa_ptr_t _incoming_midi(fa_ptr_t x, fa_ptr_t time_message)
+void handle_incoming_midi(fa_time_t time, fa_midi_message_t msg)
 {
-    // fa_print_ln(fa_string_show(timeMessage));
-    fa_time_t time         = fa_pair_first(time_message);
-    fa_midi_message_t msg  = fa_pair_second(time_message);
-    fa_destroy(time_message);
-    
     uint8_t status, data1, data2;
     bool simple = fa_midi_message_is_simple(msg);
     if (simple) fa_midi_message_decons(msg, &status, &data1, &data2);
@@ -426,6 +424,15 @@ fa_ptr_t _incoming_midi(fa_ptr_t x, fa_ptr_t time_message)
     }
 
     fa_destroy(time);
+}
+
+fa_ptr_t _incoming_midi(fa_ptr_t x, fa_ptr_t time_message)
+{
+    // fa_print_ln(fa_string_show(timeMessage));
+    fa_time_t time         = fa_pair_first(time_message);
+    fa_midi_message_t msg  = fa_pair_second(time_message);
+    fa_destroy(time_message);
+    handle_incoming_midi(time, msg);
     return NULL;
 }
 
@@ -563,7 +570,7 @@ static inline void remove_all_playback_semaphores() {
 
 fa_ptr_t _echo_time(fa_ptr_t context, fa_time_t time, fa_time_t now) {
     //send_osc_async("/time", "h", fa_time_to_milliseconds(time));
-    send_osc_async("/time", "t", timetag_from_time(time));
+    send_osc_async("/time", "t", timetag_from_time(now));
     return NULL;
 }
 
@@ -598,9 +605,15 @@ int stop_time_echo()
     return new_value;
 }
 
-fa_ptr_t _echo_level(fa_ptr_t context, fa_time_t time, fa_time_t now) {
-    send_osc_async("/level", "f", fa_time_to_milliseconds(time));
+fa_ptr_t _echo_level(fa_ptr_t context) {
+    send_osc_async("/level", "dd", last_level[0], last_level[1]);
     return NULL;
+}
+
+double _set_level(fa_ptr_t context, double level) {
+    //send_osc_async("/level", "d", level);
+    last_level[fa_peek_int16(context)] = level;
+    return 0;
 }
 
 bool _echo_level_p(fa_ptr_t context, fa_ptr_t dummy) {
@@ -613,7 +626,10 @@ int start_level_echo()
     fa_with_lock(level_echo_mutex) {
         if (!level_echo) {
             level_echo++;
-            fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), 0, fa_action_do_with_time(_echo_level, NULL));
+            fa_list_t actions = list(pair(fa_action_get(kLevelLeft,  _set_level, fa_from_int16(0)), fa_now()),
+                                     pair(fa_action_get(kLevelRight, _set_level, fa_from_int16(1)), fa_now()),
+                                     pair(fa_action_do(_echo_level, NULL), fa_now()));
+            fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(50), 0, fa_action_many(actions));
             fa_action_t while_action = fa_action_while(_echo_level_p, NULL, repeat_action);
             schedule_relative(fa_now(), while_action, current_midi_echo_stream);
         } else {
@@ -628,8 +644,10 @@ int stop_level_echo()
 {
     int new_value;
     fa_with_lock(level_echo_mutex) {
-        level_echo--;
-        new_value = level_echo;
+        if (level_echo > 0) {
+            level_echo--;
+            new_value = level_echo;
+        }
     }
     return new_value;
 }
@@ -683,6 +701,7 @@ lo_blob audio_curve(fa_buffer_t buffer)
         }
     }
     lo_blob blob = lo_blob_new(size, curve);
+    printf("Sending curve of %zu bytes\n", size);
     fa_free(curve);
     return blob;
 }

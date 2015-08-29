@@ -69,6 +69,8 @@ with_mutex(volatile int, level_echo);
 #define kLevelLeft      70
 #define kLevelRight     71
 
+double last_level[2] = { 0, 0 };
+
     
 // Hack warning!
 lo_server server = NULL;
@@ -89,6 +91,7 @@ static inline void init_globals() {
     playback_semaphores = fa_map_empty();
     playback_semaphores_mutex = fa_thread_create_mutex();
     time_echo_mutex = fa_thread_create_mutex();
+    level_echo_mutex = fa_thread_create_mutex();
     audio_files = fa_map_empty();
     audio_files_mutex = fa_thread_create_mutex();
     
@@ -106,6 +109,7 @@ static inline void destroy_globals() {
     fa_destroy(playback_semaphores);
     fa_destroy(playback_semaphores_mutex);
     fa_destroy(time_echo_mutex);
+    fa_destroy(level_echo_mutex);
     fa_destroy(audio_files);
     fa_destroy(audio_files_mutex);
     
