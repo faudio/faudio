@@ -119,7 +119,7 @@ module Fa.String
         @param pos
         @param str
      */
-    charAt : (Int,String) -> Char16;
+    charAt : (index : Int, String) -> Char16;
 
     /** String conversion interface.
     */

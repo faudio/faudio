@@ -197,7 +197,7 @@ fa_pair_t fa_signal_synth(fa_string_t name, fa_string_t path2)
         fa_inform(fa_string("Creating FluidSynth instance"));
         synth = new_fluid_synth(settings);
 
-        fa_inform(fa_string_dappend(fa_string("    Loading sound font"), fa_copy(path2)));
+        fa_inform(fa_string_dappend(fa_string("    Loading sound font "), fa_copy(path2)));
         char *path = fa_unstring(path2);
 
         if (FLUID_FAILED == fluid_synth_sfload(synth, path, true)) {

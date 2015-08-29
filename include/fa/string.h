@@ -138,7 +138,7 @@ int fa_string_length(fa_string_t string);
     @param pos
     @param str
 */
-fa_char16_t fa_string_char_at(int int_, fa_string_t string);
+fa_char16_t fa_string_char_at(int index, fa_string_t string);
 
 /** String conversion interface.
     
