@@ -505,6 +505,13 @@ bool fa_check(fa_ptr_t a)
 #define float_type_repr_impl f32_type_repr
 #define double_type_repr_impl f64_type_repr
 
+#define _bool_abs(x) x
+#define _int8_abs(x) abs(x)
+#define _int16_abs(x) abs(x)
+#define _int32_abs(x) abs(x)
+#define _int64_abs(x) llabs(x)
+#define _float_abs(x) fabs(x)
+#define _double_abs(x) fabs(x)
 
 #define UNBOXED_WRAPPER_IMPL(T) \
     bool T##_equal(fa_ptr_t a, fa_ptr_t b)                                          \
@@ -537,7 +544,7 @@ bool fa_check(fa_ptr_t a)
     }                                                                               \
     fa_ptr_t T##_absolute(fa_ptr_t a)                                               \
     {                                                                               \
-        return fa_from_##T(abs(fa_to_##T(a)));                                      \
+        return fa_from_##T(_##T##_abs(fa_to_##T(a)));                               \
     }                                                                               \
     fa_ptr_t T##_copy(fa_ptr_t a)                                                   \
     {                                                                               \
@@ -591,7 +598,7 @@ bool fa_check(fa_ptr_t a)
     }                                                                               \
     fa_ptr_t T##_absolute(fa_ptr_t a)                                               \
     {                                                                               \
-        return fa_from_##T(abs(fa_peek_##T(a))); /* TODO use tg? */                 \
+        return fa_from_##T(_##T##_abs(fa_peek_##T(a))); /* TODO use tg? */          \
     }                                                                               \
     fa_ptr_t T##_copy(fa_ptr_t a)                                                   \
     {                                                                               \
