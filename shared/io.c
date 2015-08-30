@@ -397,7 +397,7 @@ void simple_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t ca
         fa_io_pull(upstream, _simple_filter_pull1, fa_pair_create(x, fa_pair_create(callback, data)));
     } else {
         fa_io_read_callback_t simple_pull = ((struct filter_base *) x)->data2;
-        fa_ptr_t                 cbData = ((struct filter_base *) x)->data3;
+        fa_ptr_t                   cbData = ((struct filter_base *) x)->data3;
         simple_pull(cbData, callback, data);
     }
 }
@@ -412,7 +412,7 @@ void simple_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
     fa_io_callback_t      simple_push = ((struct filter_base *) x)->data1;
     fa_io_read_callback_t simple_pull = ((struct filter_base *) x)->data2;
-    fa_ptr_t                 cbData = ((struct filter_base *) x)->data3;
+    fa_ptr_t                   cbData = ((struct filter_base *) x)->data3;
 
     simple_push(cbData, buffer);
     simple_pull(cbData, _simple_push1, downstream);
@@ -642,3 +642,39 @@ void fa_io_run(fa_io_source_t source, fa_io_sink_t sink)
         }
     }
 }
+
+static void _pull_to_buffer(fa_ptr_t pair, fa_buffer_t buf)
+{
+    // buf is the current small buffer
+    // buffer is the buffer we are writing to
+    fa_unpair(pair, buffer, ok) {
+        if (!buf) {
+            *((bool *) ok) = false;
+        } else {
+            size_t old_size = fa_buffer_size(buffer);
+            size_t add = fa_buffer_size(buf);
+            fa_buffer_dresize(old_size + add, buffer);
+            void *dest = fa_buffer_unsafe_address(buffer) + old_size;
+            void *source = fa_buffer_unsafe_address(buf);
+            if (dest) {
+                memcpy(dest, source, add);
+            } else {
+                fa_fail(fa_string("fa_io_pull_to_buffer: could not allocate memory"));
+                *((bool *) ok) = false;
+            }
+        }
+    }
+}
+
+fa_buffer_t fa_io_pull_to_buffer(fa_io_source_t source)
+{
+    fa_buffer_t buffer = fa_buffer_create(16384);
+    bool ok = true;
+    fa_with_temp(pair, fa_pair_create(buffer, &ok)) {
+        while (ok) {
+            fa_io_pull(source, _pull_to_buffer, pair);
+        }
+    }
+    return buffer;
+}
+

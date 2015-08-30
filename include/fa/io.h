@@ -163,6 +163,15 @@ fa_io_filter_t fa_io_create_ogg_encoder();
 */
 void fa_io_run(fa_io_source_t source, fa_io_sink_t sink);
 
+/** Continously pull data from the given source and store it into a buffer.
+
+    This function blocks until the given source is exhausted. If this
+    never happens, this function blocks forever, or until the buffer
+    cannot grow because there is no more memory.
+ */
+fa_buffer_t fa_io_pull_to_buffer(fa_io_source_t source);
+
+
 /** @}
     @}
     */
