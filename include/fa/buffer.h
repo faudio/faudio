@@ -262,7 +262,7 @@ fa_buffer_t fa_buffer_read_raw(fa_string_t path);
     @param path
         Path to the file to write.
 */
-void fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer);
+bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer);
 
 /**
     Read an audio file.

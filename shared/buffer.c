@@ -91,7 +91,7 @@ fa_buffer_t fa_buffer_create(size_t size)
 }
 
 fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
-                           size_t      size,
+                           size_t     size,
                            fa_unary_t destroy_function,
                            fa_ptr_t   destroy_data)
 {
@@ -244,7 +244,7 @@ fa_buffer_t fa_buffer_resample(double new_rate, fa_buffer_t buffer)
 
 static inline void do_destroy_buffer(fa_buffer_t buffer)
 {
-    fa_slog_info("do_destroy_buffer");
+    //fa_slog_info("do_destroy_buffer");
     if (buffer->destroy_function) {
         buffer->destroy_function(buffer->destroy_data, buffer->data);
     }
@@ -257,7 +257,7 @@ static inline void do_destroy_buffer(fa_buffer_t buffer)
 
 void fa_buffer_destroy(fa_buffer_t buffer)
 {
-    fa_slog_info("fa_buffer_destroy");
+    //fa_slog_info("fa_buffer_destroy");
     if (buffer->ref_count == 0) {
         do_destroy_buffer(buffer);
     } else {
@@ -429,14 +429,42 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
     return NULL;
 }
 
-fa_buffer_t fa_buffer_read_raw(fa_string_t x)
+fa_buffer_t fa_buffer_read_raw(fa_string_t path)
 {
-    assert(false && "Not implemented");
+    char* path2 = fa_string_to_utf8(path);
+    FILE* file = fopen(path2, "rb");
+    fa_free(path2);
+    
+    if (!file) {
+        fa_warn(fa_dappend(fa_string("Could not open "), fa_copy(path)));
+        return NULL;
+    }
+
+    // Get length of file
+    fseek(file, 0, SEEK_END);
+    long filelen = ftell(file);
+    rewind(file);
+
+    // Read entire file
+    uint8_t *buffer = fa_malloc(filelen);
+    fread(buffer, filelen, 1, file);
+    fclose(file);
+    
+    return fa_buffer_wrap(buffer, filelen, default_destroy, NULL);
 }
 
-void fa_buffer_write_raw(fa_string_t x, fa_buffer_t y)
+bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+    char* path2 = fa_string_to_utf8(path);
+    FILE* file = fopen(path2, "wb");
+    fa_free(path2);
+    if (file) {
+        fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, file);
+        fclose(file);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 

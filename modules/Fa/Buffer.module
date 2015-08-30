@@ -229,7 +229,7 @@ module Fa.Buffer
         @param path
             Path to the file to write.
      */
-    writeRaw : (path : String, Buffer) -> Void;    
+    writeRaw : (path : String, Buffer) -> Bool;
     
     /**
         Read an audio file.
