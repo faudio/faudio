@@ -103,11 +103,19 @@ module Fa.Io
       */
     createOggEncoder : () -> Filter;
 
-    /** Continously data from the given source and push it into the sink.
+    /** Continously pull data from the given source and push it into the sink.
 
         This function blocks until the given source is exhausted. If this
         never happens, this function blocks forever.
      */
     run : (Source, Sink) -> Void;
+    
+    /** Continously pull data from the given source and store it into a buffer.
+
+        This function blocks until the given source is exhausted. If this
+        never happens, this function blocks forever, or until the buffer
+        cannot grow because there is no more memory.
+     */
+    pullToBuffer : (Source) -> Buffer;
 }
 

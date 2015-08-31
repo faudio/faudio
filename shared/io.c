@@ -592,7 +592,7 @@ void pull_buffer(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
     size_t chunk_size = 256;
     fa_buffer_t buffer = x;
     size_t size = fa_buffer_size(buffer);
-    size_t chunks = size / chunk_size; // TODO: remaining bytes
+    size_t chunks = size / chunk_size;
     byte_t *raw_source = fa_buffer_unsafe_address(buffer);
     
     for (int chunk = 0; chunk < chunks; chunk++) {
@@ -643,38 +643,67 @@ void fa_io_run(fa_io_source_t source, fa_io_sink_t sink)
     }
 }
 
-static void _pull_to_buffer(fa_ptr_t pair, fa_buffer_t buf)
+struct _pull_to_buffer_info {
+    void *ptr;
+    bool ok;
+    size_t allocated;
+    size_t used;
+};
+
+static fa_ptr_t default_destroy(fa_ptr_t _, fa_ptr_t data)
+{
+    fa_free(data);
+    return NULL;
+}
+
+static void _pull_to_buffer(fa_ptr_t i, fa_buffer_t buf)
 {
     // buf is the current small buffer
-    // buffer is the buffer we are writing to
-    fa_unpair(pair, buffer, ok) {
-        if (!buf) {
-            *((bool *) ok) = false;
-        } else {
-            size_t old_size = fa_buffer_size(buffer);
-            size_t add = fa_buffer_size(buf);
-            fa_buffer_dresize(old_size + add, buffer);
-            void *dest = fa_buffer_unsafe_address(buffer) + old_size;
-            void *source = fa_buffer_unsafe_address(buf);
-            if (dest) {
-                memcpy(dest, source, add);
+    struct _pull_to_buffer_info *info = i;
+    if (!buf) {
+        info->ok = false;
+    } else {
+        size_t add = fa_buffer_size(buf);
+        
+        // Grow if needed
+        if ((info->used + add) > info->allocated) {
+            size_t new_allocate_size = info->allocated + 65536;
+            if (new_allocate_size < info->allocated + add) {
+                new_allocate_size = info->allocated + add;
+            }
+            printf("Allocating more memory for buffer, new size: %zu\n", new_allocate_size);
+            info->ptr = fa_realloc(info->ptr, new_allocate_size);
+            if (info->ptr) {
+                info->allocated = new_allocate_size;
             } else {
+                info->allocated = 0;
+                info->used = 0;
+                info->ok = false;
                 fa_fail(fa_string("fa_io_pull_to_buffer: could not allocate memory"));
-                *((bool *) ok) = false;
+                return;
             }
         }
+        
+        // Copy data and increase used
+        memcpy(info->ptr + info->used, fa_buffer_unsafe_address(buf), add);
+        info->used += add;
     }
 }
 
 fa_buffer_t fa_io_pull_to_buffer(fa_io_source_t source)
 {
-    fa_buffer_t buffer = fa_buffer_create(16384);
-    bool ok = true;
-    fa_with_temp(pair, fa_pair_create(buffer, &ok)) {
-        while (ok) {
-            fa_io_pull(source, _pull_to_buffer, pair);
-        }
+    size_t start_size = 65536;
+    struct _pull_to_buffer_info info = { fa_malloc(start_size), true, start_size, 0 };
+    while (info.ok) {
+        fa_io_pull(source, _pull_to_buffer, (fa_ptr_t)&info);
     }
-    return buffer;
+    if (info.ptr && info.used) {
+        return fa_buffer_wrap(info.ptr, info.used, default_destroy, NULL);
+    } else {
+        if (info.ptr) {
+            fa_free(info.ptr);
+        }
+        return NULL;
+    }
 }
 
