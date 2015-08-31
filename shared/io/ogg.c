@@ -99,7 +99,6 @@ void fill_vorbis_buffers(float **dest, fa_buffer_t floats, size_t channels)
             dest[c][i] = raw_floats[i * channels + c];
         }
     }
-
 }
 
 static inline
@@ -222,6 +221,11 @@ void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
     fa_mark_used(encoder);
 }
 
+fa_ptr_t default_destroy(fa_ptr_t _, fa_ptr_t data);
+    // fa_free(data);
+    // return NULL;
+
+
 void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb, fa_ptr_t data)
 {
     size_t headerSize = page->header_len;
@@ -234,8 +238,10 @@ void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb
 
     // TODO cleanup of wrapped memory
     ogg_printf("                    <<< Ogg sending %zu bytes\n", bufferSize);
-    cb(data, fa_copy(fa_buffer_wrap(raw, bufferSize, NULL, NULL)));
-    fa_free(raw);
+    fa_buffer_t buf = fa_buffer_wrap(raw, bufferSize, default_destroy, NULL);
+    cb(data, buf);
+    //fa_destroy(buf);
+    //fa_free(raw);
 }
 
 
