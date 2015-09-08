@@ -24,7 +24,7 @@
 // high value will make e.g. stop playback appear sluggish. Also, action_do
 // (and action_do_with_time) is executed in the audio control thread rather
 // than the audio thread, which means that they will be executed (more) too early.
-#define kScheduleLookahead 50
+#define kScheduleLookahead 80
 
 // Actions 
 #define kScheduleMaxAge    5000
@@ -169,6 +169,13 @@ fa_action_t fa_action_accum(channel_t       channel,
 
 fa_action_t fa_action_send(fa_action_name_t name, fa_ptr_t value)
 {
+    assert(name && "NULL name sent to fa_action_send");
+#ifdef FAUDIO_DEBUG
+    fa_dynamic_type_repr_t type = fa_dynamic_get_type(value);
+    if (type == buffer_type_repr || type == atomic_ring_buffer_type_repr) {
+        fa_warn(fa_string("Sending buffer or ring buffer as an action_send, should probable use action_send_retain instead"));
+    }
+#endif
     action_t action = new_action(send_action);
     send_get(action, name)  = fa_copy(name);
     send_get(action, value) = value;
@@ -368,7 +375,7 @@ static inline void destroy_accum(fa_action_t action)
 static inline void destroy_send(fa_action_t action)
 {
     fa_destroy(send_get(action, name));
-    if (!send_get(action, retain)) {
+    if (send_get(action, value) && !send_get(action, retain)) {
         fa_destroy(send_get(action, value));
     }
 }
@@ -473,7 +480,7 @@ void fa_action_destroy(fa_action_t action)
 static inline void deep_destroy_send(fa_action_t action, fa_deep_destroy_pred_t pred)
 {
     fa_deep_destroy(send_get(action, name), pred);
-    if (!send_get(action, retain)) {
+    if (send_get(action, value) && !send_get(action, retain)) {
         fa_deep_destroy(send_get(action, value), pred);
     }
 }
@@ -731,6 +738,9 @@ static fa_ptr_t _repeat(fa_ptr_t data, fa_ptr_t c)
     fa_ptr_t times;
     unpair(interval_times, action, data);
     unpair(interval, times, interval_times);
+    
+    //assert(fa_is_int16(times) && fa_peek_int16(times) == 0);
+    
     
     //printf("About to copy\n");
     //fa_slog_info("  object: ", compound);
