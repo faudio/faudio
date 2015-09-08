@@ -8,7 +8,7 @@
 /*
     This program does ...
 
-    SCL_SESSION=1d6581ea210d2c66bfab1fdcdec94f03465058176fa_fbe1baca5254d9902c6cec1
+    SCL_SESSION=s%3AfsKqQOD26XdVLkMqr--ERi_RboX8Z60C.GpbfPTqGWHQyq2%2B38SH1SQaVojeZ2MqHf1rlfR%2FT6tI
     curl -v -X POST "Accept: application/scld" \
         --cookie "session_id=$SCL_SESSION" \
         --data-binary @test/test.ogg \
@@ -98,7 +98,7 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
 #define kRecOffset 2000
 
     // 10 seconds, 5 notes starting at 1 seconds (1 second between)
-    fa_audio_schedule(fa_milliseconds(kRecOffset + 0),      fa_action_send(fa_string("foo"), rbuffer) , s);
+    fa_audio_schedule(fa_milliseconds(kRecOffset + 0),      fa_action_send_retain(fa_string("foo"), rbuffer) , s);
     fa_audio_schedule(fa_milliseconds(kRecOffset + 0),      fa_action_do(_print, fa_string("Started recording")) , s);
 
     for (int i = 0; i < 5; ++i) {
