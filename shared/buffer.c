@@ -11,6 +11,7 @@
 #include <fa/error.h>
 #include <fa/util.h>
 #include <fa/dynamic.h>
+#include <fa/atomic.h>
 
 #include <sndfile.h>
 
@@ -43,8 +44,8 @@ struct _fa_buffer_t {
 
     fa_map_t        meta;
     
-    size_t          ref_count;
-    bool            marked_for_destruction;
+    fa_atomic_t     ref_count;
+    fa_atomic_t     marked_for_destruction;
 };
 
 
@@ -65,8 +66,8 @@ fa_buffer_t fa_buffer_create(size_t size)
     buffer->impl = &buffer_impl;
     buffer->size = size;
     buffer->data = fa_malloc(size);
-    buffer->ref_count = 0;
-    buffer->marked_for_destruction = false;
+    buffer->ref_count = fa_atomic();
+    buffer->marked_for_destruction = fa_atomic();
     
     //fa_slog_info("fa_buffer_create ", fa_i32(size));
 
@@ -101,6 +102,8 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
     b->impl = &buffer_impl;
     b->size = size;
     b->data = pointer;
+    b->ref_count = fa_atomic();
+    b->marked_for_destruction = fa_atomic();
 
     b->destroy_function = destroy_function;
     b->destroy_data     = destroy_data;
@@ -113,7 +116,7 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
 
 fa_buffer_t fa_buffer_copy(fa_buffer_t buffer)
 {
-    assert("Not implemented");
+    assert(false && "Not implemented");
     return fa_buffer_resize(buffer->size, buffer);
 }
 
@@ -252,28 +255,31 @@ static inline void do_destroy_buffer(fa_buffer_t buffer)
     fa_destroy(buffer->meta); // keys and values are automatically destroyed because the destructor is set
 
     buffer_warn(fa_string("Buffer destroyed"));
+    fa_destroy(buffer->ref_count);
+    fa_destroy(buffer->marked_for_destruction);
     fa_delete(buffer);
 }
 
 void fa_buffer_destroy(fa_buffer_t buffer)
 {
     //fa_slog_info("fa_buffer_destroy");
-    if (buffer->ref_count == 0) {
+    if ((size_t)fa_atomic_get(buffer->ref_count) == 0) {
         do_destroy_buffer(buffer);
     } else {
-        buffer->marked_for_destruction = true;
+        fa_atomic_set(buffer->marked_for_destruction, (fa_ptr_t) true);
     }
 }
 
 void fa_buffer_take_reference(fa_buffer_t buffer)
 {
-    buffer->ref_count++;
+    fa_atomic_add(buffer->ref_count, 1);
 }
 
 void fa_buffer_release_reference(fa_buffer_t buffer)
 {
-    buffer->ref_count--;
-    if (buffer->ref_count == 0 && buffer->marked_for_destruction) {
+    fa_atomic_add(buffer->ref_count, -1);
+    // TODO: is a lock needed?
+    if ((size_t)fa_atomic_get(buffer->ref_count) == 0 && (bool)fa_atomic_get(buffer->marked_for_destruction)) {
         do_destroy_buffer(buffer);
     }
 }
