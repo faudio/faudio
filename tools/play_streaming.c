@@ -52,25 +52,25 @@ void request_audio()
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, _write);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, NULL);
 
-        inform(fa_string("Beginning HTTP request"));
+        fa_inform(fa_string("Beginning HTTP request"));
         res = curl_easy_perform(curl);
 
         if (res != CURLE_OK) {
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
         }
 
-        inform(fa_string("Finished HTTP request"));
+        fa_inform(fa_string("Finished HTTP request"));
         curl_easy_cleanup(curl);
     }
 }
 
-fa_list_t just(fa_ptr_t x, fa_list_t xs)
-{
-    return x;
-}
+// fa_list_t just(fa_ptr_t x, fa_list_t xs)
+// {
+//     return x;
+// }
 
 // TODO move
-#define fa_with_session_(V) fa_with_temp(V, fa_audio_begin_session())
+//#define fa_with_session_(V) fa_with_temp(V, fa_audio_begin_session())
 #define fa_with_default_devices(I,O,S) \
     fa_let(I, fa_audio_default_input(S)) \
     fa_let(O, fa_audio_default_output(S))
@@ -85,8 +85,8 @@ int main(int argc, char const *argv[])
         BUFFER = ring_buffer((8L * 44100L * BUFFER_SIZE_MILLIS) / 1000L);
 
         // fa_signal_t left = fa_multiply(fa_signal_play_stream(BUFFER), constant(0.8));
-        fa_signal_t left = fa_multiply(fa_signal_random(), constant(0.0));
-        fa_signal_t right = fa_multiply(fa_signal_random(), constant(0.0));
+        fa_signal_t left = fa_multiply(fa_signal_random(), fa_signal_constant(0.0));
+        fa_signal_t right = fa_multiply(fa_signal_random(), fa_signal_constant(0.0));
 
         fa_with_session_(session) {
             fa_with_default_devices(input, output, session) {
