@@ -146,8 +146,8 @@ static inline void destroy_globals() {
     fa_destroy(record_left_name);
     fa_destroy(record_right_name);
     
-    fa_destroy(selected_midi_input_devices);
-    fa_destroy(selected_midi_output_devices);
+    if (selected_midi_input_devices) fa_destroy(selected_midi_input_devices);
+    if (selected_midi_output_devices) fa_destroy(selected_midi_output_devices);
     fa_destroy(current_midi_input_devices);
     fa_destroy(current_midi_output_devices);
     fa_destroy(current_midi_input_streams);
