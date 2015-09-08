@@ -252,9 +252,6 @@ int main()
         stop_streams();
         stop_sessions();
         
-        fa_audio_end_session(current_audio_session);
-        fa_midi_end_session(current_midi_session);
-        
         destroy_globals();
       
     }
