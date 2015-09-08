@@ -381,7 +381,7 @@ void _simple_filter_pull1(fa_ptr_t y, fa_buffer_t buffer)
     fa_unpair(y, x, closure) {
         fa_io_callback_t      simple_push = ((struct filter_base *) x)->data1;
         fa_io_read_callback_t simple_pull = ((struct filter_base *) x)->data2;
-        fa_ptr_t                 cbData = ((struct filter_base *) x)->data3;
+        fa_ptr_t                   cbData = ((struct filter_base *) x)->data3;
 
         fa_unpair(closure, callback, data) {
             simple_push(cbData, buffer);
@@ -414,8 +414,8 @@ void simple_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
     fa_io_read_callback_t simple_pull = ((struct filter_base *) x)->data2;
     fa_ptr_t                   cbData = ((struct filter_base *) x)->data3;
 
-    simple_push(cbData, buffer);
-    simple_pull(cbData, _simple_push1, downstream);
+    if (simple_push) simple_push(cbData, buffer);
+    if (simple_pull) simple_pull(cbData, _simple_push1, downstream);
 }
 FILTER_IMPLEMENTATION(simple_filter);
 
@@ -524,7 +524,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
 {
     fa_atomic_ring_buffer_t rbuffer = x;
     // fa_mark_used(rbuffer);
-
+    
     while (!fa_atomic_ring_buffer_is_closed(rbuffer)) {
         size_t size = 256;
 
@@ -543,6 +543,8 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
 
             cb(data, buf);
             fa_destroy(buf);
+        } else {
+            fa_thread_sleep(1);
         }
     }
 
@@ -552,7 +554,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
         // fa_warn(fa_string_format_integral("Bytes read: %zu", bytes_read));
 
 // should be 1
-// we drop last frame as ogg converter (and others) expect an even number of sample
+// we drop last frame as ogg converter (and others) expect an even number of samples
 #define kMaxDrainSpill 8
 
         for (size_t size = 256; size >= kMaxDrainSpill; size /= 2) {
@@ -648,6 +650,7 @@ struct _pull_to_buffer_info {
     bool ok;
     size_t allocated;
     size_t used;
+    size_t growth;
 };
 
 static fa_ptr_t default_destroy(fa_ptr_t _, fa_ptr_t data)
@@ -667,11 +670,12 @@ static void _pull_to_buffer(fa_ptr_t i, fa_buffer_t buf)
         
         // Grow if needed
         if ((info->used + add) > info->allocated) {
-            size_t new_allocate_size = info->allocated + 65536;
+            size_t new_allocate_size = info->allocated + info->growth;
             if (new_allocate_size < info->allocated + add) {
                 new_allocate_size = info->allocated + add;
+                info->growth = add;
             }
-            printf("Allocating more memory for buffer, new size: %zu\n", new_allocate_size);
+            //printf("Allocating more memory for buffer, new size: %zu\n", new_allocate_size);
             info->ptr = fa_realloc(info->ptr, new_allocate_size);
             if (info->ptr) {
                 info->allocated = new_allocate_size;
@@ -693,7 +697,7 @@ static void _pull_to_buffer(fa_ptr_t i, fa_buffer_t buf)
 fa_buffer_t fa_io_pull_to_buffer(fa_io_source_t source)
 {
     size_t start_size = 65536;
-    struct _pull_to_buffer_info info = { fa_malloc(start_size), true, start_size, 0 };
+    struct _pull_to_buffer_info info = { fa_malloc(start_size), true, start_size, 0, start_size };
     while (info.ok) {
         fa_io_pull(source, _pull_to_buffer, (fa_ptr_t)&info);
     }
