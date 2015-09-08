@@ -1068,7 +1068,7 @@ void fa_audio_schedule_relative(fa_time_t         time,
                                 fa_action_t       action,
                                 fa_audio_stream_t stream)
 {
-    fa_time_t now = fa_dadd(fa_clock_time(fa_audio_stream_clock(stream)), fa_milliseconds(50));
+    fa_time_t now = fa_clock_time(fa_audio_stream_clock(stream));
     fa_audio_schedule(fa_dadd(now, time), action, stream);
 }
 
@@ -1169,9 +1169,9 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
             //  * Write platform-specific code
             //  * Use notifications from the audio thread (might not work at startup)
 
-            fa_thread_sleep(1);
+            // fa_thread_sleep(1);
             // printf("-- waking up at %d\n", fa_clock_milliseconds(fa_clock_standard()));
-            //fa_thread_sleep((stream->input ? stream->input : stream->output)->session->parameters.scheduler_interval);
+            fa_thread_sleep((stream->input ? stream->input : stream->output)->session->parameters.scheduler_interval);
         }
     }
 
