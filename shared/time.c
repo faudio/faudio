@@ -9,13 +9,15 @@
 
 #include <fa/time.h>
 #include <fa/util.h>
+#include <fa/atomic.h>
 
 struct _fa_time_t {
     fa_impl_t       impl;       //  Interface dispatcher
     double          dvalue;     //  Value in seconds
 };
 
-static int gTimeCount = 0;
+static fa_atomic_t gTimeCount = 0;
+//static int temp_counter = 0;
 
 double to_double(fa_ratio_t x);
 static fa_ratio_t from_double(double x)
@@ -32,13 +34,18 @@ inline static fa_time_t new_time(double dvalue)
     fa_time_t t     = fa_new(time);
     t->impl         = &time_impl;
     t->dvalue       = dvalue;
-    gTimeCount++;
+    if (!gTimeCount) {
+        gTimeCount = fa_atomic_create();
+    }
+    fa_atomic_add(gTimeCount, 1);
+    //printf("fa_time_create\n");
+    //if (++temp_counter % 1000 == 0) assert(false && "break in new_time");
     return t;
 }
 
 inline static void delete_time(fa_time_t time)
 {
-    gTimeCount--;
+    fa_atomic_add(gTimeCount, -1);
     fa_delete(time);
 }
 
@@ -289,7 +296,7 @@ fa_ptr_t time_impl(fa_id_t interface)
 
 void fa_time_log_count()
 {
-  fa_log_info(fa_string_dappend(fa_string("Times allocated: "), fa_string_dshow(fa_i32(gTimeCount))));
+  fa_log_info(fa_string_dappend(fa_string("Times allocated: "), fa_string_dshow(fa_i32((int)fa_atomic_get(gTimeCount)))));
 }
 
 
