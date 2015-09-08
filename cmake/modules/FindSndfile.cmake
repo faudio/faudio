@@ -9,14 +9,14 @@
 include (DynamicLet)
 include (FindPackageHandleStandardArgs)
 
-letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a") 
+letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a;.lib") 
 find_path (SNDFILE_INCLUDE_DIR 
   NAMES sndfile.h
   PATH_SUFFIXES include
   PATHS ${CMAKE_SOURCE_DIR}/external/sndfile/result
   )
 find_library (SNDFILE_LIBRARY
-  NAMES libsndfile sndfile-1 libFLAC.la
+  NAMES libsndfile libsndfile-1 sndfile-1 libFLAC.la
   PATH_SUFFIXES lib
   PATHS ${CMAKE_SOURCE_DIR}/external/sndfile/result
   )

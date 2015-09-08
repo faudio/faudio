@@ -27,8 +27,16 @@ add_standard_component(COMPONENTS Sndfile
   ${AUDIO_ENGINE_SYSTEM_NAME}
   )
   
+predicate_file_exists(curl_exists
+  "external/curl/result/include/curl/curl.h"
+  )
+add_standard_component(COMPONENTS Curl
+  curl_exists
+  ${AUDIO_ENGINE_SYSTEM_NAME}
+  )
+  
 predicate_file_exists(liblo_exists
-  "external/liblo/result/include/liblo.h"
+  "external/liblo/result/include/lo/lo.h"
   )
 add_standard_component(COMPONENTS Liblo
   liblo_exists

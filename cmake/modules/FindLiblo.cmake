@@ -9,14 +9,14 @@
 include (DynamicLet)
 include (FindPackageHandleStandardArgs)
 
-letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a") 
+letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a;.dll.a;.dylib")
 find_path (LIBLO_INCLUDE_DIR 
-  NAMES lo.h
-  PATH_SUFFIXES include/lo
+  NAMES lo/lo.h
+  PATH_SUFFIXES include
   PATHS ${CMAKE_SOURCE_DIR}/external/liblo/result
   )
 find_library (LIBLO_LIBRARY
-  NAMES liblo
+  NAMES liblo liblo.7
   PATH_SUFFIXES lib
   PATHS ${CMAKE_SOURCE_DIR}/external/liblo/result
   )
