@@ -956,6 +956,8 @@ int lo_server_recv_raw_stream_socket(lo_server s, int isock,
 	size_t bytes_wrote;
     *pdata = 0;
 
+//    printf("lo_server_recv_raw_stream_socket 1\n");
+
   again:
 
     // Check if there is already a message waiting in the buffer.
@@ -971,6 +973,10 @@ int lo_server_recv_raw_stream_socket(lo_server s, int isock,
         size = 64;
     while (buffer_bytes_left < size/2)
     {
+        
+        // printf("  in while,  buffer_bytes_left: %d  size: %d  read_offset: %d  max_size: %d\n",
+        //     buffer_bytes_left, size, sc->buffer_read_offset, LO_MAX_MSG_SIZE);
+        
         size *= 2;
 
         // Strictly speaking this is an arbitrary limit and could be
@@ -978,14 +984,25 @@ int lo_server_recv_raw_stream_socket(lo_server s, int isock,
         // size as in UDP, however we leave it for security
         // reasons--an unterminated SLIP stream would consume memory
         // indefinitely.
-        if (size > LO_MAX_MSG_SIZE)
-            size = LO_MAX_MSG_SIZE;
+        
+        // ERIK's note: this code is buggy and causes the while loop
+        // to loop forever if the size is close to LO_MAX_MSG_SIZE.
+        // Better disabling it altogether, as we are no using neither
+        // UDP nor SLIP
+        
+        // Protocol can be checked with (s->protocol == LO_TCP)
+        
+        // if (size > LO_MAX_MSG_SIZE)
+        //    size = LO_MAX_MSG_SIZE;
 
         buffer_bytes_left = size - sc->buffer_read_offset;
     }
+    
+//    printf("lo_server_recv_raw_stream_socket 2   size: %d\n", size);
 
     if (size > sc->buffer_size)
     {
+//        printf("  expanding buffer...\n");
         sc->buffer_size = size;
         sc->buffer = realloc(sc->buffer, sc->buffer_size);
         if (!sc->buffer)
@@ -997,6 +1014,9 @@ int lo_server_recv_raw_stream_socket(lo_server s, int isock,
     buffer_bytes_left = sc->buffer_size - sc->buffer_read_offset;
 
     read_into = sc->buffer + sc->buffer_read_offset;
+    
+    // printf("lo_server_recv_raw_stream_socket 3   buffer_bytes_left: %d  read_into: %d  is_slip: %d\n",
+    //     buffer_bytes_left, read_into, sc->is_slip);
 
     // In SLIP mode, we instead read into the local stack buffer
     if (sc->is_slip == 1)
@@ -1005,9 +1025,13 @@ int lo_server_recv_raw_stream_socket(lo_server s, int isock,
         read_into = stack_buffer;
     }
 
+//    printf("lo_server_recv_raw_stream_socket 4\n");
+
     bytes_recv = recv(s->sockets[isock].fd,
                       read_into,
                       buffer_bytes_left, 0);
+
+//    printf("lo_server_recv_raw_stream_socket 5   bytes_recv: %d\n", bytes_recv);
 
     if (bytes_recv <= 0)
     {
@@ -1038,6 +1062,8 @@ int lo_server_recv_raw_stream_socket(lo_server s, int isock,
             sc->buffer_read_offset += sizeof(uint32_t);
         }
     }
+    
+//    printf("lo_server_recv_raw_stream_socket 6   slip is now: %d\n", sc->is_slip);
 
     if (sc->is_slip == 1)
     {
@@ -1101,11 +1127,15 @@ int lo_server_recv_raw_stream_socket(lo_server s, int isock,
     {
         sc->buffer_read_offset += bytes_recv;
     }
+    
+//    printf("lo_server_recv_raw_stream_socket 7\n");
 
     *pdata = lo_server_buffer_copy_for_dispatch(s, isock, psize);
 
     if (!*pdata && bytes_recv == buffer_bytes_left)
     {
+//        printf("  goto again, because *pdata = %p  bytes_recv = %d  buffer_bytes_left = %d\n",
+//            *pdata, bytes_recv, buffer_bytes_left);
         // There could be more data, try recv() again.  This is okay
         // because we set the O_NONBLOCK flag.
         goto again;
@@ -1114,6 +1144,7 @@ int lo_server_recv_raw_stream_socket(lo_server s, int isock,
     // We need to inform the caller whether there may be data left
     // to read, which is true if we read exactly as much as we
     // asked for.
+//    printf("lo_server_recv_raw_stream_socket returning %d\n", bytes_recv == buffer_bytes_left);
     return bytes_recv == buffer_bytes_left;
 }
 
