@@ -39,7 +39,12 @@ typedef struct _fa_atomic_ring_buffer_t * fa_atomic_ring_buffer_t;
 */
 fa_atomic_ring_buffer_t fa_atomic_ring_buffer_create(size_t size_);
 
-/** Destroy the given ring buffer.
+/** Destroy the given ring buffer. If the reference count is greater than zero,
+    the actual destruction is postponed until the reference count reaches
+    zero. See @ref fa_buffer_take_reference and @ref fa_buffer_release_reference.
+    
+    @note
+        O(n)
 */
 void fa_atomic_ring_buffer_destroy(fa_atomic_ring_buffer_t ringBuffer);
 
@@ -57,9 +62,28 @@ double fa_atomic_ring_buffer_filled(fa_atomic_ring_buffer_t ringBuffer);
 */
 void fa_atomic_ring_buffer_close(fa_atomic_ring_buffer_t ringBuffer);
 
+/** Empty the ring buffer and its reading pointer.
+    NOTE: reference counts are not reset!
+    NOTE: Not atomic!
+*/
+void fa_atomic_ring_buffer_reset(fa_atomic_ring_buffer_t ringBuffer);
+
 /** Whether the buffer have been closed by an upstream source.
 */
 bool fa_atomic_ring_buffer_is_closed(fa_atomic_ring_buffer_t ringBuffer);
+
+/** Take a reference to the ring buffer, i.e. increase its reference count.
+    Atomic.
+*/
+void fa_atomic_ring_buffer_take_reference(fa_atomic_ring_buffer_t buffer);
+
+/** Release a reference to the ring buffer, i.e. decrease its reference count.
+    If the reference count reaches 0 and destroy has previously been
+    called on the buffer, the buffer will be destroyed.
+    Atomic.
+*/
+void fa_atomic_ring_buffer_release_reference(fa_atomic_ring_buffer_t buffer);
+
 
 /** If true, a subsequent call to `read` with a type of the given
     size is guaranteed to succeed.

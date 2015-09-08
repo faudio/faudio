@@ -28,7 +28,12 @@ module Fa.Atomic.RingBuffer
      */
     create : Size -> RingBuffer;
 
-    /** Destroy the given ring buffer.
+    /** Destroy the given ring buffer. If the reference count is greater than zero,
+        the actual destruction is postponed until the reference count reaches
+        zero. See @ref fa_buffer_take_reference and @ref fa_buffer_release_reference.
+        
+        @note
+            O(n)
      */
     destroy : RingBuffer -> Void;
 
@@ -51,7 +56,15 @@ module Fa.Atomic.RingBuffer
     /** Whether the buffer have been closed by an upstream source.
      */
     isClosed : RingBuffer -> Bool;
+    
+    /** Take a reference to the buffer, i.e. increase its reference count.
+    */
+    takeReference : Buffer -> Void;
 
+    /** Release a reference to the buffer, i.e. decrease its reference count.
+    */
+    releaseReference: Buffer -> Void;    
+    
     /** If true, a subsequent call to `read` with a type of the given
         size is guaranteed to succeed.
      */

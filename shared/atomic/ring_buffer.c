@@ -48,7 +48,11 @@ struct _fa_atomic_ring_buffer_t {
 
     byte_t              *data;                  //  Memory region (data..data+size) [0,1,2,3,4]
 
-    bool                closed;
+    fa_atomic_t         closed;
+
+    fa_atomic_t         ref_count;
+    fa_atomic_t         marked_for_destruction;
+    
     enum {
         buffer_overflowed,
         buffer_alright,
@@ -74,23 +78,42 @@ ring_fa_buffer_t fa_atomic_ring_buffer_create(size_t size)
     b->first    = 0;
     b->last     = 0;
     b->count    = fa_atomic();
-
+    
     b->status   = buffer_alright;
-    b->closed   = false;
+    b->closed   = fa_atomic();
+    fa_atomic_set(b->closed, (fa_ptr_t)false);
+    
+    b->ref_count              = fa_atomic();
+    b->marked_for_destruction = fa_atomic();
+    fa_atomic_set(b->ref_count, (fa_ptr_t)0);
+    fa_atomic_set(b->marked_for_destruction, (fa_ptr_t)false);
 
     return b;
 }
 
 #define atomic_get_size(A) ((size_t) fa_atomic_get(A))
 
-void fa_atomic_ring_buffer_destroy(ring_fa_buffer_t buffer)
+static inline void do_destroy_ring_buffer(ring_fa_buffer_t buffer)
 {
+    //fa_slog_info("do_destroy_ring_buffer");
     fa_destroy(buffer->count);
+    fa_destroy(buffer->closed);
+    fa_destroy(buffer->ref_count);
+    fa_destroy(buffer->marked_for_destruction);
     fa_free(buffer->data);
-
     fa_delete(buffer);
 }
 
+
+void fa_atomic_ring_buffer_destroy(ring_fa_buffer_t buffer)
+{
+    //fa_slog_info("fa_atomic_ring_buffer_destroy");
+    if ((size_t)fa_atomic_get(buffer->ref_count) == 0) {
+        do_destroy_ring_buffer(buffer);
+    } else {
+        fa_atomic_set(buffer->marked_for_destruction, (fa_ptr_t) true);
+    }
+}
 
 size_t fa_atomic_ring_buffer_size(ring_fa_buffer_t buffer)
 {
@@ -122,14 +145,37 @@ bool fa_atomic_ring_buffer_can_write(ring_fa_buffer_t buffer, size_t n)
 
 void fa_atomic_ring_buffer_close(ring_fa_buffer_t buffer)
 {
-    buffer->closed = true;
+    fa_atomic_set(buffer->closed, (fa_ptr_t)true);
+}
+
+void fa_atomic_ring_buffer_reset(ring_fa_buffer_t buffer)
+{
+    // Note: does not reset reference counting
+    buffer->first    = 0;
+    buffer->last     = 0;
+    fa_atomic_set(buffer->count, (fa_ptr_t)0);
+    fa_atomic_set(buffer->closed, (fa_ptr_t)false);
+    buffer->status   = buffer_alright;
 }
 
 bool fa_atomic_ring_buffer_is_closed(ring_fa_buffer_t buffer)
 {
-    return buffer->closed;
+    return (bool)fa_atomic_get(buffer->closed);
 }
 
+void fa_atomic_ring_buffer_take_reference(ring_fa_buffer_t buffer)
+{
+    fa_atomic_add(buffer->ref_count, 1);
+}
+
+void fa_atomic_ring_buffer_release_reference(ring_fa_buffer_t buffer)
+{
+    fa_atomic_add(buffer->ref_count, -1);
+    // TODO: is a lock needed?
+    if ((size_t)fa_atomic_get(buffer->ref_count) == 0 && (bool)fa_atomic_get(buffer->marked_for_destruction)) {
+        do_destroy_ring_buffer(buffer);
+    }
+}
 
 byte_t unsafe_read_byte(ring_fa_buffer_t buffer)
 {
@@ -262,6 +308,11 @@ void atomic_ring_buffer_destroy(fa_ptr_t a)
     fa_atomic_ring_buffer_destroy(a);
 }
 
+void atomic_ring_buffer_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    if (p(a)) fa_atomic_ring_buffer_destroy(a);
+}
+
 fa_dynamic_type_repr_t atomic_ring_buffer_get_type(fa_ptr_t a) {
     return atomic_ring_buffer_type_repr;
 }
@@ -269,7 +320,7 @@ fa_dynamic_type_repr_t atomic_ring_buffer_get_type(fa_ptr_t a) {
 fa_ptr_t atomic_ring_buffer_impl(fa_id_t interface)
 {
     static fa_string_show_t atomic_ring_buffer_show_impl = { atomic_ring_buffer_show };
-    static fa_destroy_t atomic_ring_buffer_destroy_impl = { atomic_ring_buffer_destroy };
+    static fa_destroy_t atomic_ring_buffer_destroy_impl = { atomic_ring_buffer_destroy, atomic_ring_buffer_deep_destroy };
     static fa_dynamic_t atomic_ring_buffer_dynamic_impl = { atomic_ring_buffer_get_type };
 
     switch (interface) {
