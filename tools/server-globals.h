@@ -19,17 +19,18 @@ fa_string_t audio_name = NULL;
 fa_string_t record_left_name  = NULL;
 fa_string_t record_right_name = NULL;
 
-fa_device_descriptor_t selected_audio_input_device = NULL;
-fa_device_descriptor_t selected_audio_output_device = NULL;
+fa_pair_t selected_audio_input_device = NULL;
+fa_pair_t selected_audio_output_device = NULL;
 fa_list_t selected_midi_input_devices = NULL;
 fa_list_t selected_midi_output_devices = NULL;
 fa_echo_type_t selected_midi_echo = FA_ECHO_AUDIO;
-fa_device_descriptor_t selected_midi_echo_device = NULL;
+fa_pair_t selected_midi_echo_device = NULL;
 
 fa_audio_device_t current_audio_input_device = NULL;
 fa_audio_device_t current_audio_output_device = NULL;
 fa_list_t current_midi_input_devices = NULL;
 fa_list_t current_midi_output_devices = NULL;
+fa_echo_type_t current_midi_echo = FA_ECHO_AUDIO;
 fa_ptr_t current_midi_echo_device = NULL;
 
 fa_audio_stream_t current_audio_stream = NULL;
@@ -37,6 +38,15 @@ fa_list_t current_midi_input_streams = NULL;
 fa_list_t current_midi_output_streams = NULL;
 fa_ptr_t current_midi_echo_stream = NULL;
 fa_clock_t current_clock = NULL;
+
+recording_state_t recording_state = NOT_RECORDING;
+fa_atomic_ring_buffer_t recording_ring_buffer = NULL;
+fa_thread_t recording_thread = NULL;
+// bool recording_flag = false;
+
+fa_map_t host_input_latency = NULL;
+fa_map_t host_output_latency = NULL;
+fa_map_t host_vector_size = NULL;
 
 #ifdef _WIN32
 double synth_volume   = 1.0;
@@ -52,9 +62,12 @@ with_mutex(fa_map_t, playback_semaphores);
 with_mutex(fa_map_t, audio_files);
 with_mutex(volatile int, time_echo);
 with_mutex(volatile int, level_echo);
+with_mutex(fa_map_t, uploads);
 
-#define kOutputOffset                   0  // These should be exported from faudio
-#define kInputOffset                    8
+#define kRingBufferSize (44100 * 8 * 20) // 20 seconds
+
+#define kOutputOffset   0  // These should be exported from faudio
+#define kInputOffset    8
 
 #define kOutputLeft     (kOutputOffset + 0)
 #define kOutputRight    (kOutputOffset + 1)
@@ -94,6 +107,8 @@ static inline void init_globals() {
     level_echo_mutex = fa_thread_create_mutex();
     audio_files = fa_map_empty();
     audio_files_mutex = fa_thread_create_mutex();
+    uploads = fa_map_empty();
+    uploads_mutex = fa_thread_create_mutex();
     
     selected_midi_input_devices  = fa_list_empty();
     selected_midi_output_devices = fa_list_empty();
@@ -101,6 +116,17 @@ static inline void init_globals() {
     current_midi_output_devices  = fa_list_empty();
     current_midi_input_streams   = fa_list_empty();
     current_midi_output_streams  = fa_list_empty();
+    
+    // Using global ring buffer means no parallel recordings, but
+    // that is an acceptable limitation for now
+    recording_ring_buffer = fa_atomic_ring_buffer(kRingBufferSize);
+    
+    host_input_latency  = fa_map_empty();
+    host_output_latency = fa_map_empty();
+    host_vector_size    = fa_map_empty();
+    fa_map_set_value_destructor(host_input_latency, fa_destroy);
+    fa_map_set_value_destructor(host_output_latency, fa_destroy);
+    fa_map_set_value_destructor(host_vector_size, fa_destroy);
 }
 
 static inline void destroy_globals() {
@@ -112,6 +138,8 @@ static inline void destroy_globals() {
     fa_destroy(level_echo_mutex);
     fa_destroy(audio_files);
     fa_destroy(audio_files_mutex);
+    fa_destroy(uploads);
+    fa_destroy(uploads_mutex);
     
     fa_destroy(synth_name);
     fa_destroy(audio_name);
@@ -124,6 +152,12 @@ static inline void destroy_globals() {
     fa_destroy(current_midi_output_devices);
     fa_destroy(current_midi_input_streams);
     fa_destroy(current_midi_output_streams);
+    
+    fa_destroy(recording_ring_buffer);
+    
+    fa_destroy(host_input_latency);
+    fa_destroy(host_output_latency);
+    fa_destroy(host_vector_size);
 }
 
 #endif

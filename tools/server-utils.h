@@ -28,6 +28,8 @@
 //   return r;
 // }
 
+#define sched_delay fa_milliseconds(200)
+
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
@@ -52,8 +54,11 @@ if (fa_check(_obj)) {               \
     return;                         \
 }
 
-
 #define safe_peek_i32(ptr) (ptr ? (int32_t) fa_peek_number(ptr) : 0)
+
+static inline char* strdup_or_null(char* s) {
+    return (s && *s) ? strdup(s) : NULL;
+}
 
 void do_schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
     if (stream) {
@@ -436,41 +441,158 @@ fa_ptr_t _incoming_midi(fa_ptr_t x, fa_ptr_t time_message)
     return NULL;
 }
 
+static inline bool audio_device_matches(fa_audio_device_t device, fa_pair_t description) {
+    if (!description) return false;
+    return (fa_equal(fa_audio_host_name(device), fa_pair_first(description))
+            && fa_equal(fa_audio_name(device), fa_pair_second(description)));
+}
+
+static inline bool midi_device_matches(fa_midi_device_t device, fa_pair_t description) {
+    if (!description) return false;
+    return (fa_equal(fa_midi_host_name(device), fa_pair_first(description))
+            && fa_equal(fa_midi_name(device), fa_pair_second(description)));
+}
+
+static inline bool pair_is_two_empty_strings(fa_pair_t pair) {
+    return ((fa_string_length(fa_pair_first(pair)) == 0)
+         && (fa_string_length(fa_pair_second(pair)) == 0));
+}
+
+void resolve_devices() {
+    
+    // First, reset current values
+    current_audio_input_device = NULL;
+    current_audio_output_device = NULL;
+    if (current_midi_input_devices) fa_destroy(current_midi_input_devices);
+    current_midi_input_devices = fa_list_empty();
+    if (current_midi_output_devices) fa_destroy(current_midi_output_devices);
+    current_midi_output_devices = fa_list_empty();
+    current_midi_echo = FA_ECHO_NO_ECHO;
+    
+    fa_list_t midi_devices = fa_midi_all(current_midi_session);
+    fa_list_t audio_devices = fa_audio_all(current_audio_session);
+
+    // Audio devices
+    fa_slog_info("In resolve_devices, selected_audio_input_device: ", selected_audio_input_device);
+    if (selected_audio_input_device) {
+        // a pair of empty strings means default device
+        if (pair_is_two_empty_strings(selected_audio_input_device)) {
+            current_audio_input_device = fa_audio_default_input(current_audio_session);
+        } else {
+            fa_for_each(device, audio_devices) {
+                if (audio_device_matches(device, selected_audio_input_device)) current_audio_input_device = device;
+            }
+            // Use default input if there was no match
+            if (!current_audio_input_device) current_audio_input_device = fa_audio_default_input(current_audio_session);
+        }
+    }
+    fa_slog_info("In resolve_devices, selected_audio_output_device: ", selected_audio_output_device);
+    if (selected_audio_output_device) {
+        // a pair of empty strings means default device
+        if (pair_is_two_empty_strings(selected_audio_output_device)) {
+            current_audio_output_device = fa_audio_default_output(current_audio_session);
+        } else {
+            fa_for_each(device, audio_devices) {
+                if (audio_device_matches(device, selected_audio_output_device)) current_audio_output_device = device;
+            }
+            if (!current_audio_output_device) current_audio_output_device = fa_audio_default_output(current_audio_session);
+        }
+    }
+    
+    // MIDI devices
+    if (!selected_midi_input_devices) { // NULL = all
+        fa_for_each(device, midi_devices) {
+            if (fa_midi_has_input(device)) fa_push_list(device, current_midi_input_devices);
+        }
+    } else if (!fa_list_is_empty(selected_midi_input_devices)) {
+        fa_for_each(device, midi_devices) {
+            if (fa_midi_has_input(device)) {
+                fa_for_each(d, selected_midi_input_devices) {
+                    if (midi_device_matches(device, d)) {
+                        fa_push_list(device, current_midi_input_devices);
+                    }
+                }
+            }
+        }
+    }
+    if (!selected_midi_output_devices) { // NULL == all
+        fa_for_each(device, midi_devices) {
+            if (fa_midi_has_output(device)) fa_push_list(device, current_midi_output_devices);
+        }
+    } else if (!fa_list_is_empty(selected_midi_output_devices)) {
+        fa_for_each(device, midi_devices) {
+            if (fa_midi_has_output(device)) {
+                fa_for_each(d, selected_midi_output_devices) {
+                    if (midi_device_matches(device, d)) {
+                        fa_push_list(device, current_midi_output_devices);
+                    }
+                }
+            }
+        }
+    }
+
+    // MIDI echo
+    if (selected_midi_echo == FA_ECHO_DEVICE) {
+        assert(selected_midi_echo_device && "selected_midi_echo_device is NULL!");
+        fa_for_each(device, midi_devices) {
+            if (fa_midi_has_input(device) && midi_device_matches(device, selected_midi_echo_device)) {
+                current_midi_echo_device = device;
+                current_midi_echo = FA_ECHO_DEVICE;
+            }
+        }
+    } else {
+        current_midi_echo = selected_midi_echo;
+    }
+    
+    fa_slog_info("Audio input:      ", selected_audio_input_device, current_audio_input_device);
+    fa_slog_info("Audio output:     ", selected_audio_output_device, current_audio_output_device);
+    fa_slog_info("MIDI input:       ", selected_midi_input_devices, current_midi_input_devices);
+    fa_slog_info("MIDI output:      ", selected_midi_output_devices, current_midi_output_devices);
+    fa_slog_info("MIDI echo:        ", fa_from_int8(selected_midi_echo), fa_from_int8(current_midi_echo));
+    fa_slog_info("MIDI echo device: ", selected_midi_echo_device, current_midi_echo_device);
+    
+    fa_destroy(midi_devices);  // just the list
+    fa_destroy(audio_devices); // just the list
+}
+
 void stop_streams() {
     fa_slog_info("Stopping streams...");
     current_midi_echo_stream = NULL;
+    current_clock = fa_clock_standard();
+    
     // MIDI input streams
     fa_for_each(stream, current_midi_input_streams) {
         fa_midi_close_stream(stream);
     }
     fa_destroy(current_midi_input_streams);
     current_midi_input_streams = fa_list_empty();
+    
     // MIDI output streams
     fa_for_each(stream, current_midi_output_streams) {
         fa_midi_close_stream(stream);
     }
     fa_destroy(current_midi_output_streams);
     current_midi_output_streams = fa_list_empty();
+    
     // Audio stream
     if (current_audio_stream) {
         fa_audio_close_stream(current_audio_stream);
         current_audio_stream = NULL;
     }
-    current_clock = fa_clock_standard();
 }
 
 void start_streams() {
     fa_slog_info("Starting streams...");
     
     // Start audio stream first
-    if (current_audio_output_device) {
+    if (current_audio_input_device || current_audio_output_device) {
         fa_list_t out_signal = construct_output_signal_tree();
         fa_audio_stream_t audio_stream =
             fa_audio_open_stream(current_audio_input_device, current_audio_output_device, just, out_signal);
         error_check(audio_stream, "Could not start audio stream!");
         current_audio_stream = audio_stream;
         current_clock = fa_audio_get_clock(audio_stream);
-        if (selected_midi_echo == FA_ECHO_AUDIO) {
+        if (current_midi_echo == FA_ECHO_AUDIO) {
             current_midi_echo_stream = audio_stream;
         }
                 
@@ -506,8 +628,8 @@ void start_streams() {
         fa_midi_stream_t midi_stream = fa_midi_open_stream(device);
         error_check(midi_stream, "Could not start MIDI output stream!");
         fa_midi_set_clock(midi_stream, current_clock);
-        if (selected_midi_echo == FA_ECHO_DEVICE && device == selected_midi_echo_device) {
-            current_midi_echo_stream = midi_stream;
+        if (current_midi_echo == FA_ECHO_DEVICE && device == current_midi_echo_device) {
+             current_midi_echo_stream = midi_stream;
         }
         fa_push_list(midi_stream, current_midi_output_streams);
         midi_output_count++;
@@ -522,6 +644,28 @@ void start_streams() {
             do_schedule_now(fa_action_send(synth_name, msg), current_midi_echo_stream);
         }
     }
+}
+
+fa_ptr_t _status_callback(fa_ptr_t session)
+{
+    send_osc_async("/status-change", "");
+    return NULL;
+}
+
+void start_sessions() {
+    assert(!current_audio_session && "An audio session is already running!");
+    assert(!current_midi_session && "A MIDI session is already running!");
+    current_audio_session = fa_audio_begin_session();
+    current_midi_session = fa_midi_begin_session();
+    fa_audio_add_status_callback(_status_callback, current_audio_session, current_audio_session);
+    fa_midi_add_status_callback(_status_callback, current_midi_session, current_midi_session);
+}
+
+void stop_sessions() {
+    fa_audio_end_session(current_audio_session);
+    current_audio_session = NULL;
+    fa_midi_end_session(current_midi_session);
+    current_midi_session = NULL;
 }
 
 void add_playback_semaphore(oid_t id, fa_string_t signal_name) {
@@ -551,7 +695,7 @@ bool remove_playback_semaphore(oid_t id) {
         fa_ptr_t s = fa_map_dget(wrap_oid(id), playback_semaphores);
         if (s) {
             if (fa_dynamic_get_type(s) == string_type_repr) {
-                schedule_relative(fa_now(), fa_action_send(s, fa_string("free")), current_audio_stream);
+                schedule_now(fa_action_send(s, fa_string("free")), current_audio_stream);
             }
             playback_semaphores = fa_map_dremove(wrap_oid(id), playback_semaphores);
             removed = true;
@@ -586,7 +730,7 @@ int start_time_echo()
             time_echo++;
             fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), 0, fa_action_do_with_time(_echo_time, NULL));
             fa_action_t while_action = fa_action_while(_echo_time_p, NULL, repeat_action);
-            schedule_relative(fa_now(), while_action, current_midi_echo_stream);
+            schedule_relative(sched_delay, while_action, current_midi_echo_stream);
         } else {
             time_echo++;
         }
@@ -631,7 +775,7 @@ int start_level_echo()
                                      pair(fa_action_do(_echo_level, NULL), fa_now()));
             fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(50), 0, fa_action_many(actions));
             fa_action_t while_action = fa_action_while(_echo_level_p, NULL, repeat_action);
-            schedule_relative(fa_now(), while_action, current_midi_echo_stream);
+            schedule_relative(sched_delay, while_action, current_midi_echo_stream);
         } else {
             level_echo++;
         }
@@ -706,3 +850,321 @@ lo_blob audio_curve(fa_buffer_t buffer)
     return blob;
 }
 
+struct upload_buffer_info {
+  const char *readptr;
+  long sizeleft;
+};
+
+static size_t _upload_read_buffer(void *ptr, size_t size, size_t nmemb, void *data)
+{
+    struct upload_buffer_info *info = (struct upload_buffer_info *)data;
+    
+    if(size*nmemb < 1)
+        return 0;
+
+    if (info->sizeleft) {
+        size_t bytes = MIN(size*nmemb, info->sizeleft);
+        //printf("upload_read_function: %zu bytes\n", bytes);
+        memcpy(ptr, info->readptr, bytes);
+        info->readptr += bytes;
+        info->sizeleft -= bytes;
+        return size*nmemb;
+    }
+
+    return 0;
+}
+
+static size_t _upload_read_ring_buffer(void *ptr, size_t size, size_t nmemb, void *data)
+{
+    fa_atomic_ring_buffer_t ring_buffer = (fa_atomic_ring_buffer_t)data;
+    
+    // // If buffer is closed, return 0
+    // if (fa_atomic_ring_buffer_is_closed(ring_buffer)) {
+    //     printf("  Closed\n");
+    //     return 0;
+    // }
+
+
+    // If there is enough data available, read as much as possible
+    if (fa_atomic_ring_buffer_can_read(ring_buffer, size*nmemb)) {
+        printf("  Reading block of %zu bytes\n", size*nmemb);
+        void *dest = ptr;
+        for (size_t i = 0; i < size*nmemb; ++i) {
+            bool success = fa_atomic_ring_buffer_read(ring_buffer, dest);
+            assert(success && "Could not read from ring buffer");
+            dest++;
+        }
+        return size*nmemb;
+    }
+
+    // Otherwise, read one byte at a time until
+    void *dest = ptr;
+    printf("  Trying to read %zu bytes one at a time\n", size*nmemb);
+    size_t i = 0;
+    while (i < size*nmemb) {
+        if (fa_atomic_ring_buffer_can_read(ring_buffer, 1)) {
+            fa_atomic_ring_buffer_read(ring_buffer, dest);
+            dest++;
+            i++;
+        } else {
+            // Cannot read. If it is because the buffer is closed, then return
+            if (fa_atomic_ring_buffer_is_closed(ring_buffer)) {
+                printf("Cannot read and buffer was closed. Returning %zu\n", i);
+                return i;
+            }
+            // Otherwise, wait for more data
+            fa_thread_sleep(2);
+        }
+    }
+    return size*nmemb;
+}
+
+static size_t _upload_write(char *ptr, size_t size, size_t nmemb, void *userdata)
+{
+    fa_buffer_t buffer = (fa_buffer_t)userdata;
+    size_t old_size = fa_buffer_size(buffer);
+    fa_buffer_dresize(old_size + (size * nmemb), buffer);
+    void *dest = fa_buffer_unsafe_address(buffer) + old_size;
+    memcpy(dest, ptr, (size * nmemb));
+    printf("Received %zu bytes (%zu * %zu)\n", size*nmemb, size, nmemb);
+    return size*nmemb;
+}
+
+struct upload_buffer_args {
+    char *osc_path; // reference, do not free!
+    oid_t id;
+    fa_buffer_t buffer;
+    fa_atomic_ring_buffer_t ring_buffer;
+    char *url;
+    char *cookies;
+};
+
+fa_ptr_t upload_buffer(fa_ptr_t context)
+{
+    struct upload_buffer_args *args = context;
+    char* osc_path = args->osc_path;
+    oid_t id = args->id;
+    fa_buffer_t buffer = args->buffer;
+    fa_atomic_ring_buffer_t ring_buffer = args->ring_buffer;
+    char* url = args->url;
+    char* cookies = args->cookies;
+    fa_free(args);
+
+    //printf("url: %s  cookies: %s\n", url, cookies);
+    
+    fa_buffer_t result = fa_buffer_create(0);
+    
+    struct upload_buffer_info info;
+    
+    fa_slog_info("  In upload thread ", buffer, ring_buffer);
+    
+    CURL *curl = curl_easy_init();
+    if (curl) {
+        printf("Uploading to %s\n", url);
+        curl_easy_setopt(curl, CURLOPT_URL, url); // url is copied by curl
+        if (cookies) curl_easy_setopt(curl, CURLOPT_COOKIE, cookies); // as is cookies
+        curl_easy_setopt(curl, CURLOPT_POST, 1L);
+        if (ring_buffer) {
+            // Ring buffer: enable chunked upload
+            struct curl_slist *chunk = NULL;
+            chunk = curl_slist_append(chunk, "Transfer-Encoding: chunked");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+            // Set read function and data
+            curl_easy_setopt(curl, CURLOPT_READDATA, ring_buffer);
+            curl_easy_setopt(curl, CURLOPT_READFUNCTION, _upload_read_ring_buffer);
+            
+        } else {
+            // Normal buffer: we know the size of the data, so send it in advance
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, fa_buffer_size(buffer));
+            // Set read function and data
+            info.readptr = fa_buffer_unsafe_address(buffer);
+            info.sizeleft = (long)fa_buffer_size(buffer);
+            curl_easy_setopt(curl, CURLOPT_READDATA, &info);
+            curl_easy_setopt(curl, CURLOPT_READFUNCTION, _upload_read_buffer);
+        }
+
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, result);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, _upload_write);
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        CURLcode res = curl_easy_perform(curl);
+        
+        if (res == CURLE_OK) {
+            fa_inform(fa_string("  Upload ok!"));
+            long response_code;
+            long request_size;
+            curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+            curl_easy_getinfo(curl, CURLINFO_REQUEST_SIZE, &request_size);
+            //printf("Request was %ld bytes\n", request_size);
+            
+            lo_blob blob = lo_blob_new(fa_buffer_size(result), fa_buffer_unsafe_address(result));
+            send_osc_async(osc_path, "iib", id, response_code, blob);
+            lo_blob_free(blob);
+        } else {
+            fa_fail(fa_string("CURL error"));
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+            send_osc_async(osc_path, "iFs", id, curl_easy_strerror(res));
+        }
+        
+        // Cleanup
+        //curl_slist_free_all(chunk);
+        curl_easy_cleanup(curl);
+    } else {
+        fa_fail(fa_string("Could not allocate curl!"));
+        send_osc_async(osc_path, "iFs", id, "Could not allocate curl");
+    }
+    
+    fa_slog_info("  Cleaning up upload, destroying buffers");
+    fa_slog_info("     buffer: ", buffer);
+    fa_slog_info("     ring_buffer: ", ring_buffer);
+    free(url);
+    if (cookies) free(cookies);
+    if (buffer) fa_destroy(buffer);
+    if (ring_buffer) fa_atomic_ring_buffer_release_reference(ring_buffer);
+    fa_destroy(result);
+    
+    fa_slog_info("  End of upload function");
+    
+    return NULL;
+}
+
+fa_thread_t upload_buffer_async(oid_t id, fa_buffer_t buffer, char* url, char* cookies)
+{
+    struct upload_buffer_args *args = fa_new_struct(upload_buffer_args);
+    args->osc_path = "/audio-file/upload";
+    args->id = id;
+    args->buffer = buffer;
+    args->ring_buffer = NULL;
+    args->url = strdup(url);
+    args->cookies = strdup_or_null(cookies);
+    
+    fa_thread_t thread = fa_thread_create(upload_buffer, args);
+    return thread;
+}
+
+fa_thread_t upload_ring_buffer_async(oid_t id, fa_atomic_ring_buffer_t ring_buffer, char* url, char* cookies)
+{
+    struct upload_buffer_args *args = fa_new_struct(upload_buffer_args);
+    args->osc_path = "/recording/result";
+    args->id = id;
+    args->buffer = NULL;
+    args->ring_buffer = ring_buffer;
+    args->url = strdup(url);
+    args->cookies = strdup_or_null(cookies);
+    
+    fa_atomic_ring_buffer_take_reference(ring_buffer);
+    
+    fa_thread_t thread = fa_thread_create(upload_buffer, args);
+    return thread;
+}
+
+
+struct recording_thread_args {
+    oid_t id;
+    fa_atomic_ring_buffer_t ring_buffer;
+    char *filename;
+    char *url;
+    char *cookies;
+};
+
+void _recording_receive(fa_ptr_t context, fa_buffer_t buffer) {
+    fa_atomic_ring_buffer_t ring_buffer = context;
+    if (buffer) {
+        uint8_t *ptr = fa_buffer_unsafe_address(buffer);
+        size_t size = fa_buffer_size(buffer);
+        printf("Received %zu bytes of ogg\n", size);
+        if (fa_atomic_ring_buffer_can_write(ring_buffer, size)) {
+            for (size_t i = 0; i < fa_buffer_size(buffer); i++) {
+                 fa_atomic_ring_buffer_write(ring_buffer, *ptr);
+                 ptr++;
+             }
+        } else {
+            // TODO: handle this error!
+            fa_fail(fa_string("Upload ring buffer overflow!"));
+        }
+    } else {
+        printf("Received NULL, closing ring buffer\n");
+        fa_atomic_ring_buffer_close(ring_buffer);
+    }
+}
+
+fa_ptr_t _recording_thread(fa_ptr_t context)
+{
+    struct recording_thread_args *args = context;
+    oid_t id = args->id;
+    fa_atomic_ring_buffer_t ring_buffer = args->ring_buffer;
+    char* filename = args->filename;
+    char* url = args->url;
+    char* cookies = args->cookies;
+    fa_free(args);
+    
+    //printf("url: %s  cookies: %s\n", url, cookies);
+    
+    fa_io_source_t source = fa_io_from_ring_buffer(ring_buffer);
+    fa_io_sink_t sink = NULL;
+    fa_atomic_ring_buffer_t upload_ring_buffer = NULL;
+    
+    if (url && filename) {
+        // If url is specified, create the file sink as a split filter
+        fa_io_sink_t file_sink = fa_io_write_file(fa_string(filename));
+        source = fa_io_apply(fa_io_apply(source, fa_io_split(file_sink)), fa_io_create_ogg_encoder());
+    } else if (url) {
+        source = fa_io_apply(source, fa_io_create_ogg_encoder());
+    } else {
+        printf("Creating file sink\n");
+        sink = fa_io_write_file(fa_string(filename));
+    }
+    
+    printf("_recording_thread 3\n");
+    
+    // If sink is unspecified, it should be the upload sink
+    // Start a new thread for the upload and send data to it though a second ring buffer
+    if (!sink) {
+        upload_ring_buffer = fa_atomic_ring_buffer(1048576);
+        fa_atomic_ring_buffer_take_reference(upload_ring_buffer);
+        fa_destroy(upload_ring_buffer); // delayed destruction because of the reference
+        sink = (fa_io_sink_t) fa_io_create_simple_filter(_recording_receive, NULL, upload_ring_buffer);
+        fa_thread_t thread = upload_ring_buffer_async(id, upload_ring_buffer, url, cookies);
+        fa_thread_detach(thread);
+    }
+    
+    printf("_recording_thread 4\n");
+    
+    // This will block until the source is drained
+    fa_io_run(source, sink);
+    
+    printf("_recording_thread 5\n");
+    
+    // Make sure sink is detached (why is this needed?)
+    fa_io_push(sink, NULL);
+    
+    printf("_recording_thread 6\n");
+    
+    // Cleanup
+    if (filename) free(filename);
+    if (url) free(url);
+    if (cookies) free(cookies);
+    fa_destroy(source);
+    if (upload_ring_buffer) fa_atomic_ring_buffer_release_reference(upload_ring_buffer);
+    //fa_destroy(ring_buffer); // currently, we are using a global ring buffer, so don't free it
+    //fa_destroy(result);
+    
+    fa_slog_info("End of recording thread function");
+    
+    recording_state = NOT_RECORDING;
+    
+    return NULL;
+}
+
+
+fa_thread_t create_recording_thread(oid_t id, fa_atomic_ring_buffer_t ring_buffer, char* filename, char* url, char* cookies)
+{
+    struct recording_thread_args *args = fa_new_struct(recording_thread_args);
+    args->id          = id;
+    args->ring_buffer = ring_buffer;
+    args->filename    = strdup_or_null(filename);
+    args->url         = strdup_or_null(url);
+    args->cookies     = strdup_or_null(cookies);
+    
+    fa_thread_t thread = fa_thread_create(_recording_thread, args);
+    return thread;
+}

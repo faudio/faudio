@@ -12,6 +12,7 @@
 #include <fa/dynamic.h>
 #include <fa/string.h>
 #include <fa/func_ref.h>
+#include <fa/io.h>
 #include "common.h"
 
 #if defined(_WIN32)
@@ -37,11 +38,13 @@ void liblo_error(int num, const char *m, const char *path);
 int bundle_start_handler(lo_timetag time, void *user_data);
 int bundle_end_handler(void *user_data);
 
-define_handler(generic);
+define_handler(fallback);
 
 define_handler(quit);
-define_handler(restart);
+define_handler(restart_streams);
+define_handler(restart_sessions);
 define_handler(settings);
+define_handler(host_settings);
 
 define_handler(test);
 define_handler(stats);
@@ -53,14 +56,17 @@ define_handler(play_audio);
 define_handler(stop);
 
 define_handler(time);
+define_handler(next_id);
 define_handler(all_devices);
 define_handler(current_devices);
 
 define_handler(load_audio_file);
+define_handler(load_raw_audio_file);
 define_handler(close_audio_file);
 define_handler(save_audio_file);
 define_handler(audio_file_curve);
 define_handler(audio_file_peak);
+define_handler(audio_file_upload);
 
 define_handler(main_volume);
 define_handler(pan);
@@ -74,6 +80,8 @@ define_handler(level);
 
 define_handler(start_recording);
 define_handler(stop_recording);
+
+define_handler(choose_device);
 
 fa_ptr_t _status_callback(fa_ptr_t session);
 
@@ -92,34 +100,10 @@ int main()
 
     /* add bundle handlers */
     lo_server_add_bundle_handlers(server, bundle_start_handler, bundle_end_handler, NULL);
-
-    /* add method that will match any path and args */
-    lo_server_thread_add_method(st, NULL, NULL, generic_handler, server);
     
     lo_server_thread_add_method(st, "/test", "fd", test_handler, server);
     
     lo_server_thread_add_method(st, "/stats", "", stats_handler, server);
-
-    /* Quitting, restart */
-    lo_server_thread_add_method(st, "/quit", "", quit_handler, server);
-    lo_server_thread_add_method(st, "/restart", "", restart_handler, server);
-    lo_server_thread_add_method(st, "/restart", "i", restart_handler, server);
-    
-    /* Settings */
-    lo_server_thread_add_method(st, "/set/latency",            "f", settings_handler, "latency");
-    lo_server_thread_add_method(st, "/set/input-latency",      "f", settings_handler, "input-latency");
-    lo_server_thread_add_method(st, "/set/output-latency",     "f", settings_handler, "output-latency");
-    lo_server_thread_add_method(st, "/set/sample-rate",        "f", settings_handler, "sample-rate");
-    lo_server_thread_add_method(st, "/set/vector-size",        "i", settings_handler, "vector-size");
-    lo_server_thread_add_method(st, "/set/scheduler-interval", "i", settings_handler, "scheduler-interval");
-    lo_server_thread_add_method(st, "/set/exclusive",          "T", settings_handler, "exclusive");
-    lo_server_thread_add_method(st, "/set/exclusive",          "F", settings_handler, "exclusive");
-    lo_server_thread_add_method(st, "/set/exclusive",          "N", settings_handler, "exclusive");
-      
-    /* Get info */
-    lo_server_thread_add_method(st, "/time", NULL, time_handler, server);
-    lo_server_thread_add_method(st, "/all/devices", "", all_devices_handler, server);
-    lo_server_thread_add_method(st, "/current/devices", "", current_devices_handler, server);
 
     /* Send raw midi messages */
     lo_server_thread_add_method(st, "/send/midi", "ii",  simple_midi_handler, server);
@@ -131,6 +115,35 @@ int main()
     /* Emulate incoming midi */
     lo_server_thread_add_method(st, "/receive/midi", "ii",  receive_midi_handler, server);
     lo_server_thread_add_method(st, "/receive/midi", "iii", receive_midi_handler, server);
+    
+    /* Quitting, restart */
+    lo_server_thread_add_method(st, "/quit", "", quit_handler, server);
+    lo_server_thread_add_method(st, "/restart/streams",  "",  restart_streams_handler, server);
+    lo_server_thread_add_method(st, "/restart/streams",  "i", restart_streams_handler, server); // id
+    lo_server_thread_add_method(st, "/restart/sessions", "",  restart_sessions_handler, server);
+    lo_server_thread_add_method(st, "/restart/sessions", "i", restart_sessions_handler, server); // id
+    
+    /* Settings */
+    lo_server_thread_add_method(st, "/set/latency",           "i",  host_settings_handler, (void*)HOST_SETTINGS_LATENCY);
+    lo_server_thread_add_method(st, "/set/latency",           "is", host_settings_handler, (void*)HOST_SETTINGS_LATENCY);
+    lo_server_thread_add_method(st, "/set/input-latency",     "i",  host_settings_handler, (void*)HOST_SETTINGS_INPUT_LATENCY);
+    lo_server_thread_add_method(st, "/set/input-latency",     "is", host_settings_handler, (void*)HOST_SETTINGS_INPUT_LATENCY);
+    lo_server_thread_add_method(st, "/set/output-latency",    "i",  host_settings_handler, (void*)HOST_SETTINGS_OUTPUT_LATENCY);
+    lo_server_thread_add_method(st, "/set/output-latency",    "is", host_settings_handler, (void*)HOST_SETTINGS_OUTPUT_LATENCY);
+    lo_server_thread_add_method(st, "/set/vector-size",       "i",  host_settings_handler, (void*)HOST_SETTINGS_VECTOR_SIZE);
+    lo_server_thread_add_method(st, "/set/vector-size",       "is", host_settings_handler, (void*)HOST_SETTINGS_VECTOR_SIZE);
+    lo_server_thread_add_method(st, "/set/sample-rate",        "f",  settings_handler, "sample-rate");
+    lo_server_thread_add_method(st, "/set/scheduler-interval", "i",  settings_handler, "scheduler-interval");
+    lo_server_thread_add_method(st, "/set/exclusive",          "T",  settings_handler, "exclusive");
+    lo_server_thread_add_method(st, "/set/exclusive",          "F",  settings_handler, "exclusive");
+    lo_server_thread_add_method(st, "/set/exclusive",          "N",  settings_handler, "exclusive");
+      
+    /* Get info */
+    lo_server_thread_add_method(st, "/time", NULL, time_handler, server);
+    lo_server_thread_add_method(st, "/next-id", NULL, next_id_handler, server);
+    lo_server_thread_add_method(st, "/all/devices", "", all_devices_handler, server);
+    lo_server_thread_add_method(st, "/all/devices", "i", all_devices_handler, server);
+    lo_server_thread_add_method(st, "/current/devices", "", current_devices_handler, server);
     
     /* Playback */
     //  /play/audio  id,  audio id,  skip (ms),  start-time (ms),  repeat-interval (ms)
@@ -146,12 +159,16 @@ int main()
     lo_server_thread_add_method(st, "/stop", "i", stop_handler, server);
 
     /* Audio files handling */
-    lo_server_thread_add_method(st, "/audio-file/load",  "is", load_audio_file_handler, server);  // audio id, path
-    lo_server_thread_add_method(st, "/audio-file/close", "i",  close_audio_file_handler, server); // audio id
-    lo_server_thread_add_method(st, "/audio-file/save",  "i",  save_audio_file_handler, server);  // audio id
-    lo_server_thread_add_method(st, "/audio-file/save",  "is", save_audio_file_handler, server);  // audio id, path
-    lo_server_thread_add_method(st, "/audio-file/curve", "i",  audio_file_curve_handler, server); // audio id
-    lo_server_thread_add_method(st, "/audio-file/peak",  "i",  audio_file_peak_handler, server);  // audio id
+    lo_server_thread_add_method(st, "/audio-file/load",     "is", load_audio_file_handler, server);  // audio id, path
+    lo_server_thread_add_method(st, "/audio-file/load/raw", "isii", load_raw_audio_file_handler, server);  // a id, path, sr, ch
+    lo_server_thread_add_method(st, "/audio-file/close",    "i",  close_audio_file_handler, server); // audio id
+    lo_server_thread_add_method(st, "/audio-file/save",     "i",  save_audio_file_handler, server);  // audio id
+    lo_server_thread_add_method(st, "/audio-file/save",     "is", save_audio_file_handler, server);  // audio id, path
+    lo_server_thread_add_method(st, "/audio-file/curve",    "i",  audio_file_curve_handler, server); // audio id
+    lo_server_thread_add_method(st, "/audio-file/peak",     "i",  audio_file_peak_handler, server);  // audio id
+    // id, audio id, url, cookies, [from_time (ms), to_time (ms)]
+    lo_server_thread_add_method(st, "/audio-file/upload",   "iiss",  audio_file_upload_handler, server);
+    lo_server_thread_add_method(st, "/audio-file/upload",   "iissff",  audio_file_upload_handler, server);
     
     /* Send midi control messages */
     lo_server_thread_add_method(st, "/send/main-volume",    "ii", main_volume_handler, server);
@@ -170,8 +187,31 @@ int main()
     lo_server_thread_add_method(st, "/level/start", "", level_handler, (void*)true);
     lo_server_thread_add_method(st, "/level/stop", "", level_handler, (void*)false);
     
-    lo_server_thread_add_method(st, "/recording/start", "iff", start_recording_handler, server); //
+    // id (not currently used), filename, url, cookies, rel-start-time (s), max-length (s)
+    lo_server_thread_add_method(st, "/recording/start", "isssff", start_recording_handler, server);
     lo_server_thread_add_method(st, "/recording/stop",  "i", stop_recording_handler, server);
+    
+    lo_server_thread_add_method(st, "/choose/midi/input",   "",    choose_device_handler, (void*)CHOOSE_MIDI_INPUT_NONE);
+    lo_server_thread_add_method(st, "/choose/midi/input",   "T",   choose_device_handler, (void*)CHOOSE_MIDI_INPUT_ALL);
+    lo_server_thread_add_method(st, "/choose/midi/input",   "ss",  choose_device_handler, (void*)CHOOSE_MIDI_INPUT_DEVICE);
+    lo_server_thread_add_method(st, "/choose/midi/output",  "",    choose_device_handler, (void*)CHOOSE_MIDI_OUTPUT_NONE);
+    lo_server_thread_add_method(st, "/choose/midi/output",  "T",   choose_device_handler, (void*)CHOOSE_MIDI_OUTPUT_ALL);
+    lo_server_thread_add_method(st, "/choose/midi/output",  "ss",  choose_device_handler, (void*)CHOOSE_MIDI_OUTPUT_DEVICE);
+    lo_server_thread_add_method(st, "/choose/audio/input",  "",    choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_NONE);
+    lo_server_thread_add_method(st, "/choose/audio/input",  "N",   choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_NONE);
+    lo_server_thread_add_method(st, "/choose/audio/input",  "T",   choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_DEFAULT);
+    lo_server_thread_add_method(st, "/choose/audio/input",  "ss",  choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_DEVICE);
+    lo_server_thread_add_method(st, "/choose/audio/output", "",    choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_NONE);
+    lo_server_thread_add_method(st, "/choose/audio/output", "N",   choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_NONE);
+    lo_server_thread_add_method(st, "/choose/audio/output", "T",   choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_DEFAULT);
+    lo_server_thread_add_method(st, "/choose/audio/output", "ss",  choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_DEVICE);
+    lo_server_thread_add_method(st, "/choose/midi/echo",    "",    choose_device_handler, (void*)CHOOSE_MIDI_ECHO_NONE);
+    lo_server_thread_add_method(st, "/choose/midi/echo",    "N",   choose_device_handler, (void*)CHOOSE_MIDI_ECHO_NONE);
+    lo_server_thread_add_method(st, "/choose/midi/echo",    "T",   choose_device_handler, (void*)CHOOSE_MIDI_ECHO_AUDIO);
+    lo_server_thread_add_method(st, "/choose/midi/echo",    "ss",  choose_device_handler, (void*)CHOOSE_MIDI_ECHO_DEVICE);
+    
+    /* add method that will match any path and args */
+    lo_server_thread_add_method(st, NULL, NULL, fallback_handler, server);
 
     fa_with_faudio() {
         
@@ -180,23 +220,22 @@ int main()
         
         init_globals();
 
-        // Audio
-        current_audio_session = fa_audio_begin_session();
-        current_audio_output_device = fa_audio_default_output(current_audio_session); // temp
-        current_audio_input_device = fa_audio_default_input(current_audio_session); // temp
-        fa_audio_add_status_callback(_status_callback, current_audio_session, current_audio_session);
-        // MIDI
-        current_midi_session = fa_midi_begin_session();
-        fa_list_t midi_devices = fa_midi_all(current_midi_session);
-        fa_for_each(device, midi_devices) {
-            if (fa_midi_has_input(device)) fa_push_list(device, current_midi_input_devices);
-            if (fa_midi_has_output(device)) fa_push_list(device, current_midi_output_devices);
-        }
-        fa_destroy(midi_devices); // the list
-        fa_midi_add_status_callback(_status_callback, current_midi_session, current_midi_session);
+        start_sessions();
+
+        // // Audio
+        // current_audio_output_device = fa_audio_default_output(current_audio_session); // temp
+        // current_audio_input_device = fa_audio_default_input(current_audio_session); // temp
+        // // MIDI
+        // fa_list_t midi_devices = fa_midi_all(current_midi_session);
+        // fa_for_each(device, midi_devices) {
+        //     if (fa_midi_has_input(device)) fa_push_list(device, current_midi_input_devices);
+        //     if (fa_midi_has_output(device)) fa_push_list(device, current_midi_output_devices);
+        // }
+        // fa_destroy(midi_devices); // the list
+
         
         
-        start_streams(); // server-utils.h
+        // start_streams(); // server-utils.h
 
         lo_server_thread_start(st);
     
@@ -211,6 +250,7 @@ int main()
         }
     
         stop_streams();
+        stop_sessions();
         
         fa_audio_end_session(current_audio_session);
         fa_midi_end_session(current_midi_session);
@@ -262,7 +302,7 @@ int bundle_end_handler(void *user_data) {
                 if (fa_action_is_flat(action)) {
                     do_schedule_now(action, bundle_stream);
                 } else {
-                    do_schedule_relative(fa_now(), action, bundle_stream);
+                    do_schedule_relative(sched_delay, action, bundle_stream);
                 }
                 fa_destroy(bundle_time);
             } else {
@@ -278,18 +318,13 @@ int bundle_end_handler(void *user_data) {
 
 /* catch any incoming messages and display them. returning 1 means that the
 * message has not been fully handled and the server should try other methods */
-int generic_handler(const char *path, const char *types, lo_arg ** argv,
+int fallback_handler(const char *path, const char *types, lo_arg ** argv,
 int argc, lo_message message, void *user_data)
 {
-    if (last_address) {
-        lo_address_free(last_address);
-    }
-    last_address = lo_address_new_from_copy(lo_message_get_source(message));
-    
     //fa_log_region_count("In generic_handler");
     int i;
 
-    printf("msg: %s   ", path);
+    printf("Unrecognized message: %s   ", path);
     for (i = 0; i < argc; i++) {
         printf("arg %d '%c' ", i, types[i]);
         lo_arg_pp((lo_type)types[i], argv[i]);
@@ -323,7 +358,7 @@ fa_ptr_t _playback_stopped(fa_ptr_t context, fa_time_t time, fa_time_t now)
         send_osc_async("/playback/stopped", "itT", id, timetag_from_time(now));
         stop_time_echo();
         if (current_midi_echo_stream) {
-            do_schedule_relative(fa_now(), all_notes_off_action(), current_midi_echo_stream);
+            do_schedule_relative(sched_delay, all_notes_off_action(), current_midi_echo_stream);
         }
     }
     return NULL;
@@ -380,7 +415,7 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
         
         
         if (time == 0) {
-            schedule_relative(fa_now(), main_action, current_audio_stream);
+            schedule_relative(sched_delay, main_action, current_audio_stream);
         } else {
             schedule(fa_milliseconds(time), main_action, current_audio_stream);
         }
@@ -397,6 +432,7 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
     lo_blob data = argv[1];
     double time            = argc >= 3 ? (argv[2]->f / 1000.0) : 0.0; // convert from ms to s
     double repeat_interval = argc >= 4 ? (argv[3]->f / 1000.0) : 0.0;
+    time = time + 0;
     check_id(id);
     int data_size = lo_blob_datasize(data);
     uint8_t* ptr = lo_blob_dataptr(data);
@@ -408,11 +444,11 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
         printf("data_size (%d) not a multiple of 8\n", data_size);
         return 0;
     }
-    
+
     fa_list_t actions = fa_list_empty();
     int count = data_size / 8;
     printf("%d MIDI entries:\n", count);
-    
+
     // Collect MIDI entries from the data blob, create MIDI messages and add them to a list
     int32_t max_time = 0;
     for (int i = 0; i < count; i++) {
@@ -423,7 +459,7 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
         int32_t time  = lo_otoh32(*(int32_t *) &ptr[4]);
         max_time = MAX(time, max_time);
         //printf("  %x %x %x %x  %d\n", cmd, ch, data1, data2, time);
-        
+
         fa_midi_message_t msg = fa_midi_message_create_simple(cmd + ch, data1, data2);
         fa_action_t a = fa_action_send(synth_name, msg);
         if (repeat_interval > 0) {
@@ -432,16 +468,16 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
         fa_push_list(pair(a, fa_milliseconds(time)), actions);
         ptr += 8;
     }
-    
+
     if (repeat_interval == 0) {
         fa_push_list(pair(fa_action_do_with_time(_playback_started, wrap_oid(id)), fa_milliseconds(0)), actions);
         fa_push_list(pair(fa_action_do_with_time(_playback_stopped, wrap_oid(id)), fa_milliseconds(max_time + 10)), actions);
     }
-    
+
     // Convert absolute times to relative times
     actions = times_to_delta_times(actions);
-    
-    // 
+
+    //
     add_playback_semaphore(id, NULL);
     fa_action_t main_action;
     if (repeat_interval > 0) {
@@ -449,35 +485,38 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
             fa_action_many(
                 list(pair(fa_action_do_with_time(_playback_started, wrap_oid(id)),
                           fa_milliseconds(0)),
-                     pair(fa_action_while(check_playback_semaphore, wrap_oid(id),   
+                     pair(fa_action_while(check_playback_semaphore, wrap_oid(id),
                                           fa_action_repeat(fa_time_from_double(repeat_interval), 0, fa_action_many(actions))),
                           fa_milliseconds(0))));
     } else {
         main_action = fa_action_while(check_playback_semaphore, wrap_oid(id), fa_action_many(actions));
     }
-        
+
     // Send to scheduler
     if (time == 0) {
-        schedule_relative(fa_now(), main_action, current_midi_echo_stream);
+        schedule_relative(sched_delay, main_action, current_midi_echo_stream);
     } else {
         schedule(fa_time_from_double(time), main_action, current_midi_echo_stream);
     }
-    
+
     start_time_echo();
-    
+
     return 0;
 }
 
 int stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
-    //printf("Stopping playback %d\n", argv[0]->i);
+    fa_slog_info("stop_handler");
     if (remove_playback_semaphore(argv[0]->i)) {
+        printf("Stopping playback %d\n", argv[0]->i);
         fa_time_t now = fa_clock_time(current_clock);
         send_osc(message, user_data, "/playback/stopped", "itF", argv[0]->i, timetag_from_time(now));
         fa_destroy(now);
         stop_time_echo();
         if (current_midi_echo_stream) {
-            do_schedule_relative(fa_now(), all_notes_off_action(), current_midi_echo_stream);
+            do_schedule_relative(sched_delay, all_notes_off_action(), current_midi_echo_stream);
         }
+    } else {
+        printf("Could not remove semaphore for id %d\n", argv[0]->i);
     }
     return 0;
 }
@@ -492,34 +531,50 @@ int quit_handler(const char *path, const char *types, lo_arg ** argv, int argc, 
     return 0;
 }
 
-int restart_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
-{
-    int restart_type = argc ? argv[1]->i : 0;
-    
-    switch (restart_type) {
-    case 0:
-        stop_streams();
-        remove_all_playback_semaphores();
-        start_streams();
-        break;
-    default:
-        fa_log_warning(fa_string("No such restart type!"));
-    } 
-    return 0;
-}
-
 int settings_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
 {
     fa_string_t parameter = fa_string(user_data);
     fa_ptr_t value = create_fa_value(types[0], argv[0]);
+    if (!value) value = fa_from_bool(false);
     fa_slog_info("settings handler: ", parameter, value);
-    if (value && current_audio_session) {
+    if (current_audio_session) {
         fa_audio_set_parameter(parameter, value, current_audio_session);
     }
-    if (value) fa_destroy(value);
     fa_destroy(parameter);
     return 0;
 }
+
+
+int host_settings_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
+{
+    host_setting_t parameter = (int)user_data;
+    fa_ptr_t value = create_fa_value(types[0], argv[0]);
+    fa_ptr_t host = (argc > 1) ? fa_string(&argv[1]->s) : fa_string("");
+    fa_slog_info("host_settings handler: ", fa_from_int16(parameter), host, value);
+    switch (parameter) {
+    case HOST_SETTINGS_LATENCY:
+        host_input_latency  = fa_map_dset(fa_copy(host), fa_copy(value), host_input_latency);
+        host_output_latency = fa_map_dset(host, value, host_output_latency);
+        break;
+    case HOST_SETTINGS_INPUT_LATENCY:
+        host_input_latency  = fa_map_dset(host, value, host_input_latency);
+        break;
+    case HOST_SETTINGS_OUTPUT_LATENCY:
+        host_output_latency = fa_map_dset(host, value, host_output_latency);
+        break;
+    case HOST_SETTINGS_VECTOR_SIZE:
+        host_vector_size    = fa_map_dset(host, value, host_vector_size);
+        break;
+    }
+    
+    fa_slog_info("Current settings:");
+    fa_slog_info("Input latency:   ", host_input_latency);
+    fa_slog_info("Output latency:  ", host_output_latency);
+    fa_slog_info("Vector size:     ", host_vector_size);
+    
+    return 0;
+}
+
 
 
 /***************************
@@ -549,11 +604,31 @@ int time_handler(const char *path, const char *types, lo_arg ** argv, int argc, 
 }
 
 /***************************
+*   /next-id
+*/
+
+int next_id_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    // Save last_address, so that async osc can be used
+    // TODO: move this to a dedicated handler
+    if (last_address) {
+        lo_address_free(last_address);
+    }
+    last_address = lo_address_new_from_copy(lo_message_get_source(message));
+    
+    send_osc(message, user_data, "/next-id", "i", last_used_id + 1);
+    return 0;
+}
+
+/***************************
 *   /all/devices
 */
 
 int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
+    oid_t id = argc > 0 ? argv[0]->i : -1;
+    bool errors = false;
+    
     if (current_audio_session) {
         fa_list_t audio_devices = fa_audio_all(current_audio_session);
         send_osc(message, user_data, "/audio/devices", "i", fa_list_length(audio_devices));
@@ -568,8 +643,11 @@ int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int
             fa_free(host_name);
             fa_free(name);
         }
+        fa_destroy(audio_devices);
     } else {
-        send_osc(message, user_data, "/error", "is", -1, "no-audio-session");
+        fa_slog_warning("No audio session!");
+        send_osc(message, user_data, "/audio-devices", "i", 0);
+        errors = true;
     }
   
     if (current_midi_session) {
@@ -584,8 +662,19 @@ int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int
             fa_free(host_name);
             fa_free(name);
         }
+        fa_destroy(midi_devices);
     } else {
-        send_osc(message, user_data, "/error", "is", -1, "no-midi-session");
+        fa_slog_warning("No MIDI session!");
+        send_osc(message, user_data, "/midi/devices", "i", 0);
+        errors = true;
+    }
+    
+    if (id >= 0) {
+        if (errors) {
+            send_osc(message, user_data, "/all/devices", "iF", id);
+        } else {
+            send_osc(message, user_data, "/all/devices", "iT", id);
+        }
     }
   
     return 0;
@@ -595,7 +684,7 @@ int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int
 *   /current/devices
 */
 
-int current_devices_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+void send_current_devices(lo_message message, void *user_data)
 {
     if (current_audio_input_device) {
         char *host_name = fa_unstring(fa_audio_host_name(current_audio_input_device));
@@ -613,14 +702,41 @@ int current_devices_handler(const char *path, const char *types, lo_arg ** argv,
     if (current_audio_output_device) {
         char *host_name = fa_unstring(fa_audio_host_name(current_audio_output_device));
         char *name = fa_unstring(fa_audio_name(current_audio_output_device));
-        send_osc(message, user_data, "/current/audio/output", "issiif", host_name, name,
+        send_osc(message, user_data, "/current/audio/output", "ssiif", host_name, name,
             fa_audio_input_channels(current_audio_output_device),
             fa_audio_output_channels(current_audio_output_device),
             fa_audio_current_sample_rate(current_audio_output_device));
+        fa_free(host_name);
+        fa_free(name);
     } else {
         send_osc(message, user_data, "/current/audio/output", "N");
     }
-  
+
+    // TODO: MIDI devices
+    
+    switch (current_midi_echo) {
+    case FA_ECHO_NO_ECHO:
+        send_osc(message, user_data, "/current/midi/echo", "N");
+        break;
+    case FA_ECHO_AUDIO:
+        send_osc(message, user_data, "/current/midi/echo", "T");
+        break;
+    case FA_ECHO_DEVICE:
+        assert(current_midi_echo_device && "current_midi_echo_device is NULL in current_devices_handler");
+        char *host_name = fa_unstring(fa_audio_host_name(current_midi_echo_device));
+        char *name = fa_unstring(fa_audio_name(current_midi_echo_device));
+        send_osc(message, user_data, "/current/midi/echo", "ssii", host_name, name,
+            fa_midi_has_input(current_midi_echo_device) ? 1 : 0,
+            fa_midi_has_output(current_midi_echo_device) ? 1 : 0);
+        fa_free(host_name);
+        fa_free(name);
+        break;
+    }
+}
+
+int current_devices_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    send_current_devices(message, user_data);
     return 0;
 }
 
@@ -701,6 +817,42 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
         fa_fail(fa_string("sample-rate or channels not set"));
         send_osc(message, user_data, "/audio-file/load", "iF", id);
     }
+    
+    return 0;
+}
+
+int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    oid_t id  = argv[0]->i;
+    fa_string_t file_path = fa_string_from_utf8(&argv[1]->s);
+    int sr    = argv[2]->i;
+    int ch    = argv[3]->i;
+    
+    if (ch < 1 || ch > 2 || sr < 44100 || sr > 192000) {
+        fa_destroy(file_path);
+        fa_fail(fa_string("Bad sample rate and/or channels in load_raw_audio_file_handler"));
+        send_osc(message, user_data, "/audio-file/load", "iF", id);
+        return 0;
+    }
+    
+    
+    fa_buffer_t buffer = fa_buffer_read_raw(file_path);
+    if (fa_check(buffer)) {
+        fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
+        fa_destroy(file_path);
+        send_osc(message, user_data, "/audio-file/load", "iF", id);
+        return 0;
+    }
+    fa_buffer_set_meta(buffer, fa_string("file_path"), file_path);
+    fa_with_lock(audio_files_mutex) {
+        audio_files = fa_map_dset(wrap_oid(id), buffer, audio_files);
+    }
+    
+    fa_buffer_set_meta(buffer, fa_string("sample-rate"), fa_from_int32(sr));
+    fa_buffer_set_meta(buffer, fa_string("channels"), fa_from_int32(ch));
+    
+    size_t frames = fa_buffer_size(buffer) / (sizeof(double) * ch);
+    send_osc(message, user_data, "/audio-file/load", "iTiii", id, frames, sr, ch);
     
     return 0;
 }
@@ -786,6 +938,80 @@ int audio_file_peak_handler(const char *path, const char *types, lo_arg ** argv,
             send_osc(message, user_data, "/audio-file/peak", "iF", id);
         }
     }
+    return 0;
+}
+
+fa_ptr_t default_destroy(fa_ptr_t _, fa_ptr_t data) {
+    fa_free(data);
+    return NULL;
+}
+
+int audio_file_upload_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    oid_t id         =  argv[0]->i;
+    oid_t audio_id   =  argv[1]->i;
+    char* url        = &argv[2]->s;
+    char* cookie     = &argv[3]->s;
+    fa_buffer_t buffer = NULL;
+    bool new_buffer = false;
+    
+    fa_with_lock(audio_files_mutex) {
+        buffer = fa_map_dget(wrap_oid(audio_id), audio_files);
+        if (buffer) {
+            fa_buffer_take_reference(buffer);
+            
+            // Use only part of buffer
+            // TODO: don't copy, implement a filter in fa_io_from_buffer instead, to reduce memory footprint
+            if (argc >= 5) {
+                double from_ms = argv[4]->f;
+                double to_ms   = argv[5]->f;
+                if (from_ms < 0) from_ms = 0;
+                if (to_ms < 0) to_ms = 0;
+                fa_ptr_t sr = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
+                fa_ptr_t ch = fa_buffer_get_meta(buffer, fa_string("channels"));
+                if (sr && ch) {
+                    int channels = fa_peek_integer(ch);
+                    double sample_rate = fa_peek_number(sr);
+                    size_t from_byte = (int)round(sample_rate * (from_ms / 1000.0) * (double)channels);
+                    size_t to_byte   = (int)round(sample_rate * (to_ms / 1000.0) * (double)channels);
+                    if (to_byte > fa_buffer_size(buffer)) to_byte = fa_buffer_size(buffer);
+                    size_t size = to_byte - from_byte;
+                    if (size > 0) {
+                        uint8_t *src = fa_buffer_unsafe_address(buffer);
+                        uint8_t *dst = fa_malloc(size);
+                        memcpy(dst, src + from_byte, size);
+                        fa_buffer_release_reference(buffer);
+                        buffer = fa_buffer_wrap(dst, size, default_destroy, NULL);
+                        new_buffer = true;
+                    }
+                }
+            }
+            
+        } else {
+            fa_fail(fa_format_integral("There is no audio file with ID %zu", audio_id));
+            send_osc(message, user_data, "/audio-file/upload", "iF", id);
+        }
+    }
+    if (!buffer) return 0;
+    
+    fa_io_source_t source = fa_io_apply(fa_io_from_buffer(buffer), fa_io_create_ogg_encoder());
+    fa_buffer_t ogg_buffer = fa_io_pull_to_buffer(source);
+    size_t ogg_size = fa_buffer_size(ogg_buffer);
+    fa_destroy(source);
+    if (new_buffer) {
+        fa_destroy(buffer);
+    } else {
+        fa_buffer_release_reference(buffer);
+    }
+    
+    //fa_slog_info("ogg buffer: ", ogg_buffer);
+    //printf("Uploading %zu bytes...\n", fa_buffer_size(ogg_buffer));
+    
+    fa_buffer_write_raw(fa_string("/Users/erik/Desktop/out2.ogg"), ogg_buffer);
+
+    fa_thread_t thread = upload_buffer_async(id, ogg_buffer, url, cookie);
+    fa_thread_detach(thread);
+    send_osc(message, user_data, "/audio-file/upload/started", "ii", id, ogg_size);
     return 0;
 }
 
@@ -886,7 +1112,7 @@ int channel_reset_handler(const char *path, const char *types, lo_arg ** argv, i
         fa_pair_create(pitch_wheel_action(ch, pitch_wheel), fa_now()),
         fa_pair_create(sustain_action(ch, sustain), fa_now())));
 
-    schedule_relative(fa_now(), action, current_midi_echo_stream);
+    schedule_now(action, current_midi_echo_stream);
     return 0;
 }
 
@@ -928,19 +1154,194 @@ int level_handler(const char *path, const char *types, lo_arg ** argv, int argc,
     return 0;
 }
 
+fa_ptr_t _recording_started(fa_ptr_t context, fa_time_t time, fa_time_t now)
+{
+    recording_state = RECORDING_RUNNING;
+    send_osc_async("/recording/started", "iT", peek_oid(context)); //, timetag_from_time(now));
+    return NULL;
+}
+
+fa_ptr_t _recording_stopped(fa_ptr_t context, fa_time_t time, fa_time_t now)
+{
+    send_osc_async("/recording/stopped", "iT", peek_oid(context)); //, timetag_from_time(now));
+    return NULL;
+}
+
+fa_ptr_t _stop_recording(fa_ptr_t context) {
+    if (recording_state != NOT_RECORDING) recording_state = RECORDING_STOPPING;
+    return NULL;
+}
+
 int start_recording_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
+    // NOTE: as of now, the id is not used, and we support only one recording at a time
+    oid_t id          = argv[0]->i;
+    char* filename    = &argv[1]->s;
+    char* url         = &argv[2]->s;
+    char* cookies     = &argv[3]->s;
+    double rel_time   = argc > 4 ? argv[4]->f : 0;
+    double max_length = argc > 5 ? argv[5]->f : 0;
+    
+    // TODO: atomic access to recording_state
+    
+    // Already recording
+    if (recording_state != NOT_RECORDING) {
+        fa_slog_warning("Cannot record: already recording, state: ", fa_from_int8(recording_state));
+        send_osc(message, user_data, "/recording/start", "iFs", id, "already-recording");
+        return 0;
+    }
+    
+    // No input device
+    if (!current_audio_input_device) {
+        fa_slog_warning("Cannot record: no audio input device!");
+        send_osc(message, user_data, "/recording/start", "iFs", id, "no-audio-input");
+        return 0;
+    }
+    
+    if (*filename == 0 && *url == 0) {
+        fa_fail(fa_string("Cannot record: URL or filename must be provided!"));
+        send_osc(message, user_data, "/recording/start", "iFs", id, "no-url-or-filename");
+        return 0;
+    }
+    
+    fa_atomic_ring_buffer_reset(recording_ring_buffer);
+    
+    recording_state = RECORDING_INITIALIZING;
+    
+    recording_thread = create_recording_thread(id, recording_ring_buffer, filename, url, cookies);
+    
+    fa_action_t action = fa_action_send_retain(record_left_name, recording_ring_buffer);
+    if (rel_time == 0) {
+        schedule_now(action, current_audio_stream);
+    } else {
+        schedule_relative(fa_time_from_double(rel_time), action, current_audio_stream);
+    }
+    
+    if (max_length != 0) {
+        fa_action_t action = fa_action_many(list(
+            pair(fa_action_do(_stop_recording, NULL), fa_now()),
+            pair(fa_action_send(record_left_name, NULL), fa_now()),
+            pair(fa_action_send(record_right_name, NULL), fa_now())));
+        schedule_relative(fa_time_from_double(rel_time + max_length), action, current_audio_stream);
+    }
+    
+    
     return 0;
 }
 
 int stop_recording_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
+    // NOTE: as of now, the id is not used, and we support only one recording at a time
+    oid_t id = argv[0]->i;
+
+    if (recording_state == NOT_RECORDING) {
+        fa_slog_warning("Cannot stop recording: not currently recording!");
+        send_osc(message, user_data, "/recording/stop", "iFs", id, "not-recording");
+        return 0;
+    }
+    recording_state = RECORDING_STOPPING;
+    fa_action_t action = fa_action_many(list(
+        pair(fa_action_send(record_left_name, NULL), fa_now()),
+        pair(fa_action_send(record_right_name, NULL), fa_now())));
+    schedule_now(action, current_audio_stream);
+    return 0;
+}
+
+int choose_device_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    switch ((int)user_data) {
+    case CHOOSE_MIDI_INPUT_NONE:
+        if (selected_midi_input_devices) fa_deep_destroy_always(selected_midi_input_devices);
+        selected_midi_input_devices = fa_list_empty();
+        break;
+    case CHOOSE_MIDI_INPUT_ALL:
+        if (selected_midi_input_devices) fa_deep_destroy_always(selected_midi_input_devices);
+        selected_midi_input_devices = NULL;
+        break;
+    case CHOOSE_MIDI_INPUT_DEVICE:
+        if (selected_midi_input_devices) fa_deep_destroy_always(selected_midi_input_devices);
+        selected_midi_input_devices = list(pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s)));
+        break;
+    case CHOOSE_MIDI_OUTPUT_NONE:
+        if (selected_midi_output_devices) fa_deep_destroy_always(selected_midi_output_devices);
+        selected_midi_output_devices = fa_list_empty();
+        break;
+    case CHOOSE_MIDI_OUTPUT_ALL:
+        selected_midi_output_devices = NULL;
+        break;
+    case CHOOSE_MIDI_OUTPUT_DEVICE:
+        if (selected_midi_input_devices) fa_deep_destroy_always(selected_midi_input_devices);
+        selected_midi_input_devices = list(pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s)));
+        break;
+    case CHOOSE_AUDIO_INPUT_NONE:
+        if (selected_audio_input_device) fa_deep_destroy_always(selected_audio_input_device);
+        selected_audio_input_device = NULL;
+        break;
+    case CHOOSE_AUDIO_INPUT_DEFAULT:
+        if (selected_audio_input_device) fa_deep_destroy_always(selected_audio_input_device);
+        selected_audio_input_device = pair(fa_string_empty(), fa_string_empty());
+        break;
+    case CHOOSE_AUDIO_INPUT_DEVICE:
+        if (selected_audio_input_device) fa_deep_destroy_always(selected_audio_input_device);
+        selected_audio_input_device = pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s));
+        break;
+    case CHOOSE_AUDIO_OUTPUT_NONE:
+        if (selected_audio_output_device) fa_deep_destroy_always(selected_audio_output_device);
+        selected_audio_output_device = NULL;
+        break;
+    case CHOOSE_AUDIO_OUTPUT_DEFAULT:
+        if (selected_audio_output_device) fa_deep_destroy_always(selected_audio_output_device);
+        selected_audio_output_device = pair(fa_string_empty(), fa_string_empty());
+        break;
+    case CHOOSE_AUDIO_OUTPUT_DEVICE:
+        if (selected_audio_output_device) fa_deep_destroy_always(selected_audio_output_device);
+        selected_audio_output_device = pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s));
+        break;
+    case CHOOSE_MIDI_ECHO_NONE:
+        selected_midi_echo = FA_ECHO_NO_ECHO;
+        break;
+    case CHOOSE_MIDI_ECHO_AUDIO:
+        selected_midi_echo = FA_ECHO_AUDIO;
+        break;
+    case CHOOSE_MIDI_ECHO_DEVICE:
+        selected_midi_echo = FA_ECHO_DEVICE;
+        if (selected_midi_echo_device) fa_deep_destroy_always(selected_midi_echo_device);
+        selected_midi_echo_device = pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s));
+        break;
+        
+    default:
+        assert(false && "Never reached");
+    }
+    
+    return 0;
+}
+
+int restart_streams_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    stop_streams();
+    remove_all_playback_semaphores();
+    resolve_devices();
+    start_streams();
+    send_current_devices(message, user_data);
+    if (argc > 0) {
+        send_osc(message, user_data, "/restart/streams", "i", argv[0]->i);
+    }
+    return 0;
+}
+
+int restart_sessions_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    stop_streams();
+    remove_all_playback_semaphores();
+    stop_sessions();
+    start_sessions();
+    resolve_devices();
+    start_streams();
+    send_current_devices(message, user_data);
+    if (argc > 0) {
+        send_osc(message, user_data, "/restart/sessions", "i", argv[0]->i);
+    }
     return 0;
 }
 
 
-fa_ptr_t _status_callback(fa_ptr_t session)
-{
-    send_osc_async("/status-change", "");
-    return NULL;
-}
