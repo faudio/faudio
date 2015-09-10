@@ -59,6 +59,7 @@ double monitor_volume = 0.0;
 #define with_mutex(type, var) type var = 0; fa_thread_mutex_t var ## _mutex = NULL
 
 with_mutex(fa_map_t, playback_semaphores);
+with_mutex(fa_map_t, recording_semaphores);
 with_mutex(fa_map_t, audio_files);
 with_mutex(volatile int, time_echo);
 with_mutex(volatile int, level_echo);
@@ -103,6 +104,8 @@ static inline void init_globals() {
     
     playback_semaphores = fa_map_empty();
     playback_semaphores_mutex = fa_thread_create_mutex();
+    recording_semaphores = fa_map_empty();
+    recording_semaphores_mutex = fa_thread_create_mutex();    
     time_echo_mutex = fa_thread_create_mutex();
     level_echo_mutex = fa_thread_create_mutex();
     audio_files = fa_map_empty();
@@ -134,6 +137,8 @@ static inline void destroy_globals() {
     
     fa_destroy(playback_semaphores);
     fa_destroy(playback_semaphores_mutex);
+    fa_destroy(recording_semaphores);
+    fa_destroy(recording_semaphores_mutex);
     fa_destroy(time_echo_mutex);
     fa_destroy(level_echo_mutex);
     fa_destroy(audio_files);

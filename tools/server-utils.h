@@ -712,6 +712,39 @@ static inline void remove_all_playback_semaphores() {
     }
 }
 
+void add_recording_semaphore(oid_t id) {
+    fa_with_lock(recording_semaphores_mutex) {
+        recording_semaphores = fa_map_dset(wrap_oid(id), fa_from_bool(true), recording_semaphores);
+    }
+}
+
+bool check_recording_semaphore(fa_ptr_t context, fa_ptr_t dummy)
+{
+    fa_ptr_t value = fa_map_get(context, recording_semaphores);
+    return (value != NULL); // any value
+}
+
+bool remove_recording_semaphore(oid_t id) {
+    bool removed = false;
+    fa_with_lock(recording_semaphores_mutex) {
+        fa_ptr_t s = fa_map_dget(wrap_oid(id), recording_semaphores);
+        if (s) {
+            //schedule_now(fa_action_send(s, fa_string("free")), current_audio_stream);
+            recording_semaphores = fa_map_dremove(wrap_oid(id), recording_semaphores);
+            removed = true;
+        }
+    }
+    return removed;
+}
+
+static inline void remove_all_recording_semaphores() {
+    fa_with_lock(recording_semaphores_mutex) {
+        fa_map_t old_semaphores = recording_semaphores;
+        recording_semaphores = fa_map_empty();
+        fa_destroy(old_semaphores);
+    }
+}
+
 fa_ptr_t _echo_time(fa_ptr_t context, fa_time_t time, fa_time_t now) {
     //send_osc_async("/time", "h", fa_time_to_milliseconds(time));
     send_osc_async("/time", "t", timetag_from_time(now));

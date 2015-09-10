@@ -207,7 +207,8 @@ void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
         fa_free(_path);
 
         if (!fp) {
-            fa_fail(fa_string_dappend(fa_string("Could not write file: "), path));
+            fa_fail(fa_string_dappend(fa_string("Could not write file: "), fa_copy(path)));
+            fa_fail(fa_string_format_integral("  errno: %d", errno));
             fclose(fp);
         } else {
             fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
