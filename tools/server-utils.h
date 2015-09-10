@@ -1,6 +1,7 @@
 #include "fa/fa.h"
 #include "server-types.h"
 #include "server-globals.h"
+#include "fa/signal.h"
 
 // int lo_message_add_varargs_internal(lo_message m, const char *types,
 //                                     va_list ap, const char *file,
@@ -58,6 +59,12 @@ if (fa_check(_obj)) {               \
 
 static inline char* strdup_or_null(char* s) {
     return (s && *s) ? strdup(s) : NULL;
+}
+
+static inline char* fa_dunstring(fa_string_t str) {
+    char* result = fa_unstring(str);
+    fa_destroy(str);
+    return result;
 }
 
 void do_schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
@@ -443,14 +450,14 @@ fa_ptr_t _incoming_midi(fa_ptr_t x, fa_ptr_t time_message)
 
 static inline bool audio_device_matches(fa_audio_device_t device, fa_pair_t description) {
     if (!description) return false;
-    return (fa_equal(fa_audio_host_name(device), fa_pair_first(description))
-            && fa_equal(fa_audio_name(device), fa_pair_second(description)));
+    return (fa_dequal(fa_audio_host_name(device), fa_copy(fa_pair_first(description)))
+            && fa_dequal(fa_audio_name(device), fa_copy(fa_pair_second(description))));
 }
 
 static inline bool midi_device_matches(fa_midi_device_t device, fa_pair_t description) {
     if (!description) return false;
-    return (fa_equal(fa_midi_host_name(device), fa_pair_first(description))
-            && fa_equal(fa_midi_name(device), fa_pair_second(description)));
+    return (fa_dequal(fa_midi_host_name(device), fa_copy(fa_pair_first(description)))
+            && fa_dequal(fa_midi_name(device), fa_copy(fa_pair_second(description))));
 }
 
 static inline bool pair_is_two_empty_strings(fa_pair_t pair) {
@@ -584,6 +591,55 @@ void stop_streams() {
 void start_streams() {
     fa_slog_info("Starting streams...");
     
+    if (current_audio_session) {
+        fa_slog_info("Current settings:");
+        fa_slog_info("Input latency:   ", host_input_latency);
+        fa_slog_info("Output latency:  ", host_output_latency);
+        fa_slog_info("Vector size:     ", host_vector_size);
+        if (current_audio_input_device) {
+            fa_ptr_t input_latency = fa_map_dget(fa_audio_host_name(current_audio_input_device), host_input_latency);
+            if (!input_latency) {
+                fa_inform(fa_dappend(fa_string("No input latency setting for host "),
+                     fa_audio_host_name(current_audio_input_device)));
+                input_latency = fa_map_dget(fa_string(""), host_input_latency);
+            }
+            if (!input_latency) {
+                fa_inform(fa_string("No generic input latency setting, using default"));
+                input_latency = fa_from_int16(30);
+            }
+            fa_ptr_t value = fa_from_double(fa_peek_number(input_latency) / 1000.0);
+            fa_audio_set_parameter(fa_string("input-latency"), value, current_audio_session);
+        }
+        if (current_audio_output_device) {
+            fa_ptr_t output_latency = fa_map_dget(fa_audio_host_name(current_audio_output_device), host_output_latency);
+            if (!output_latency) {
+                fa_inform(fa_dappend(fa_string("No output latency setting for host "),
+                     fa_audio_host_name(current_audio_input_device)));
+                output_latency = fa_map_dget(fa_string(""), host_output_latency);
+            }
+            if (!output_latency) {
+                fa_inform(fa_string("No generic output latency setting, using default"));
+                output_latency = fa_from_int16(30);
+            }
+            fa_ptr_t value = fa_from_double(fa_peek_number(output_latency) / 1000.0);
+            fa_audio_set_parameter(fa_string("output-latency"), value, current_audio_session);
+        }
+        if (current_audio_output_device || current_audio_input_device) {
+            fa_ptr_t device = current_audio_input_device ? current_audio_input_device : current_audio_output_device;
+            fa_ptr_t vector_size = fa_map_dget(fa_audio_host_name(device), host_vector_size);
+            if (!vector_size) {
+                fa_inform(fa_dappend(fa_string("No output latency setting for host "),
+                     fa_audio_host_name(device)));
+                vector_size = fa_map_dget(fa_string(""), host_vector_size);
+            }
+            if (!vector_size) {
+                fa_inform(fa_string("No generic output latency setting, using default"));
+                vector_size = fa_from_int16(64);
+            }
+            fa_audio_set_parameter(fa_string("vector-size"), fa_copy(vector_size), current_audio_session);
+        }
+    }
+    
     // Start audio stream first
     if (current_audio_input_device || current_audio_output_device) {
         fa_list_t out_signal = construct_output_signal_tree();
@@ -646,9 +702,15 @@ void start_streams() {
     }
 }
 
-fa_ptr_t _status_callback(fa_ptr_t session)
+fa_ptr_t _audio_status_callback(fa_ptr_t session)
 {
-    send_osc_async("/status-change", "");
+    send_osc_async("/status-change", "s", "audio");
+    return NULL;
+}
+
+fa_ptr_t _midi_status_callback(fa_ptr_t session)
+{
+    send_osc_async("/status-change", "s", "midi");
     return NULL;
 }
 
@@ -657,8 +719,8 @@ void start_sessions() {
     assert(!current_midi_session && "A MIDI session is already running!");
     current_audio_session = fa_audio_begin_session();
     current_midi_session = fa_midi_begin_session();
-    fa_audio_add_status_callback(_status_callback, current_audio_session, current_audio_session);
-    fa_midi_add_status_callback(_status_callback, current_midi_session, current_midi_session);
+    fa_audio_add_status_callback(_audio_status_callback, current_audio_session, current_audio_session);
+    fa_midi_add_status_callback(_midi_status_callback, current_midi_session, current_midi_session);
 }
 
 void stop_sessions() {

@@ -537,7 +537,6 @@ int settings_handler(const char *path, const char *types, lo_arg ** argv, int ar
     if (current_audio_session) {
         fa_audio_set_parameter(parameter, value, current_audio_session);
     }
-    fa_destroy(parameter);
     return 0;
 }
 
@@ -547,7 +546,7 @@ int host_settings_handler(const char *path, const char *types, lo_arg ** argv, i
     host_setting_t parameter = (int)user_data;
     fa_ptr_t value = create_fa_value(types[0], argv[0]);
     fa_ptr_t host = (argc > 1) ? fa_string(&argv[1]->s) : fa_string("");
-    fa_slog_info("host_settings handler: ", fa_from_int16(parameter), host, value);
+    // fa_slog_info("host_settings handler: ", fa_from_int16(parameter), host, value);
     switch (parameter) {
     case HOST_SETTINGS_LATENCY:
         host_input_latency  = fa_map_dset(fa_copy(host), fa_copy(value), host_input_latency);
@@ -564,10 +563,10 @@ int host_settings_handler(const char *path, const char *types, lo_arg ** argv, i
         break;
     }
     
-    fa_slog_info("Current settings:");
-    fa_slog_info("Input latency:   ", host_input_latency);
-    fa_slog_info("Output latency:  ", host_output_latency);
-    fa_slog_info("Vector size:     ", host_vector_size);
+    // fa_slog_info("Current settings:");
+    // fa_slog_info("Input latency:   ", host_input_latency);
+    // fa_slog_info("Output latency:  ", host_output_latency);
+    // fa_slog_info("Vector size:     ", host_vector_size);
     
     return 0;
 }
@@ -631,9 +630,9 @@ int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int
         send_osc(message, user_data, "/audio/devices", "i", fa_list_length(audio_devices));
         int counter = 0;
         fa_for_each (device, audio_devices) {
-            //printf("device: %d %s / %s\n", counter, fa_unstring(fa_audio_host_name(device)), fa_unstring(fa_audio_name(device)));
-            char *host_name = fa_unstring(fa_audio_host_name(device));
-            char *name = fa_unstring(fa_audio_name(device));
+            //printf("device: %d %s / %s\n", counter, fa_dunstring(fa_audio_host_name(device)), fa_unstring(fa_audio_name(device)));
+            char *host_name = fa_dunstring(fa_audio_host_name(device));
+            char *name = fa_dunstring(fa_audio_name(device));
             send_osc(message, user_data, "/audio/device", "issiif", counter++, host_name, name,
                 fa_audio_input_channels(device), fa_audio_output_channels(device),
                 fa_audio_current_sample_rate(device));
@@ -684,8 +683,8 @@ int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int
 void send_current_devices(lo_message message, void *user_data)
 {
     if (current_audio_input_device) {
-        char *host_name = fa_unstring(fa_audio_host_name(current_audio_input_device));
-        char *name = fa_unstring(fa_audio_name(current_audio_input_device));
+        char *host_name = fa_dunstring(fa_audio_host_name(current_audio_input_device));
+        char *name = fa_dunstring(fa_audio_name(current_audio_input_device));
         send_osc(message, user_data, "/current/audio/input", "ssiif", host_name, name,
             fa_audio_input_channels(current_audio_input_device),
             fa_audio_output_channels(current_audio_input_device),
@@ -697,8 +696,8 @@ void send_current_devices(lo_message message, void *user_data)
     }
   
     if (current_audio_output_device) {
-        char *host_name = fa_unstring(fa_audio_host_name(current_audio_output_device));
-        char *name = fa_unstring(fa_audio_name(current_audio_output_device));
+        char *host_name = fa_dunstring(fa_audio_host_name(current_audio_output_device));
+        char *name = fa_dunstring(fa_audio_name(current_audio_output_device));
         send_osc(message, user_data, "/current/audio/output", "ssiif", host_name, name,
             fa_audio_input_channels(current_audio_output_device),
             fa_audio_output_channels(current_audio_output_device),
@@ -720,8 +719,8 @@ void send_current_devices(lo_message message, void *user_data)
         break;
     case FA_ECHO_DEVICE:
         assert(current_midi_echo_device && "current_midi_echo_device is NULL in current_devices_handler");
-        char *host_name = fa_unstring(fa_audio_host_name(current_midi_echo_device));
-        char *name = fa_unstring(fa_audio_name(current_midi_echo_device));
+        char *host_name = fa_dunstring(fa_audio_host_name(current_midi_echo_device));
+        char *name = fa_dunstring(fa_audio_name(current_midi_echo_device));
         send_osc(message, user_data, "/current/midi/echo", "ssii", host_name, name,
             fa_midi_has_input(current_midi_echo_device) ? 1 : 0,
             fa_midi_has_output(current_midi_echo_device) ? 1 : 0);

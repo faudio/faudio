@@ -415,11 +415,9 @@ void fa_audio_with_session(session_callback_t session_callback,
     fa_audio_end_session(session);
 }
 
-void fa_audio_set_parameter(fa_string_t name,
-                            fa_ptr_t value,
-                            session_t session)
+static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
 {
-    if (fa_dequal(fa_copy(name), fa_string("sample-rate"))) {
+    if (strcmp(name, "sample-rate") == 0) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -444,7 +442,7 @@ void fa_audio_set_parameter(fa_string_t name,
         return;
     }
 
-    if (fa_dequal(fa_copy(name), fa_string("scheduler-interval"))) {
+    if (strcmp(name, "scheduler-interval") == 0) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -469,7 +467,7 @@ void fa_audio_set_parameter(fa_string_t name,
         return;
     }
 
-    if (fa_dequal(fa_copy(name), fa_string("latency"))) {
+    if (strcmp(name, "latency") == 0) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -495,7 +493,7 @@ void fa_audio_set_parameter(fa_string_t name,
         return;
     }
 
-    if (fa_dequal(fa_copy(name), fa_string("input-latency"))) {
+    if (strcmp(name, "input-latency") == 0) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -520,7 +518,7 @@ void fa_audio_set_parameter(fa_string_t name,
         return;
     }
 
-    if (fa_dequal(fa_copy(name), fa_string("output-latency"))) {
+    if (strcmp(name, "output-latency") == 0) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -545,7 +543,7 @@ void fa_audio_set_parameter(fa_string_t name,
         return;
     }
 
-    if (fa_dequal(fa_copy(name), fa_string("vector-size"))) {
+    if (strcmp(name, "vector-size") == 0) {
         int x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -574,7 +572,7 @@ void fa_audio_set_parameter(fa_string_t name,
         return;
     }
 
-    if (fa_dequal(fa_copy(name), fa_string("exclusive"))) {
+    if (strcmp(name, "exclusive") == 0) {
         bool x;
 
         switch (fa_dynamic_get_type(value)) {
@@ -598,7 +596,18 @@ void fa_audio_set_parameter(fa_string_t name,
         session->parameters.exclusive = x;
         return;
     }
-    fa_warn(fa_dappend(fa_string("Unknown setting: "), fa_copy(name)));
+    fa_warn(fa_dappend(fa_string("Unknown setting: "), fa_string(name)));
+}
+
+void fa_audio_set_parameter(fa_string_t name,
+                            fa_ptr_t value,
+                            session_t session)
+{
+    char* param = fa_unstring(name);
+    set_parameter(param, value, session);
+    fa_free(param);
+    fa_destroy(name);
+    fa_destroy(value);
 }
 
 fa_list_t fa_audio_current_sessions()
