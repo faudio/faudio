@@ -7,7 +7,7 @@ fa_list_t just(fa_ptr_t x, fa_list_t xs)
 
 // TODO move
 #define fa_map_get_the(TYPE, KEY, MAP) \
-    (fa_peek_##TYPE(fa_map_get(KEY, MAP)))
+    (fa_peek_##TYPE(fa_map_dget(KEY, MAP)))
 
 #define fa_map_get_int32(KEY, MAP) fa_map_get_the(int32, KEY, MAP)
 #define fa_map_get_int64(KEY, MAP) fa_map_get_the(int64, KEY, MAP)
