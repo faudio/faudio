@@ -13,6 +13,7 @@
 #include <fa/string.h>
 #include <fa/func_ref.h>
 #include <fa/io.h>
+#include <fa/option.h>
 #include "common.h"
 
 #if defined(_WIN32)
@@ -26,6 +27,10 @@
 #include "server-types.h"
 #include "server-globals.h"
 #include "server-utils.h"
+
+fa_option_t option_declaration[] = {
+    { "p", "port", "Port number", fa_option_integral, "7770"  }
+};
 
 #define define_handler(name) \
   int name ## _handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
@@ -85,17 +90,27 @@ define_handler(choose_device);
 
 fa_ptr_t _status_callback(fa_ptr_t session);
 
-int main()
+int main(int argc, char const *argv[])
 {
     fa_set_log_std();
     
-    const char *port = "7770";
-  
-    // Init curl
+    char port[14]; // enough to hold all int32 numbers
+    fa_with_options(option_declaration, argc, argv, options, args) {
+        sprintf(port, "%d", fa_map_get_int32(fa_string("port"), options));
+        
+    }
+    
+    // Init curl. This MUST be called before any other threads are spawned, even
+    // if they are not using libcurl (according to the libcurl documentation).
     curl_global_init(CURL_GLOBAL_DEFAULT);
   
-    /* start a new server on port 7770 */
+    /* start a new server  */
     lo_server_thread st = lo_server_thread_new_with_proto(port, LO_TCP, liblo_error);
+    if (!st) {
+        printf("Could not start OSC server, exiting\n");
+        curl_global_cleanup();
+        return 0;
+    }
     server = lo_server_thread_get_server(st);
 
     /* add bundle handlers */
@@ -294,7 +309,7 @@ int bundle_end_handler(void *user_data) {
     if (in_bundle == 0) {
         if (!fa_list_is_empty(bundle_actions)) {
             //fa_slog_info("end handler: ", bundle_actions);
-            fa_action_t action = fa_action_many(fa_list_dreverse(bundle_actions)); // preserve original order
+            fa_action_t action = fa_action_many(times_to_delta_times(bundle_actions)); // preserve original order
             if (fa_time_is_zero(bundle_time)) {
                 if (fa_action_is_flat(action)) {
                     do_schedule_now(action, bundle_stream);
@@ -342,9 +357,10 @@ int argc, lo_message message, void *user_data)
     return 1;
 }
 
+// Note: sends nominal (scheduled) time!
 fa_ptr_t _playback_started(fa_ptr_t context, fa_time_t time, fa_time_t now)
 {
-    send_osc_async("/playback/started", "it", peek_oid(context), timetag_from_time(now));
+    send_osc_async("/playback/started", "it", peek_oid(context), timetag_from_time(time));
     return NULL;
 }
 
@@ -444,7 +460,7 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
 
     fa_list_t actions = fa_list_empty();
     int count = data_size / 8;
-    printf("%d MIDI entries:\n", count);
+    printf("%d MIDI entries\n", count);
 
     // Collect MIDI entries from the data blob, create MIDI messages and add them to a list
     int32_t max_time = 0;
@@ -502,14 +518,18 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
 }
 
 int stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
-    fa_slog_info("stop_handler");
+    //fa_slog_info("stop_handler");
     if (remove_playback_semaphore(argv[0]->i)) {
-        printf("Stopping playback %d\n", argv[0]->i);
+        //printf("Stopping playback %d\n", argv[0]->i);
         fa_time_t now = fa_clock_time(current_clock);
         send_osc(message, user_data, "/playback/stopped", "itF", argv[0]->i, timetag_from_time(now));
         fa_destroy(now);
         stop_time_echo();
         if (current_midi_echo_stream) {
+            // Stop sounding notes as fast as possible...
+            do_schedule_now(all_notes_off_action(), current_midi_echo_stream);
+            // ... but also schedule a note-off for notes that may
+            // already have been sent to the audio thread
             do_schedule_relative(sched_delay, all_notes_off_action(), current_midi_echo_stream);
         }
     } else {
@@ -620,9 +640,8 @@ int next_id_handler(const char *path, const char *types, lo_arg ** argv, int arg
 *   /all/devices
 */
 
-int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+void send_all_devices(int id, lo_message message, void *user_data)
 {
-    oid_t id = argc > 0 ? argv[0]->i : -1;
     bool errors = false;
     
     if (current_audio_session) {
@@ -671,8 +690,19 @@ int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int
         } else {
             send_osc(message, user_data, "/all/devices", "iT", id);
         }
+    } else {
+        if (errors) {
+            send_osc(message, user_data, "/all/devices", "NF");
+        } else {
+            send_osc(message, user_data, "/all/devices", "NT");
+        }
     }
-  
+}
+
+int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    oid_t id = argc > 0 ? argv[0]->i : -1;
+    send_all_devices(id, message, user_data);
     return 0;
 }
 
@@ -1153,7 +1183,7 @@ int level_handler(const char *path, const char *types, lo_arg ** argv, int argc,
 fa_ptr_t _recording_started(fa_ptr_t context, fa_time_t time, fa_time_t now)
 {
     recording_state = RECORDING_RUNNING;
-    send_osc_async("/recording/started", "iT", peek_oid(context)); //, timetag_from_time(now));
+    send_osc_async("/recording/started", "it", peek_oid(context), timetag_from_time(time));
     return NULL;
 }
 
@@ -1360,6 +1390,7 @@ int restart_streams_handler(const char *path, const char *types, lo_arg ** argv,
     recording_state = NOT_RECORDING;
     resolve_devices();
     start_streams();
+    send_all_devices(-1, message, user_data);
     send_current_devices(message, user_data);
     if (argc > 0) {
         send_osc(message, user_data, "/restart/streams", "i", argv[0]->i);
@@ -1377,6 +1408,7 @@ int restart_sessions_handler(const char *path, const char *types, lo_arg ** argv
     start_sessions();
     resolve_devices();
     start_streams();
+    send_all_devices(-1, message, user_data);
     send_current_devices(message, user_data);
     if (argc > 0) {
         send_osc(message, user_data, "/restart/sessions", "i", argv[0]->i);
