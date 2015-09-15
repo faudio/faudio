@@ -4,9 +4,9 @@ git submodule update external/libogg/source;
 
 pushd external/libogg/source;
 
-CFLAGS="-arch i386" \
-CXXFLAGS="-arch i386" \
-LDFLAGS="-arch i386" \
+CFLAGS="-arch x86_64" \
+CXXFLAGS="-arch x86_64" \
+LDFLAGS="-arch x86_64" \
 ./configure \
     --prefix=`pwd`/../result \
 	  && make \

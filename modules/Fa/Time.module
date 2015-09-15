@@ -88,7 +88,18 @@ module Fa.Time
         @return
             A new time value.
      */
-    create : (Days, Hours, Minutes, Ratio) -> Time;
+    create : (Days, Hours, Minutes, seconds : Ratio) -> Time;
+    
+    /** Construct a time value from a double.
+        @param dvalue
+            Number of seconds
+     */
+    fromDouble : (dvalue : Double) -> Time;
+    
+    /**
+        Return a time as a double (number of seconds)
+     */
+    toDouble : Time -> Double;
     
     /**
         Copy the given time value.
@@ -176,11 +187,17 @@ module Fa.Time
             Time value.
      */
     toMilliseconds : Time -> Milliseconds;
+    
+    /** Return true if the time equals 0. */
+    isZero : Time -> Bool;
 
     /** The system time type.
 
         This is the same as `time_t` in the standard C header `time.h`.
      */
     type System = opaque; 
+    
+    
+    logCount : () -> Void;
 }
 

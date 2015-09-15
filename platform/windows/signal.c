@@ -8,7 +8,7 @@
 
 #include <fluidsynth.h>
 
-fa_pair_t fa_signal_dls()
+fa_pair_t fa_signal_dls(fa_string_t name)
 {
     assert(false && "Not available on this platform");
 }
@@ -76,8 +76,6 @@ fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
     return NULL;
 }
 
-void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
-
 fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     fluid_synth_t *synth = x;
@@ -85,14 +83,18 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
     // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
 
-    // TODO
     if (fa_equal(n, fa_string("fluid"))) {
+
         if (!fa_midi_message_is_simple(msg)) {
-            fa_warn(fa_string("Unknown message to Fluidsynth (not a MIDI message)"));
+			fa_warn(fa_string("SYSEX message to Fluidsynth"));
+			//if (FLUID_OK != fluid_synth_sysex(synth, msg->sysex->data, msg->sysex->size, NULL, 0, NULL, 0)) {
+			//	fa_warn(fa_string("Fluidsynth: Could not send SYSEX message"));
+			//}
+			
         } else {
 
 
-            int status_channel, data1, data2;
+            uint8_t status_channel, data1, data2;
             fa_midi_message_decons(msg, &status_channel, &data1, &data2);
 
             int channel = status_channel        & 0x0f;
@@ -177,6 +179,8 @@ fa_ptr_t destroy_(fa_ptr_t x)
 
 fa_pair_t fa_signal_synth(fa_string_t name, fa_string_t path2)
 {
+    // FIXME: name is currently ignored and hardcoded to "fluid" in receive_
+    
     // create synth
     fluid_synth_t *synth = NULL;
     {
@@ -193,7 +197,7 @@ fa_pair_t fa_signal_synth(fa_string_t name, fa_string_t path2)
         fa_inform(fa_string("Creating FluidSynth instance"));
         synth = new_fluid_synth(settings);
 
-        fa_inform(fa_string_dappend(fa_string("    Loading sound font"), fa_copy(path2)));
+        fa_inform(fa_string_dappend(fa_string("    Loading sound font "), fa_copy(path2)));
         char *path = fa_unstring(path2);
 
         if (FLUID_FAILED == fluid_synth_sfload(synth, path, true)) {

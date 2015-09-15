@@ -31,7 +31,9 @@
 #define base_t              fa_list_t
 #define base_empty          fa_list_empty
 #define base_copy           fa_list_copy
+#define base_deep_copy      fa_list_deep_copy
 #define base_destroy        fa_list_destroy
+#define base_deep_destroy   fa_list_deep_destroy
 #define base_insert         fa_list_insert
 #define base_dinsert        fa_list_dinsert
 #define base_remove         fa_list_remove
@@ -89,7 +91,7 @@ fa_set_t fa_set_add(fa_ptr_t x, fa_set_t set)
 fa_set_t fa_set_set(fa_ptr_t x, fa_set_t set)
 {
     int i = base_index_of(x, set->elems);
-
+    
     if (i < 0) {
         return new_set(base_insert((-i - 1), x, set->elems));
     } else {
@@ -135,9 +137,21 @@ fa_set_t fa_set_copy(fa_set_t set)
     return new_set(base_copy(set->elems));
 }
 
+fa_set_t fa_set_deep_copy(fa_set_t set)
+{
+    return new_set(base_deep_copy(set->elems));
+}
+
 void fa_set_destroy(fa_set_t set)
 {
     base_destroy(set->elems);
+    delete_set(set);
+}
+
+void fa_set_deep_destroy(fa_set_t set, fa_deep_destroy_pred_t pred)
+{
+    if (!(pred(set))) return;
+    base_deep_destroy(set->elems, pred);
     delete_set(set);
 }
 
@@ -300,9 +314,19 @@ fa_ptr_t set_copy(fa_ptr_t a)
     return fa_set_copy(a);
 }
 
+fa_ptr_t set_deep_copy(fa_ptr_t a)
+{
+    return fa_set_copy(a);
+}
+
 void set_destroy(fa_ptr_t a)
 {
     fa_set_destroy(a);
+}
+
+void set_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    fa_set_deep_destroy(a, p);
 }
 
 fa_dynamic_type_repr_t set_get_type(fa_ptr_t a)
@@ -314,8 +338,8 @@ fa_ptr_t set_impl(fa_id_t interface)
 {
     static fa_equal_t set_equal_impl = { set_equal };
     static fa_string_show_t set_show_impl = { set_show };
-    static fa_copy_t set_copy_impl = { set_copy };
-    static fa_destroy_t set_destroy_impl = { set_destroy };
+    static fa_copy_t set_copy_impl = { set_copy, set_deep_copy };
+    static fa_destroy_t set_destroy_impl = { set_destroy, set_deep_destroy };
     static fa_dynamic_t set_dynamic_impl = { set_get_type };
 
     switch (interface) {

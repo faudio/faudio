@@ -96,7 +96,18 @@ typedef int64_t fa_time_milliseconds_t;
 fa_time_t fa_time_create(fa_time_days_t days,
                          fa_time_hours_t hours,
                          fa_time_minutes_t minutes,
-                         fa_ratio_t ratio);
+                         fa_ratio_t seconds);
+
+/** Construct a time value from a double.
+    @param dvalue
+        Number of seconds
+*/
+fa_time_t fa_time_from_double(double dvalue);
+
+/**
+    Return a time as a double (number of seconds)
+ */
+double fa_time_to_double(fa_time_t time);
 
 /**
     Copy the given time value.
@@ -181,11 +192,18 @@ fa_time_seconds_t fa_time_to_seconds(fa_time_t time);
 */
 fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t time);
 
+/** Return true if the time equals 0. 
+*/
+bool fa_time_is_zero(fa_time_t time);
+
 /** The system time type.
 
     This is the same as `time_t` in the standard C header `time.h`.
 */
 typedef struct _fa_time_system_t * fa_time_system_t;
+
+
+void fa_time_log_count();
 
 /** @}
     @}

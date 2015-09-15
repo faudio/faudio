@@ -28,7 +28,8 @@
           may not necessarily lead to its nodes being destroyed as they might
           be shared by other lists.
 
-       - Destroying a list does not destroy its contents (as with all containters)
+        - As with all containers, destroying a list does not destroy its contents
+          (However deep_destroy does)
  */
 
 struct node {
@@ -44,6 +45,9 @@ struct _fa_list_t {
     node_t          node;       //  Top-level node
 };
 
+static int gListCount = 0;
+static int gNodeCount = 0;
+
 
 // --------------------------------------------------------------------------------
 
@@ -55,6 +59,7 @@ inline static node_t new_node(fa_ptr_t value, node_t next)
     node->count = 1;
     node->value = value;
     node->next  = next;
+    gNodeCount++;
     return node;
 }
 
@@ -79,10 +84,11 @@ inline static void release_node(node_t node)
     }
 
     node->count--;
-
+    
     if (node->count == 0) {
         release_node(node->next);
         fa_delete(node);
+        gNodeCount--;
     }
 }
 
@@ -93,11 +99,13 @@ inline static fa_list_t new_list(node_t node)
     fa_list_t list = fa_new(list);
     list->impl = &list_impl;
     list->node = node;
+    gListCount++;
     return list;
 }
 
 inline static void delete_list(fa_list_t list)
 {
+    gListCount--;
     fa_delete(list);
 }
 
@@ -176,6 +184,35 @@ fa_list_t fa_list_copy(fa_list_t xs)
     return new_list(take_node(xs->node));
 }
 
+static inline fa_ptr_t deep_copy_unless_null(fa_ptr_t value)
+{
+    return value ? fa_deep_copy(value) : NULL;
+}
+
+fa_list_t fa_list_deep_copy(fa_list_t xs)
+{
+    if (!xs->node) return fa_list_empty();
+
+    // copy head element
+    node_t old = xs->node;
+    node_t new_head = new_node(deep_copy_unless_null(old->value), NULL);
+
+    // copy rest of the list
+    node_t new = new_head;
+    old = old->next;
+    while (old != NULL) {
+        new->next = new_node(deep_copy_unless_null(old->value), NULL);
+        old = old->next;
+        new = new->next;
+    }
+
+    return new_list(new_head);
+    
+    // impl_for_each(xs, value) {
+    //     fa_push_list(value ? fa_deep_copy(value) : NULL, new_list);
+    // }
+}
+
 fa_list_t fa_list_cons(fa_ptr_t x, fa_list_t xs)
 {
     return new_list(new_node(x, take_node(xs->node)));
@@ -190,6 +227,17 @@ fa_list_t fa_list_dcons(fa_ptr_t x, fa_list_t xs)
 
 void fa_list_destroy(fa_list_t xs)
 {
+    release_node(xs->node);
+    delete_list(xs);
+}
+
+// FIXME: check reference count!
+void fa_list_deep_destroy(fa_list_t xs, fa_deep_destroy_pred_t p)
+{
+    if (!p(xs)) return;
+    impl_for_each(xs, value) {
+        fa_deep_destroy(value, p);
+    }
     release_node(xs->node);
     delete_list(xs);
 }
@@ -310,10 +358,13 @@ fa_list_t fa_list_append(fa_list_t xs, fa_list_t ys)
 
 fa_list_t fa_list_reverse(fa_list_t xs)
 {
-    return revappend(xs, fa_list_empty());
+    fa_list_t empty_list = fa_list_empty();
+    fa_list_t reversed = revappend(xs, empty_list);
+    //fa_list_destroy(empty_list);
+    return reversed;
 }
 
-static inline fa_list_t merge(fa_list_t xs, fa_list_t ys)
+static inline fa_list_t dmerge(fa_list_t xs, fa_list_t ys, fa_list_sort_fn_t fn)
 {
     begin_node(node, next);
 
@@ -323,36 +374,32 @@ static inline fa_list_t merge(fa_list_t xs, fa_list_t ys)
         x = fa_list_head(xs);
         y = fa_list_head(ys);
 
-        if (fa_less_than(x, y)) {
+        if (fn(x, y)) {
             append_node(next, x);
-            xs = fa_list_tail(xs);
+            xs = fa_list_dtail(xs);
         } else {
             append_node(next, y);
-            ys = fa_list_tail(ys);
+            ys = fa_list_dtail(ys);
         }
     }
 
     if (!fa_list_is_empty(xs)) {
-        return fa_list_append(new_list(node), xs);
+        fa_list_destroy(ys);
+        return fa_list_dappend(new_list(node), xs);
     }
 
     if (!fa_list_is_empty(ys)) {
-        return fa_list_append(new_list(node), ys);
+        fa_list_destroy(xs);
+        return fa_list_dappend(new_list(node), ys);
     }
+    
+    fa_list_destroy(xs);
+    fa_list_destroy(ys);
 
     return new_list(node);
 }
 
-static inline fa_list_t dmerge(fa_list_t xs, fa_list_t ys)
-{
-    fa_list_t res = merge(xs, ys);
-    fa_list_destroy(xs);
-    fa_list_destroy(ys);
-    return res;
-}
-
-
-static inline fa_list_t dmerge_sort(fa_list_t xs)
+static inline fa_list_t dmerge_sort(fa_list_t xs, fa_list_sort_fn_t fn)
 {
     int len, mid;
     fa_list_t left, right;
@@ -367,20 +414,29 @@ static inline fa_list_t dmerge_sort(fa_list_t xs)
     left  = fa_list_take(mid, xs);
     right = fa_list_ddrop(mid, xs); // xs destroyed here
 
-    left  = dmerge_sort(left);
-    right = dmerge_sort(right);
+    left  = dmerge_sort(left, fn);
+    right = dmerge_sort(right, fn);
 
-    if (fa_less_than(fa_list_last(left),
-                     fa_list_head(right))) {
+    if (fn(fa_list_last(left), fa_list_head(right))) {
         return fa_list_dappend(left, right);
     } else {
-        return dmerge(left, right);
+        return dmerge(left, right, fn);
     }
 }
 
-fa_list_t fa_list_sort(fa_list_t xs)
+fa_list_t fa_list_sort(fa_list_t xs, fa_list_sort_fn_t fn)
 {
-    return dmerge_sort(fa_list_copy(xs));
+    return dmerge_sort(fa_list_copy(xs), fn);
+}
+
+fa_list_t fa_list_dsort(fa_list_t xs, fa_list_sort_fn_t fn)
+{
+    return dmerge_sort(xs, fn);
+}
+
+fa_list_t fa_list_dsort_ascending(fa_list_t xs)
+{
+    return fa_list_sort(xs, fa_less_than);
 }
 
 fa_list_t fa_list_dappend(fa_list_t xs, fa_list_t ys)
@@ -393,14 +449,18 @@ fa_list_t fa_list_dappend(fa_list_t xs, fa_list_t ys)
 
 fa_list_t fa_list_dreverse(fa_list_t xs)
 {
-    fa_list_t ys = revappend(xs, fa_list_empty());
+    /*fa_list_t ys = revappend(xs, fa_list_empty());
     fa_list_destroy(xs);
-    return ys;
-}
-
-fa_list_t fa_list_dsort(fa_list_t xs)
-{
-    fa_list_t ys = dmerge_sort(xs);
+    return ys;*/
+    if (fa_list_is_empty(xs)) {
+        return xs;
+    }
+    fa_list_t ys = fa_list_empty();
+    while (!fa_list_is_empty(xs)) {
+        fa_push_list(fa_list_head(xs), ys);
+        xs = fa_list_dtail(xs);
+    }
+    fa_list_destroy(xs);
     return ys;
 }
 
@@ -805,9 +865,19 @@ fa_ptr_t list_copy(fa_ptr_t a)
     return fa_list_copy(a);
 }
 
+fa_ptr_t list_deep_copy(fa_ptr_t a)
+{
+  return fa_list_deep_copy(a);
+}
+
 void list_destroy(fa_ptr_t a)
 {
     fa_list_destroy(a);
+}
+
+void list_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    fa_list_deep_destroy(a, p);
 }
 
 fa_dynamic_type_repr_t list_get_type(fa_ptr_t a)
@@ -829,9 +899,9 @@ fa_ptr_t list_impl(fa_id_t interface)
     static fa_string_show_t list_show_impl
         = { list_show };
     static fa_copy_t list_copy_impl
-        = { list_copy };
+        = { list_copy, list_deep_copy };
     static fa_destroy_t list_destroy_impl
-        = { list_destroy };
+        = { list_destroy, list_deep_destroy };
     static fa_dynamic_t list_dynamic_impl
         = { list_get_type };
     static fa_semigroup_t list_semigroup_impl
@@ -849,10 +919,10 @@ fa_ptr_t list_impl(fa_id_t interface)
 
     case fa_copy_i:
         return &list_copy_impl;
-
+        
     case fa_destroy_i:
         return &list_destroy_impl;
-
+        
     case fa_dynamic_i:
         return &list_dynamic_impl;
 
@@ -862,5 +932,12 @@ fa_ptr_t list_impl(fa_id_t interface)
     default:
         return NULL;
     }
+}
+
+void fa_list_log_count()
+{
+  fa_log_info(fa_string_dappend(fa_string("Lists/nodes allocated: "),
+      fa_string_dappend(fa_string_dshow(fa_i32(gListCount)),
+      fa_string_dappend(fa_string(" / "), fa_string_dshow(fa_i32(gNodeCount))))));
 }
 

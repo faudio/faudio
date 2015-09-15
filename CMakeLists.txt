@@ -9,6 +9,16 @@
 cmake_minimum_required(VERSION 2.8.8)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
+# set(MSVC_INCREMENTAL_DEFAULT ON)
+#
+# STRING(REPLACE "INCREMENTAL:YES" "INCREMENTAL:NO" replacementFlags ${CMAKE_EXE_LINKER_FLAGS_DEBUG})
+# SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "/INCREMENTAL:NO ${replacementFlags}" )
+#
+# STRING(REPLACE "INCREMENTAL:YES" "INCREMENTAL:NO" replacementFlags3 ${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO})
+# SET(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "/INCREMENTAL:NO ${replacementFlags3}" )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/INCREMENTAL:NO")
+
 ## ----------------------------------------------------------------------
 ## Basic definitions
 
@@ -19,6 +29,9 @@ set(VERSION_Y 16)
 set(VERSION_Z 0)
 set(VERSION_SUFF "")
 set(VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}")
+
+
+
 
 if(APPLE)
   set(NOT_APPLE False)
@@ -54,7 +67,7 @@ option(ENABLE_FLUIDSYNTH        "Enable the Fluidsynth processor"           ${NO
 option(ENABLE_OGG_VORBIS        "Enable OGG/Vorbis support"                 True)
 option(ENABLE_AUDIO_UNIT        "Enable AudioUnit processors"               ${APPLE})
 option(ENABLE_VST               "Enable VST processors"                     True)
-option(ENABLE_HTTP              "Enable HTTP-client functionality"          False)
+option(ENABLE_HTTP              "Enable HTTP-client functionality"          True)
 
 option(BUILD_FRAMEWORK          "Build an OS X framework"                   ${APPLE})
 option(BUILD_SHARED             "Build a shared library"                    ${NOT_APPLE})
@@ -62,7 +75,7 @@ option(BUILD_TESTS              "Build unit tests"                          True
 
 option(PROFILING                "Compile with profiler flags -pg set"       False)
 
-option(BUILD_COMPONENTS         "Build dependent components locally"        False)
+option(BUILD_COMPONENTS         "Build dependent components locally"        True)
 option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     True)
 
 
@@ -172,6 +185,7 @@ if (COMPONENTS_RESOLVED)
   find_package(Portaudio)
   find_package(Portmidi)
   find_package(Sndfile)
+  find_package(Liblo)
   if(ENABLE_HTTP)
     find_package(Curl)
   endif()
@@ -236,6 +250,8 @@ if (COMPONENTS_RESOLVED)
   include_directories(${PORTAUDIO_INCLUDE_DIRS})
   include_directories(${PORTMIDI_INCLUDE_DIRS})
   include_directories(${SNDFILE_INCLUDE_DIRS})
+  include_directories(${CURL_INCLUDE_DIRS})
+  include_directories(${LIBLO_INCLUDE_DIRS})
   include_directories(${ICU_INCLUDE_DIRS})
   include_directories(${FLUIDSYNTH_INCLUDE_DIRS})
   include_directories(${GLIB_INCLUDE_DIRS})
@@ -253,6 +269,8 @@ if (COMPONENTS_RESOLVED)
     ${PORTAUDIO_LIBRARIES}
     ${PORTMIDI_LIBRARIES}
     ${SNDFILE_LIBRARIES}
+    ${CURL_LIBRARIES}
+    ${LIBLO_LIBRARIES}
     ${ICU_LIBRARIES}
     ${FLUIDSYNTH_LIBRARIES}
     ${GLIB_LIBRARIES}
@@ -268,6 +286,7 @@ if (COMPONENTS_RESOLVED)
   list(APPEND EXTS ${PORTAUDIO_LIBRARIES})
   list(APPEND EXTS ${PORTMIDI_LIBRARIES})
   list(APPEND EXTS ${SNDFILE_LIBRARIES})
+  list(APPEND EXTS ${LIBLO_LIBRARIES})
   list(APPEND EXTS ${FLUIDSYNTH_LIBRARIES})
   list(APPEND EXTS ${GLIB_LIBRARIES})
   list(APPEND EXTS ${LIBVORBIS_LIBRARIES})

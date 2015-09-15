@@ -6,9 +6,9 @@ pushd external/libvorbis/source;
 
 make distclean; \
 
-CFLAGS="-arch i386" \
-CXXFLAGS="-arch i386" \
-LDFLAGS="-arch i386" \
+CFLAGS="-arch x86_64" \
+CXXFLAGS="-arch x86_64" \
+LDFLAGS="-arch x86_64" \
 ./configure \
 	--with-ogg=`pwd`/../../libogg/result \
     --prefix=`pwd`/../result \

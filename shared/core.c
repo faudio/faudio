@@ -2,7 +2,7 @@
 /*
     faudio
 
-    Copyright (c) DoReMIR Music Research 2012-2013
+    Copyright (c) DoReMIR Music Research 2012-2015
     All rights reserved.
 
  */
@@ -79,6 +79,14 @@ bool fa_is_double(fa_ptr_t x)
 bool fa_is_ref(fa_ptr_t x)
 {
     return (((intptr_t) x) & 0x7) == 0x0;
+}
+bool fa_is_number(fa_ptr_t x)
+{
+    return ((((intptr_t) x) & 0x7) >= 0x1 && (((intptr_t) x) & 0x7) <= 0x6);
+}
+bool fa_is_integer(fa_ptr_t x)
+{
+    return ((((intptr_t) x) & 0x7) >= 0x3 && (((intptr_t) x) & 0x7) <= 0x6);
 }
 
 
@@ -283,6 +291,32 @@ fa_ptr_t fa_from_double(double a)
 
 // --------------------------------------------------------------------------------
 
+int64_t fa_peek_integer(fa_ptr_t a)
+{
+    switch (fa_type(a)) {
+        case 0x3: return fa_peek_int64(a);
+        case 0x4: return fa_peek_int32(a);
+        case 0x5: return fa_peek_int16(a);
+        case 0x6: return fa_peek_int8(a);
+        default: assert(false && "Not an integer type!");
+    }
+}
+
+double fa_peek_number(fa_ptr_t a)
+{
+    switch (fa_type(a)) {
+        case 0x1: return fa_peek_double(a);
+        case 0x2: return fa_peek_float(a);
+        case 0x3: return fa_peek_int64(a);
+        case 0x4: return fa_peek_int32(a);
+        case 0x5: return fa_peek_int16(a);
+        case 0x6: return fa_peek_int8(a);
+        default: assert(false && "Not a numeric type!");
+    }
+}
+
+// --------------------------------------------------------------------------------
+
 #define GENERIC1(I,F,A,B) \
     B fa_##F(A a)                                                               \
     {                                                                           \
@@ -298,13 +332,46 @@ fa_ptr_t fa_from_double(double a)
     }
 
 
-GENERIC2(equal,     equal,          fa_ptr_t, fa_ptr_t, bool);
+//GENERIC2(equal,     equal,          fa_ptr_t, fa_ptr_t, bool); // use special implementaion for equal
 GENERIC2(order,     less_than,      fa_ptr_t, fa_ptr_t, bool);
 GENERIC2(order,     greater_than,   fa_ptr_t, fa_ptr_t, bool);
+
+bool fa_equal(fa_ptr_t a, fa_ptr_t b)
+{
+    // This may seem overly complicated, but it is needed to get nice handling
+    // of the numeric types, since it would be ridiculus if we couldn't compare
+    // e.g. an int16 to an int32. Also, it is nice to be able to handle NULL values.
+    
+    // Same object is always considered equal (this also implies that NULL == NULL)
+    if (a == b) return true;
+    // NULL is never equal to anything except NULL
+    if (a == NULL || b == NULL) return false;
+    // If both values are of integral types, compare them as int64
+    if (fa_is_integer(a) && fa_is_integer(b)) {
+        return (fa_peek_integer(a) == fa_peek_integer(b));
+    }
+    // If both values are numiercal, compare them as doubles.
+    // Also, a number can never equal a non-number
+    if (fa_is_number(a)) {
+        if (!fa_is_number(b)) return false;
+        return (fa_peek_number(a) == fa_peek_number(b));
+    }
+    // Dispatch to interface
+    assert(fa_interface(fa_equal_i, a) && "Must implement equal");
+    return ((fa_equal_t*) fa_interface(fa_equal_i, a))->equal(a, b);
+}
 
 bool fa_not_equal(fa_ptr_t a, fa_ptr_t b)
 {
     return !fa_equal(a, b);
+}
+
+bool fa_dequal(fa_ptr_t a, fa_ptr_t b)
+{
+    bool res = fa_equal(a, b);
+    if (a) fa_destroy(a);
+    if (b) fa_destroy(b);
+    return res;
 }
 
 bool fa_less_than_equal(fa_ptr_t a, fa_ptr_t b)
@@ -341,11 +408,20 @@ fa_ptr_t fa_dadd(fa_ptr_t a, fa_ptr_t b)
     return res;
 }
 
+fa_ptr_t fa_dsubtract(fa_ptr_t a, fa_ptr_t b)
+{
+    fa_ptr_t res = fa_subtract(a, b);
+    fa_destroy(a);
+    fa_destroy(b);
+    return res;
+}
 
-GENERIC1(copy,      copy,           fa_ptr_t, fa_ptr_t);
-GENERIC1(destroy,   destroy,        fa_ptr_t, void);
-GENERIC2(semigroup, append,         fa_ptr_t, fa_ptr_t, fa_ptr_t);
-GENERIC1(monoid,    empty,          fa_ptr_t, fa_ptr_t);
+GENERIC1(copy,       copy,           fa_ptr_t, fa_ptr_t);
+GENERIC1(copy,       deep_copy,      fa_ptr_t, fa_ptr_t);
+GENERIC1(destroy,    destroy,        fa_ptr_t, void);
+GENERIC2(destroy,    deep_destroy,   fa_ptr_t, fa_deep_destroy_pred_t, void);
+GENERIC2(semigroup,  append,         fa_ptr_t, fa_ptr_t, fa_ptr_t);
+GENERIC1(monoid,     empty,          fa_ptr_t, fa_ptr_t);
 
 fa_ptr_t fa_dappend(fa_ptr_t a, fa_ptr_t b)
 {
@@ -429,6 +505,13 @@ bool fa_check(fa_ptr_t a)
 #define float_type_repr_impl f32_type_repr
 #define double_type_repr_impl f64_type_repr
 
+#define _bool_abs(x) x
+#define _int8_abs(x) abs(x)
+#define _int16_abs(x) abs(x)
+#define _int32_abs(x) abs(x)
+#define _int64_abs(x) llabs(x)
+#define _float_abs(x) fabs(x)
+#define _double_abs(x) fabs(x)
 
 #define UNBOXED_WRAPPER_IMPL(T) \
     bool T##_equal(fa_ptr_t a, fa_ptr_t b)                                          \
@@ -461,9 +544,13 @@ bool fa_check(fa_ptr_t a)
     }                                                                               \
     fa_ptr_t T##_absolute(fa_ptr_t a)                                               \
     {                                                                               \
-        return fa_from_##T(abs(fa_to_##T(a)));                                      \
+        return fa_from_##T(_##T##_abs(fa_to_##T(a)));                               \
     }                                                                               \
     fa_ptr_t T##_copy(fa_ptr_t a)                                                   \
+    {                                                                               \
+        return a;                                                                   \
+    }                                                                               \
+    fa_ptr_t T##_deep_copy(fa_ptr_t a)                                              \
     {                                                                               \
         return a;                                                                   \
     }                                                                               \
@@ -472,6 +559,10 @@ bool fa_check(fa_ptr_t a)
         return T##_type_repr_impl;                                                  \
     }                                                                               \
     void T##_destroy(fa_ptr_t a)                                                    \
+    {                                                                               \
+        /* nothing to do */                                                         \
+    }                                                                               \
+    void T##_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)                     \
     {                                                                               \
         /* nothing to do */                                                         \
     }
@@ -507,9 +598,13 @@ bool fa_check(fa_ptr_t a)
     }                                                                               \
     fa_ptr_t T##_absolute(fa_ptr_t a)                                               \
     {                                                                               \
-        return fa_from_##T(abs(fa_peek_##T(a))); /* TODO use tg? */                 \
+        return fa_from_##T(_##T##_abs(fa_peek_##T(a))); /* TODO use tg? */          \
     }                                                                               \
     fa_ptr_t T##_copy(fa_ptr_t a)                                                   \
+    {                                                                               \
+        return fa_copy_##T(a);                                                      \
+    }                                                                               \
+    fa_ptr_t T##_deep_copy(fa_ptr_t a)                                              \
     {                                                                               \
         return fa_copy_##T(a);                                                      \
     }                                                                               \
@@ -520,6 +615,10 @@ bool fa_check(fa_ptr_t a)
     void T##_destroy(fa_ptr_t a)                                                    \
     {                                                                               \
         fa_to_##T(a);                                                               \
+    }                                                                               \
+    void T##_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)                     \
+    {                                                                               \
+        if (p(a)) fa_to_##T(a);                                                     \
     }
 
 #define UNBOXED_SHOW_IMPL(T,F)                                                      \
@@ -556,11 +655,11 @@ bool fa_check(fa_ptr_t a)
         static fa_string_show_t    T##_show_impl    =                               \
             { T##_show };                                                           \
         static fa_copy_t    T##_copy_impl    =                                      \
-            { T##_copy };                                                           \
+            { T##_copy, T##_deep_copy };                                            \
         static fa_dynamic_t T##_dynamic_impl =                                      \
             { T##_get_type };                                                       \
         static fa_destroy_t T##_destroy_impl =                                      \
-            { T##_destroy };                                                        \
+            { T##_destroy, T##_deep_destroy };                                      \
                                                                                     \
         switch (interface)                                                          \
         {                                                                           \
@@ -650,4 +749,11 @@ fa_ptr_t fa_interface(fa_id_t type, fa_ptr_t pointer)
         //  non-boxed primitive to a generic function.
         return ((struct fa_impl_disp *) pointer)->impl(type);
     }
+}
+
+bool DESTROY_ALWAYS(fa_ptr_t ptr) {
+    return true;
+}
+void fa_deep_destroy_always(fa_ptr_t ptr) {
+    fa_deep_destroy(ptr, DESTROY_ALWAYS);
 }

@@ -293,6 +293,25 @@ module Fa.Signal
             Sample index to read from.
      */
     play : (Buffer, Signal) -> Signal;
+    
+    /** A signal that plays an audio buffer.
+    
+        Control the signal by sending one of the following to it (using @ref fa_action_send):
+        - A @ref fa_buffer_t -- the buffer is loaded into the signal
+        - The string "play" -- start playback
+        - The string "stop" -- stop playback
+        - A (wrapped) number -- move to the corresponding frame
+    
+        @param name
+            A name to identify the signal, use with @ref fa_action_send
+        @return
+            A pair of @ref fa_signal_t (left and right output).
+        
+        @note
+            This custom signal is provided for convenience. An equivalent signal could be
+            constructed from combinations of play, count and trigger signals.
+    */
+    playBuffer : (name : String) -> Pair;
 
     /**
         Index a buffer at the given sample and returns the written value.
@@ -396,7 +415,7 @@ module Fa.Signal
         
         For example if the sample rate is 44100, `fa_signal_impulses(44100)` generates an impulse every second.
      */
-    impulses : (Int) -> Signal;
+    impulses : (samples : Size) -> Signal;
                            
     // isVariable : Signal -> Bool;
     // isConstant : Signal -> Bool;

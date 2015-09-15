@@ -129,6 +129,21 @@ void fa_midi_schedule_relative(fa_time_t time,
                                fa_action_t action,
                                fa_midi_stream_t stream);
 
+/**
+    Schedule an action to be run immediately.
+
+    Can be used with non-compound, non-do actions.
+    As a special case, non-nested compound actions can also
+    be passed, note however that the contained actions
+    will all be executed immediately, regardless of their
+    specified timing. The order is still guaranteed though.
+
+    Note also that actions scheduled this way may be run before actions
+    scheduled using fa_schedule_relative(fa_now(), ...)
+ */
+void fa_midi_schedule_now(fa_action_t action,
+                          fa_midi_stream_t stream);
+
 /** @}
     @}
     @}

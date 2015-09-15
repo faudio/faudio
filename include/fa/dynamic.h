@@ -18,6 +18,7 @@
 
 
 typedef enum {
+            null_type_repr,
             bool_type_repr,
             i8_type_repr,
             i16_type_repr,
@@ -31,7 +32,12 @@ typedef enum {
             map_type_repr,
             string_type_repr,
             ratio_type_repr,
-            midi_message_type_repr
+            midi_message_type_repr,
+            action_type_repr,
+            audio_stream_type_repr,
+            midi_stream_type_repr,
+            buffer_type_repr,
+            atomic_ring_buffer_type_repr
         } fa_dynamic_type_repr_t;
 
 /** Dynamic typing interface.

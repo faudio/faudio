@@ -87,11 +87,24 @@ fa_buffer_t fa_buffer_resize(size_t size_, fa_buffer_t buffer);
 */
 fa_buffer_t fa_buffer_dresize(size_t size_, fa_buffer_t buffer);
 
-/** Destroy the given buffer.
+/** Destroy the given buffer. If the reference count is greater than zero,
+    the actual destruction is postponed until the reference count reaches
+    zero. See @ref fa_buffer_take_reference and @ref fa_buffer_release_reference.
+    
     @note
         O(n)
 */
 void fa_buffer_destroy(fa_buffer_t buffer);
+
+/** Take a reference to the buffer, i.e. increase its reference count.
+    
+*/
+void fa_buffer_take_reference(fa_buffer_t buffer);
+
+/** Release a reference to the buffer, i.e. decrease its reference count.
+    
+*/
+void fa_buffer_release_reference(fa_buffer_t buffer);
 
 /** Return the size of the buffer.
     @note
@@ -101,7 +114,7 @@ size_t fa_buffer_size(fa_buffer_t buffer);
 
 /** Get the value of some meta-data attribute of the given buffer.
     @param buffer The buffer.
-    @param string Attribute name.
+    @param string Attribute name (will be destroyed)
     @returns 
         The value (implementing @ref fa_dynamic).
 */
@@ -112,13 +125,18 @@ fa_ptr_t fa_buffer_get_meta(fa_buffer_t buffer, fa_string_t string);
     @param string Attribute name.
     @param The value (implementing @ref fa_dynamic).
     
+    @note
+        Both the name and the value will be automatically destroyed
+        when the buffer is destroyed or the key is removed from the map.
+    
+    
 */
 void fa_buffer_set_meta(fa_buffer_t buffer,
                         fa_string_t string,
                         fa_ptr_t ptr);
 
 /** Get all meta-data as a map from strings to values.
-    @returns A map of meta-data.
+    @returns A @ref map of meta-data.
 */
 fa_map_t fa_buffer_meta(fa_buffer_t buffer);
 
@@ -168,26 +186,26 @@ int32_t fa_buffer_get_int32(fa_buffer_t buffer, size_t size_);
     @note
         O(1)
 */
-int64_t fa_buffer_get_int64(fa_buffer_t buffer, size_t size_);
+int64_t fa_buffer_get_int64(fa_buffer_t buffer, size_t index);
 
 /** Get a value from the buffer.
     @note
         O(1)
 */
-float fa_buffer_get_float(fa_buffer_t buffer, size_t size_);
+float fa_buffer_get_float(fa_buffer_t buffer, size_t index);
 
 /** Get a value from the buffer.
     @note
         O(1)
 */
-double fa_buffer_get_double(fa_buffer_t buffer, size_t size_);
+double fa_buffer_get_double(fa_buffer_t buffer, size_t index);
 
 /** Update a value in the buffer.
     @note
         O(1)
 */
 void fa_buffer_set_int16(fa_buffer_t buffer,
-                         size_t size_,
+                         size_t index,
                          int16_t int16_);
 
 /** Update a value in the buffer.
@@ -195,16 +213,16 @@ void fa_buffer_set_int16(fa_buffer_t buffer,
         O(1)
 */
 void fa_buffer_set_int32(fa_buffer_t buffer,
-                         size_t size_,
-                         int32_t int32_);
+                         size_t index,
+                         int32_t value);
 
 /** Update a value in the buffer.
     @note
         O(1)
 */
 void fa_buffer_set_int64(fa_buffer_t buffer,
-                         size_t size_,
-                         int64_t int64_);
+                         size_t index,
+                         int64_t value);
 
 /** Update a value in the buffer.
     @note
@@ -236,7 +254,7 @@ fa_pair_t fa_buffer_unzip(fa_buffer_t buffer);
     @return
         A new buffer.
 */
-fa_buffer_t fa_buffer_read_raw(fa_string_t string);
+fa_buffer_t fa_buffer_read_raw(fa_string_t path);
 
 /**
     Write a buffer to a file.
@@ -244,7 +262,7 @@ fa_buffer_t fa_buffer_read_raw(fa_string_t string);
     @param path
         Path to the file to write.
 */
-void fa_buffer_write_raw(fa_string_t string, fa_buffer_t buffer);
+bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer);
 
 /**
     Read an audio file.
@@ -254,7 +272,7 @@ void fa_buffer_write_raw(fa_string_t string, fa_buffer_t buffer);
     @return
         A buffer or an error value.
 */
-fa_buffer_t fa_buffer_read_audio(fa_string_t string);
+fa_buffer_t fa_buffer_read_audio(fa_string_t path);
 
 /**
     Write an audio file.
@@ -266,7 +284,7 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t string);
     @return
         The null pointer or an error value.
 */
-fa_ptr_t fa_buffer_write_audio(fa_string_t string,
+fa_ptr_t fa_buffer_write_audio(fa_string_t path,
                                fa_buffer_t buffer);
 
 /** Resample the given buffer to the given rate (nullable).

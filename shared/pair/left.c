@@ -16,6 +16,8 @@ struct _fa_pair_left_t {
     fa_ptr_t       values[2];
 };
 
+static int gPairLeftCount = 0;
+
 // -----------------------------------------------------------------------------
 
 fa_pair_left_t new_pair_left(fa_ptr_t first, fa_ptr_t second)
@@ -26,11 +28,13 @@ fa_pair_left_t new_pair_left(fa_ptr_t first, fa_ptr_t second)
     pair_left->impl = &pair_left_impl;
     pair_left->values[0]  = first;
     pair_left->values[1]  = second;
+    gPairLeftCount++;
     return pair_left;
 }
 
 void delete_pair_left(fa_pair_left_t p)
 {
+    gPairLeftCount--;
     fa_delete(p);
 }
 
@@ -64,8 +68,23 @@ fa_pair_left_t fa_pair_left_copy(fa_pair_left_t pair_left)
     return new_pair_left(pair_left->values[0], pair_left->values[1]);
 }
 
+fa_pair_left_t fa_pair_left_deep_copy(fa_pair_left_t pair_left)
+{
+    return new_pair_left(fa_deep_copy(pair_left->values[0]), fa_deep_copy(pair_left->values[1]));
+}
+
 void fa_pair_left_destroy(fa_pair_left_t pair_left)
 {
+    delete_pair_left(pair_left);
+}
+
+void fa_pair_left_deep_destroy(fa_pair_left_t pair_left, fa_deep_destroy_pred_t pred)
+{
+    if (!(pred(pair_left))) return;
+    fa_ptr_t a = pair_left->values[0];
+    fa_ptr_t b = pair_left->values[1];
+    if (a) fa_deep_destroy(a, pred);
+    if (b) fa_deep_destroy(b, pred);
     delete_pair_left(pair_left);
 }
 
@@ -125,9 +144,19 @@ fa_ptr_t pair_left_copy(fa_ptr_t a)
     return fa_pair_left_copy(a);
 }
 
+fa_ptr_t pair_left_deep_copy(fa_ptr_t a)
+{
+    return fa_pair_left_deep_copy(a);
+}
+
 void pair_left_destroy(fa_ptr_t a)
 {
     fa_pair_left_destroy(a);
+}
+
+void pair_left_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    fa_pair_left_deep_destroy(a, p);
 }
 
 fa_ptr_t pair_left_impl(fa_id_t interface)
@@ -135,8 +164,8 @@ fa_ptr_t pair_left_impl(fa_id_t interface)
     static fa_equal_t pair_left_equal_impl = { pair_left_equal };
     static fa_order_t pair_left_order_impl = { pair_left_less_than, pair_left_greater_than };
     static fa_string_show_t pair_left_show_impl = { pair_left_show };
-    static fa_copy_t pair_left_copy_impl = { pair_left_copy };
-    static fa_destroy_t pair_left_destroy_impl = { pair_left_destroy };
+    static fa_copy_t pair_left_copy_impl = { pair_left_copy, pair_left_deep_copy };
+    static fa_destroy_t pair_left_destroy_impl = { pair_left_destroy, pair_left_deep_destroy };
 
     switch (interface) {
     case fa_equal_i:
@@ -159,3 +188,7 @@ fa_ptr_t pair_left_impl(fa_id_t interface)
     }
 }
 
+void fa_pair_left_log_count()
+{
+  fa_log_info(fa_string_dappend(fa_string("Pair-lefts allocated: "), fa_string_dshow(fa_i32(gPairLeftCount))));
+}

@@ -103,7 +103,7 @@ bool fa_midi_message_is_sysex(fa_midi_message_t midi_message)
     return midi_message->is_sysex;
 }
 
-void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2)
+void fa_midi_message_decons(fa_midi_message_t midi_message, uint8_t *statusCh, uint8_t *data1, uint8_t *data2)
 {
     *statusCh = midi_message->data.simple[0];
     *data1    = midi_message->data.simple[1];
@@ -228,9 +228,19 @@ fa_ptr_t midi_message_copy(fa_ptr_t a)
     return fa_midi_message_copy(a);
 }
 
+fa_ptr_t midi_message_deep_copy(fa_ptr_t a)
+{
+    return fa_midi_message_copy(a);
+}
+
 void midi_message_destroy(fa_ptr_t a)
 {
     fa_midi_message_destroy(a);
+}
+
+void midi_message_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    if (p(a)) fa_midi_message_destroy(a);
 }
 
 fa_dynamic_type_repr_t midi_message_get_type(fa_ptr_t a)
@@ -244,8 +254,8 @@ fa_ptr_t midi_message_impl(fa_id_t interface)
     static fa_equal_t midi_message_equal_impl = { midi_message_equal };
     static fa_order_t midi_message_order_impl = { midi_message_less_than, midi_message_greater_than };
     static fa_string_show_t midi_message_show_impl = { midi_message_show };
-    static fa_copy_t midi_message_copy_impl = { midi_message_copy };
-    static fa_destroy_t midi_message_destroy_impl = { midi_message_destroy };
+    static fa_copy_t midi_message_copy_impl = { midi_message_copy, midi_message_deep_copy };
+    static fa_destroy_t midi_message_destroy_impl = { midi_message_destroy, midi_message_deep_destroy };
     static fa_dynamic_t midi_message_dynamic_impl = { midi_message_get_type };
 
     switch (interface) {
@@ -260,10 +270,10 @@ fa_ptr_t midi_message_impl(fa_id_t interface)
 
     case fa_copy_i:
         return &midi_message_copy_impl;
-
+        
     case fa_destroy_i:
         return &midi_message_destroy_impl;
-
+        
     case fa_dynamic_i:
         return &midi_message_dynamic_impl;
 

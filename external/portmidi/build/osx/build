@@ -7,9 +7,9 @@ pushd external/portmidi/source;
 mkdir -p build \
       && pushd build \
       && cmake .. \
-          -DCMAKE_OSX_DEPLOYMENT_TARGET="10.5"        \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET="10.7"        \
           -DCMAKE_BUILD_TYPE=Release                  \
-          -DCMAKE_OSX_ARCHITECTURES="i386"            \
+          -DCMAKE_OSX_ARCHITECTURES="x86_64"            \
       && VERBOSE=1 make \
       && popd \
       && mkdir -p ../result/include \

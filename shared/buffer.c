@@ -10,6 +10,8 @@
 #include <fa/buffer.h>
 #include <fa/error.h>
 #include <fa/util.h>
+#include <fa/dynamic.h>
+#include <fa/atomic.h>
 
 #include <sndfile.h>
 
@@ -20,6 +22,12 @@
       and its closure.
 
     * The create/destroy functions uses the standard fa_malloc/fa_free allocator.
+
+    * Buffers have a reference count, modified with @ref fa_buffer_take_reference and
+      @ref fa_buffer_release_reference. If the reference count is not zero,
+      fa_destroy only marks for future destruction, and the
+      real destruction happens when the reference count reaches zero.
+    
  */
 
 #define kMaxPrintSize 80
@@ -35,6 +43,9 @@ struct _fa_buffer_t {
     fa_ptr_t        destroy_data;
 
     fa_map_t        meta;
+    
+    fa_atomic_t     ref_count;
+    fa_atomic_t     marked_for_destruction;
 };
 
 
@@ -55,11 +66,16 @@ fa_buffer_t fa_buffer_create(size_t size)
     buffer->impl = &buffer_impl;
     buffer->size = size;
     buffer->data = fa_malloc(size);
+    buffer->ref_count = fa_atomic();
+    buffer->marked_for_destruction = fa_atomic();
+    
+    //fa_slog_info("fa_buffer_create ", fa_i32(size));
 
     buffer->destroy_function = default_destroy;
     buffer->destroy_data     = NULL;
 
     buffer->meta = fa_map_empty();
+    fa_map_set_value_destructor(buffer->meta, fa_destroy);
 
     memset(buffer->data, 0, buffer->size);
 
@@ -76,7 +92,7 @@ fa_buffer_t fa_buffer_create(size_t size)
 }
 
 fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
-                           size_t      size,
+                           size_t     size,
                            fa_unary_t destroy_function,
                            fa_ptr_t   destroy_data)
 {
@@ -86,6 +102,8 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
     b->impl = &buffer_impl;
     b->size = size;
     b->data = pointer;
+    b->ref_count = fa_atomic();
+    b->marked_for_destruction = fa_atomic();
 
     b->destroy_function = destroy_function;
     b->destroy_data     = destroy_data;
@@ -98,42 +116,48 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
 
 fa_buffer_t fa_buffer_copy(fa_buffer_t buffer)
 {
+    assert(false && "Not implemented");
     return fa_buffer_resize(buffer->size, buffer);
 }
 
 fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer)
 {
-    fa_ptr_t buffer_impl(fa_id_t interface);
-
-    fa_buffer_t copy           = fa_new(buffer);
-    copy->impl              = &buffer_impl;
-    copy->size              = size;
-    copy->data              = fa_malloc(size);
-    copy->destroy_function  = buffer->destroy_function;
-    copy->destroy_data      = buffer->destroy_data;
-    copy->meta              = fa_copy(buffer->meta);
-
-    if (!copy->data) {
-        if (errno == ENOMEM) {
-            buffer_fatal("Out of memory", errno);
-        } else {
-            buffer_fatal("Unknown", errno);
-        }
-    }
-
-    buffer_warn(fa_string("Buffer resized/copied"));
-
-    copy->data = memcpy(copy->data, buffer->data, size);
-    return copy;
+    assert(false && "Not implemented");
+//     fa_ptr_t buffer_impl(fa_id_t interface);
+//
+//     fa_buffer_t copy        = fa_new(buffer);
+//     copy->impl              = &buffer_impl;
+//     copy->size              = size;
+//     copy->data              = fa_malloc(size);
+//     copy->destroy_function  = buffer->destroy_function;
+//     copy->destroy_data      = buffer->destroy_data;
+//     copy->meta              = fa_deep_copy(buffer->meta);
+//
+//     if (!copy->data) {
+//         if (errno == ENOMEM) {
+//             buffer_fatal("Out of memory", errno);
+//         } else {
+//             buffer_fatal("Unknown", errno);
+//         }
+//     }
+//
+//     buffer_warn(fa_string("Buffer resized/copied"));
+//
+//     copy->data = memcpy(copy->data, buffer->data, size);
+//     return copy;
 }
 
 fa_buffer_t fa_buffer_dresize(size_t size, fa_buffer_t buffer)
 {
-    // TODO could use realloc and be much more efficient
+    //fa_slog_info("fa_buffer_dresize");
 
-    fa_buffer_t buffer2 = fa_buffer_resize(size, buffer);
-    fa_destroy(buffer);
-    return buffer2;
+    buffer->data = fa_realloc(buffer->data, size);
+    if (buffer->data) {
+        buffer->size = size;
+    } else {
+        buffer->size = 0;
+    }
+    return buffer;
 }
 
 fa_pair_t fa_buffer_unzip(fa_buffer_t buffer)
@@ -221,19 +245,43 @@ fa_buffer_t fa_buffer_resample(double new_rate, fa_buffer_t buffer)
     assert(false);
 }
 
-
-
-void fa_buffer_destroy(fa_buffer_t buffer)
+static inline void do_destroy_buffer(fa_buffer_t buffer)
 {
+    //fa_slog_info("do_destroy_buffer");
     if (buffer->destroy_function) {
         buffer->destroy_function(buffer->destroy_data, buffer->data);
     }
 
-    // TODO recursive (everything in here is copy)
-    fa_destroy(buffer->meta);
+    fa_destroy(buffer->meta); // keys and values are automatically destroyed because the destructor is set
 
     buffer_warn(fa_string("Buffer destroyed"));
+    fa_destroy(buffer->ref_count);
+    fa_destroy(buffer->marked_for_destruction);
     fa_delete(buffer);
+}
+
+void fa_buffer_destroy(fa_buffer_t buffer)
+{
+    //fa_slog_info("fa_buffer_destroy");
+    if ((size_t)fa_atomic_get(buffer->ref_count) == 0) {
+        do_destroy_buffer(buffer);
+    } else {
+        fa_atomic_set(buffer->marked_for_destruction, (fa_ptr_t) true);
+    }
+}
+
+void fa_buffer_take_reference(fa_buffer_t buffer)
+{
+    fa_atomic_add(buffer->ref_count, 1);
+}
+
+void fa_buffer_release_reference(fa_buffer_t buffer)
+{
+    fa_atomic_add(buffer->ref_count, -1);
+    // TODO: is a lock needed?
+    if ((size_t)fa_atomic_get(buffer->ref_count) == 0 && (bool)fa_atomic_get(buffer->marked_for_destruction)) {
+        do_destroy_buffer(buffer);
+    }
 }
 
 size_t fa_buffer_size(fa_buffer_t buffer)
@@ -243,12 +291,12 @@ size_t fa_buffer_size(fa_buffer_t buffer)
 
 fa_ptr_t fa_buffer_get_meta(fa_buffer_t buffer, fa_string_t name)
 {
-    return fa_map_get(name, buffer->meta);
+    return fa_map_dget(name, buffer->meta);
 }
 
 void fa_buffer_set_meta(fa_buffer_t buffer, fa_string_t name, fa_ptr_t value)
 {
-    buffer->meta = fa_map_dset(fa_copy(name), value, buffer->meta);
+    buffer->meta = fa_map_dset(name, value, buffer->meta);
 }
 
 fa_map_t fa_buffer_meta(fa_buffer_t buffer)
@@ -271,7 +319,10 @@ void fa_buffer_set(fa_buffer_t buffer, size_t index, uint8_t value)
 #define BUFFER_PRIM_GET_SET(NAME,TYPE) \
     TYPE fa_buffer_get_##NAME(fa_buffer_t buffer, size_t index)                     \
     {                                                                               \
-        assert(index * sizeof(TYPE) < buffer->size && "Buffer overflow");           \
+        if (index * sizeof(TYPE) >= buffer->size) { \
+            printf("overflow, %zu >= %zu\n", index, buffer->size); \
+            return 0; \
+        } \
         return ((TYPE *) buffer->data)[index];                                      \
     }                                                                               \
                                                                                     \
@@ -295,7 +346,7 @@ void *fa_buffer_unsafe_address(fa_buffer_t buffer)
 
 // --------------------------------------------------------------------------------
 
-typedef fa_string_t path_t;
+//typedef fa_string_t path_t;
 
 fa_buffer_t fa_buffer_read_audio(fa_string_t path)
 {
@@ -310,12 +361,12 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
         file            = sf_open(cpath, SFM_READ, &info);
 
         if (sf_error(file)) {
-            char err[100];
-            snprintf(err, 100, "Could not read audio file '%s'", cpath);
+            char err[200];
+            snprintf(err, 200, "Could not read audio file '%s'", cpath);
             return (fa_buffer_t) fa_error_create_simple(error, fa_string(err), fa_string("Doremir.Buffer"));
         }
 
-        fa_inform(fa_string_append(fa_string("Reading "), path));
+        fa_inform(fa_string_dappend(fa_string("Reading "), fa_copy(path)));
     }
     {
         size_t bufSize  = info.frames * info.channels * sizeof(double);
@@ -374,24 +425,52 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
     sf_count_t written = sf_write_double(file, ptr, size);
 
     if (written != size) {
-        return (fa_pair_t) fa_error_create_simple(error, fa_string("To few bytes written"), fa_string("Doremir.Buffer"));
+        return fa_error_create_simple(error, fa_string("To few bytes written"), fa_string("Doremir.Buffer"));
     }
 
     if (sf_close(file)) {
-        return (fa_pair_t) fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Buffer"));
+        return fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Buffer"));
     }
 
     return NULL;
 }
 
-fa_buffer_t fa_buffer_read_raw(fa_string_t x)
+fa_buffer_t fa_buffer_read_raw(fa_string_t path)
 {
-    assert(false && "Not implemented");
+    char* path2 = fa_string_to_utf8(path);
+    FILE* file = fopen(path2, "rb");
+    fa_free(path2);
+    
+    if (!file) {
+        fa_warn(fa_dappend(fa_string("Could not open "), fa_copy(path)));
+        return NULL;
+    }
+
+    // Get length of file
+    fseek(file, 0, SEEK_END);
+    long filelen = ftell(file);
+    rewind(file);
+
+    // Read entire file
+    uint8_t *buffer = fa_malloc(filelen);
+    fread(buffer, filelen, 1, file);
+    fclose(file);
+    
+    return fa_buffer_wrap(buffer, filelen, default_destroy, NULL);
 }
 
-void fa_buffer_write_raw(fa_string_t x, fa_buffer_t y)
+bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+    char* path2 = fa_string_to_utf8(path);
+    FILE* file = fopen(path2, "wb");
+    fa_free(path2);
+    if (file) {
+        fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, file);
+        fclose(file);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -402,9 +481,19 @@ fa_ptr_t buffer_copy(fa_ptr_t a)
     return fa_buffer_copy(a);
 }
 
+fa_ptr_t buffer_deep_copy(fa_ptr_t a)
+{
+    assert(false && "Not implemented");
+}
+
 void buffer_destroy(fa_ptr_t a)
 {
     fa_buffer_destroy(a);
+}
+
+void buffer_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    if (p(a)) fa_buffer_destroy(a);
 }
 
 fa_string_t buffer_show(fa_ptr_t a)
@@ -430,11 +519,17 @@ fa_string_t buffer_show(fa_ptr_t a)
     return str;
 }
 
+fa_dynamic_type_repr_t buffer_get_type(fa_ptr_t a)
+{
+    return buffer_type_repr;
+}
+
 fa_ptr_t buffer_impl(fa_id_t interface)
 {
     static fa_string_show_t buffer_show_impl = { buffer_show };
-    static fa_copy_t buffer_copy_impl = { buffer_copy };
-    static fa_destroy_t buffer_destroy_impl = { buffer_destroy };
+    static fa_copy_t buffer_copy_impl = { buffer_copy, buffer_deep_copy };
+    static fa_destroy_t buffer_destroy_impl = { buffer_destroy, buffer_deep_destroy };
+    static fa_dynamic_t buffer_dynamic_impl = { buffer_get_type };
 
     switch (interface) {
     case fa_copy_i:
@@ -445,6 +540,9 @@ fa_ptr_t buffer_impl(fa_id_t interface)
 
     case fa_string_show_i:
         return &buffer_show_impl;
+        
+    case fa_dynamic_i:
+        return &buffer_dynamic_impl;
 
     default:
         return NULL;

@@ -8,6 +8,8 @@
 #include <fa/util/literals.h>
 #include <fa/util/macros.h>
 #include <fa/util/apply.h>
+#include <fa/util/vararg.h>
+#include <fa/util/literals.h>
 
 #include <time.h>
 
@@ -91,6 +93,7 @@
 #define fa_action_accum        fa_action_accum
 #define fa_action_send         fa_action_send
 
+#define fa_now()               fa_time_create(0,0,0,fa_ratio(0,1))
 #define fa_hms(h,m,s)          fa_time_create(0,h,m,fa_ratio(s,1))
 #define fa_days(d)             fa_time_create(d,0,0,fa_ratio(0,1))
 #define fa_hours(h)            fa_time_create(0,h,0,fa_ratio(0,1))
@@ -121,15 +124,42 @@
 void fa_log_info(fa_string_t);
 void fa_log_warning(fa_string_t);
 void fa_log_error(fa_string_t);
-void fa_dlog_info(fa_string_t);
-void fa_dlog_warning(fa_string_t);
-void fa_dlog_error(fa_string_t);
+//void fa_dlog_info(fa_string_t);
+//void fa_dlog_warning(fa_string_t);
+//void fa_dlog_error(fa_string_t);
 
-#define fa_inform(s)           fa_dlog_info(s)
-// #define fa_dinform(s)          fa_dlog_info(s)
-#define fa_warn(s)             fa_dlog_warning(s)
-#define fa_fail(s)             fa_dlog_error(s)
+#define fa_slog_info0()              fa_log_info(fa_string_empty())
+#define fa_slog_info1(a)             fa_log_info(fa_string(a))
+#define fa_slog_info2(a,b)           fa_log_info(fa_dappend(fa_string(a), fa_string_show(b)))
+#define fa_slog_info3(a,b,c)         fa_log_info(fa_dappend(fa_string(a), fa_dappend(fa_string_show(b), (fa_dappend(fa_string(" "), fa_string_show(c))))))
+#define fa_slog_info4(a,b,c,d)       fa_log_info(fa_dappend(fa_string(a), fa_dappend(fa_string_show(b), (fa_dappend(fa_string(" "), fa_dappend(fa_string_show(c), fa_dappend(fa_string(" "), fa_string_show(d))))))));
+#define fa_slog_info5(a,b,c,d,e)     fa_log_info(fa_dappend(fa_string(a), fa_dappend(fa_string_show(b), (fa_dappend(fa_string(" "), fa_dappend(fa_string_show(c), fa_dappend(fa_string(" "), fa_dappend(fa_string_show(d), fa_dappend(fa_string(" "), fa_string_show(e))))))))));
+#define fa_slog_info(...) VARARG(fa_slog_info, __VA_ARGS__)
+
+#define fa_slog_warning0()              fa_log_warning(fa_string_empty())
+#define fa_slog_warning1(a)             fa_log_warning(fa_string(a))
+#define fa_slog_warning2(a,b)           fa_log_warning(fa_dappend(fa_string(a), fa_string_show(b)))
+#define fa_slog_warning3(a,b,c)         fa_log_warning(fa_dappend(fa_string(a), fa_dappend(fa_string_show(b), (fa_dappend(fa_string(" "), fa_string_show(c))))))
+#define fa_slog_warning4(a,b,c,d)       fa_log_warning(fa_dappend(fa_string(a), fa_dappend(fa_string_show(b), (fa_dappend(fa_string(" "), fa_dappend(fa_string_show(c), fa_dappend(fa_string(" "), fa_string_show(d))))))));
+#define fa_slog_warning5(a,b,c,d,e)     fa_log_warning(fa_dappend(fa_string(a), fa_dappend(fa_string_show(b), (fa_dappend(fa_string(" "), fa_dappend(fa_string_show(c), fa_dappend(fa_string(" "), fa_dappend(fa_string_show(d), fa_dappend(fa_string(" "), fa_string_show(e))))))))));
+#define fa_slog_warning(...) VARARG(fa_slog_warning, __VA_ARGS__)
+
+#define fa_slog_error0()              fa_log_error(fa_string_empty())
+#define fa_slog_error1(a)             fa_log_error(fa_string(a))
+#define fa_slog_error2(a,b)           fa_log_error(fa_dappend(fa_string(a), fa_string_show(b)))
+#define fa_slog_error3(a,b,c)         fa_log_error(fa_dappend(fa_string(a), fa_dappend(fa_string_show(b), (fa_dappend(fa_string(" "), fa_string_show(c))))))
+#define fa_slog_error4(a,b,c,d)       fa_log_error(fa_dappend(fa_string(a), fa_dappend(fa_string_show(b), (fa_dappend(fa_string(" "), fa_dappend(fa_string_show(c), fa_dappend(fa_string(" "), fa_string_show(d))))))));
+#define fa_slog_error5(a,b,c,d,e)     fa_log_error(fa_dappend(fa_string(a), fa_dappend(fa_string_show(b), (fa_dappend(fa_string(" "), fa_dappend(fa_string_show(c), fa_dappend(fa_string(" "), fa_dappend(fa_string_show(d), fa_dappend(fa_string(" "), fa_string_show(e))))))))));
+#define fa_slog_error(...) VARARG(fa_slog_error, __VA_ARGS__)
+
+#define fa_inform(s)           fa_log_info(s)
+#define fa_warn(s)             fa_log_warning(s)
+#define fa_fail(s)             fa_log_error(s)
+
+//#define fa_slog_info(s,a)      fa_dlog_info(fa_string_dappend(fa_string(s), fa_string_show(a)))
 // #define fa_log_error(e)        fa_error_log(NULL,e)
+
+
 
 #define fa_tb                  fa_to_bool
 #define fa_ti8                 fa_to_int8

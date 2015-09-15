@@ -16,8 +16,10 @@ FILES= \
 LIBS= \
 	-lportmidi \
 	-lsndfile \
+        -lFLAC \
 	-lportaudio \
 	-liconv \
+        -liblo \
 	-framework Cocoa \
 	-framework CoreAudio \
 	-framework CoreMidi \
@@ -31,6 +33,7 @@ LIBS= \
 LIB_DIRS = \
 	-L external/portaudio/result/lib \
 	-L external/portmidi/result/lib \
+        -L external/liblo/result/lib \
 	-L external/sndfile/result/lib
 
 MISC_OPTS      = \
@@ -76,6 +79,7 @@ bin/fa_tests: bin/config.h
 		-I include \
 		-I external/portaudio/result/include \
 		-I external/sndfile/result/include \
+                -I external/liblo/result/include \
 		-I bin \
 		$(LIB_DIRS) \
 		$(LIBS) \

@@ -18,6 +18,7 @@
 #include <fa/time.h>
 #include <fa/clock.h>
 #include <fa/util/macros.h>
+#include <fa/dynamic.h>
 
 #define NO_THREAD_T
 #include <fa/util.h>
@@ -846,15 +847,12 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
     fa_destroy(time);
 }
 
-void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
-
-
 static inline bool is_two_byte_message(uint8_t status)
 {
     return ((status & 0xF0) == 0xC0) || ((status & 0xF0) == 0xD0);
 }
 
-fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
+fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action, fa_ptr_t time)
 {
     stream_t stream = x;
 
@@ -868,7 +866,7 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
         fa_ptr_t message     = fa_action_send_value(action);
 
         if (fa_midi_message_is_simple(message)) {
-            int sc, d1, d2;
+            uint8_t sc, d1, d2;
             fa_midi_message_decons(message, &sc, &d1, &d2);
 
             {
@@ -897,6 +895,7 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
 
                 if (result < 0) {
                     fa_warn(fa_string("Could not send MIDI"));
+                    fa_action_destroy(action);
                     return 0;
                 }
             }
@@ -906,6 +905,7 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
 
             if (fa_buffer_size(data) > 256) {
                 fa_warn(fa_string("Too large SysEx to send, ignoring!"));
+                fa_action_destroy(action);
                 return 0;
             }
 
@@ -930,14 +930,17 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
 
             if (result < 0) {
                 fa_warn(fa_string("Could not send MIDI"));
+                fa_action_destroy(action);
                 return 0;
             }
         }
 
+        fa_action_destroy(action);
         return NULL;
     }
 
     fa_warn(fa_string_dappend(fa_string("Unknown simple action passed to Midi.forwardActionToMidi: "), fa_string_show(action)));
+    fa_action_destroy(action);
     return NULL;
 }
 
@@ -948,7 +951,7 @@ fa_ptr_t midi_stream_callback(fa_ptr_t x)
     fa_ptr_t val;
 
     while ((val = fa_atomic_queue_read(stream->short_controls))) {
-        forward_action_to_midi(stream, val);
+        forward_action_to_midi(stream, val, NULL);
     }
 
     while ((val = fa_atomic_queue_read(stream->in_controls))) {
@@ -1048,13 +1051,25 @@ void fa_midi_schedule_relative(fa_time_t        time,
                                fa_action_t       action,
                                fa_midi_stream_t  stream)
 {
-    if (fa_equal(time, fa_seconds(0)) && !fa_action_is_compound(action)) {
-        // Pass directly to output
-        // TODO is this still needed
-        fa_atomic_queue_write(stream->short_controls, action);
-    } else {
+    // if (fa_time_is_zero(time) && !fa_action_is_compound(action) && !fa_action_is_do(action)) {
+    //     // Pass directly to output
+    //     fa_atomic_queue_write(stream->short_controls, action);
+    // } else {
         fa_time_t now = fa_clock_time(stream->clock);
-        fa_midi_schedule(fa_add(now, time), action, stream);
+        fa_midi_schedule(fa_dadd(now, time), action, stream);
+    // }
+}
+
+void fa_midi_schedule_now(fa_action_t action, fa_midi_stream_t stream)
+{
+    if (fa_action_is_flat(action)) {
+        fa_list_t actions = fa_action_flat_to_list(action);
+        fa_for_each(a, actions) {
+            fa_atomic_queue_write(stream->short_controls, a);
+        }
+        fa_destroy(actions);
+    } else {
+        fa_warn(fa_string("Non-flat action passed to fa_midi_schedule_now"));
     }
 }
 
@@ -1163,21 +1178,30 @@ void midi_stream_destroy(fa_ptr_t a)
     fa_midi_close_stream(a);
 }
 
+fa_dynamic_type_repr_t midi_stream_get_type(fa_ptr_t a)
+{
+    return midi_stream_type_repr;
+}
+
 fa_ptr_t midi_stream_impl(fa_id_t interface)
 {
     static fa_string_show_t midi_stream_show_impl
         = { midi_stream_show };
     static fa_destroy_t midi_stream_destroy_impl
         = { midi_stream_destroy };
+    static fa_dynamic_t midi_stream_dynamic_impl
+        = { midi_stream_get_type };
 
     switch (interface) {
-
 
     case fa_string_show_i:
         return &midi_stream_show_impl;
 
     case fa_destroy_i:
         return &midi_stream_destroy_impl;
+        
+    case fa_dynamic_i:
+        return &midi_stream_dynamic_impl;
 
     default:
         return NULL;

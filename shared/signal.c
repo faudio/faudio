@@ -16,6 +16,7 @@
 #include <fa/dynamic.h>
 #include <fa/util.h>
 #include <fa/midi/message.h>
+#include <pthread.h> // temp
 
 #include "signal.h"
 #include "signal_internal.h"
@@ -553,7 +554,7 @@ fa_signal_t simplify(part_t *part, fa_list_t *procs, fa_signal_t signal2)
 
     case loop_signal: {
         fixpoint_t fix      = loop_get(signal2, function);
-        fa_ptr_t      fix_data = loop_get(signal2, data);
+        fa_ptr_t   fix_data = loop_get(signal2, data);
 
         int channel;
         part_t part1;
@@ -568,7 +569,7 @@ fa_signal_t simplify(part_t *part, fa_list_t *procs, fa_signal_t signal2)
 
     case delay_signal: {
         fa_signal_t a              = delay_get(signal2, a);
-        int samples             = delay_get(signal2, n);
+        int samples                = delay_get(signal2, n);
 
         int channel;
         part_t part1;
@@ -775,7 +776,7 @@ struct _state_t {
     double     *inputs;                 // Current input values (TODO should not be called inputs as they are also outputs...)
     double     *buses;                  // Current and future bus values
 
-    int         count;                  // Number of processed samples
+    uint64_t    count;                  // Number of processed samples
     double      rate;                   // Sample rate (immutable during processing)
     double      speed;
     double      elapsed_time;
@@ -1011,6 +1012,8 @@ void run_custom_procs(custom_proc_when_t when, int count, state_t state)
     }
 }
 
+uint64_t last_count = 0;
+
 // typedef void(* fa_signal_message_callback_t)(fa_ptr_t, fa_signal_name_t, fa_signal_message_t)
 void custom_procs_send(state_t state, fa_string_t name, fa_ptr_t value)
 {
@@ -1018,6 +1021,8 @@ void custom_procs_send(state_t state, fa_string_t name, fa_ptr_t value)
         custom_proc_t proc = state->custom_procs[i];
 
         if (proc->receive) {
+            //printf("custom_procs_send, count: %llu  (diff: %llu)\n", state->count, state->count - last_count);
+            last_count = state->count;
             proc->receive(proc->data, name, value);
         }
     }
@@ -1048,6 +1053,8 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         fa_warn(fa_string_dappend(fa_string("Compound action passed to Signal.runSimpleAction: "), fa_string_show(action)));
         return NULL;
     }
+    //fa_slog_info("run_simple_action in thread ", fa_string_format_integral("%p", (long) fa_thread_current()));
+    //printf("run_simple_action %p\n", pthread_self());
 
     if (fa_action_is_get(action)) {
         int ch = fa_action_get_channel(action);
@@ -1055,6 +1062,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         fa_ptr_t ctxt = fa_action_get_data(action);
         double x = read_samp1(ch, state);
         f(ctxt, x); // Ignore result
+        fa_action_destroy(action);
         return NULL;
     }
 
@@ -1062,6 +1070,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         int ch = fa_action_set_channel(action);
         double v = fa_action_set_value(action);
         write_samp1(0, ch, v, state);
+        fa_action_destroy(action);
         return NULL;
     }
 
@@ -1074,18 +1083,25 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         double x2 = f(ctxt, x);
 
         write_samp1(0, ch, x2, state);
+        
+        fa_action_destroy(action);
         return NULL;
     }
 
     if (fa_action_is_send(action)) {
         fa_string_t name = fa_action_send_name(action);
         fa_ptr_t value = fa_action_send_value(action);
+        //printf("timestamp: %llu\n", fa_action_timestamp(action));
         custom_procs_send(state, name, value);
-
+        
+        //printf("ref_count: %d\n", fa_action_ref_count(action));
+        fa_action_destroy(action);
+        
         return NULL;
     }
 
     fa_warn(fa_string_dappend(fa_string("Unknown simple action passed to Signal.runSimpleAction: "), fa_string_show(action)));
+    fa_action_destroy(action);
     return NULL;
 }
 
@@ -1142,7 +1158,7 @@ double step(fa_signal_t signal, state_t state)
     case output_signal: {
         int         n         = output_get(signal, n);
         int         c         = output_get(signal, c);
-        fa_signal_t    a         = output_get(signal, a);
+        fa_signal_t a         = output_get(signal, a);
 
         double      xa        = step(a, state);
         write_samp1(n, c, xa, state);
@@ -1219,8 +1235,8 @@ void step_vector(fa_signal_t signal, state_t state, int count, double *out)
     }
 
     case input_signal: {
-        int         c         = input_get(signal, c);
-        double *xs = read_samp(c, state);
+        int         c = input_get(signal, c);
+        double    *xs = read_samp(c, state);
 
         for (int i = 0; i < count; ++i) {
             out[i] = xs[i];
@@ -1251,7 +1267,7 @@ void step_vector(fa_signal_t signal, state_t state, int count, double *out)
     assert(false);
 }
 
-fa_ptr_t run_simple_action_(fa_ptr_t x, fa_ptr_t a)
+fa_ptr_t run_simple_action_(fa_ptr_t x, fa_ptr_t a, fa_ptr_t ignored_time)
 {
     return run_simple_action(x, a);
 }
@@ -1289,7 +1305,7 @@ fa_map_t pointer_list_to_custom_proc_map(fa_list_t xs)
 
 fa_ptr_t lookup_proc_offset(fa_map_t proc_map, intptr_t x)
 {
-    return fa_map_get(fa_from_int64(x), proc_map);
+    return fa_map_dget(fa_from_int64(x), proc_map);
 }
 
 inline static
@@ -1319,7 +1335,6 @@ fa_map_t build_proc_map(fa_list_t procs)
     // Now remove duplicates, then build a map (ProcId => BusIndexOffset)
     fa_map_t proc_map = pointer_list_to_custom_proc_map(procs2);
 
-    fa_mark_used(proc_map);
     fa_for_each(x, procs) {
         // printf("%lu\n", (unsigned long) x);
         fa_ptr_t offset = lookup_proc_offset(proc_map, (intptr_t) x);
@@ -1346,13 +1361,13 @@ void fa_signal_run(int count, fa_list_t controls_, fa_signal_t a, double *output
             add_custom_proc(x, state);
         }
 
-        // XXX Before this, remplace "local" buses with "global" (for custom procs)
+        // XXX Before this, replace "local" buses with "global" (for custom procs)
         a = fa_signal_simplify(a);
 
-        fa_inform(fa_string_dappend(fa_string("    Signal Tree: \n"), fa_string_show(a)));
+        fa_inform(fa_string_dappend(fa_string("    Signal Tree 1: \n"), fa_string_show(a)));
         a = fa_signal_route_processors(proc_map, a);
 
-        fa_inform(fa_string_dappend(fa_string("    Signal Tree: \n"), fa_string_show(a)));
+        fa_inform(fa_string_dappend(fa_string("    Signal Tree 2: \n"), fa_string_show(a)));
         a = fa_signal_doptimize(a);
         a = fa_signal_dverify(a);
 
@@ -1366,6 +1381,7 @@ void fa_signal_run(int count, fa_list_t controls_, fa_signal_t a, double *output
                 run_custom_procs(custom_proc_render, 1, state);
                 output[i] = step(a, state);
                 inc_state1(state);
+                fa_destroy(now);
             }
 
             run_custom_procs(custom_proc_after, 0, state);
@@ -1504,11 +1520,11 @@ fa_signal_t fa_signal_counter()
 
 inline static double _impulses(fa_ptr_t n, double x)
 {
-    int n2 = (int) n;
+    size_t n2 = (size_t) n;
     int x2 = (int) x;
     return (x2 % n2) == 0 ? 1 : 0;
 }
-fa_signal_t fa_signal_impulses(int n)
+fa_signal_t fa_signal_impulses(size_t n)
 {
     return fa_signal_lift(fa_string("mkImps"), _impulses, (fa_ptr_t) n, fa_signal_counter());
 }
@@ -1584,17 +1600,17 @@ struct rec_external {
     fa_atomic_ring_buffer_t buffer;
 };
 
-fa_ptr_t record_extrenal_before_(fa_ptr_t x, int count, fa_signal_state_t *state)
+static fa_ptr_t record_external_before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
 
-fa_ptr_t record_extrenal_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
+static fa_ptr_t record_external_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
 
-fa_ptr_t record_extrenal_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
+static fa_ptr_t record_external_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 {
     struct rec_external *ext = (struct rec_external *) x;
 
@@ -1617,13 +1633,9 @@ fa_ptr_t record_extrenal_render_(fa_ptr_t x, int offset, int count, fa_signal_st
     return x;
 }
 
-fa_ptr_t record_extrenal_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+static fa_ptr_t record_external_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     struct rec_external *ext = (struct rec_external *) x;
-
-    // inform(fa_string("Recorder, comparing names: "));
-    // inform(n);
-    // inform(ext->name);
 
     if (fa_equal(ext->name, n)) {
         if (ext->buffer) {
@@ -1631,12 +1643,12 @@ fa_ptr_t record_extrenal_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_mess
             fa_atomic_ring_buffer_close(ext->buffer);
         }
 
-        // TODO assert it is actually a ring buffer
-        ext->buffer = msg;
+        if (!msg || (fa_dynamic_get_type(msg) == atomic_ring_buffer_type_repr)) {
+            ext->buffer = msg;
+        } else {
+            assert(false && "Strange value sent to record_ext");
+        }
         // ext->bytes_written = 0;
-    } else {
-        // fa_warn(fa_string_dappend(fa_string("Unknown message to external recorder: "), fa_copy(ext->name)));
-        // no assert!
     }
 
     return x;
@@ -1651,10 +1663,10 @@ fa_signal_t fa_signal_record_external(fa_string_t name,
     ext->buffer = NULL;
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
-    proc->before  = record_extrenal_before_;
-    proc->after   = record_extrenal_after_;
-    proc->render  = record_extrenal_render_;
-    proc->receive = record_extrenal_receive_;
+    proc->before  = record_external_before_;
+    proc->after   = record_external_after_;
+    proc->render  = record_external_render_;
+    proc->receive = record_external_receive_;
     proc->send    = NULL;
     proc->destroy = NULL;
     proc->data    = ext;
@@ -1788,10 +1800,10 @@ fa_signal_t fa_signal_xor(fa_signal_t x, fa_signal_t y)
     return fa_signal_lift2(fa_string("(^)"), _xor, NULL, x, y);
 }
 
-inline static double _eq(fa_ptr_t _, double x, double y)
-{
-    return x == y;
-}
+// inline static double _eq(fa_ptr_t _, double x, double y)
+// {
+//     return x == y;
+// }
 fa_signal_t fa_signal_equal(fa_signal_t x, fa_signal_t y)
 {
     assert(false && "Not implemented");
@@ -1988,8 +2000,7 @@ fa_ptr_t vst_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state
 #define fa_dynamic_is_fa_string(x) (fa_dynamic_get_type(x) == string_type_repr)
 #define fa_dynamic_is_bool(x)   (fa_dynamic_get_type(x) == bool_type_repr)
 #define fa_dynamic_is_pair(x)   (fa_dynamic_get_type(x) == pair_type_repr)
-
-void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
+#define fa_dynamic_is_list(x)   (fa_dynamic_get_type(x) == list_type_repr)
 
 // Used by vst.cc
 void vst_log(const char *msg)
@@ -2034,7 +2045,7 @@ fa_ptr_t vst_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
             fa_warn(fa_string("Unknown message to VST plug"));
             return x;
         } else {
-            int status, data1, data2;
+            uint8_t status, data1, data2;
             fa_midi_message_decons(msg, &status, &data1, &data2);
 
             VstMidiEvent event;
@@ -2285,6 +2296,171 @@ fa_signal_t fa_signal_trigger(fa_string_t name, double init)
     proc->data    = context;
 
     return fa_signal_custom(proc, fa_signal_input_with_custom(proc, 0));
+}
+
+// --------------------------------------------------------------------------------
+
+struct _play_buffer_context {
+    fa_string_t name;
+    fa_buffer_t buffer;
+    double stream_sample_rate;
+    double pos;
+    double speed;
+    size_t max_pos;
+    uint8_t channels;
+    bool playing;
+};
+
+typedef struct _play_buffer_context play_buffer_context;
+
+fa_ptr_t play_buffer_before_(fa_ptr_t x, int count, fa_signal_state_t *state)
+{
+    play_buffer_context *context = x;
+    context->stream_sample_rate = state->rate;
+    return x;
+}
+fa_ptr_t play_buffer_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
+{
+    play_buffer_context *context = x;
+    if (context->buffer) {
+        fa_buffer_release_reference(context->buffer);
+        context->buffer = NULL;
+    }
+    return x;
+}
+fa_ptr_t play_buffer_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
+{
+    play_buffer_context *context = x;
+
+    if (!kVectorMode) {
+        if (context->playing) {
+
+            //context->pos = state->count % 4410; // TEST!
+            //context->pos =  % 4410; // TEST!
+
+            if (context->pos < context->max_pos) {
+                // TODO: interpolating samples for non-integer positions would improve sound quality
+                size_t buffer_pos = ((size_t)context->pos) * context->channels;
+                double left = fa_buffer_get_double(context->buffer, buffer_pos + 0);
+                state->buffer[(offset + 0)*kMaxVectorSize] = left;
+                if (context->channels > 1) {
+                    state->buffer[(offset + 1)*kMaxVectorSize] = fa_buffer_get_double(context->buffer, buffer_pos + 1);
+                } else {
+                    state->buffer[(offset + 1)*kMaxVectorSize] = left;
+                }
+                context->pos += context->speed;
+            } else {
+                state->buffer[(offset + 0)*kMaxVectorSize] = 0;
+                state->buffer[(offset + 1)*kMaxVectorSize] = 0;
+                context->playing = false;
+                context->pos = 0;
+            }
+        } else {
+            state->buffer[(offset + 0)*kMaxVectorSize] = 0;
+            state->buffer[(offset + 1)*kMaxVectorSize] = 0;
+        }
+    } else {
+        assert(false && "Not supported yet");
+    }
+
+    return x;
+}
+fa_ptr_t play_buffer_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+{
+    play_buffer_context *context = x;
+
+    if (fa_equal(n, context->name)) {
+        
+        // fa_slog_info("play_buffer_receive_ ", msg);
+        
+        fa_dynamic_type_repr_t msg_type = fa_dynamic_get_type(msg);
+        switch (msg_type) {
+            case buffer_type_repr:
+            {
+                context->playing = false;
+                context->pos = 0;
+                fa_buffer_t buffer = msg;
+                if (buffer != context->buffer) {
+                    fa_buffer_take_reference(buffer);
+                    if (context->buffer) {
+                        fa_buffer_release_reference(context->buffer);
+                    }
+                    context->buffer = buffer;
+                    context->channels = fa_peek_number(fa_buffer_get_meta(buffer, fa_string("channels")));
+                    size_t size = fa_buffer_size(buffer);
+                    context->max_pos = (size / ((sizeof(double)) * context->channels)) - 1;
+                    double buffer_rate = fa_peek_number(fa_buffer_get_meta(buffer, fa_string("sample-rate")));
+                    context->speed = buffer_rate / context->stream_sample_rate;
+                }
+                break;
+            }
+            
+            case i8_type_repr:
+            case i16_type_repr:
+            case i32_type_repr:
+            case i64_type_repr:
+            case f32_type_repr:
+            case f64_type_repr:
+            {
+                double new_pos = fa_peek_number(msg);
+                if (new_pos > context->max_pos) new_pos = context->max_pos;
+                context->pos = new_pos;
+                break;
+            }
+            
+            case string_type_repr:
+            {
+                if (fa_dequal(fa_copy(msg), fa_string("play"))) {
+                    context->playing = true;
+                }
+                else if (fa_dequal(fa_copy(msg), fa_string("stop"))) {
+                    context->playing = false;
+                }
+                else if (fa_dequal(fa_copy(msg), fa_string("free"))) {
+                    if (context->buffer) {
+                        fa_buffer_t buffer = context->buffer;
+                        context->playing = false;
+                        context->pos = 0;
+                        context->buffer = NULL;
+                        fa_buffer_release_reference(buffer);
+                    }
+                }
+                break;
+            }
+
+            default:
+            break;
+        }
+    }
+
+    return x;
+}
+
+fa_pair_t fa_signal_play_buffer(fa_string_t name)
+{
+    play_buffer_context *context = fa_malloc(sizeof(play_buffer_context));
+    context->name = fa_copy(name);
+    context->buffer = NULL;
+    context->pos = 0;
+    context->max_pos = 0;
+    context->playing = false;
+    context->speed = 1.0;
+    context->stream_sample_rate = 0;
+
+    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
+    proc->before  = play_buffer_before_;
+    proc->after   = play_buffer_after_;
+    proc->render  = play_buffer_render_;
+    proc->receive = play_buffer_receive_;
+    proc->send    = NULL;
+    proc->destroy = NULL; // TODO
+    proc->data    = context;
+
+    fa_signal_t left  = fa_signal_input_with_custom(proc, 0);
+    fa_signal_t right = fa_signal_input_with_custom(proc, 1);
+    fa_signal_t left2 = fa_signal_custom(proc, left);
+    fa_pair_t result = fa_pair_create(left2, right);
+    return result;
 }
 
 // --------------------------------------------------------------------------------

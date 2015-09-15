@@ -14,7 +14,7 @@
 
 /*
     Notes:
-        * Simple unbounded FIFO
+        * Simple unbounded LIFO
         * Does not support multi-read or multi-write
         * All malloc/free is done in writer thread
 
@@ -24,15 +24,15 @@
  */
 
 struct node {
-    struct node    *next;
-    fa_ptr_t           value;
+    struct node         *next;
+    fa_ptr_t            value;
 };
 
 typedef struct node *node_t;
 
 struct _fa_atomic_stack_t {
-    fa_impl_t      impl;               //  Interface dispatcher
-    fa_atomic_t    top;
+    fa_impl_t           impl;               //  Interface dispatcher
+    fa_atomic_t         top;
 };
 
 fa_ptr_t atomic_stack_impl(fa_id_t interface);

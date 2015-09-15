@@ -38,13 +38,14 @@ module Fa.Action
     */
     type Action = opaque;
 
-    /** A nullary function that also receives time.
+    /** A nullary function that also receives time
+        (scheduled time and current time, respectively)
      */
-    type NullaryWithTime = ((Ptr, Time) -> Ptr)*;
+    type NullaryWithTime = ((Ptr, Time, Time) -> Ptr)*;
 
-    /** A predicate that also receives time.
-     */
-    type PredWithTime = ((Ptr, Time, Ptr) -> Bool)*;
+    // /** A predicate that also receives time.
+    //  */
+    // type PredWithTime = ((Ptr, Time, Ptr) -> Bool)*;
 
     /** Channel on which to carry out the action.
     */
@@ -66,9 +67,17 @@ module Fa.Action
      */
     copy : Action -> Action;
     
+    /** Copy the given action recursivly.
+     */
+    deep_copy : Action -> Action;
+    
     /** Destroy the given action.
      */
     destroy : Action -> Void;
+    
+    /** Destroy the given action recursivly.
+     */
+    deep_destroy : (Action, DeepDestroyPred) -> Void;
 
     /** The `get` action reads a single global bus.
 
@@ -109,17 +118,30 @@ module Fa.Action
     accum : (Channel, UnaryDouble, Ptr) -> Action;
 
     /** The `send` action sends a message, the type of which depends on
-        the type of receiver. Often this is @ref fa_midi_message_t or 
+        the type of receiver. Often this is a @ref fa_midi_message_t or 
         a value implementing @ref fa_dynamic_t.
 
-        The resulting action must be destroyed by the caller.
+        The resulting action must be destroyed by the caller (or passed to
+        the scheduler). Note that the value is destroyed with the action,
+        to avoid that, use @ref fa_action_send_retain instead. Note also
+        that the name is not destroyed.
         
         @param name
-            Name of receiver.
+            Name that identifies the receiver.
         @param value
             Value to send.
      */
     send : (Name, Value) -> Action;
+    
+    /** Identical to @ref fa_action_send, except that the value is not destroyed
+        when the action is destroyed.
+        
+        @param name
+            Name that identifies the receiver.
+        @param value
+            Value to send.
+     */
+    sendRetain : (Name, Value) -> Action;
 
 
     /** Return whether the given action is a get action.
@@ -183,9 +205,10 @@ module Fa.Action
 
 
     
-    /** Repeat the given action indefinitely.
+    /** Repeat the given action a given number of times.
+        If times is 0, repeat indefinitely (wrap in a while action to stop it)
      */
-    repeat : (interval : Time, action : Action) -> Action;
+    repeat : (interval : Time, times : Size, action : Action) -> Action;
 
     /** Join a list of actions into a single compond action.
         TODO document
@@ -204,33 +227,32 @@ module Fa.Action
 
     /** Creates a derived action from the given action that executes as long as the given predicate
         does *not* hold.
-        
         The predicate function is called for every occurence.
      */
     until : (pred : Pred, predData : Ptr, action : Action) -> Action;
 
-    /** Creates a derived action from the given action that executes íf and only given predicate holds.
-        The predicate function is called for every occurence.
-        
-        This is exactly like @ref fa_action_if, except that it also includes time.
-     */
-    ifWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
-
-    /** Creates a derived action from the given action that executes as long as the given predicate holds.
-        The predicate function is called for every occurence.
-        
-        This is exactly like @ref fa_action_while, except that it also includes time.
-     */
-    whileWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
-
-    /** Creates a derived action from the given action that executes as long as the given predicate
-        does *not* hold.
-        
-        The predicate function is called for every occurence.
-
-        This is exactly like @ref fa_action_until, except that it also includes time.
-     */
-    untilWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
+    // /** Creates a derived action from the given action that executes íf and only given predicate holds.
+    //     The predicate function is called for every occurence.
+    //
+    //     This is exactly like @ref fa_action_if, except that it also includes time.
+    //  */
+    // ifWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
+    //
+    // /** Creates a derived action from the given action that executes as long as the given predicate holds.
+    //     The predicate function is called for every occurence.
+    //
+    //     This is exactly like @ref fa_action_while, except that it also includes time.
+    //  */
+    // whileWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
+    //
+    // /** Creates a derived action from the given action that executes as long as the given predicate
+    //     does *not* hold.
+    //
+    //     The predicate function is called for every occurence.
+    //
+    //     This is exactly like @ref fa_action_until, except that it also includes time.
+    //  */
+    // untilWithTime : (pred : PredWithTime, predData : Ptr, action : Action) -> Action;
 
     /** Convert a unary function to an action.
      */
@@ -242,9 +264,6 @@ module Fa.Action
      */
     doWithTime : (NullaryWithTime, Ptr) -> Action;
 
-
-
-
     /** Returns whether the given action is simple or not.
      */
     isSimple : Action -> Bool;
@@ -252,17 +271,21 @@ module Fa.Action
     /** Returns whether the given action is compound or not.
      */
     isCompound : Action -> Bool;
+
+    /** Returns whether the given action is a do action or not.
+     */
+    isDo : Action -> Bool;
+
+    /** Log the number of allocated actions (for debugging).
+     */    
+    logCount : () -> Void;
     
-    /** Given a compound action, return the minimum offset to its tail.
+    /** TODO: document
      */
-    compoundInterval : Action -> Time;
-
-    /** Given a compound action, return its head (nullable).
+    isFlat : Action -> Bool;
+    
+    /** TODO: document
      */
-    compoundFirst : Action -> Action; // Nullable
-
-    /** Given a compound action, return its tail (nullable).
-     */
-    compoundRest : Action -> Action; // Nullable
+    flatToList : (Action) -> List;
 }
 

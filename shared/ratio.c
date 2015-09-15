@@ -315,9 +315,19 @@ fa_ptr_t ratio_copy(fa_ptr_t a)
     return fa_ratio_copy(a);
 }
 
+fa_ptr_t ratio_deep_copy(fa_ptr_t a)
+{
+    return fa_ratio_copy(a);
+}
+
 void ratio_destroy(fa_ptr_t a)
 {
     fa_ratio_destroy(a);
+}
+
+void ratio_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    if (p(a)) fa_ratio_destroy(a);
 }
 
 fa_dynamic_type_repr_t ratio_get_type(fa_ptr_t a)
@@ -336,9 +346,9 @@ fa_ptr_t ratio_impl(fa_id_t interface)
     static fa_number_t  ratio_number_impl
         = { ratio_add, ratio_subtract, ratio_multiply, ratio_divide, ratio_absolute };
     static fa_copy_t ratio_copy_impl
-        = { ratio_copy };
+        = { ratio_copy, ratio_deep_copy };
     static fa_destroy_t ratio_destroy_impl
-        = { ratio_destroy };
+        = { ratio_destroy, ratio_deep_destroy };
     static fa_dynamic_t ratio_dynamic_impl = { ratio_get_type };
 
     switch (interface) {

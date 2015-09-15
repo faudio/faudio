@@ -44,5 +44,7 @@ module Fa.Atomic.Queue
             Atomic
      */
     write : (Queue, Ptr) -> Bool;
+    
+    peek : Queue -> Ptr;
 }
 

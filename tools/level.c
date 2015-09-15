@@ -90,7 +90,7 @@ fa_ptr_t send_(fa_ptr_t x, fa_signal_message_callback_t cb, fa_ptr_t data)
     // All create/destroy should happen in the setup phase
     if (should_send) {
         should_send = false;
-        cb(data, out_name, fa_f32(values[0]));
+        cb(data, out_name, fa_f64(values[0]));
     }
 
     return x;
@@ -123,8 +123,12 @@ double amp2db(double x)
     return log10(x) * 10;
 }
 
+extern char *fa_type_str(fa_ptr_t a);
+
 fa_ptr_t _message_out(fa_ptr_t x, fa_ptr_t name, fa_ptr_t value)
 {
+    // printf("Type 1: %s\n", fa_type_str(value));
+    // printf("Type 2: %d\n", fa_dynamic_get_type(value));
     // fa_print("Receieved 2: %s\n", fa_pair_create(name, value));
     int bars = (int)(((amp2db(fa_peek_double(value)) + 20) / 20) * kBarsInMeter);
 

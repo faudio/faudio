@@ -20,7 +20,7 @@
 
 #include "au.h"
 
-struct au_context {                     
+struct au_context {
     double *outputs;
     fa_string_t name;
     int channels;
@@ -254,7 +254,7 @@ fa_list_t find_audio_components(AudioComponentDescription* description)
     {
         component = AudioComponentFindNext(component, description);
         if (component) {
-            fa_dpush_list(component, all);
+            fa_push_list(component, all);
         }
     }
     return all;

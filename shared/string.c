@@ -11,6 +11,7 @@
 #include <fa/error.h>
 #include <fa/dynamic.h>
 #include <fa/util.h>
+#include <fa/atomic.h>
 
 #include "string/trex.h"
 #include "string/parson.h"
@@ -24,7 +25,9 @@
 
         - Only 16-bit, extended range not supported
 
-        - Slow copying
+        - fa_copy uses reference counting, so "copying" is O(1) (Note that copy-on-write is not needed, as fa_strings are immutable)
+
+        - Deep copying is relatively slow
 
         - Reasonable dappend (using realloc)
  */
@@ -36,8 +39,10 @@ struct _fa_string_t {
     fa_impl_t       impl;           // Dispatcher
     size_t          size;           // Character count
     uint16_t        *data;          // Payload
+    fa_atomic_t     count;          // Reference count
 };
 
+static int gStringCount = 0;
 
 // --------------------------------------------------------------------------------
 
@@ -53,12 +58,18 @@ fa_string_t new_string(size_t size, uint16_t *data)
     str->impl = &string_impl;
     str->size = size;
     str->data = data;
+    str->count = fa_atomic_create();
+    
+    fa_atomic_set(str->count, (fa_ptr_t) 1);
 
+    gStringCount++;
     return str;
 }
 
 void delete_string(fa_string_t str)
 {
+    gStringCount--;
+    fa_destroy(str->count);
     fa_delete(str);
 }
 
@@ -80,16 +91,30 @@ fa_string_t fa_string_single(fa_char16_t chr)
 
 fa_string_t fa_string_repeat(int times, fa_char16_t chr)
 {
+    /*
+    // Canonic but inefficient implementation
     fa_string_t s = fa_string("");
 
     for (int i = 0; i < times; ++i) {
-        fa_write_string(s, fa_string_single(chr));
+        s = fa_string_dappend(s, fa_string_single(chr));
+    }*/
+
+    // Less elegant, but much faster
+    fa_string_t s = new_string(times, fa_malloc(times * kStandardCodeSize));
+    for (int i = 0; i < times; ++i) {
+        s->data[i] = chr;
     }
 
     return s;
 }
 
 fa_string_t fa_string_copy(fa_string_t str)
+{
+    fa_atomic_add(str->count, 1);
+    return str;
+}
+
+fa_string_t fa_string_deep_copy(fa_string_t str)
 {
     fa_string_t pst = new_string(str->size, NULL);
     pst->data = fa_malloc(str->size * kStandardCodeSize);
@@ -114,6 +139,15 @@ fa_string_t fa_string_append(fa_string_t str1,
 fa_string_t fa_string_dappend(fa_string_t str1,
                               fa_string_t str2)
 {
+    // If str1 is referenced from > 1 places, we can't change it in place
+    if ((int)fa_atomic_get(str1->count) > 1) {
+        fa_string_t str = fa_string_append(str1, str2);
+        fa_string_destroy(str1);
+        fa_string_destroy(str2);
+        return str;
+    }
+    
+    // Destructive variant
     size_t oldSize = str1->size;
 
     str1->size = str1->size + str2->size;
@@ -121,14 +155,17 @@ fa_string_t fa_string_dappend(fa_string_t str1,
 
     memcpy(str1->data + oldSize, str2->data, str2->size * kStandardCodeSize);
 
-    fa_destroy(str2);
+    fa_string_destroy(str2);
     return str1;
 }
 
 void fa_string_destroy(fa_string_t str)
 {
-    fa_free(str->data);
-    delete_string(str);
+    fa_atomic_add(str->count, -1);
+    if (fa_atomic_get(str->count) == 0) {
+        fa_free(str->data);
+        delete_string(str);
+    }
 }
 
 int fa_string_length(fa_string_t str)
@@ -386,12 +423,14 @@ fa_string_t fa_string_from_utf16(fa_string_utf16_t cstr)
 
 fa_string_t fa_string_show(fa_ptr_t a)
 {
+    if (!a) return fa_string("NULL");
     assert(fa_interface(fa_string_show_i, a) && "Must implement Show");
     return ((fa_string_show_t *) fa_interface(fa_string_show_i, a))->show(a);
 }
 
 fa_string_t fa_string_dshow(fa_ptr_t a)
 {
+    if (!a) return fa_string("NULL");
     assert(fa_interface(fa_string_show_i, a) && "Must implement Show");
 	fa_string_t result = ((fa_string_show_t *) fa_interface(fa_string_show_i, a))->show(a);
 	fa_destroy(a);
@@ -426,22 +465,35 @@ fa_ptr_t jsonify(fa_ptr_t a)
         return fa_list_map(apply1, jsonify, a);
 
     case map_type_repr:
-        return fa_map_map(apply1, jsonify, a);
+        assert(false && "Not implemented yet");
+        //return fa_map_map(apply1, jsonify, a);
 
     default:
         return a;
     }
 }
 
-inline static
+//inline static
 fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
 {
+  void fa_log_region_count(fa_string_t);
+  printf("beginning of unjsonify\n");
+  fflush(stdout);
+  fa_log_region_count(NULL);
+  
+  if (!a) {
+    return fa_list_empty();
+  }
+  
+  
     switch (json_value_get_type(a)) {
     case JSONError:
         *ok = false;
         return NULL;
 
     case JSONNull:
+        printf("null\n");
+        fflush(stdout);
         return fa_list_empty();
 
     case JSONString:
@@ -454,11 +506,17 @@ fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
         return fa_fb(json_value_get_boolean(a));
 
     case JSONArray: {
+        printf("array\n");
+        fflush(stdout);
         JSON_Array *ar  = json_value_get_array(a);
         size_t sz       = json_array_get_count(ar);
         fa_list_t list     = fa_list_empty();
 
         for (size_t i = sz; i > 0; --i) {
+          printf("in loop\n");
+          fa_log_region_count(NULL);
+          fflush(stdout);
+            
             fa_ptr_t v = unjsonify(json_array_get_value(ar, i - 1), ok);
 
             if (!ok) {
@@ -467,7 +525,9 @@ fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
 
             list = fa_list_dcons(v, list);
         }
-
+        printf("end of array case\n");
+        fflush(stdout);
+        fa_log_region_count(NULL);
         return list;
     }
 
@@ -506,8 +566,36 @@ fa_string_t fa_string_to_json(fa_ptr_t a)
 
 fa_ptr_t fa_string_from_json(fa_string_t string)
 {
+  void fa_log_region_count(fa_string_t);
+  printf("fa_string_from_json 1\n");
+  fflush(stdout);
+  fa_log_region_count(NULL);
+  
     bool ok = true;
-    fa_ptr_t result = unjsonify(json_parse_string(fa_unstring(string)), &ok);
+    char* cstring = fa_unstring(string);
+    
+    printf("fa_string_from_json 2\n");
+    fflush(stdout);
+    fa_log_region_count(NULL);
+    
+    JSON_Value *a = json_parse_string(cstring);
+    
+    printf("fa_string_from_json 2.5\n");
+    fflush(stdout);
+    fa_log_region_count(NULL);
+    
+    fa_ptr_t result = unjsonify(a, &ok);
+    
+    json_value_free(a);
+    
+    printf("fa_string_from_json 3\n");
+    fflush(stdout);
+    fa_log_region_count(NULL);
+    
+    fa_free(cstring);
+    printf("fa_string_from_json 4\n");
+    fflush(stdout);
+    fa_log_region_count(NULL);
 
     if (!ok) {
         return (fa_ptr_t) string_error(fa_string("Malformed JSON value."));
@@ -579,6 +667,7 @@ inline static fa_string_t escape(fa_string_t string)
 
 static bool string_equal(fa_ptr_t as, fa_ptr_t bs)
 {
+    if (as == bs) return true; // May be more common than one would think, since strings are reference counted
     fa_string_t cs, ds;
     cs = (fa_string_t) as;
     ds = (fa_string_t) bs;
@@ -586,9 +675,7 @@ static bool string_equal(fa_ptr_t as, fa_ptr_t bs)
     if (cs->size != ds->size) {
         return false;
     } else {
-        for (size_t i = 0;
-                i < cs->size && i < ds->size;
-                ++i) {
+        for (size_t i = 0; i < cs->size; ++i) {
             if (cs->data[i] != ds->data[i]) {
                 return false;
             }
@@ -671,9 +758,19 @@ fa_ptr_t string_copy(fa_ptr_t a)
     return fa_string_copy(a);
 }
 
+fa_ptr_t string_deep_copy(fa_ptr_t a)
+{
+    return fa_string_deep_copy(a);
+}
+
 void string_destroy(fa_ptr_t a)
 {
     fa_string_destroy(a);
+}
+
+void string_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    if (p(a)) fa_string_destroy(a);
 }
 
 fa_dynamic_type_repr_t string_get_type(fa_ptr_t a)
@@ -684,9 +781,9 @@ fa_dynamic_type_repr_t string_get_type(fa_ptr_t a)
 fa_ptr_t string_impl(fa_id_t interface)
 {
     static fa_equal_t string_equal_impl = { string_equal };
-    static fa_copy_t string_copy_impl = { string_copy };
+    static fa_copy_t string_copy_impl = { string_copy, string_deep_copy };
     static fa_string_show_t string_show_impl = { string_show };
-    static fa_destroy_t string_destroy_impl = { string_destroy };
+    static fa_destroy_t string_destroy_impl = { string_destroy, string_deep_destroy };
     static fa_order_t string_order_impl = { string_less_than, string_greater_than };
     static fa_dynamic_t string_dynamic_impl = { string_get_type };
     static fa_semigroup_t string_semigroup_impl = { _string_append };
@@ -731,5 +828,9 @@ void string_fatal(char *msg, int error)
 
     fa_log_error_from(fa_string(msg), fa_string("Doremir.String"));
     exit(error);
+}
+
+void fa_string_log_count() {
+    fa_log_info(fa_string_dappend(fa_string("Strings allocated: "), fa_string_dshow(fa_i32(gStringCount))));
 }
 

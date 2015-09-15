@@ -188,9 +188,9 @@ void write_filter_destroy(fa_ptr_t x)
     fa_warn(fa_string("Unimplemented IO destroy"));
 }
 
-fa_string_t  write_filter_show(fa_ptr_t x)
+fa_string_t write_filter_show(fa_ptr_t x)
 {
-    return fa_string("<StdOutSink>");
+    return fa_string("<WriteSink>");
 }
 
 void write_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
@@ -202,10 +202,13 @@ void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 
     if (buffer) {
         fa_string_t path = /*fa_copy*/(((struct filter_base *) x)->data1);
-        FILE *fp = fopen(fa_unstring(path), "ab");
+        char* _path = fa_unstring(path);
+        FILE *fp = fopen(_path, "ab");
+        fa_free(_path);
 
         if (!fp) {
-            fa_fail(fa_string_dappend(fa_string("Could not write file: "), path));
+            fa_fail(fa_string_dappend(fa_string("Could not write file: "), fa_copy(path)));
+            fa_fail(fa_string_format_integral("  errno: %d", errno));
             fclose(fp);
         } else {
             fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
@@ -227,7 +230,7 @@ void read_filter_destroy(fa_ptr_t x)
 
 fa_string_t  read_filter_show(fa_ptr_t x)
 {
-    return fa_string("<StdOutSink>");
+    return fa_string("<ReadSource>");
 }
 
 void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
@@ -295,7 +298,7 @@ void identity_destroy(fa_ptr_t x)
 
 fa_string_t identity_show(fa_ptr_t x)
 {
-    return fa_string("<Ref>");
+    return fa_string("<Id>");
 }
 
 void identity_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
@@ -352,6 +355,10 @@ void composed_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffe
     fa_io_filter_t f2 = ((struct filter_base *) x)->data2;
 
     fa_buffer_t buffer2;
+//     fa_io_push_through((fa_io_sink_t) fa_io_ref_filter(&buffer2), f1, buffer);
+//     fa_slog_info("buffer2 is now ", buffer2);
+//     fa_io_push_through(f2, downstream, buffer2);
+    
     fa_io_push_through(f1, (fa_io_sink_t) fa_io_ref_filter(&buffer2), buffer);
     fa_io_push_through(f2, downstream, buffer2);
 }
@@ -367,7 +374,7 @@ void simple_filter_destroy(fa_ptr_t x)
 
 fa_string_t simple_filter_show(fa_ptr_t x)
 {
-    return fa_string("<Ref>");
+    return fa_string("<Simple>");
 }
 
 void _simple_filter_pull1(fa_ptr_t y, fa_buffer_t buffer)
@@ -375,7 +382,7 @@ void _simple_filter_pull1(fa_ptr_t y, fa_buffer_t buffer)
     fa_unpair(y, x, closure) {
         fa_io_callback_t      simple_push = ((struct filter_base *) x)->data1;
         fa_io_read_callback_t simple_pull = ((struct filter_base *) x)->data2;
-        fa_ptr_t                 cbData = ((struct filter_base *) x)->data3;
+        fa_ptr_t                   cbData = ((struct filter_base *) x)->data3;
 
         fa_unpair(closure, callback, data) {
             simple_push(cbData, buffer);
@@ -391,7 +398,7 @@ void simple_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t ca
         fa_io_pull(upstream, _simple_filter_pull1, fa_pair_create(x, fa_pair_create(callback, data)));
     } else {
         fa_io_read_callback_t simple_pull = ((struct filter_base *) x)->data2;
-        fa_ptr_t                 cbData = ((struct filter_base *) x)->data3;
+        fa_ptr_t                   cbData = ((struct filter_base *) x)->data3;
         simple_pull(cbData, callback, data);
     }
 }
@@ -406,10 +413,10 @@ void simple_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
     fa_io_callback_t      simple_push = ((struct filter_base *) x)->data1;
     fa_io_read_callback_t simple_pull = ((struct filter_base *) x)->data2;
-    fa_ptr_t                 cbData = ((struct filter_base *) x)->data3;
+    fa_ptr_t                   cbData = ((struct filter_base *) x)->data3;
 
-    simple_push(cbData, buffer);
-    simple_pull(cbData, _simple_push1, downstream);
+    if (simple_push) simple_push(cbData, buffer);
+    if (simple_pull) simple_pull(cbData, _simple_push1, downstream);
 }
 FILTER_IMPLEMENTATION(simple_filter);
 
@@ -518,7 +525,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
 {
     fa_atomic_ring_buffer_t rbuffer = x;
     // fa_mark_used(rbuffer);
-
+    
     while (!fa_atomic_ring_buffer_is_closed(rbuffer)) {
         size_t size = 256;
 
@@ -537,6 +544,8 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
 
             cb(data, buf);
             fa_destroy(buf);
+        } else {
+            fa_thread_sleep(1);
         }
     }
 
@@ -546,7 +555,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
         // fa_warn(fa_string_format_integral("Bytes read: %zu", bytes_read));
 
 // should be 1
-// we drop last frame as ogg converter (and others) expect an even number of sample
+// we drop last frame as ogg converter (and others) expect an even number of samples
 #define kMaxDrainSpill 8
 
         for (size_t size = 256; size >= kMaxDrainSpill; size /= 2) {
@@ -581,6 +590,40 @@ fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t rbuffer)
 
 
 
+void pull_buffer(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
+{
+    size_t chunk_size = 256;
+    fa_buffer_t buffer = x;
+    size_t size = fa_buffer_size(buffer);
+    size_t chunks = size / chunk_size;
+    byte_t *raw_source = fa_buffer_unsafe_address(buffer);
+    
+    for (int chunk = 0; chunk < chunks; chunk++) {
+        fa_buffer_t buf = fa_buffer_create(chunk_size);
+        byte_t *raw_dest = fa_buffer_unsafe_address(buf);
+        memcpy(raw_dest, raw_source + (chunk * chunk_size), chunk_size);
+        cb(data, buf);
+        fa_destroy(buf);
+    }
+    
+    size_t remaining_bytes = size - (chunk_size * chunks);
+    if (remaining_bytes > kMaxDrainSpill) {
+        remaining_bytes = kMaxDrainSpill * (remaining_bytes / kMaxDrainSpill);
+        fa_buffer_t buf = fa_buffer_create(remaining_bytes);
+        byte_t *raw_dest = fa_buffer_unsafe_address(buf);
+        memcpy(raw_dest, raw_source + (chunks * chunk_size), remaining_bytes);
+        cb(data, buf);
+        fa_destroy(buf);
+    }
+
+    // Nothing more to read, close downstream and finish
+    cb(data, NULL);
+}
+
+fa_io_source_t fa_io_from_buffer(fa_buffer_t buffer) {
+    return (fa_io_source_t) fa_io_create_simple_filter(NULL, pull_buffer, buffer);
+}
+
 
 
 static inline void _run(fa_ptr_t pair, fa_buffer_t buffer)
@@ -602,3 +645,70 @@ void fa_io_run(fa_io_source_t source, fa_io_sink_t sink)
         }
     }
 }
+
+struct _pull_to_buffer_info {
+    void *ptr;
+    bool ok;
+    size_t allocated;
+    size_t used;
+    size_t growth;
+};
+
+static fa_ptr_t default_destroy(fa_ptr_t _, fa_ptr_t data)
+{
+    fa_free(data);
+    return NULL;
+}
+
+static void _pull_to_buffer(fa_ptr_t i, fa_buffer_t buf)
+{
+    // buf is the current small buffer
+    struct _pull_to_buffer_info *info = i;
+    if (!buf) {
+        info->ok = false;
+    } else {
+        size_t add = fa_buffer_size(buf);
+        
+        // Grow if needed
+        if ((info->used + add) > info->allocated) {
+            size_t new_allocate_size = info->allocated + info->growth;
+            if (new_allocate_size < info->allocated + add) {
+                new_allocate_size = info->allocated + add;
+                info->growth = add;
+            }
+            //printf("Allocating more memory for buffer, new size: %zu\n", new_allocate_size);
+            info->ptr = fa_realloc(info->ptr, new_allocate_size);
+            if (info->ptr) {
+                info->allocated = new_allocate_size;
+            } else {
+                info->allocated = 0;
+                info->used = 0;
+                info->ok = false;
+                fa_fail(fa_string("fa_io_pull_to_buffer: could not allocate memory"));
+                return;
+            }
+        }
+        
+        // Copy data and increase used
+        memcpy(info->ptr + info->used, fa_buffer_unsafe_address(buf), add);
+        info->used += add;
+    }
+}
+
+fa_buffer_t fa_io_pull_to_buffer(fa_io_source_t source)
+{
+    size_t start_size = 65536;
+    struct _pull_to_buffer_info info = { fa_malloc(start_size), true, start_size, 0, start_size };
+    while (info.ok) {
+        fa_io_pull(source, _pull_to_buffer, (fa_ptr_t)&info);
+    }
+    if (info.ptr && info.used) {
+        return fa_buffer_wrap(info.ptr, info.used, default_destroy, NULL);
+    } else {
+        if (info.ptr) {
+            fa_free(info.ptr);
+        }
+        return NULL;
+    }
+}
+

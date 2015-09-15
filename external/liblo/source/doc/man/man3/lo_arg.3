@@ -1,0 +1,91 @@
+.TH "lo_arg" 3 "Sat Jun 20 2015" "Version 0.28" "liblo" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+lo_arg \- 
+.PP
+Union used to read values from incoming messages\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "int32_t \fBi\fP"
+.br
+.ti -1c
+.RI "int32_t \fBi32\fP"
+.br
+.ti -1c
+.RI "int64_t \fBh\fP"
+.br
+.ti -1c
+.RI "int64_t \fBi64\fP"
+.br
+.ti -1c
+.RI "float \fBf\fP"
+.br
+.ti -1c
+.RI "float \fBf32\fP"
+.br
+.ti -1c
+.RI "double \fBd\fP"
+.br
+.ti -1c
+.RI "double \fBf64\fP"
+.br
+.ti -1c
+.RI "char \fBs\fP"
+.br
+.ti -1c
+.RI "char \fBS\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBc\fP"
+.br
+.ti -1c
+.RI "uint8_t \fBm\fP [4]"
+.br
+.ti -1c
+.RI "\fBlo_timetag\fP \fBt\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Union used to read values from incoming messages\&. 
+
+Types can generally be read using argv[n]->t where n is the argument number and t is the type character, with the exception of strings and symbols which must be read with &argv[n]->t\&. 
+.SH "Field Documentation"
+.PP 
+.SS "unsigned char lo_arg::c"
+Standard C, 8 bit, char\&. 
+.SS "double lo_arg::d"
+64 bit IEEE-754 double\&. 
+.SS "float lo_arg::f"
+32 bit IEEE-754 float\&. 
+.SS "float lo_arg::f32"
+32 bit IEEE-754 float\&. 
+.SS "double lo_arg::f64"
+64 bit IEEE-754 double\&. 
+.SS "int64_t lo_arg::h"
+64 bit signed integer\&. 
+.SS "int32_t lo_arg::i"
+32 bit signed integer\&. 
+.SS "int32_t lo_arg::i32"
+32 bit signed integer\&. 
+.SS "int64_t lo_arg::i64"
+64 bit signed integer\&. 
+.SS "uint8_t lo_arg::m[4]"
+A 4 byte MIDI packet\&. 
+.SS "char lo_arg::s"
+Standard C, NULL terminated string\&. 
+.SS "char lo_arg::S"
+Standard C, NULL terminated, string\&. Used in systems which distinguish strings and symbols\&. 
+.SS "\fBlo_timetag\fP lo_arg::t"
+OSC TimeTag value\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for liblo from the source code\&.

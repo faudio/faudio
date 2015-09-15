@@ -47,9 +47,11 @@
 */
 typedef struct _fa_action_t * fa_action_t;
 
-/** A nullary function that also receives time.
-*/
+/** A nullary function that also receives time
+    (scheduled time and current time, respectively)
+ */
 typedef fa_ptr_t (* fa_action_nullary_with_time_t)(fa_ptr_t,
+                                                   fa_time_t,
                                                    fa_time_t);
 
 /** A predicate that also receives time.
@@ -81,9 +83,18 @@ fa_action_t fa_action_null();
 */
 fa_action_t fa_action_copy(fa_action_t action);
 
+/** Copy the given action recursivly.
+*/
+fa_action_t fa_action_deep_copy(fa_action_t action);
+
 /** Destroy the given action.
 */
 void fa_action_destroy(fa_action_t action);
+
+/** Destroy the given action recursivly.
+*/
+void fa_action_deep_destroy(fa_action_t action,
+                            fa_deep_destroy_pred_t deepDestroyPred);
 
 /** The `get` action reads a single global bus.
 
@@ -129,18 +140,35 @@ fa_action_t fa_action_accum(fa_action_channel_t channel,
                             fa_ptr_t ptr);
 
 /** The `send` action sends a message, the type of which depends on
-    the type of receiver. Often this is @ref fa_midi_message_t or 
+    the type of receiver. Often this is a @ref fa_midi_message_t or 
     a value implementing @ref fa_dynamic_t.
 
-    The resulting action must be destroyed by the caller.
+    The resulting action must be destroyed by the caller (or passed to
+    the scheduler). Note that the value is destroyed with the action,
+    to avoid that, use @ref fa_action_send_retain instead. Note also
+    that the name is not destroyed.
     
     @param name
-        Name of receiver.
+        Name that identifies the receiver.
     @param value
         Value to send.
 */
 fa_action_t fa_action_send(fa_action_name_t name,
                            fa_action_value_t value);
+
+/** Identical to @ref fa_action_send, except that the value is not destroyed
+    when the action is destroyed.
+    
+    @param name
+        Name that identifies the receiver.
+    @param value
+        Value to send.
+*/
+fa_action_t fa_action_send_retain(fa_action_name_t name,
+                                  fa_action_value_t value);
+
+double fa_action_timestamp(fa_action_t action);
+void fa_action_timestamp_set(fa_action_t action, double timestamp);
 
 /** Return whether the given action is a get action.
       
@@ -202,9 +230,11 @@ fa_action_name_t fa_action_send_name(fa_action_t action);
 */
 fa_action_value_t fa_action_send_value(fa_action_t action);
 
-/** Repeat the given action indefinitely.
-*/
+/** Repeat the given action a given number of times.
+    If times is 0, repeat indefinitely (wrap in a while action to stop it)
+ */
 fa_action_t fa_action_repeat(fa_time_t interval,
+                             size_t times,
                              fa_action_t action);
 
 /** Join a list of actions into a single compond action.
@@ -235,35 +265,6 @@ fa_action_t fa_action_until(fa_pred_t pred,
                             fa_ptr_t predData,
                             fa_action_t action);
 
-/** Creates a derived action from the given action that executes íf and only given predicate holds.
-    The predicate function is called for every occurence.
-    
-    This is exactly like @ref fa_action_if, except that it also includes time.
-*/
-fa_action_t fa_action_if_with_time(fa_action_pred_with_time_t pred,
-                                   fa_ptr_t predData,
-                                   fa_action_t action);
-
-/** Creates a derived action from the given action that executes as long as the given predicate holds.
-    The predicate function is called for every occurence.
-    
-    This is exactly like @ref fa_action_while, except that it also includes time.
-*/
-fa_action_t fa_action_while_with_time(fa_action_pred_with_time_t pred,
-                                      fa_ptr_t predData,
-                                      fa_action_t action);
-
-/** Creates a derived action from the given action that executes as long as the given predicate
-    does *not* hold.
-    
-    The predicate function is called for every occurence.
-
-    This is exactly like @ref fa_action_until, except that it also includes time.
-*/
-fa_action_t fa_action_until_with_time(fa_action_pred_with_time_t pred,
-                                      fa_ptr_t predData,
-                                      fa_action_t action);
-
 /** Convert a unary function to an action.
 */
 fa_action_t fa_action_do(fa_nullary_t nullary, fa_ptr_t ptr);
@@ -283,17 +284,21 @@ bool fa_action_is_simple(fa_action_t action);
 */
 bool fa_action_is_compound(fa_action_t action);
 
-/** Given a compound action, return the minimum offset to its tail.
+/** Returns whether the given action is a do action or not.
 */
-fa_time_t fa_action_compound_interval(fa_action_t action);
+bool fa_action_is_do(fa_action_t action);
 
-/** Given a compound action, return its head (nullable).
+/** Log the number of allocated actions (for debugging).
 */
-fa_action_t fa_action_compound_first(fa_action_t action);
+void fa_action_log_count();
 
-/** Given a compound action, return its tail (nullable).
-*/
-fa_action_t fa_action_compound_rest(fa_action_t action);
+/** TODO: document
+ */
+bool fa_action_is_flat(fa_action_t action);
+
+/** TODO: document
+ */
+fa_list_t fa_action_flat_to_list(fa_action_t action);
 
 /** @}
     @}

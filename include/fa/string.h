@@ -138,7 +138,7 @@ int fa_string_length(fa_string_t string);
     @param pos
     @param str
 */
-fa_char16_t fa_string_char_at(int int_, fa_string_t string);
+fa_char16_t fa_string_char_at(int index, fa_string_t string);
 
 /** String conversion interface.
     
@@ -277,6 +277,9 @@ fa_string_t fa_string_format_integral(char *, long long_);
         A new formatted string.
 */
 fa_string_t fa_string_format_floating(char *, double double_);
+
+
+void fa_string_log_count();
 
 /** @}
     @}

@@ -1,0 +1,12 @@
+#!/bin/bash
+git submodule init   external/curl/source;
+git submodule update external/curl/source;
+
+pushd external/curl/source;
+
+./configure \
+    --prefix=`pwd`/../result \
+    && make \
+    && make install
+
+popd;

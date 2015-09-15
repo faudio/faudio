@@ -40,9 +40,9 @@
 #define MAX(a, b)             ((a) > (b) ? (a) : (b))
 
 #include <fa/alloc.h>
-#define parson_malloc(a)     fa_malloc(a)
-#define parson_free(a)       fa_free((void*)a)
-#define parson_realloc(a, b) fa_realloc(a, b)
+#define parson_malloc(a)     malloc(a)
+#define parson_free(a)       free((void*)a)
+#define parson_realloc(a, b) realloc(a, b)
 
 /* Type definitions */
 typedef union json_value_value {

@@ -6,7 +6,6 @@ build/*
 build2/*
 dist
 external/*/result/
-OSX
 *~
 test/plot/AudioEnginePlotTest/CorePlot.framework/
 test/#*

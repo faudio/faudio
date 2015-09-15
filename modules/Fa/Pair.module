@@ -83,5 +83,7 @@ module Fa.Pair
     /** Convert a pair to a list of two elements.
      */
     toList : Pair -> List;
+    
+    logCount : () -> Void;
 }
 

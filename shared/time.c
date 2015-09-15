@@ -9,11 +9,15 @@
 
 #include <fa/time.h>
 #include <fa/util.h>
+#include <fa/atomic.h>
 
 struct _fa_time_t {
     fa_impl_t       impl;       //  Interface dispatcher
     double          dvalue;     //  Value in seconds
 };
+
+static fa_atomic_t gTimeCount = 0;
+//static int temp_counter = 0;
 
 double to_double(fa_ratio_t x);
 static fa_ratio_t from_double(double x)
@@ -30,11 +34,18 @@ inline static fa_time_t new_time(double dvalue)
     fa_time_t t     = fa_new(time);
     t->impl         = &time_impl;
     t->dvalue       = dvalue;
+    if (!gTimeCount) {
+        gTimeCount = fa_atomic_create();
+    }
+    fa_atomic_add(gTimeCount, 1);
+    //printf("fa_time_create\n");
+    //if (++temp_counter % 1000 == 0) assert(false && "break in new_time");
     return t;
 }
 
 inline static void delete_time(fa_time_t time)
 {
+    fa_atomic_add(gTimeCount, -1);
     fa_delete(time);
 }
 
@@ -46,6 +57,11 @@ fa_time_t fa_time_create(int32_t days, int32_t hours, int32_t minutes, fa_ratio_
 	double fraction = to_double(seconds);
 	fa_destroy(seconds);
     return new_time(whole + fraction);
+}
+
+fa_time_t fa_time_from_double(double dvalue)
+{
+    return new_time(dvalue);
 }
 
 fa_time_t fa_time_copy(fa_time_t time)
@@ -98,6 +114,10 @@ int32_t fa_time_to_seconds(fa_time_t time)
            + fa_time_seconds(time);
 }
 
+double fa_time_to_double(fa_time_t time) {
+    return time->dvalue;
+}
+
 #define approx_millis(r) ( (int32_t) ( ((double) fa_ratio_num(r)) / ((double) fa_ratio_denom(r)) * 1000 ) )
 
 /** Convert the time to milliseconds.
@@ -128,6 +148,10 @@ fa_string_t fa_time_to_iso(fa_time_t time)
     return s;
 }
 
+bool fa_time_is_zero(fa_time_t time)
+{
+    return time->dvalue == 0.0;
+}
 
 // --------------------------------------------------------------------------------
 
@@ -154,7 +178,7 @@ bool time_greater_than(fa_ptr_t a, fa_ptr_t b)
 
 fa_ptr_t time_add(fa_ptr_t a, fa_ptr_t b)
 {
-    fa_ratio_t fa_ratio_add_safe(fa_ratio_t x, fa_ratio_t y);
+    //fa_ratio_t fa_ratio_add_safe(fa_ratio_t x, fa_ratio_t y);
     fa_time_t x = (fa_time_t) a;
     fa_time_t y = (fa_time_t) b;
     return new_time(x->dvalue + y->dvalue);
@@ -190,17 +214,24 @@ fa_ptr_t time_absolute(fa_ptr_t a)
 fa_string_t time_show(fa_ptr_t a)
 {
     fa_time_t t = (fa_time_t) a;
-    fa_string_t s = fa_string("<Time");
+    //fa_string_t s = fa_string("<Time ");
+    // s = fa_string_dappend(s, fa_format_integral(" %02id", fa_time_days(t)));
+    // s = fa_string_dappend(s, fa_format_integral(" %02ih", fa_time_hours(t)));
+    // s = fa_string_dappend(s, fa_format_integral(" %02im", fa_time_minutes(t)));
+    // s = fa_string_dappend(s, fa_format_integral(" %02i+", fa_time_seconds(t)));
+    // s = fa_string_dappend(s, fa_string_dshow(fa_time_divisions(t)));
+    // s = fa_string_dappend(s, fa_string("s>"));
+    
+    if (t->dvalue >= 1.0) {
+        int seconds = t->dvalue;
+        return fa_dappend(
+            fa_format_integral("<Time %d ", seconds),
+            fa_format_floating("%.1f ms>", (t->dvalue - (double) seconds) * 1000.0));
+    } else {
+        return fa_format_floating("<Time %.1f ms>", t->dvalue * 1000.0);
+    }
 
-    s = fa_string_dappend(s, fa_format_integral(" %02id", fa_time_days(t)));
-    s = fa_string_dappend(s, fa_format_integral(" %02ih", fa_time_hours(t)));
-    s = fa_string_dappend(s, fa_format_integral(" %02im", fa_time_minutes(t)));
-    s = fa_string_dappend(s, fa_format_integral(" %02i+", fa_time_seconds(t)));
-    s = fa_string_dappend(s, fa_string_show(fa_time_divisions(t)));
-    s = fa_string_dappend(s, fa_string("s"));
-    s = fa_string_dappend(s, fa_string(">"));
-
-    return s;
+    //return s;
 }
 
 fa_ptr_t time_copy(fa_ptr_t a)
@@ -208,9 +239,19 @@ fa_ptr_t time_copy(fa_ptr_t a)
     return fa_time_copy(a);
 }
 
+fa_ptr_t time_deep_copy(fa_ptr_t a)
+{
+    return fa_time_copy(a);
+}
+
 void time_destroy(fa_ptr_t a)
 {
     fa_time_destroy(a);
+}
+
+void time_deep_destroy(fa_ptr_t a, fa_deep_destroy_pred_t p)
+{
+    if (p(a)) fa_time_destroy(a);
 }
 
 fa_ptr_t time_impl(fa_id_t interface)
@@ -224,9 +265,9 @@ fa_ptr_t time_impl(fa_id_t interface)
     static fa_number_t  time_number_impl
         = { time_add, time_subtract, time_multiply, time_divide, time_absolute };
     static fa_copy_t time_copy_impl
-        = { time_copy };
+        = { time_copy, time_deep_copy };
     static fa_destroy_t time_destroy_impl
-        = { time_destroy };
+        = { time_destroy, time_deep_destroy };
 
 
     switch (interface) {
@@ -252,4 +293,10 @@ fa_ptr_t time_impl(fa_id_t interface)
         return NULL;
     }
 }
+
+void fa_time_log_count()
+{
+  fa_log_info(fa_string_dappend(fa_string("Times allocated: "), fa_string_dshow(fa_i32((int)fa_atomic_get(gTimeCount)))));
+}
+
 

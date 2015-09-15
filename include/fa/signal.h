@@ -134,7 +134,7 @@ fa_signal_t fa_signal_delay(int int_, fa_signal_t signal);
 
 
 typedef struct {
-            double * buffer; fa_ptr_t dummy; int count; double rate;
+            double * buffer; fa_ptr_t dummy; uint64_t count; double rate;
         } fa_signal_state_t;
 
 /** Type of names.
@@ -333,6 +333,26 @@ fa_signal_t fa_signal_trigger(fa_string_t name, double init);
 */
 fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t signal);
 
+/** A signal that plays an audio buffer.
+    
+    Control the signal by sending one of the following to it (using @ref fa_action_send):
+    - A @ref fa_buffer_t -- the buffer is loaded into the signal
+    - The string "play" -- start playback
+    - The string "stop" -- stop playback
+    - A (wrapped) number -- move to the corresponding frame
+    
+    @param name
+        A name to identify the signal, use with @ref fa_action_send
+    @return
+        A pair of @ref fa_signal_t (left and right output).
+    
+    @note
+        This custom signal is provided for convenience. An equivalent signal could be
+        constructed from combinations of play, count and trigger signals.
+    
+*/
+fa_pair_t fa_signal_play_buffer(fa_string_t name);
+
 /**
     Index a buffer at the given sample and returns the written value.
 
@@ -506,7 +526,7 @@ fa_signal_t fa_signal_counter();
     
     For example if the sample rate is 44100, `fa_signal_impulses(44100)` generates an impulse every second.
 */
-fa_signal_t fa_signal_impulses(int int_);
+fa_signal_t fa_signal_impulses(size_t samples);
 
 /** Run a signal through an external VST plug-in.
     

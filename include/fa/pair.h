@@ -94,6 +94,9 @@ fa_pair_t fa_pair_unassoc(fa_pair_t pair);
 */
 fa_list_t fa_pair_to_list(fa_pair_t pair);
 
+
+void fa_pair_log_count();
+
 /** @}
     @}
     */

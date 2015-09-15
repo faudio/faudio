@@ -62,6 +62,11 @@ typedef fa_ptr_t (* fa_ternary_t)(fa_ptr_t,
 */
 typedef bool (* fa_pred_t)(fa_ptr_t, fa_ptr_t);
 
+/** A predicate used for testing an object for deep destruction.
+    
+*/
+typedef bool (* fa_deep_destroy_pred_t)(fa_ptr_t);
+
 /** An 8-bit character. 
 */
 typedef char fa_char8_t;
@@ -113,6 +118,16 @@ bool fa_is_double(fa_ptr_t ptr);
     @see [Value references](@ref ValueReferences) 
 */
 bool fa_is_ref(fa_ptr_t ptr);
+
+/** Return whether the given value is of an integer type (int8, int16, int32 or int64).
+    @see [Value references](@ref ValueReferences) 
+*/
+bool fa_is_integer(fa_ptr_t ptr);
+
+/** Return whether the given value is of a numeric type (int8, int16, int32, int64, float or double).
+    @see [Value references](@ref ValueReferences) 
+*/
+bool fa_is_number(fa_ptr_t ptr);
 
 /** Unwrap a referece to a @bool@ and destroy the reference. 
     @see [Value references](@ref ValueReferences) 
@@ -184,6 +199,20 @@ float fa_peek_float(fa_ptr_t ptr);
 */
 double fa_peek_double(fa_ptr_t ptr);
 
+/** Unwrap a referece to an integer (int8, int16, int32 or int64) without destroying the reference.
+    The result is promoted to an int64.
+    @see [Value references](@ref ValueReferences) 
+    
+*/
+int64_t fa_peek_integer(fa_ptr_t ptr);
+
+/** Unwrap a referece to a number (int8, int16, int32, int64, float or double) without destroying the reference.
+    The result is promoted to a double.
+    @see [Value references](@ref ValueReferences) 
+    
+*/
+double fa_peek_number(fa_ptr_t ptr);
+
 /** Create a new referece to a @bool@ value.
     The returned reference must be destroyed by the caller.
     @see [Value references](@ref ValueReferences) 
@@ -252,6 +281,12 @@ typedef struct {
 
 /** Return whether the given values are equal.
     @see [Equal](@ref fa_equal_t)
+    
+    @note
+      * NULL == NULL
+      * Identical pointers return true, regardless of type (this means that non-wrapped values may be passed to fa_equal)
+      * Numerical values are compared numerically (regardless of the underlying number type)
+      * Other values will generally have to be the same type, unless overridden by their implementation of fa_equal_t
       
 */
 bool fa_equal(fa_ptr_t ptr, fa_ptr_t ptr_);
@@ -261,6 +296,13 @@ bool fa_equal(fa_ptr_t ptr, fa_ptr_t ptr_);
       
 */
 bool fa_not_equal(fa_ptr_t ptr, fa_ptr_t ptr_);
+
+/** Identical to @ref fa_equal, but destroys both arguments (unless they are NULL).
+    @see [Equal](@ref fa_equal_t)
+    @see @ref fa_equal
+    
+*/
+bool fa_dequal(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 /** Less-than comparison interface.
     
@@ -333,7 +375,7 @@ fa_ptr_t fa_dabsolute(fa_ptr_t ptr);
     
 */
 typedef struct {
-            fa_ptr_t (* copy)(fa_ptr_t);
+            fa_ptr_t (* copy)(fa_ptr_t); fa_ptr_t (* deep_copy)(fa_ptr_t);
         } fa_copy_t;
 
 /** Generic destruction interface.
@@ -341,6 +383,7 @@ typedef struct {
 */
 typedef struct {
             void (* destroy)(fa_ptr_t);
+            void (* deep_destroy)(fa_ptr_t, fa_deep_destroy_pred_t);
         } fa_destroy_t;
 
 /** Copy the given value.
@@ -348,6 +391,13 @@ typedef struct {
       
 */
 fa_ptr_t fa_copy(fa_ptr_t ptr);
+
+/** Deep copy the given value.
+    @see [Copy](@ref fa_deep_t)
+      
+    
+*/
+fa_ptr_t fa_deep_copy(fa_ptr_t ptr);
 
 /** Move the given value. This is the identity function,
     just serves as a notification.
@@ -361,6 +411,21 @@ fa_ptr_t fa_move(fa_ptr_t ptr);
       
 */
 void fa_destroy(fa_ptr_t ptr);
+
+/** Destroy the given value and contained values (in case of a collection such as a pair or list).
+    @param  Value to destroy (destroyed).
+    @param  Predicate function
+    @see [Destroy](@ref fa_destroy_t)
+      
+*/
+void fa_deep_destroy(fa_ptr_t ptr,
+                     fa_deep_destroy_pred_t deepDestroyPred);
+
+
+bool fa_d_e_s_t_r_o_y_a_l_w_a_y_s(fa_ptr_t ptr);
+
+
+void fa_deep_destroy_always(fa_ptr_t ptr);
 
 /** Generic append operation interface. 
 */

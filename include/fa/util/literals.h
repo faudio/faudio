@@ -17,6 +17,7 @@ fa_map_t fa_map(int count, ...);
 #define list3(a,b,c)                        fa_list(3,a,b,c)
 #define list4(a,b,c,d)                      fa_list(4,a,b,c,d)
 #define list5(a,b,c,d,e)                    fa_list(5,a,b,c,d,e)
+#define list6(a,b,c,d,e,f)                  fa_list(6,a,b,c,d,e,f)
 #define list(...) VARARG(list, __VA_ARGS__)
 
 #define set0()                              fa_set(0)
@@ -33,7 +34,7 @@ fa_map_t fa_map(int count, ...);
 #define map3(a,b,c)                         fa_map(3,a,b,c)
 #define map4(a,b,c,d)                       fa_map(4,a,b,c,d)
 #define map5(a,b,c,d,e)                     fa_map(5,a,b,c,d,e)
-// #define map6(a,b,c,d,e,f)                   fa_map(6,a,b,c,d,e,f)
+#define map6(a,b,c,d,e,f)                   fa_map(6,a,b,c,d,e,f)
 #define map(...) VARARG(map, __VA_ARGS__)
 
 #define concat0()                           fa_string_empty()
@@ -51,6 +52,9 @@ fa_map_t fa_map(int count, ...);
 #define dconcat4(a,b,c,d)                   dconcat2(a,dconcat3(b,c,d))
 #define dconcat5(a,b,c,d,e)                 dconcat2(a,dconcat4(b,c,d,e))
 #define dconcat(...) VARARG(dconcat, __VA_ARGS__)
+
+#define pair(a,b)                           fa_pair_create(a,b)
+#define pair_left(a,b)                      fa_pair_left_create(a,b)
 
 
 #endif // _FA_UTIL_LITERALS

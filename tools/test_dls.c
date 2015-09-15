@@ -34,32 +34,36 @@ void run_dls()
             fa_error_log(st, NULL);
         }
 
-        for (int i = 0; i < 10; ++i) {
+		for (int x = 0; x < 3; ++x) {
+			for (int i = 0; i < 10; ++i) {
 
-            // fa_clock_t cl = fa_clock_standard();
-            // fa_clock_t cl = fa_audio_stream_clock(st);
-            // fa_mark_used(cl);
+				// fa_clock_t cl = fa_clock_standard();
+				// fa_clock_t cl = fa_audio_stream_clock(st);
+				// fa_mark_used(cl);
 
-            // printf("Scheduling msec: %lld \n", fa_clock_milliseconds(cl));
-            // printf("Scheduling time: %s \n", unstring(fa_string_show(fa_clock_time(cl))));
+				// printf("Scheduling msec: %lld \n", fa_clock_milliseconds(cl));
+				// printf("Scheduling time: %s \n", unstring(fa_string_show(fa_clock_time(cl))));
 
-            fa_action_t chord = fa_action_many(list(
-                                                   fa_pair_create(
-                                                       fa_action_send(name, fa_midi_message_create_simple(0x90, 64 + ((i % 12) * 3), 90)),
-                                                       fa_hms(0, 0, 0)
-                                                   ),
-                                                   fa_pair_create(
-                                                       fa_action_send(name, fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
-                                                       fa_hms(0, 0, 0)
-                                                   )
-                                               ));
-            // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
-            fa_audio_schedule_relative(
-                fa_hms(0, 0, 0),
-                chord,
-                st);
-            fa_thread_sleep(150);
-        }
+				fa_action_t chord = fa_action_many(list(
+					fa_pair_create(
+						fa_action_send(name, fa_midi_message_create_simple(0x90, 64 + ((i % 12) * 3), 90)),
+				fa_hms(0, 0, 0)
+					),
+				fa_pair_create(
+					fa_action_send(name, fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
+				fa_hms(0, 0, 0)
+					)
+						));
+				// printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
+				fa_audio_schedule_relative(
+					fa_hms(0, 0, 0),
+				chord,
+				st);
+				fa_thread_sleep(150);
+			}
+		}
+		
+		fa_thread_sleep(1000);
 
         fa_destroy(st);
         fa_destroy(s);

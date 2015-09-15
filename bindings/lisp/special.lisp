@@ -51,9 +51,9 @@
 
 (defmethod free-translated-object (x (type ratio-type) a)
   (declare (ignore a))
-  ; FIXME makes (time...) etc fail when object is printied (and otherwise?)
+  ; FIXME makes (time...) etc fail when object is printed (and otherwise?)
   ; See #112 
-  ; (ratio-destroy# x)
+  ;(ratio-destroy# x)
   )
 
 
@@ -213,7 +213,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defvar *exported-closures#* (make-hash-table))
+(defvar *exported-closures#* (make-hash-table)) ; can be declared "single-threaded", since it is always accessed through a lock (?)
 
 (defvar *exported-closures-lock* (mp:make-lock
                                   :name "exported-closures-lock"))
