@@ -61,8 +61,21 @@ typedef struct _fa_midi_message_t * fa_midi_message_t;
     @return         A new Midi message.
 */
 fa_midi_message_t fa_midi_message_create_simple(fa_midi_message_status_t status,
-                                                int int_,
-                                                int int__);
+                                                int data1,
+                                                int data2);
+                                                
+/** Creates a simple message from the given components.
+    @param status   The status byte.
+    @param data1    The first data byte.
+    @param data2    The second data byte.
+    @param data3    Extra data byte.
+    @return         A new Midi message.
+*/
+fa_midi_message_t fa_midi_message_create_extended(fa_midi_message_status_t status,
+                                                  int data1,
+                                                  int data2,
+                                                  int data3);
+
 
 /** Creates a sysex message from the given data buffer (not including F0 and F7).
     @param data     Raw data buffer (transfered).
@@ -125,6 +138,7 @@ fa_buffer_t fa_midi_message_sysex_data(fa_midi_message_t message);
 
 void fa_midi_message_decons(fa_midi_message_t midi_message, uint8_t *statusCh, uint8_t *data1, uint8_t *data2);
 
+void fa_midi_message_ex_decons(fa_midi_message_t midi_message, uint8_t *statusCh, uint8_t *data1, uint8_t *data2, uint8_t *data3);
 
 
 /** @}
