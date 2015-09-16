@@ -91,6 +91,9 @@ module Fa.Map
     /** Convert the given map to a list. */
     toList : Map -> List;
     
+    /** Get a list of all keys in the map. The keys are not copied, so don't free them! */
+    getKeys : Map -> List;
+    
     logCount : () -> Void;
 }
 

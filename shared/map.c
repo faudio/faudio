@@ -411,6 +411,15 @@ fa_list_t fa_map_to_list(fa_map_t map)
     return NULL;
 }
 
+fa_list_t fa_map_get_keys(fa_map_t map)
+{
+    fa_list_t keys = fa_list_empty();
+    impl_for_each_entry(map, entry) {
+        fa_push_list(entry->key, keys);
+    }
+    return keys;
+}
+
 
 // --------------------------------------------------------------------------------
 
