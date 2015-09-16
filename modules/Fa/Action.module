@@ -210,10 +210,26 @@ module Fa.Action
      */
     repeat : (interval : Time, times : Size, action : Action) -> Action;
 
-    /** Join a list of actions into a single compond action.
-        TODO document
-     */
+    /** Join actions into a single compond action. The provided list must
+        be a list of pairs, where each pair is an action and a time to the
+        /next/ action in the list.
+    
+        The actions are guaranteed to be executed in the same order as they
+        occur in the list.
+    */
     many : (actions : List) -> Action;
+    
+    /** Join a flat list of actions into a single compond action.
+        
+        The actions are guaranteed to be executed in the same order as they
+        occur in the list.
+    
+        Note that
+        fa_action_simultaneous(list(action1, action2))
+        is equivalent to
+        fa_action_many(list(pair(action1, fa_now()), pair(action2, fa_now())))
+    */
+    simultaneous : (actions : List) -> Action;
     
     /** Creates a derived action from the given action that executes íf and only given predicate holds.
         The predicate function is called for every occurence.
