@@ -85,8 +85,8 @@ module "transient" Fa.Audio.Session
         `scheduler-interval` | Scheduler update interval in milliseconds (integer).
         `exclusive`          | Use exclusive mode if available (boolean or integer). This will force `faudio` to claim exclusive access to each audio device it uses.
         
-        @param name     Name of parameter to set.
-        @param value    A [reference](@ref ValueReferences) to the value to set.
+        @param name     Name of parameter to set. Consumed.
+        @param value    A [reference](@ref ValueReferences) to the value to set. Consumed.
         @param session  Session in which to set the parameter.
      */
     setParameter : (String, Ptr, Session) -> Void;

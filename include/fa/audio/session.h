@@ -97,8 +97,8 @@ void fa_audio_with_session(fa_audio_session_callback_t sessionCallback,
     `scheduler-interval` | Scheduler update interval in milliseconds (integer).
     `exclusive`          | Use exclusive mode if available (boolean or integer). This will force `faudio` to claim exclusive access to each audio device it uses.
     
-    @param name     Name of parameter to set.
-    @param value    A [reference](@ref ValueReferences) to the value to set.
+    @param name     Name of parameter to set. Consumed.
+    @param value    A [reference](@ref ValueReferences) to the value to set. Consumed.
     @param session  Session in which to set the parameter.
 */
 void fa_audio_set_parameter(fa_string_t string,
