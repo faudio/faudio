@@ -47,7 +47,16 @@ module Fa.Midi.Message
         @param data2    The second data byte.
         @return         A new Midi message.
      */
-    createSimple  : (Status, Int, Int) -> Message;
+    createSimple  : (Status, data1 : Int, data2: Int) -> Message;
+    
+    /** Creates a simple message from the given components.
+        @param status   The status byte.
+        @param data1    The first data byte.
+        @param data2    The second data byte.
+        @param data3    Extra data byte.
+        @return         A new Midi message.
+     */
+    createExtended  : (Status, data1 : Int, data2 : Int, data3 : Int) -> Message;
     
     /** Creates a sysex message from the given data buffer (not including F0 and F7).
         @param data     Raw data buffer (transfered).

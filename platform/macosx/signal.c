@@ -75,16 +75,29 @@ fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     au_context_t context = x;
-    
-    //printf("receive_ (DLS) %p\n", pthread_self());
-    
+        
     if (fa_equal(n, context->name)) {
         if (!fa_midi_message_is_simple(msg)) {
             fa_warn(fa_string("SYSEX message to DLS, ignoring"));
         } else {
-            uint8_t status, data1, data2;
-            fa_midi_message_decons(msg, &status, &data1, &data2);
-            au_send_midi(context, status, data1, data2);
+            uint8_t status, data1, data2, data3;
+            fa_midi_message_ex_decons(msg, &status, &data1, &data2, &data3);
+            uint8_t cmd = status & 0xF0;
+            uint8_t ch  = status & 0x0F;
+            if ((cmd == 0x80 || cmd == 0x90) && (ch != 9) && (data3 != 0)) {
+                // NoteOn and NoteOff with cents != 0
+                if ((cmd == 0x90) && (data2 > 0)) {
+                    au_send_note_start(context, status, data1, data2, data3);
+                } else {
+                    au_send_note_stop(context, status, data1, data2, data3);
+                }
+            } else if ((cmd == 0xB0) && (data1 == 0x7B)) {
+                // All Notes Off
+                au_send_all_notes_off(context, ch);
+            } else {
+                // Normal case
+                au_send_midi(context, status, data1, data2);
+            }
         }
     }
 

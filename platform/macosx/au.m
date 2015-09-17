@@ -20,6 +20,15 @@
 
 #include "au.h"
 
+#define kMaxChannels   16
+#define kMaxMicrotones 32
+
+typedef struct {
+    NoteInstanceID id;
+    uint8_t tone;
+    uint8_t cents;
+} pitch_map_t;
+
 struct au_context {
     double *outputs;
     fa_string_t name;
@@ -32,6 +41,8 @@ struct au_context {
     int                         BusNumber;
     AudioTimeStamp              TimeStamp;
     AudioBufferList*            BufferList;
+    
+    pitch_map_t pitch_map[kMaxChannels][kMaxMicrotones];
 };
 
 au_context_t create_au_context(fa_ptr_t instance, int channels, int frames, double sample_rate)
@@ -42,6 +53,7 @@ au_context_t create_au_context(fa_ptr_t instance, int channels, int frames, doub
     context->frames = frames;
     context->sample_rate = sample_rate;
     context->outputs = fa_malloc(sizeof(double)*channels*frames);
+    memset(context->pitch_map, 0, sizeof(context->pitch_map[0][0]) * kMaxChannels * kMaxMicrotones);
     return context;
 }
 void destroy_au_context(au_context_t context) {
@@ -311,8 +323,84 @@ void au_send_midi(au_context_t context, int status, int data1, int data2)
     OSStatus err;
     AudioComponentInstance instance = context->Instance;
     
+    //printf("Sending MIDI\n");
     if ((err = MusicDeviceMIDIEvent(instance, status, data1, data2, 0))) {
         fa_print_ln(from_os_status(err));
         assert(false && "Could not send note");
     }
 }
+
+void au_send_note_start(au_context_t context, int status, int data1, int data2, int data3)
+{
+    OSStatus err;
+    AudioComponentInstance instance = context->Instance;
+    
+    int8_t cents = (uint8_t)data3;
+    int ch = status & 0x0F;
+    Float32 pitch = (float)data1 + ((float)cents / 100.0);
+    Float32 vel = data2;
+    struct MusicDeviceNoteParams noteParams = { 2, pitch, vel }; // 2 is for 2 parameters
+    NoteInstanceID id;
+    //printf("Sending notestart %d %f %f   cents: %d", ch, pitch, vel, cents);
+    if ((err = MusicDeviceStartNote(instance, kMusicNoteEvent_Unused, ch, &id, 0, &noteParams))) {
+        fa_print_ln(from_os_status(err));
+        assert(false && "Could not send note");
+    }
+    //printf("=> %d\n", id);
+    for (int i = 0; i < kMaxMicrotones; i++) {
+        if (context->pitch_map[ch][i].id == 0) {
+            context->pitch_map[ch][i].id = id;
+            context->pitch_map[ch][i].tone = data1;
+            context->pitch_map[ch][i].cents = data3;
+            //printf("  found free spot at %d\n", i);
+            return;
+        }
+    }
+    printf("!! Too many microtones!\n");
+}
+
+void au_send_note_stop(au_context_t context, int status, int data1, int data2, int data3)
+{
+    OSStatus err;
+    AudioComponentInstance instance = context->Instance;
+    
+    //printf("Sending notestop %d %d %d\n", data1, data2, data3);
+    
+    int ch = status & 0x0F;
+    for (int i = 0; i < kMaxMicrotones; i++) {
+        if (context->pitch_map[ch][i].tone == data1 && context->pitch_map[ch][i].cents == data3) {
+            int id = context->pitch_map[ch][i].id;
+            context->pitch_map[ch][i].id = 0;
+            //printf("  found matching note %d at %d\n", id, i);
+            if ((err = MusicDeviceStopNote(instance, ch, id, 0))) {
+                fa_print_ln(from_os_status(err));
+                assert(false && "Could not stop note");
+            }
+            //return;
+        }
+    }
+    //printf("!! Could not find note!\n");
+}
+
+void au_send_all_notes_off(au_context_t context, int ch)
+{
+    OSStatus err;
+    AudioComponentInstance instance = context->Instance;
+    
+    for (int i = 0; i < 128; i++) {
+        MusicDeviceMIDIEvent(instance, 0x80 + ch, i, 0, 0);
+    }
+    for (int i = 0; i < kMaxMicrotones; i++) {
+        int id = context->pitch_map[ch][i].id;
+        if (id > 0) {
+            context->pitch_map[ch][i].id = 0;
+            //printf("  all_notes_off stopping note %d at %d\n", id, i);
+            if ((err = MusicDeviceStopNote(instance, ch, id, 0))) {
+                fa_print_ln(from_os_status(err));
+                assert(false && "Could not stop note");
+            }
+        }
+    }
+}
+
+

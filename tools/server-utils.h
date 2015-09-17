@@ -305,12 +305,15 @@ fa_action_t all_notes_off_action()
 {
     fa_list_t actions = fa_list_empty();
     for(uint8_t ch = 0; ch < 16; ch++) {
-        for(uint8_t f0 = 0; f0 < 128; f0++) {
+        fa_midi_message_t msg = fa_midi_message_create_simple(0xB0 + ch, 0x7B, 0);
+        fa_push_list(fa_action_send(synth_name, msg), actions);
+        /*for(uint8_t f0 = 0; f0 < 128; f0++) {
             fa_midi_message_t msg = fa_midi_message_create_simple(msg_note_off + ch, f0, 0);
-            fa_push_list(pair(fa_action_send(synth_name, msg), fa_now()), actions);
-        }
+            fa_push_list(fa_action_send(synth_name, msg), actions);
+        }*/
+        
     }
-    return fa_action_many(actions);
+    return fa_action_simultaneous(actions);
 }
 
 
@@ -384,7 +387,7 @@ fa_list_t construct_output_signal_tree() {
     
     // Synth
     #ifdef _WIN32
-    fa_pair_t synth = fa_signal_synth(synth_name, fa_string("C:\\sf.sf2")); // TODO
+    fa_pair_t synth = fa_signal_synth(synth_name, soundfont_path);
     #else
     fa_pair_t synth = fa_signal_dls(synth_name);
     #endif

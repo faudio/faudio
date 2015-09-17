@@ -119,6 +119,10 @@ fa_map_t fa_map_from_list(fa_list_t list);
 */
 fa_list_t fa_map_to_list(fa_map_t map);
 
+/** Get a list of all keys in the map. The keys are not copied, so don't free them!
+*/
+fa_list_t fa_map_get_keys(fa_map_t map);
+
 
 void fa_map_log_count();
 

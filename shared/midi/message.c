@@ -18,7 +18,7 @@ struct _fa_midi_message_t {
     fa_impl_t           impl;           //    Interface dispatcher
     bool                is_sysex;       //    Whether it is a sysex message
     union {                             //    Status or buffer data
-        uint8_t         simple[3];
+        uint8_t         simple[4];      //    3 bytes + extra byte
         fa_buffer_t     sysex;
     } data;
 };
@@ -56,8 +56,25 @@ fa_midi_message_t fa_midi_message_create_simple(status_t status,
     fa_midi_message_t m = new_midi_message();
 
     m->is_sysex = false;
-    char simp[3] = { status, data1, data2 };
-    memcpy(&m->data.simple, simp, 3);
+    char simp[4] = { status, data1, data2, 0 };
+    memcpy(&m->data.simple, simp, 4);
+
+    return m;
+}
+
+fa_midi_message_t fa_midi_message_create_extended(status_t status,
+                                                  data_t data1,
+                                                  data_t data2,
+                                                  data_t data3)
+{
+//    FIXME logical error
+//    assert(status != 0xf0 && status != 0xf7);
+
+    fa_midi_message_t m = new_midi_message();
+
+    m->is_sysex = false;
+    char simp[4] = { status, data1, data2, data3 };
+    memcpy(&m->data.simple, simp, 4);
 
     return m;
 }
@@ -110,6 +127,13 @@ void fa_midi_message_decons(fa_midi_message_t midi_message, uint8_t *statusCh, u
     *data2    = midi_message->data.simple[2];
 }
 
+void fa_midi_message_ex_decons(fa_midi_message_t midi_message, uint8_t *statusCh, uint8_t *data1, uint8_t *data2, uint8_t *data3)
+{
+    *statusCh = midi_message->data.simple[0];
+    *data1    = midi_message->data.simple[1];
+    *data2    = midi_message->data.simple[2];
+    *data3    = midi_message->data.simple[3];
+}
 
 fa_midi_message_status_t fa_midi_message_status(fa_midi_message_t midi_message)
 {

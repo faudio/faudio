@@ -14,7 +14,11 @@ void destroy_au_context(au_context_t context);
 fa_ptr_t new_dls_music_device_instance();
 void au_prepare(au_context_t context, double sample_rate);
 void au_send_midi(au_context_t context, int status, int data1, int data2);
+void au_send_note_start(au_context_t context, int status, int data1, int data2, int data3);
+void au_send_note_stop(au_context_t context, int status, int data1, int data2, int data3);
+void au_send_all_notes_off(au_context_t context, int channel);
 void au_render(au_context_t context, double time, int count, double *output);
 void au_cleanup(au_context_t context);
 
 void fa_midi_message_decons(fa_midi_message_t midi_message, uint8_t *statusCh, uint8_t *data1, uint8_t *data2);
+void fa_midi_message_ex_decons(fa_midi_message_t midi_message, uint8_t *statusCh, uint8_t *data1, uint8_t *data2, uint8_t *data3);

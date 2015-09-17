@@ -29,7 +29,10 @@
 #include "server-utils.h"
 
 fa_option_t option_declaration[] = {
-    { "p", "port", "Port number", fa_option_integral, "7770"  }
+    #ifdef _WIN32
+    { "s", "soundfont", "Soundfont path", fa_option_string,   "FluidR3_GM.sf2" },
+    #endif
+    { "p", "port",      "Port number",    fa_option_integral, "7770" }
 };
 
 #define define_handler(name) \
@@ -65,6 +68,7 @@ define_handler(next_id);
 define_handler(all_devices);
 define_handler(current_devices);
 
+define_handler(list_audio_files);
 define_handler(load_audio_file);
 define_handler(load_raw_audio_file);
 define_handler(close_audio_file);
@@ -97,7 +101,9 @@ int main(int argc, char const *argv[])
     char port[14]; // enough to hold all int32 numbers
     fa_with_options(option_declaration, argc, argv, options, args) {
         sprintf(port, "%d", fa_map_get_int32(fa_string("port"), options));
-        
+        #ifdef _WIN32
+        soundfont_path = fa_map_get_string(fa_string("soundfont"), options);
+        #endif
     }
     
     // Init curl. This MUST be called before any other threads are spawned, even
@@ -124,8 +130,8 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/send/midi", "ii",  simple_midi_handler, server);
     lo_server_thread_add_method(st, "/send/midi", "iii", simple_midi_handler, server);
     /* Send note immediately */
-    lo_server_thread_add_method(st, "/send/note", "iii", simple_note_handler, server); // f0, velocity, length (ms)
-    lo_server_thread_add_method(st, "/send/note", "iiii", simple_note_handler, server); // f0, velocity, length (ms), channel
+    lo_server_thread_add_method(st, "/send/note", "fii", simple_note_handler, server); // f0, velocity, length (ms)
+    lo_server_thread_add_method(st, "/send/note", "fiii", simple_note_handler, server); // f0, velocity, length (ms), channel
     
     /* Emulate incoming midi */
     lo_server_thread_add_method(st, "/receive/midi", "ii",  receive_midi_handler, server);
@@ -174,6 +180,7 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/stop", "i", stop_handler, server);
 
     /* Audio files handling */
+    lo_server_thread_add_method(st, "/audio-file/list",     "i", list_audio_files_handler, server);  // id
     lo_server_thread_add_method(st, "/audio-file/load",     "is", load_audio_file_handler, server);  // audio id, path
     lo_server_thread_add_method(st, "/audio-file/load/raw", "isii", load_raw_audio_file_handler, server);  // a id, path, sr, ch
     lo_server_thread_add_method(st, "/audio-file/close",    "i",  close_audio_file_handler, server); // audio id
@@ -289,7 +296,7 @@ int main(int argc, char const *argv[])
 
 void liblo_error(int num, const char *msg, const char *path)
 {
-    printf("liblo server error %d in path %s: %s\n", num, path, msg);
+    printf("liblo error %d in path %s: %s\n", num, path, msg);
     fflush(stdout);
 }
 
@@ -453,14 +460,23 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
         printf("zero-length blob sent to /play/midi\n");
         return 0;
     }
-    if ((data_size % 8) != 0) {
-        printf("data_size (%d) not a multiple of 8\n", data_size);
+    if ((data_size % 12) != 0) {
+        printf("data_size (%d) not a multiple of 12\n", data_size);
         return 0;
     }
 
     fa_list_t actions = fa_list_empty();
-    int count = data_size / 8;
+    int count = data_size / 12;
     printf("%d MIDI entries\n", count);
+    
+    typedef union {
+        int32_t i;
+        float f;
+        char c;
+        uint32_t nl;
+    } lo_pcast32;
+    
+    lo_pcast32 val32;
 
     // Collect MIDI entries from the data blob, create MIDI messages and add them to a list
     int32_t max_time = 0;
@@ -470,16 +486,26 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
         uint8_t data1 = ptr[2];
         uint8_t data2 = ptr[3];
         int32_t time  = lo_otoh32(*(int32_t *) &ptr[4]);
+        val32.nl = lo_otoh32(*(int32_t *) &ptr[8]);
+        float f0  = val32.f;
         max_time = MAX(time, max_time);
-        //printf("  %x %x %x %x  %d\n", cmd, ch, data1, data2, time);
+        //printf("  %x %x %x %x  %d   %f\n", cmd, ch, data1, data2, time, f0);
 
-        fa_midi_message_t msg = fa_midi_message_create_simple(cmd + ch, data1, data2);
-        fa_action_t a = fa_action_send(synth_name, msg);
+        fa_action_t a;
+
+        if (cmd == 0x80 || cmd == 0x90) {
+            int pitch = round(f0);
+            int cents = round((double)(f0 - pitch) * (double)100.0);
+            //printf("%x %x %x\n", pitch, data2, cents);
+            a = fa_action_send(synth_name, fa_midi_message_create_extended(cmd + ch, pitch, data2, (uint8_t)cents));
+        } else {
+            a = fa_action_send(synth_name, fa_midi_message_create_simple(cmd + ch, data1, data2));
+        }
         if (repeat_interval > 0) {
             a = fa_action_if(check_playback_semaphore, wrap_oid(id), a);
         }
         fa_push_list(pair(a, fa_milliseconds(time)), actions);
-        ptr += 8;
+        ptr += 12;
     }
 
     if (repeat_interval == 0) {
@@ -542,7 +568,7 @@ int stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, 
 int quit_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
 {
     done = 1;
-    printf("quiting\n\n");
+    printf("quitting\n\n");
     fflush(stdout);
 
     return 0;
@@ -701,7 +727,7 @@ void send_all_devices(int id, lo_message message, void *user_data)
 
 int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
-    oid_t id = argc > 0 ? argv[0]->i : -1;
+    int id = argc > 0 ? argv[0]->i : -1;
     send_all_devices(id, message, user_data);
     return 0;
 }
@@ -784,7 +810,7 @@ int simple_midi_handler(const char *path, const char *types, lo_arg ** argv, int
 
 int simple_note_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
 {
-    int f0 = argv[0]->i;
+    double f0 = argv[0]->f;
     int vel = argv[1]->i;
     int ms = argv[2]->i;
     int ch = (argc > 3) ? argv[3]->i : 0;
@@ -798,8 +824,14 @@ int simple_note_handler(const char *path, const char *types, lo_arg ** argv, int
     //         fa_action_send(synth_name, fa_midi_message_create_simple(0x90 + ch, f0, 0)), fa_now()
     //             )));
     // schedule_relative(fa_now(), action, current_midi_echo_stream);
-    fa_action_t noteOn  = fa_action_send(synth_name, fa_midi_message_create_simple(0x90 + ch, f0, vel));
-    fa_action_t noteOff = fa_action_send(synth_name, fa_midi_message_create_simple(0x90 + ch, f0, 0));
+    
+    int pitch = round(f0);
+    uint8_t cents = ch == 9 ? 0 : round((double)(f0 - pitch) * (double)100.0);
+    
+    //printf("%d %d (%d)\n", pitch, cents, vel);
+    
+    fa_action_t noteOn  = fa_action_send(synth_name, fa_midi_message_create_extended(0x90 + ch, pitch, vel, cents));
+    fa_action_t noteOff = fa_action_send(synth_name, fa_midi_message_create_extended(0x90 + ch, pitch, 0, cents));
     schedule_now(noteOn, current_midi_echo_stream);
     schedule_relative(fa_milliseconds(argv[2]->i), noteOff, current_midi_echo_stream);
     return 0;
@@ -816,6 +848,42 @@ int receive_midi_handler(const char *path, const char *types, lo_arg ** argv, in
     return 0;
 }
 
+
+/***************************
+*   /audio-file/list
+*/
+
+int list_audio_files_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    int id = argc > 0 ? argv[0]->i : -1;
+    
+    fa_with_lock(audio_files_mutex) {
+        fa_list_t keys = fa_map_get_keys(audio_files);
+        size_t count = 0;
+        fa_for_each (key, keys) {
+            fa_ptr_t buffer = fa_map_get(key, audio_files);
+            if (buffer) {
+                int audio_id = fa_peek_integer(key);
+                fa_ptr_t sample_rate = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
+                fa_ptr_t channels    = fa_buffer_get_meta(buffer, fa_string("channels"));
+                if (sample_rate && channels) {
+                    uint32_t sr = safe_peek_i32(sample_rate);
+                    uint32_t ch = safe_peek_i32(channels);
+                    size_t frames = fa_buffer_size(buffer) / (sizeof(double) * ch);
+                    send_osc(message, user_data, "/audio-file", "iiii", audio_id, frames, sr, ch);
+                    count++;
+                } else {
+                    fa_slog_error("sample_rate or channels missing for audio id ", key);
+                }
+            } else {
+                fa_slog_warning("No buffer for audio id ", key);
+            }
+        }
+        fa_destroy(keys);
+        send_osc(message, user_data, "/audio-file/list", "ii", id, count);
+    }
+    return 0;
+}
 
 int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
@@ -1130,13 +1198,13 @@ int channel_reset_handler(const char *path, const char *types, lo_arg ** argv, i
         sustain       = (argv[6]->i > 0);
     }
     
-    fa_action_t action = fa_action_many(list(
-        fa_pair_create(main_volume_action(ch, main_volume), fa_now()),
-        fa_pair_create(pan_action(ch, pan), fa_now()),
-        fa_pair_create(bank_select_action(ch, bank), fa_now()),
-        fa_pair_create(program_change_action(ch, program), fa_now()),
-        fa_pair_create(pitch_wheel_action(ch, pitch_wheel), fa_now()),
-        fa_pair_create(sustain_action(ch, sustain), fa_now())));
+    fa_action_t action = fa_action_simultaneous(list(
+        main_volume_action(ch, main_volume),
+        pan_action(ch, pan),
+        bank_select_action(ch, bank),
+        program_change_action(ch, program),
+        pitch_wheel_action(ch, pitch_wheel),
+        sustain_action(ch, sustain)));
 
     schedule_now(action, current_midi_echo_stream);
     return 0;

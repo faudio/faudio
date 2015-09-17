@@ -826,6 +826,17 @@ fa_action_t fa_action_many(fa_list_t timeActions)
     return fa_action_compound(_many, timeActions);
 }
 
+// [Action] -> Action
+fa_action_t fa_action_simultaneous(fa_list_t actions)
+{
+    fa_list_t timeActions = fa_list_empty();
+    fa_for_each(a, actions) {
+        fa_push_list(pair(a, fa_now()), timeActions);
+    }
+    fa_destroy(actions);
+    return fa_action_many(fa_list_dreverse(timeActions));
+}
+
 static void _flatten(fa_action_t action, fa_list_t *alist) {
     if (fa_action_is_simple(action)) {
         fa_push_list(action, *alist);

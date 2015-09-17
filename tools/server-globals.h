@@ -18,6 +18,9 @@ fa_string_t synth_name = NULL;
 fa_string_t audio_name = NULL;
 fa_string_t record_left_name  = NULL;
 fa_string_t record_right_name = NULL;
+#ifdef _WIN32
+fa_string_t soundfont_path = NULL;
+#endif
 
 fa_pair_t selected_audio_input_device = NULL;
 fa_pair_t selected_audio_output_device = NULL;
@@ -105,7 +108,7 @@ static inline void init_globals() {
     playback_semaphores = fa_map_empty();
     playback_semaphores_mutex = fa_thread_create_mutex();
     recording_semaphores = fa_map_empty();
-    recording_semaphores_mutex = fa_thread_create_mutex();    
+    recording_semaphores_mutex = fa_thread_create_mutex();
     time_echo_mutex = fa_thread_create_mutex();
     level_echo_mutex = fa_thread_create_mutex();
     audio_files = fa_map_empty();
