@@ -4,6 +4,7 @@
 #define __SERVER_GLOBALS
 
 oid_t last_used_id = 0;
+uint32_t ping_counter = 0;
 
 int in_bundle = 0;
 fa_list_t bundle_actions = NULL;

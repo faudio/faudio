@@ -64,6 +64,7 @@ define_handler(play_audio);
 define_handler(stop);
 
 define_handler(time);
+define_handler(ping);
 define_handler(next_id);
 define_handler(all_devices);
 define_handler(current_devices);
@@ -115,7 +116,7 @@ int main(int argc, char const *argv[])
     if (!st) {
         printf("Could not start OSC server, exiting\n");
         curl_global_cleanup();
-        return 0;
+        exit(1);
     }
     server = lo_server_thread_get_server(st);
 
@@ -161,6 +162,7 @@ int main(int argc, char const *argv[])
       
     /* Get info */
     lo_server_thread_add_method(st, "/time", NULL, time_handler, server);
+    lo_server_thread_add_method(st, "/ping", "", ping_handler, server);
     lo_server_thread_add_method(st, "/next-id", NULL, next_id_handler, server);
     lo_server_thread_add_method(st, "/all/devices", "", all_devices_handler, server);
     lo_server_thread_add_method(st, "/all/devices", "i", all_devices_handler, server);
@@ -261,7 +263,7 @@ int main(int argc, char const *argv[])
 
         lo_server_thread_start(st);
     
-        printf("Listening on TCP port %s\n", port);
+        fa_inform(fa_dappend(fa_string("Listening on TCP port "), fa_string(port)));
 
         while (!done) {
 #ifdef WIN32
@@ -343,6 +345,7 @@ int argc, lo_message message, void *user_data)
     //fa_log_region_count("In generic_handler");
     int i;
 
+    fa_slog_info("Unrecognized message"); // temp
     printf("Unrecognized message: %s   ", path);
     for (i = 0; i < argc; i++) {
         printf("arg %d '%c' ", i, types[i]);
@@ -559,7 +562,7 @@ int stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, 
             do_schedule_relative(sched_delay, all_notes_off_action(), current_midi_echo_stream);
         }
     } else {
-        printf("Could not remove semaphore for id %d\n", argv[0]->i);
+        fa_warn(fa_format_integral("Could not remove semaphore for id %d", argv[0]->i));
     }
     return 0;
 }
@@ -568,8 +571,7 @@ int stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, 
 int quit_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
 {
     done = 1;
-    printf("quitting\n\n");
-    fflush(stdout);
+    fa_slog_info("Quitting");
 
     return 0;
 }
@@ -625,6 +627,14 @@ int host_settings_handler(const char *path, const char *types, lo_arg ** argv, i
 
 int time_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
+    // Save last_address, so that async osc can be used
+    // TODO: move this to a dedicated handler
+    if (last_address) {
+        lo_address_free(last_address);
+    }
+    last_address = lo_address_clone(lo_message_get_source(message));
+    
+    
     if (current_clock) {
         fa_time_t time = fa_clock_time(current_clock);
         if (argc > 0) {
@@ -646,6 +656,16 @@ int time_handler(const char *path, const char *types, lo_arg ** argv, int argc, 
 }
 
 /***************************
+*   /time
+*/
+
+int ping_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    send_osc(message, user_data, "/ping", "i", ++ping_counter);
+    return 0;
+}
+
+/***************************
 *   /next-id
 */
 
@@ -656,7 +676,7 @@ int next_id_handler(const char *path, const char *types, lo_arg ** argv, int arg
     if (last_address) {
         lo_address_free(last_address);
     }
-    last_address = lo_address_new_from_copy(lo_message_get_source(message));
+    last_address = lo_address_clone(lo_message_get_source(message));
     
     send_osc(message, user_data, "/next-id", "i", last_used_id + 1);
     return 0;
