@@ -589,6 +589,10 @@ void stop_streams() {
         fa_audio_close_stream(current_audio_stream);
         current_audio_stream = NULL;
     }
+    
+    // Reset counters
+    time_echo = 0;
+    level_echo = 0;
 }
 
 void start_streams() {
