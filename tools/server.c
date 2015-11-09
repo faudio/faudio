@@ -453,9 +453,13 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
 {
     int id = argv[0]->i;
     lo_blob data = argv[1];
+    // Allowed time values:
+    // 0     "soon" = default sched_delay
+    // < 0   "now"  = immediately
+    // > 0   absolute time
     double time            = argc >= 3 ? (argv[2]->f / 1000.0) : 0.0; // convert from ms to s
     double repeat_interval = argc >= 4 ? (argv[3]->f / 1000.0) : 0.0;
-    time = time + 0;
+    time = time + 0; // ?
     check_id(id);
     int data_size = lo_blob_datasize(data);
     uint8_t* ptr = lo_blob_dataptr(data);
@@ -537,6 +541,8 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
     // Send to scheduler
     if (time == 0) {
         schedule_relative(sched_delay, main_action, current_midi_echo_stream);
+    } else if (time < 0) {
+        schedule_relative(fa_milliseconds(0), main_action, current_midi_echo_stream);
     } else {
         schedule(fa_time_from_double(time), main_action, current_midi_echo_stream);
     }
