@@ -69,6 +69,9 @@ with_mutex(volatile int, time_echo);
 with_mutex(volatile int, level_echo);
 with_mutex(fa_map_t, uploads);
 
+int time_echo_id  = 0;
+int level_echo_id = 0;
+
 #define kRingBufferSize (44100 * 8 * 20) // 20 seconds
 
 #define kOutputOffset   0  // These should be exported from faudio

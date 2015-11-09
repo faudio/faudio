@@ -821,7 +821,7 @@ fa_ptr_t _echo_time(fa_ptr_t context, fa_time_t time, fa_time_t now) {
 }
 
 bool _echo_time_p(fa_ptr_t context, fa_ptr_t dummy) {
-    return time_echo > 0;
+    return time_echo > 0 && fa_peek_int16(context) == time_echo_id;
 }
 
 int start_time_echo()
@@ -830,8 +830,9 @@ int start_time_echo()
     fa_with_lock(time_echo_mutex) {
         if (!time_echo) {
             time_echo++;
+            time_echo_id++;
             fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), 0, fa_action_do_with_time(_echo_time, NULL));
-            fa_action_t while_action = fa_action_while(_echo_time_p, NULL, repeat_action);
+            fa_action_t while_action = fa_action_while(_echo_time_p, fa_from_int16(time_echo_id), repeat_action);
             schedule_relative(sched_delay, while_action, current_midi_echo_stream);
         } else {
             time_echo++;
