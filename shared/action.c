@@ -1241,6 +1241,9 @@ fa_string_t action_show(fa_ptr_t a)
             str = fa_string_dappend(str, fa_dappend(fa_string("other compound "), fa_string_show(compound_get(x, data))));
         }
         break;
+    default:
+        str = fa_string_dappend(str, fa_string_format_integral("unknown (%u)", x->tag));
+        break;
     }
     //str = fa_string_dappend(str, fa_string(" "));
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) x));
