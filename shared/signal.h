@@ -66,11 +66,11 @@ typedef struct _state_base_t *state_base_t;
 
 /** Maximum number of (global + custom) inputs.
  */
-#define kMaxInputs                      128
+#define kMaxInputs                      64
 
 /** Maximum number of internal buses (for delay and loop).
  */
-#define kMaxBuses                       256
+#define kMaxBuses                       128
 
 /** Maximum delay in seconds.
  */
