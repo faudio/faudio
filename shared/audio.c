@@ -1624,7 +1624,21 @@ fa_error_t audio_device_error(fa_string_t msg)
 
 fa_error_t audio_device_error_with(fa_string_t msg, int code)
 {
-    fa_string_t pa_error_str = fa_string(code != 0 ? (char *) Pa_GetErrorText(code) : "");
+    fa_string_t pa_error_str;
+    if (code == 0) {
+        pa_error_str = fa_string("");
+    } else if (code == paUnanticipatedHostError) {
+        const PaHostErrorInfo* herr = Pa_GetLastHostErrorInfo();
+        if (herr) {
+            pa_error_str = fa_dappend(
+                fa_format_integral("Unanticipated Host Error, number: %ld, text: ", herr->errorCode),
+                fa_string((char*)herr->errorText));
+        } else {
+            pa_error_str = fa_string("Unanticipated Host Error, Pa_GetLastHostErrorInfo() failed!");
+        }
+    } else {
+        pa_error_str = fa_string((char *) Pa_GetErrorText(code));
+    }
 
     fa_error_t err = fa_error_create_simple(error,
                                             fa_string_dappend(msg,
