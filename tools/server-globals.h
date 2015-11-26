@@ -43,7 +43,6 @@ fa_list_t current_midi_output_streams = NULL;
 fa_ptr_t current_midi_echo_stream = NULL;
 fa_clock_t current_clock = NULL;
 
-recording_state_t recording_state = NOT_RECORDING;
 fa_atomic_ring_buffer_t recording_ring_buffer = NULL;
 fa_thread_t recording_thread = NULL;
 // bool recording_flag = false;
@@ -62,6 +61,7 @@ double monitor_volume = 0.0;
 
 #define with_mutex(type, var) type var = 0; fa_thread_mutex_t var ## _mutex = NULL
 
+with_mutex(recording_state_t, recording_state);
 with_mutex(fa_map_t, playback_semaphores);
 with_mutex(fa_map_t, recording_semaphores);
 with_mutex(fa_map_t, audio_files);
@@ -109,6 +109,8 @@ static inline void init_globals() {
     
     bundle_actions = fa_list_empty();
     
+    recording_state = NOT_RECORDING;
+    recording_state_mutex = fa_thread_create_mutex();
     playback_semaphores = fa_map_empty();
     playback_semaphores_mutex = fa_thread_create_mutex();
     recording_semaphores = fa_map_empty();
@@ -142,6 +144,7 @@ static inline void init_globals() {
 static inline void destroy_globals() {
     fa_destroy(bundle_actions);
     
+    fa_destroy(recording_state_mutex);
     fa_destroy(playback_semaphores);
     fa_destroy(playback_semaphores_mutex);
     fa_destroy(recording_semaphores);

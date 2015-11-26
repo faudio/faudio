@@ -116,16 +116,23 @@ void do_schedule_now(fa_action_t action, fa_ptr_t stream) {
 }
 
 void schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
-    if (in_bundle) {
-        if (bundle_stream) {
-            assert(bundle_stream == stream && "Cannot send to different streams in same bundle");
-        } else {
-            bundle_stream = stream;
-        }
-        fa_push_list(pair(action, time), bundle_actions);
-    } else {
+    
+    // Scheduling on absolute times does not need to be bundled,
+    // so schedule it directly
+    //
+    // This solves the problem of pushing a mix of absolute and
+    // relative times onto the bundle_actions list
+    
+    // if (in_bundle) {
+    //     if (bundle_stream) {
+    //         assert(bundle_stream == stream && "Cannot send to different streams in same bundle");
+    //     } else {
+    //         bundle_stream = stream;
+    //     }
+    //     fa_push_list(pair(action, time), bundle_actions);
+    // } else {
         do_schedule(time, action, stream);
-    }
+    //}
 }
 
 void schedule_relative(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
@@ -649,6 +656,18 @@ void start_streams() {
     
     // Start audio stream first
     if (current_audio_input_device || current_audio_output_device) {
+        
+        // Check that the devices have the same sample-rate
+        if (current_audio_input_device && current_audio_output_device) {
+            double sr_in  = fa_audio_current_sample_rate(current_audio_input_device);
+            double sr_out = fa_audio_current_sample_rate(current_audio_output_device);
+            if (sr_in != sr_out) {
+                fa_log_warning(fa_string("Sample rate mismatch, disabling input"));
+                send_osc_async("/error", "Nsdd", "sample-rate-mismatch", sr_in, sr_out);
+                current_audio_input_device = NULL;
+            }
+        }
+        
         fa_list_t out_signal = construct_output_signal_tree();
         fa_audio_stream_t audio_stream =
             fa_audio_open_stream(current_audio_input_device, current_audio_output_device, just, out_signal);
@@ -670,7 +689,7 @@ void start_streams() {
             do_schedule_now(fa_action_many(actions), current_audio_stream);
         }
     } else {
-        fa_log_warning(fa_string("No audio output device, won't start an audio stream"));
+        fa_log_warning(fa_string("No audio input or output device, won't start an audio stream"));
     }
     
     // Start one MIDI input stream for each device in current_midi_input_devices
@@ -700,7 +719,7 @@ void start_streams() {
     fa_log_info(fa_string_dappend(fa_format_integral("%d MIDI inputs, ", midi_input_count),
                                   fa_format_integral("%d MIDI outputs", midi_output_count)));
                                   
-    // Turn off reverb for all channels
+    // Turn off reverb for all MIDI channels
     if (current_midi_echo_stream) {
         for(uint8_t ch = 0; ch < 16; ch++) {
             fa_midi_message_t msg = fa_midi_message_create_simple(msg_control_change + ch, 0x5B, 0);
