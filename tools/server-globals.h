@@ -142,8 +142,10 @@ static inline void init_globals() {
 }
 
 static inline void destroy_globals() {
+    fa_slog_info("Destroying bundle_actions...");
     fa_destroy(bundle_actions);
     
+    fa_slog_info("Destroying mutex...");
     fa_destroy(recording_state_mutex);
     fa_destroy(playback_semaphores);
     fa_destroy(playback_semaphores_mutex);
@@ -156,11 +158,13 @@ static inline void destroy_globals() {
     fa_destroy(uploads);
     fa_destroy(uploads_mutex);
     
+    fa_slog_info("Destroying strings...");
     fa_destroy(synth_name);
     fa_destroy(audio_name);
     fa_destroy(record_left_name);
     fa_destroy(record_right_name);
     
+    fa_slog_info("Destroying device references...");
     if (selected_midi_input_devices) fa_destroy(selected_midi_input_devices);
     if (selected_midi_output_devices) fa_destroy(selected_midi_output_devices);
     fa_destroy(current_midi_input_devices);
@@ -168,8 +172,10 @@ static inline void destroy_globals() {
     fa_destroy(current_midi_input_streams);
     fa_destroy(current_midi_output_streams);
     
+    fa_slog_info("Destroying ring buffer...");
     fa_destroy(recording_ring_buffer);
     
+    fa_slog_info("Destroying settings...");
     fa_destroy(host_input_latency);
     fa_destroy(host_output_latency);
     fa_destroy(host_vector_size);
