@@ -220,9 +220,14 @@ fa_list_t fa_list_cons(fa_ptr_t x, fa_list_t xs)
 
 fa_list_t fa_list_dcons(fa_ptr_t x, fa_list_t xs)
 {
-    fa_list_t ys = new_list(new_node(x, xs->node));
-    delete_list(xs);
-    return ys;
+    // Canonical version
+    //fa_list_t ys = new_list(new_node(x, xs->node));
+    //delete_list(xs);
+    //return ys;
+    
+    // Efficient version
+    xs->node = new_node(x, xs->node);
+    return xs;
 }
 
 void fa_list_destroy(fa_list_t xs)
@@ -283,7 +288,21 @@ fa_list_t fa_list_tail(fa_list_t xs)
     return new_list(take_node(xs->node->next));
 }
 
-fa_list_t fa_list_init(fa_list_t xs)
+fa_list_t fa_list_dtail(fa_list_t xs)
+{
+    if (!xs->node) {
+        assert(false && "No tail");
+    }
+    node_t old_head = xs->node;
+    xs->node = take_node(xs->node->next);
+    release_node(old_head);
+    return xs;
+    //fa_list_t ys = fa_list_tail(xs);
+    //fa_list_destroy(xs);
+    //return ys;
+}
+
+fa_list_t fa_list_init(fa_list_t xs) // what does this function do, and why does it exist??
 {
     if (!xs->node) {
         assert(false && "No init");
@@ -308,13 +327,6 @@ fa_ptr_t fa_list_last(fa_list_t xs)
     assert(false && "No last");
 }
 
-fa_list_t fa_list_dtail(fa_list_t xs)
-{
-    fa_list_t ys = fa_list_tail(xs);
-    fa_list_destroy(xs);
-    return ys;
-}
-
 fa_list_t fa_list_dinit(fa_list_t xs)
 {
     fa_list_t ys = fa_list_init(xs);
@@ -329,12 +341,41 @@ static inline fa_list_t append(fa_list_t xs, fa_list_t ys)
 {
     if (fa_is_empty(xs)) {
         return fa_list_copy(ys);
+    } else if (fa_is_empty(ys)) {
+        return fa_list_copy(xs);
     } else {
-        fa_list_t xst = fa_list_tail(xs);
-        fa_list_t r = fa_list_dcons(fa_list_head(xs), append(xst, ys));
-        fa_list_destroy(xst);
-        return r;
+        
+        // copy head element of xs
+        node_t old = xs->node;
+        node_t new_head = new_node(old->value, NULL);
+
+        // copy rest of xs
+        node_t new = new_head;
+        old = old->next;
+        while (old != NULL) {
+            new->next = new_node(old->value, NULL);
+            old = old->next;
+            new = new->next;
+        }
+        
+        // append ys
+        old = ys->node;
+        while (old != NULL) {
+            new->next = new_node(old->value, NULL);
+            old = old->next;
+            new = new->next;
+        }
+
+        return new_list(new_head);
     }
+        
+        
+    // } else {
+    //     fa_list_t xst = fa_list_tail(xs);
+    //     fa_list_t r = fa_list_dcons(fa_list_head(xs), append(xst, ys));
+    //     fa_list_destroy(xst);
+    //     return r;
+    // }
 }
 
 static inline fa_list_t revappend(fa_list_t xs, fa_list_t ys)
@@ -436,7 +477,7 @@ fa_list_t fa_list_dsort(fa_list_t xs, fa_list_sort_fn_t fn)
 
 fa_list_t fa_list_dsort_ascending(fa_list_t xs)
 {
-    return fa_list_sort(xs, fa_less_than);
+    return fa_list_dsort(xs, fa_less_than);
 }
 
 fa_list_t fa_list_dappend(fa_list_t xs, fa_list_t ys)
@@ -457,8 +498,8 @@ fa_list_t fa_list_dreverse(fa_list_t xs)
     }
     fa_list_t ys = fa_list_empty();
     while (!fa_list_is_empty(xs)) {
-        fa_push_list(fa_list_head(xs), ys);
-        xs = fa_list_dtail(xs);
+        fa_push_list(fa_list_head(xs), ys); // get first element from xs and push it to ys
+        xs = fa_list_dtail(xs);             // remove first element from xs
     }
     fa_list_destroy(xs);
     return ys;
@@ -473,7 +514,26 @@ fa_list_t fa_list_take(int n, fa_list_t xs)
         return fa_list_empty();
     }
 
-    return fa_list_dcons(fa_list_head(xs), fa_list_dtake(n - 1, fa_list_tail(xs)));
+    // Elegant version
+    //return fa_list_dcons(fa_list_head(xs), fa_list_dtake(n - 1, fa_list_tail(xs)));
+    
+    // Efficient version
+    
+    // copy head element
+    node_t old = xs->node;
+    node_t new_head = new_node(old->value, NULL);
+
+    // copy rest of the list
+    node_t new = new_head;
+    old = old->next;
+    for (int x = 1; x < n; x++) {
+        assert(old && "Source list not long enough in fa_list_take!");
+        new->next = new_node(deep_copy_unless_null(old->value), NULL);
+        old = old->next;
+        new = new->next;
+    }
+
+    return new_list(new_head);
 }
 
 fa_list_t fa_list_drop(int n, fa_list_t xs)
@@ -485,8 +545,17 @@ fa_list_t fa_list_drop(int n, fa_list_t xs)
     if (n == 0) {
         return fa_list_copy(xs);
     }
-
-    return fa_list_ddrop(n - 1, fa_list_tail(xs));
+    
+    // Elegant version
+    //return fa_list_ddrop(n - 1, fa_list_tail(xs));
+    
+    // Efficient version
+    node_t new_head = xs->node;
+    for (int x = 0; x < n; x++) {
+        new_head = new_head->next;
+        if (!new_head) break;
+    }
+    return new_list(take_node(new_head));
 }
 
 fa_ptr_t fa_list_index(int n, fa_list_t xs)
@@ -931,6 +1000,15 @@ fa_ptr_t list_impl(fa_id_t interface)
 
     default:
         return NULL;
+    }
+}
+
+void print_list_debug(fa_list_t xs) {
+    node_t node = xs->node;
+    printf("---------\n");
+    while (node) {
+        printf("%zu  %lld\n", node->count, fa_peek_integer(node->value));
+        node = node->next;
     }
 }
 
