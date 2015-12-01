@@ -273,7 +273,6 @@ int main(int argc, char const *argv[])
 #endif
         }
     
-        fa_slog_info("Stopping streams...");
         stop_streams();
         fa_slog_info("Stopping sessions...");
         stop_sessions();
@@ -1281,7 +1280,9 @@ int level_handler(const char *path, const char *types, lo_arg ** argv, int argc,
 
 fa_ptr_t _recording_started(fa_ptr_t context, fa_time_t time, fa_time_t now)
 {
-    recording_state = RECORDING_RUNNING;
+    fa_with_lock(recording_state_mutex) {
+        recording_state = RECORDING_RUNNING;
+    }
     send_osc_async("/recording/started", "it", peek_oid(context), timetag_from_time(time));
     return NULL;
 }
@@ -1308,9 +1309,6 @@ fa_ptr_t _stop_recording(fa_ptr_t context) {
     oid_t id = peek_oid(context);
     if (remove_recording_semaphore(id)) {
         send_osc_async("/recording/stopped", "iT", peek_oid(context)); //, timetag_from_time(now));
-    }
-    fa_with_lock(recording_state_mutex) {
-        recording_state = NOT_RECORDING;
     }
     return NULL;
 }
@@ -1380,8 +1378,9 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
         schedule_now(action, current_audio_stream);
         _recording_started(wrap_oid(id), NULL, NULL); // TODO: time
     } else {
-        action = fa_action_many(list(pair(action, fa_now()),
-                                     pair(fa_action_do_with_time(_recording_started, wrap_oid(id)), fa_now())));
+        action = fa_action_if(check_recording_semaphore, wrap_oid(id),
+                    fa_action_many(list(pair(action, fa_now()),
+                                        pair(fa_action_do_with_time(_recording_started, wrap_oid(id)), fa_now()))));
         schedule_relative(fa_time_from_double(rel_time), action, current_audio_stream);
     }
     
@@ -1409,11 +1408,28 @@ int stop_recording_handler(const char *path, const char *types, lo_arg ** argv, 
     oid_t id = argv[0]->i;
 
     fa_with_lock(recording_state_mutex) {
+        if (recording_state == RECORDING_INITIALIZING) {
+            if (remove_recording_semaphore(id)) {
+                fa_slog_info("Aborting recording before it actually started");
+                send_osc(message, user_data, "/recording/stop", "iT", id);
+                recording_state = RECORDING_STOPPING;
+                fa_action_t action = fa_action_many(list(
+                    pair(fa_action_send(record_left_name, NULL), fa_now()),
+                    pair(fa_action_send(record_right_name, NULL), fa_now())));
+                schedule_now(action, current_audio_stream);
+                send_osc(message, user_data, "/recording/stopped", "iT", id);
+            } else {
+                fa_slog_info("Recording is initializing under another ID");
+                send_osc(message, user_data, "/recording/stop", "iFs", id, "not-recording");
+            }
+            continue;
+        }
         if (recording_state == NOT_RECORDING || !check_recording_semaphore(wrap_oid(id), NULL)) {
             fa_slog_warning("Cannot stop recording: not currently recording at id ", wrap_oid(id));
             fa_slog_info("recording_semaphores: ", recording_semaphores);
             printf("recording_state: %d\n", recording_state);
             send_osc(message, user_data, "/recording/stop", "iFs", id, "not-recording");
+            remove_recording_semaphore(id); // just in case
             continue; // cannot use return, that wouldn't release the lock
         }
     
@@ -1426,8 +1442,6 @@ int stop_recording_handler(const char *path, const char *types, lo_arg ** argv, 
                 pair(fa_action_send(record_right_name, NULL), fa_now())));
             schedule_now(action, current_audio_stream);
             send_osc_async("/recording/stopped", "iT", id);
-            recording_state = NOT_RECORDING;
-            fa_slog_info("  stopped!");
         } else {
             fa_slog_warning("Could not remove recording semaphore (strange!) ", wrap_oid(id));
             send_osc(message, user_data, "/recording/stop", "iFs", id, "strange-error");

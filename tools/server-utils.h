@@ -1035,7 +1035,8 @@ static size_t _upload_read_ring_buffer(void *ptr, size_t size, size_t nmemb, voi
                 return i;
             }
             // Otherwise, wait for more data
-            fa_thread_sleep(2);
+            // printf("Waiting for data... (ring buffer is not closed)\n");
+            fa_thread_sleep(50);
         }
     }
     return size*nmemb;
@@ -1190,7 +1191,13 @@ struct recording_thread_args {
 
 void _recording_receive(fa_ptr_t context, fa_buffer_t buffer) {
     fa_atomic_ring_buffer_t ring_buffer = context;
-    if (buffer) {
+    if (!buffer) {
+        printf("Received NULL, closing ring buffer\n");
+        fa_atomic_ring_buffer_close(ring_buffer);
+    } else if (recording_state == RECORDING_STOPPING && !fa_atomic_ring_buffer_is_closed(ring_buffer)) {
+        printf("recording_state == RECORDING_STOPPING, closing ring buffer\n");
+        fa_atomic_ring_buffer_close(ring_buffer);
+    } else {
         uint8_t *ptr = fa_buffer_unsafe_address(buffer);
         size_t size = fa_buffer_size(buffer);
         printf("Received %zu bytes of ogg\n", size);
@@ -1203,9 +1210,6 @@ void _recording_receive(fa_ptr_t context, fa_buffer_t buffer) {
             // TODO: handle this error!
             fa_fail(fa_string("Upload ring buffer overflow!"));
         }
-    } else {
-        printf("Received NULL, closing ring buffer\n");
-        fa_atomic_ring_buffer_close(ring_buffer);
     }
 }
 
@@ -1249,18 +1253,37 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
         fa_thread_detach(thread);
     }
     
-    printf("_recording_thread 4\n");
+    printf("_recording_thread 4, recording_state: %d\n", recording_state);
     
-    // This will block until the source is drained
-    fa_io_run(source, sink);
+    if (check_recording_semaphore(wrap_oid(id), NULL)) {
+        if (recording_state == RECORDING_RUNNING || recording_state == RECORDING_INITIALIZING) {
+            // If still initializing, wait here...
+            while (recording_state == RECORDING_INITIALIZING) {
+                fa_thread_sleep(100);
+            }
+
+            if (recording_state == RECORDING_RUNNING) {
+                // This will block until the source is drained
+                fa_slog_info("Recording thread: recording_state is now RUNNING, calling io_run");
+                fa_io_run(source, sink);
+                
+                
+            } else {
+                fa_slog_info("Recording thread: recording_state went from INITIALIZING to STOPPING, skipping io_run");
+            }
+        } else {
+            fa_slog_info("Recording thread: recording_state is not RUNNING or INITIALIZING, skipping io_run");
+        }
+    } else {
+        fa_slog_info("Recording thread: sempahore is not set, skipping io_run");
+    }
     
-    printf("_recording_thread 5\n");
-    
-    // Make sure sink is detached (why is this needed?)
+    // Make sure sink is detached (especially important if io_run is never called,
+    // otherwise the upload callback will never return!)
     fa_io_push(sink, NULL);
     
-    printf("_recording_thread 6\n");
-    
+    printf("_recording_thread 5\n");
+        
     // Cleanup
     if (filename) free(filename);
     if (url) free(url);
@@ -1272,7 +1295,12 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
     
     fa_slog_info("End of recording thread function");
     
-    recording_state = NOT_RECORDING;
+    fa_with_lock(recording_state_mutex) {
+        if (recording_state != RECORDING_RUNNING && recording_state != RECORDING_STOPPING) {
+            fa_warn(fa_string_format_integral("  !! recording_state is %d", recording_state));
+        }
+        recording_state = NOT_RECORDING;
+    }
     
     return NULL;
 }
