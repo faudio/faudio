@@ -7,6 +7,7 @@
 #include <fa/clock.h>
 #include <fa/list.h>
 #include <fa/pair.h>
+#include <fa/map.h>
 #include <fa/error.h>
 #include <fa/signal.h>
 #include <fa/action.h>
@@ -191,6 +192,13 @@ void fa_audio_schedule_relative(fa_time_t time,
  */
 void fa_audio_schedule_now(fa_action_t action,
                            fa_audio_stream_t stream);
+
+/**
+    Return info of the stream, in form of a map.
+
+    The map should be destroyed by the caller.
+*/
+fa_map_t fa_audio_stream_get_info(fa_audio_stream_t stream);
 
 /** @}
     @}

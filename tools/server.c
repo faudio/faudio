@@ -14,6 +14,7 @@
 #include <fa/func_ref.h>
 #include <fa/io.h>
 #include <fa/option.h>
+#include <fa/audio/stream.h>
 #include "common.h"
 
 #if defined(_WIN32)
@@ -68,6 +69,7 @@ define_handler(ping);
 define_handler(next_id);
 define_handler(all_devices);
 define_handler(current_devices);
+define_handler(stream_info);
 
 define_handler(list_audio_files);
 define_handler(load_audio_file);
@@ -159,6 +161,7 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/set/exclusive",          "T",  settings_handler, "exclusive");
     lo_server_thread_add_method(st, "/set/exclusive",          "F",  settings_handler, "exclusive");
     lo_server_thread_add_method(st, "/set/exclusive",          "N",  settings_handler, "exclusive");
+    //lo_server_thread_add_method(st, "/set/schedule-delay",     "i",  settings_handler, "schedule-delay"); // not implemented
       
     /* Get info */
     lo_server_thread_add_method(st, "/time", NULL, time_handler, server);
@@ -167,6 +170,7 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/all/devices", "", all_devices_handler, server);
     lo_server_thread_add_method(st, "/all/devices", "i", all_devices_handler, server);
     lo_server_thread_add_method(st, "/current/devices", "", current_devices_handler, server);
+    lo_server_thread_add_method(st, "/stream/info", "", stream_info_handler, server);
     
     /* Playback */
     //  /play/audio  id,  audio id,  skip (ms),  start-time (ms),  repeat-interval (ms)
@@ -324,12 +328,15 @@ int bundle_end_handler(void *user_data) {
             fa_action_t action = fa_action_many(times_to_delta_times(bundle_actions)); // preserve original order
             if (fa_time_is_zero(bundle_time)) {
                 if (fa_action_is_flat(action)) {
+                    //fa_slog_info("  flat -> now");
                     do_schedule_now(action, bundle_stream);
                 } else {
+                    //fa_slog_info("  non-flat -> relative");
                     do_schedule_relative(sched_delay, action, bundle_stream);
                 }
                 fa_destroy(bundle_time);
             } else {
+                //fa_slog_info("  absolute time");
                 do_schedule(bundle_time, action, bundle_stream);
             }
             bundle_actions = fa_list_empty();
@@ -439,12 +446,14 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
             main_action = fa_action_many(actions);
         }
         
-        
-        if (time == 0) {
+        if (time == 0 && !in_bundle) {
             schedule_relative(sched_delay, main_action, current_audio_stream);
+        } else if (time < 0 || (time == 0 && in_bundle)) {
+            schedule_relative(fa_milliseconds(0), main_action, current_audio_stream);
         } else {
-            schedule(fa_milliseconds(time), main_action, current_audio_stream);
+            schedule(fa_time_from_double(time), main_action, current_audio_stream);
         }
+        
         start_time_echo();
     } else {
         send_osc(message, user_data, "/error", "isi", id, "no-such-audio-file", audio_id);
@@ -821,6 +830,28 @@ int current_devices_handler(const char *path, const char *types, lo_arg ** argv,
     return 0;
 }
 
+void send_stream_info(lo_message message, void *user_data)
+{
+    if (current_audio_stream) {
+        fa_map_t info = fa_audio_stream_get_info(current_audio_stream);
+        fa_list_t keys = fa_map_get_keys(info);
+        fa_for_each (key, keys) {
+            fa_ptr_t value = fa_map_get(key, info);
+            send_fa_value_osc(message, user_data, "/stream/info", fa_unstring(key), value);
+        }
+        fa_destroy(keys);
+        fa_destroy(info);
+    } else {
+        fa_slog_warning("send_stream_info: no audio stream!");
+    }
+}
+
+int stream_info_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    send_stream_info(message, user_data);
+    return 0;
+}
+
 /***************************
 *   /send/midi
 */
@@ -1089,14 +1120,16 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
                 double from_ms = argv[4]->f;
                 double to_ms   = argv[5]->f;
                 if (from_ms < 0) from_ms = 0;
-                if (to_ms < 0) to_ms = 0;
+                //if (to_ms < 0) to_ms = 0;
                 fa_ptr_t sr = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
                 fa_ptr_t ch = fa_buffer_get_meta(buffer, fa_string("channels"));
-                if (sr && ch) {
+                if (sr && ch && (from_ms > 0 || to_ms >= 0)) {
                     int channels = fa_peek_integer(ch);
                     double sample_rate = fa_peek_number(sr);
-                    size_t from_byte = (int)round(sample_rate * (from_ms / 1000.0) * (double)channels);
-                    size_t to_byte   = (int)round(sample_rate * (to_ms / 1000.0) * (double)channels);
+                    size_t from_byte = sizeof(double) * (int)round(sample_rate * (from_ms / 1000.0) * (double)channels);
+                    size_t to_byte;
+                    if (to_ms < 0) to_byte = fa_buffer_size(buffer);
+                    else to_byte = sizeof(double) * (int)round(sample_rate * (to_ms / 1000.0) * (double)channels);
                     if (to_byte > fa_buffer_size(buffer)) to_byte = fa_buffer_size(buffer);
                     size_t size = to_byte - from_byte;
                     if (size > 0) {
@@ -1127,10 +1160,10 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
         fa_buffer_release_reference(buffer);
     }
     
-    //fa_slog_info("ogg buffer: ", ogg_buffer);
-    //printf("Uploading %zu bytes...\n", fa_buffer_size(ogg_buffer));
+    // fa_slog_info("ogg buffer: ", ogg_buffer);
+    // printf("Uploading %zu bytes...\n", fa_buffer_size(ogg_buffer));
     
-    fa_buffer_write_raw(fa_string("/Users/erik/Desktop/out2.ogg"), ogg_buffer);
+    // fa_buffer_write_raw(fa_string("/Users/erik/Desktop/out2.ogg"), ogg_buffer);
 
     fa_thread_t thread = upload_buffer_async(id, ogg_buffer, url, cookie);
     fa_thread_detach(thread);
@@ -1529,6 +1562,7 @@ int restart_streams_handler(const char *path, const char *types, lo_arg ** argv,
     start_streams();
     send_all_devices(-1, message, user_data);
     send_current_devices(message, user_data);
+    send_stream_info(message, user_data);
     if (argc > 0) {
         send_osc(message, user_data, "/restart/streams", "i", argv[0]->i);
     }
@@ -1547,6 +1581,7 @@ int restart_sessions_handler(const char *path, const char *types, lo_arg ** argv
     start_streams();
     send_all_devices(-1, message, user_data);
     send_current_devices(message, user_data);
+    send_stream_info(message, user_data);
     if (argc > 0) {
         send_osc(message, user_data, "/restart/sessions", "i", argv[0]->i);
     }

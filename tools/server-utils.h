@@ -222,7 +222,7 @@ fa_ptr_t create_fa_value(lo_type type, void *data) {
     case LO_FALSE:      return fa_from_bool(false);
     case LO_NIL:        return NULL; // ?
     default:
-        fa_fail(fa_string("liblo_to_faudio: Cannot handle that type"));
+        fa_fail(fa_string("create_fa_value: Cannot handle that type"));
         return NULL;
     }
 }
@@ -238,7 +238,37 @@ lo_timetag timetag_from_time(fa_time_t time) {
     return timetag_from_double(fa_time_to_double(time));
 }
 
-
+void send_fa_value_osc(lo_message message, void *user_data, char *path, char *key, fa_ptr_t value) {
+    fa_dynamic_type_repr_t type = fa_dynamic_get_type(value);
+    switch(type) {
+    case null_type_repr:
+        send_osc(message, user_data, path, "sN", key);
+        break;
+    case f32_type_repr:
+        send_osc(message, user_data, path, "sf", key, fa_peek_float(value));
+        break;
+    case f64_type_repr:
+        send_osc(message, user_data, path, "sd", key, fa_peek_double(value));
+        break;
+    case string_type_repr:
+        send_osc(message, user_data, path, "ss", key, fa_unstring(value));
+        break;
+    case bool_type_repr:
+        if (fa_peek_bool(value)) {
+            send_osc(message, user_data, path, "sT", key);
+        } else {
+            send_osc(message, user_data, path, "sF", key);
+        }
+        break;
+    case i8_type_repr:
+    case i16_type_repr:
+    case i32_type_repr:
+        send_osc(message, user_data, path, "si", key, fa_peek_integer(value));
+        break;
+    default:
+        fa_slog_warning("Don't know how to send value via osc: ", value);
+    }
+}
 
 
 // void schedule_to_midi_echo_stream(fa_time_t time, fa_action_t action)
@@ -688,6 +718,14 @@ void start_streams() {
                                      pair(fa_action_set(kMonitorRight, monitor_volume), fa_now()));
             do_schedule_now(fa_action_many(actions), current_audio_stream);
         }
+        
+        // Get some info
+        if (current_audio_stream) {
+            fa_map_t info = fa_audio_stream_get_info(current_audio_stream);
+            fa_slog_info("Actual values reported from PortAudio: ", info);
+            fa_free(info);
+        }
+        
     } else {
         fa_log_warning(fa_string("No audio input or output device, won't start an audio stream"));
     }
@@ -986,7 +1024,7 @@ static size_t _upload_read_buffer(void *ptr, size_t size, size_t nmemb, void *da
 
     if (info->sizeleft) {
         size_t bytes = MIN(size*nmemb, info->sizeleft);
-        //printf("upload_read_function: %zu bytes\n", bytes);
+        printf("upload_read_function: %zu bytes\n", bytes);
         memcpy(ptr, info->readptr, bytes);
         info->readptr += bytes;
         info->sizeleft -= bytes;
@@ -1098,7 +1136,15 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
             
         } else {
             // Normal buffer: we know the size of the data, so send it in advance
-            curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, fa_buffer_size(buffer));
+            //curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, fa_buffer_size(buffer));
+            
+            // *** NOTE ***
+            // As of 2015-12-04, the DoReMIR server seems to handle only
+            // chunked requests, otherwise it answers with an empty response!
+            struct curl_slist *chunk = NULL;
+            chunk = curl_slist_append(chunk, "Transfer-Encoding: chunked");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+            
             // Set read function and data
             info.readptr = fa_buffer_unsafe_address(buffer);
             info.sizeleft = (long)fa_buffer_size(buffer);

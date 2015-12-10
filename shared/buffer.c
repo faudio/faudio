@@ -418,8 +418,7 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
     if (sf_error(file)) {
         char err[100];
         snprintf(err, 100, "Could not write audio file '%s' (%s)", cpath, sf_strerror(file));
-        return (fa_pair_t) fa_error_create_simple(
-                   error, fa_string(err), fa_string("Doremir.Buffer"));
+        return fa_error_create_simple(error, fa_string(err), fa_string("Doremir.Buffer"));
     }
 
     sf_count_t written = sf_write_double(file, ptr, size);
@@ -443,7 +442,7 @@ fa_buffer_t fa_buffer_read_raw(fa_string_t path)
     
     if (!file) {
         fa_warn(fa_dappend(fa_string("Could not open "), fa_copy(path)));
-        return NULL;
+        return (fa_buffer_t) fa_error_create_simple(error, fa_string("Could not open file"), fa_string("Doremir.Buffer"));
     }
 
     // Get length of file

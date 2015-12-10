@@ -19,7 +19,6 @@
 #include <fa/util.h>
 #include <fa/time.h>
 #include <pthread.h>
-
 #include <portaudio.h>
 #include <pa_win_wasapi.h>
 #include "signal.h"
@@ -65,7 +64,7 @@ struct _fa_audio_session_t {
 
     struct {
         double          sample_rate;
-        double          latency[2];
+        double          latency[2];         // Suggested latency
         int             vector_size;
         int             scheduler_interval; // Scheduling interval in milliseconds
         bool            exclusive;          // Use exclusive mode (if available)
@@ -106,6 +105,8 @@ struct _fa_audio_stream_t {
     fa_signal_t         signals[kMaxSignals];
     state_t             state;              // DSP state
     int64_t             last_time;          // Cached time in milliseconds
+    double              roundtripLatency;   // "Actual" latency calculated from time values reported by PA
+    
     //int64_t             start_time;
 
     unsigned            input_channels, output_channels;
@@ -283,6 +284,7 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
     stream->state           = NULL;
     stream->last_time       = 0;
     //stream->start_time      = 0;
+    stream->roundtripLatency = 0;
 
     stream->signal_count    = 0;
     stream->pa_flags        = 0;
@@ -905,9 +907,9 @@ stream_t fa_audio_open_stream(device_t input,
             .channelCount               = stream->output_channels
         };
 
-        PaStreamFlags    flags    = paNoFlag;
+        PaStreamFlags     flags    = paNoFlag;
         PaStreamCallback *callback = native_audio_callback;
-        fa_ptr_t            data     = stream;
+        fa_ptr_t          data     = stream;
 
         status = Pa_OpenStream(
                      &stream->native,
@@ -923,7 +925,7 @@ stream_t fa_audio_open_stream(device_t input,
         }
 
         status = Pa_SetStreamFinishedCallback(stream->native, native_finished_callback);
-
+        
         if (status != paNoError) {
             after_failed_processing(stream);
             return (stream_t) audio_device_error_with(fa_string("Could not start stream"), status);
@@ -1092,6 +1094,20 @@ void fa_audio_schedule_now(fa_action_t action, fa_audio_stream_t stream)
     } else {
         fa_warn(fa_string("Non-flat action passed to fa_audio_schedule_now"));
     }
+}
+
+fa_map_t fa_audio_stream_get_info(fa_audio_stream_t stream)
+{
+    const PaStreamInfo *streamInfo = Pa_GetStreamInfo(stream->native);
+    //printf("Actual input latency: %f\n", streamInfo->inputLatency);
+    //printf("Actual output latency: %f\n", streamInfo->outputLatency);
+    fa_map_t map = fa_map_empty();
+    fa_map_set_value_destructor(map, fa_destroy);
+    map = fa_map_dadd(fa_string("inputLatency"), fa_from_double(streamInfo->inputLatency), map);
+    map = fa_map_dadd(fa_string("outputLatency"), fa_from_double(streamInfo->outputLatency), map);
+    map = fa_map_dadd(fa_string("sampleRate"), fa_from_double(streamInfo->sampleRate), map);
+    map = fa_map_dadd(fa_string("roundtripLatency"), fa_from_double(stream->roundtripLatency), map);
+    return map;
 }
 
 
@@ -1394,6 +1410,9 @@ int native_audio_callback(const void                       *input,
     stream_t stream = data;
 
     if (stream->state) {
+        // Cache "actual" latency
+        stream->roundtripLatency = time_info->outputBufferDacTime - time_info->inputBufferAdcTime;
+        
         during_processing(stream, count, time_info->outputBufferDacTime, (float **) input, (float **) output);
         stream->pa_flags |= flags;
     }
