@@ -79,17 +79,31 @@ inline static node_t take_node(node_t node)
  */
 inline static void release_node(node_t node)
 {
-    if (!node) {
-        return;
+    while (node) {
+        node->count--;
+        if (node->count == 0) {
+            node_t next = node->next;
+            fa_delete(node);
+            gNodeCount--;
+            node = next;
+        } else {
+            node = NULL;
+        }
     }
-
-    node->count--;
     
-    if (node->count == 0) {
-        release_node(node->next);
-        fa_delete(node);
-        gNodeCount--;
-    }
+    // Recursive version, won't work for very long lists, as the call stack grows too long
+    //
+    // if (!node) {
+    //     return;
+    // }
+    //
+    // node->count--;
+    //
+    // if (node->count == 0) {
+    //     release_node(node->next);
+    //     fa_delete(node);
+    //     gNodeCount--;
+    // }
 }
 
 fa_ptr_t list_impl(fa_id_t interface);
