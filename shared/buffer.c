@@ -350,11 +350,17 @@ void *fa_buffer_unsafe_address(fa_buffer_t buffer)
 
 fa_buffer_t fa_buffer_read_audio(fa_string_t path)
 {
+    return fa_buffer_read_audio_max_size(path, 0, false);
+}
+
+fa_buffer_t fa_buffer_read_audio_max_size(fa_string_t path, size_t max_size, bool crop)
+{
     fa_buffer_t     buffer;
 
     SNDFILE         *file;
     SF_INFO         info;
     info.format     = 0;
+    bool cropped    = false;
 
     {
         char *cpath     = fa_string_to_utf8(path);
@@ -370,6 +376,18 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
     }
     {
         size_t bufSize  = info.frames * info.channels * sizeof(double);
+        
+        // Required size is too big
+        if (max_size && bufSize > max_size) {
+            if (crop) {
+                bufSize = max_size;
+                cropped = true;
+            } else {
+                fa_slog_warning("Audio file too big");
+                return NULL;
+            }
+        }
+        
         buffer          = fa_buffer_create(bufSize);
         double *raw     = fa_buffer_unsafe_address(buffer);
 
@@ -381,6 +399,7 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
         fa_buffer_set_meta(buffer, fa_string("sample-rate"), fa_i32(info.samplerate));
         fa_buffer_set_meta(buffer, fa_string("channels"), fa_i32(info.channels));
         fa_buffer_set_meta(buffer, fa_string("format"), fa_i32(info.format));
+        fa_buffer_set_meta(buffer, fa_string("cropped"), fa_from_bool(cropped));
 
         fa_let(str, (char *) sf_get_string(file, SF_STR_TITLE))
         fa_buffer_set_meta(buffer, fa_string("title"), fa_string(str ? str : ""));

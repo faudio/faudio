@@ -275,6 +275,25 @@ bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer);
 fa_buffer_t fa_buffer_read_audio(fa_string_t path);
 
 /**
+    Read an audio file no bigger than a certain size.
+
+    @param path
+        Path to the file to read.
+    @param max_size
+        Max size of the internal buffer, in bytes. Note that
+        audio is represented internally by doubles, so to contain
+        a 16-bit mono WAV file if 1 MB, max_size will have to be
+        at least 4 MB. A max_size of 0 means no limit.
+    @param crop
+        Determines what happens when the audio file is too big.
+        If crop is true, data is read from the audio file until
+        max_size is reached. If crop is false, NULL is returned.
+    @return
+        A buffer, NULL (only when file is too big) or an error value.
+*/
+fa_buffer_t fa_buffer_read_audio_max_size(fa_string_t path, size_t max_size, bool crop);
+
+/**
     Write an audio file.
 
     @param path
