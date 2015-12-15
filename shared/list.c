@@ -542,7 +542,7 @@ fa_list_t fa_list_take(int n, fa_list_t xs)
     old = old->next;
     for (int x = 1; x < n; x++) {
         assert(old && "Source list not long enough in fa_list_take!");
-        new->next = new_node(deep_copy_unless_null(old->value), NULL);
+        new->next = new_node(old->value, NULL);
         old = old->next;
         new = new->next;
     }
