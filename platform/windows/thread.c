@@ -17,9 +17,9 @@ struct _fa_closure_t {
 typedef struct _fa_closure_t *fa_closure_t;
 
 struct _fa_thread_t {
-    fa_impl_t          impl;           //  Interface dispatcher
-    HANDLE native;                  //  Handle
-    DWORD tId;                      //  Id
+    fa_impl_t impl;               //  Interface dispatcher
+    HANDLE    native;             //  Handle
+    DWORD     tId;                //  Id
     fa_nullary_t function;
     fa_ptr_t     value;
 };

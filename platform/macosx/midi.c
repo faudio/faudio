@@ -1051,13 +1051,8 @@ void fa_midi_schedule_relative(fa_time_t        time,
                                fa_action_t       action,
                                fa_midi_stream_t  stream)
 {
-    // if (fa_time_is_zero(time) && !fa_action_is_compound(action) && !fa_action_is_do(action)) {
-    //     // Pass directly to output
-    //     fa_atomic_queue_write(stream->short_controls, action);
-    // } else {
-        fa_time_t now = fa_clock_time(stream->clock);
-        fa_midi_schedule(fa_dadd(now, time), action, stream);
-    // }
+    fa_time_t now = fa_clock_time(stream->clock);
+    fa_midi_schedule(fa_dadd(now, time), action, stream);
 }
 
 void fa_midi_schedule_now(fa_action_t action, fa_midi_stream_t stream)
