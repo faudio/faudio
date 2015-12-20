@@ -537,6 +537,26 @@ fa_string_t buffer_show(fa_ptr_t a)
     return str;
 }
 
+static void buffer_take_reference(fa_ptr_t a)
+{
+    fa_buffer_take_reference(a);
+}
+
+static void buffer_release_reference(fa_ptr_t a)
+{
+    fa_buffer_release_reference(a);
+}
+
+fa_ptr_t buffer_get_meta(fa_ptr_t obj, fa_ptr_t key)
+{
+    return fa_buffer_get_meta(obj, key);
+}
+
+void buffer_set_meta(fa_ptr_t obj, fa_ptr_t key, fa_ptr_t value)
+{
+    fa_buffer_set_meta(obj, key, value);
+}
+
 fa_dynamic_type_repr_t buffer_get_type(fa_ptr_t a)
 {
     return buffer_type_repr;
@@ -547,6 +567,8 @@ fa_ptr_t buffer_impl(fa_id_t interface)
     static fa_string_show_t buffer_show_impl = { buffer_show };
     static fa_copy_t buffer_copy_impl = { buffer_copy, buffer_deep_copy };
     static fa_destroy_t buffer_destroy_impl = { buffer_destroy, buffer_deep_destroy };
+    static fa_reference_count_t buffer_reference_count_impl = { buffer_take_reference, buffer_release_reference };
+    static fa_meta_data_t buffer_meta_data_impl = { buffer_get_meta, buffer_set_meta };
     static fa_dynamic_t buffer_dynamic_impl = { buffer_get_type };
 
     switch (interface) {
@@ -561,6 +583,12 @@ fa_ptr_t buffer_impl(fa_id_t interface)
         
     case fa_dynamic_i:
         return &buffer_dynamic_impl;
+        
+    case fa_reference_count_i:
+        return &buffer_reference_count_impl;
+        
+    case fa_meta_data_i:
+        return &buffer_meta_data_impl;
 
     default:
         return NULL;

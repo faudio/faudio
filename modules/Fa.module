@@ -310,7 +310,7 @@ module Fa
         destroy : (Ptr -> Void)*,
         deepDestroy : ((Ptr, DeepDestroyPred) -> Void)*
     };
-
+    
     /** Copy the given value.
         @see [Copy](@ref fa_copy_t)
       */
@@ -341,6 +341,40 @@ module Fa
     deepDestroy : (Ptr, DeepDestroyPred) -> Void;
     
     deepDestroyAlways : Ptr -> Void;
+    
+    /** Generic reference count interface.
+    */
+    type ReferenceCount   = struct {
+        takeReference : (Ptr -> Void)*,
+        releaseReference : (Ptr -> Void)*
+    };
+    
+    /** Take a reference to a reference counted object.
+        @see [Reference counted objects](@ref fa_reference_count_t)
+    */
+    takeReference : Ptr -> Void;
+    
+    /** Release a reference to a reference counted object.
+        @see [Reference counted objects](@ref fa_reference_count_t)
+    */
+    releaseReference : Ptr -> Void;
+    
+    /** Generic meta-data interface.
+    */
+    type MetaData   = struct {
+        getMeta : ((Ptr, Ptr) -> Ptr)*,
+        setMeta : ((Ptr, Ptr, Ptr) -> Void)*
+    };
+    
+    /** Get a meta data entry for an object.
+        @see [Meta data](@ref fa_meta_data_t)
+    */
+    getMeta : (object : Ptr, key : Ptr) -> Ptr;
+    
+    /** Set a meta data entry for an object.
+        @see [Meta data](@ref fa_meta_data_t)
+    */
+    setMeta : (object : Ptr, key : Ptr, value : Ptr) -> Void;
 
     /** Generic append operation interface. */
     type Semigroup = struct {
@@ -382,5 +416,13 @@ module Fa
     dprint   : (Char*,Ptr) -> Void;
     printLn  : (Ptr) -> Void;
     dprintLn : (Ptr) -> Void;
+    
+    
+    type SampleType = enum {
+        FloatSampleType,
+        DoubleSampleType
+    }
+    
+    sampleTypeSize : SampleType -> UInt8;
 }
 
