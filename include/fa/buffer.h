@@ -62,6 +62,17 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t ptr,
                            size_t size_,
                            fa_unary_t unary,
                            fa_ptr_t ptr_);
+                           
+/** Create a buffer wrapping the given memory region.
+    The memory is released (using fa_free) when the
+    buffer is destroyed.
+
+    @param ptr  Pointer to wrap.
+    @param size Number of bytes to wrap.
+    @note
+        O(1)
+*/
+fa_buffer_t fa_buffer_dwrap(fa_ptr_t ptr, size_t size_);
 
 /** Copy the given buffer.
     @note
@@ -168,7 +179,7 @@ fa_pair_t fa_buffer_take_drop(size_t size_, fa_buffer_t buffer);
 
 /** Split into a list of buffers containing at most n bytes. 
 */
-fa_list_t fa_buffer_split(fa_buffer_t buffer, size_t size_);
+fa_list_t fa_buffer_split(fa_buffer_t buffer, size_t size_, bool copy);
 
 /** Get a value from the buffer.
     @note

@@ -114,6 +114,11 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
     return b;
 }
 
+fa_buffer_t fa_buffer_dwrap(fa_ptr_t pointer, size_t size)
+{
+    return fa_buffer_wrap(pointer, size, default_destroy, NULL);
+}
+
 fa_buffer_t fa_buffer_copy(fa_buffer_t buffer)
 {
     assert(false && "Not implemented");
@@ -489,6 +494,27 @@ bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer)
     } else {
         return false;
     }
+}
+
+fa_list_t fa_buffer_split(fa_buffer_t buffer, size_t size, bool copy)
+{
+    fa_list_t segments = fa_list_empty();
+    size_t total_size = fa_buffer_size(buffer);
+    uint8_t *buffer_ptr = fa_buffer_unsafe_address(buffer);
+    for (size_t offset = 0; offset < total_size; offset += size) {
+        size_t segment_size = size;
+        if ((offset + size) > total_size) segment_size = total_size - offset;
+        fa_buffer_t segment = NULL;
+        if (copy) {
+            uint8_t *data = fa_malloc(segment_size);
+            memcpy(data, buffer_ptr + offset, segment_size);
+            segment = fa_buffer_dwrap(data, segment_size);
+        } else {
+            segment = fa_buffer_wrap(buffer_ptr + offset, segment_size, NULL, NULL);
+        }
+        fa_push_list(segment, segments);
+    }
+    return fa_list_dreverse(segments);
 }
 
 

@@ -51,7 +51,18 @@ module Fa.Buffer
             O(1)
      */
     wrap : (Ptr, Size, Unary, Ptr) -> Buffer;
-
+    
+    /** Create a buffer wrapping the given memory region.
+        The memory is released (using fa_free) when the
+        buffer is destroyed.
+    
+        @param ptr  Pointer to wrap.
+        @param size Number of bytes to wrap.
+        @note
+            O(1)
+    */
+    dwrap : (Ptr, Size) -> Buffer;
+    
     /** Copy the given buffer.
         @note
             O(n)
@@ -146,7 +157,7 @@ module Fa.Buffer
     takeDrop : (Size, Buffer) -> Pair;
     
     /** Split into a list of buffers containing at most n bytes. */
-    split : (Buffer, Size) -> List;
+    split : (Buffer, Size, copy : Bool) -> List;
 
     /** Get a value from the buffer.
         @note
