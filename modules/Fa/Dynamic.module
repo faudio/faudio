@@ -29,7 +29,8 @@ module Fa.Dynamic
         AudioStreamTypeRepr,
         MidiStreamTypeRepr,
         BufferTypeRepr,
-        AtomicRingBufferTypeRepr
+        AtomicRingBufferTypeRepr,
+        FileBufferTypeRepr
     };
 
     /** Dynamic typing interface.

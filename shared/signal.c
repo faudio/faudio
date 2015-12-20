@@ -12,6 +12,7 @@
 #include <fa/priority_queue.h>
 #include <fa/action.h>
 #include <fa/buffer.h>
+#include <fa/file_buffer.h>
 #include <fa/clock.h>
 #include <fa/dynamic.h>
 #include <fa/util.h>
@@ -2303,11 +2304,14 @@ fa_signal_t fa_signal_trigger(fa_string_t name, double init)
 struct _play_buffer_context {
     fa_string_t name;
     fa_buffer_t buffer;
+    fa_file_buffer_t file_buffer;
     double stream_sample_rate;
     double pos;
     double speed;
     size_t max_pos;
     uint8_t channels;
+    fa_sample_type_t sample_type;
+    uint8_t sample_size;
     bool playing;
 };
 
@@ -2323,8 +2327,12 @@ fa_ptr_t play_buffer_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     play_buffer_context *context = x;
     if (context->buffer) {
-        fa_buffer_release_reference(context->buffer);
+        fa_release_reference(context->buffer);
         context->buffer = NULL;
+    }
+    if (context->file_buffer) {
+        fa_release_reference(context->file_buffer);
+        context->file_buffer = NULL;
     }
     return x;
 }
@@ -2337,18 +2345,55 @@ fa_ptr_t play_buffer_render_(fa_ptr_t x, int offset, int count, fa_signal_state_
 
             //context->pos = state->count % 4410; // TEST!
             //context->pos =  % 4410; // TEST!
-
-            if (context->pos < context->max_pos) {
+            
+            if (context->file_buffer) {
                 // TODO: interpolating samples for non-integer positions would improve sound quality
                 size_t buffer_pos = ((size_t)context->pos) * context->channels;
+                double left, right;
+                switch (context->sample_type) {
+                    case float_sample_type:
+                    {
+                        left = (double) fa_file_buffer_get_float(context->file_buffer, buffer_pos + 0);
+                        if (context->channels > 1) {
+                            right = (double) fa_file_buffer_get_float(context->file_buffer, buffer_pos + 1);
+                        } else {
+                            right = left;
+                        }
+                        break;
+                    }
+                    case double_sample_type:
+                    {
+                        left = fa_file_buffer_get_double(context->file_buffer, buffer_pos + 0);
+                        if (context->channels > 1) {
+                            right = fa_file_buffer_get_double(context->file_buffer, buffer_pos + 1);
+                        } else {
+                            right = left;
+                        }
+                        break;
+                    }
+                }
+                state->buffer[(offset + 0)*kMaxVectorSize] = left;
+                state->buffer[(offset + 1)*kMaxVectorSize] = right;
+                context->pos += context->speed; // TODO: is double precision good enough not to get drifting errors?
+                
+                if (state->count % 11025 == 0) { // TODO: how do we know that this is often enough?
+                    fa_file_buffer_hint(context->file_buffer, buffer_pos * context->sample_size);
+                }
+            }
+
+            else if (context->pos < context->max_pos) {
+                // TODO: interpolating samples for non-integer positions would improve sound quality
+                size_t buffer_pos = ((size_t)context->pos) * context->channels;
+                // Left channel
                 double left = fa_buffer_get_double(context->buffer, buffer_pos + 0);
                 state->buffer[(offset + 0)*kMaxVectorSize] = left;
+                // Right channel: if stereo, get the right channel sample, otherwise, copy the left channel sample
                 if (context->channels > 1) {
                     state->buffer[(offset + 1)*kMaxVectorSize] = fa_buffer_get_double(context->buffer, buffer_pos + 1);
                 } else {
                     state->buffer[(offset + 1)*kMaxVectorSize] = left;
                 }
-                context->pos += context->speed;
+                context->pos += context->speed; // TODO: is double precision good enough not to get drifting errors?
             } else {
                 state->buffer[(offset + 0)*kMaxVectorSize] = 0;
                 state->buffer[(offset + 1)*kMaxVectorSize] = 0;
@@ -2381,20 +2426,42 @@ fa_ptr_t play_buffer_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_
                 context->pos = 0;
                 fa_buffer_t buffer = msg;
                 if (buffer != context->buffer) {
-                    fa_buffer_take_reference(buffer);
+                    fa_take_reference(buffer);
                     if (context->buffer) {
-                        fa_buffer_release_reference(context->buffer);
+                        fa_release_reference(context->buffer);
                     }
                     context->buffer = buffer;
-                    context->channels = fa_peek_number(fa_buffer_get_meta(buffer, fa_string("channels")));
+                    context->channels = fa_peek_number(fa_get_meta(buffer, fa_string("channels")));
                     size_t size = fa_buffer_size(buffer);
                     context->max_pos = (size / ((sizeof(double)) * context->channels)) - 1;
-                    double buffer_rate = fa_peek_number(fa_buffer_get_meta(buffer, fa_string("sample-rate")));
+                    double buffer_rate = fa_peek_number(fa_get_meta(buffer, fa_string("sample-rate")));
                     context->speed = buffer_rate / context->stream_sample_rate;
                 }
                 break;
             }
             
+            case file_buffer_type_repr:
+            {
+                context->playing = false;
+                context->pos = 0;
+                fa_file_buffer_t buffer = msg;
+                if (buffer != context->file_buffer) {
+                    fa_take_reference(buffer);
+                    if (context->file_buffer) {
+                        fa_release_reference(context->file_buffer);
+                    }
+                    context->file_buffer = buffer;
+                    context->channels = fa_peek_number(fa_get_meta(buffer, fa_string("channels")));
+                    context->max_pos = fa_peek_integer(fa_get_meta(buffer, fa_string("frames")));
+                    double buffer_rate = fa_peek_number(fa_get_meta(buffer, fa_string("sample-rate")));
+                    context->speed = buffer_rate / context->stream_sample_rate;
+                    context->sample_type = fa_peek_integer(fa_get_meta(buffer, fa_string("sample-type")));
+                    context->sample_size = fa_sample_type_size(context->sample_type);
+                }
+                break;
+            }
+            
+            // A number: a new position in frames
             case i8_type_repr:
             case i16_type_repr:
             case i32_type_repr:
@@ -2405,11 +2472,22 @@ fa_ptr_t play_buffer_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_
                 double new_pos = fa_peek_number(msg);
                 if (new_pos > context->max_pos) new_pos = context->max_pos;
                 context->pos = new_pos;
+                if (context->file_buffer) {
+                    fa_file_buffer_hint(context->file_buffer, context->pos * context->channels * context->sample_size);
+                }
+                // // For testing only, can't do I/O in this thread
+                // if (context->file_buffer) {
+                //     uint8_t frame_size = context->channels * context->sample_size;
+                //     fa_file_buffer_seek_if_needed(context->file_buffer, context->pos * frame_size);
+                // }
                 break;
             }
             
             case string_type_repr:
             {
+                // These comparisions actually do heap allocation, but
+                // since they are only executed when strings are sent, it
+                // will be only a few times
                 if (fa_dequal(fa_copy(msg), fa_string("play"))) {
                     context->playing = true;
                 }
@@ -2422,7 +2500,14 @@ fa_ptr_t play_buffer_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_
                         context->playing = false;
                         context->pos = 0;
                         context->buffer = NULL;
-                        fa_buffer_release_reference(buffer);
+                        fa_release_reference(buffer);
+                    }
+                    if (context->file_buffer) {
+                        fa_file_buffer_t buffer = context->file_buffer;
+                        context->playing = false;
+                        context->pos = 0;
+                        context->file_buffer = NULL;
+                        fa_release_reference(buffer);
                     }
                 }
                 break;
@@ -2441,11 +2526,14 @@ fa_pair_t fa_signal_play_buffer(fa_string_t name)
     play_buffer_context *context = fa_malloc(sizeof(play_buffer_context));
     context->name = fa_copy(name);
     context->buffer = NULL;
+    context->file_buffer = NULL;
     context->pos = 0;
     context->max_pos = 0;
     context->playing = false;
     context->speed = 1.0;
     context->stream_sample_rate = 0;
+    context->sample_type = double_sample_type;
+    context->sample_size = fa_sample_type_size(double_sample_type);
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = play_buffer_before_;

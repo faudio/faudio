@@ -275,6 +275,11 @@ bool fa_atomic_ring_buffer_read_double(fa_atomic_ring_buffer_t buffer, double *v
     return fa_atomic_ring_buffer_read_many((byte_t *) value, buffer, sizeof(double)) > 0;
 }
 
+bool fa_atomic_ring_buffer_read_long(fa_atomic_ring_buffer_t buffer, long *value)
+{
+    return fa_atomic_ring_buffer_read_many((byte_t *) value, buffer, sizeof(long)) > 0;
+}
+
 bool fa_atomic_ring_buffer_write(ring_fa_buffer_t buffer, byte_t value)
 {
     return fa_atomic_ring_buffer_write_many(buffer, (byte_t *) &value, sizeof(byte_t)) > 0;
@@ -290,6 +295,10 @@ bool fa_atomic_ring_buffer_write_double(ring_fa_buffer_t buffer, double value)
     return fa_atomic_ring_buffer_write_many(buffer, (byte_t *) &value, sizeof(double)) > 0;
 }
 
+bool fa_atomic_ring_buffer_write_long(ring_fa_buffer_t buffer, long value)
+{
+    return fa_atomic_ring_buffer_write_many(buffer, (byte_t *) &value, sizeof(long)) > 0;
+}
 
 
 

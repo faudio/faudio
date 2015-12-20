@@ -770,3 +770,10 @@ bool DESTROY_ALWAYS(fa_ptr_t ptr) {
 void fa_deep_destroy_always(fa_ptr_t ptr) {
     fa_deep_destroy(ptr, DESTROY_ALWAYS);
 }
+
+uint8_t fa_sample_type_size(fa_sample_type_t sample_type) {
+    switch (sample_type) {
+        case float_sample_type:  return sizeof(float);
+        case double_sample_type: return sizeof(double);
+    }
+}

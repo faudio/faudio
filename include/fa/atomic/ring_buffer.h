@@ -111,6 +111,11 @@ bool fa_atomic_ring_buffer_read_float(fa_atomic_ring_buffer_t ringBuffer,
 */
 bool fa_atomic_ring_buffer_read_double(fa_atomic_ring_buffer_t ringBuffer,
                                        double *);
+                                       
+/** Read a single long value.
+*/
+bool fa_atomic_ring_buffer_read_long(fa_atomic_ring_buffer_t ringBuffer,
+                                     long *);
 
 /** Write a single byte value.
 */
@@ -126,6 +131,11 @@ bool fa_atomic_ring_buffer_write_float(fa_atomic_ring_buffer_t ringBuffer,
 */
 bool fa_atomic_ring_buffer_write_double(fa_atomic_ring_buffer_t ringBuffer,
                                         double double_);
+                                        
+/** Write a single long value.
+*/
+bool fa_atomic_ring_buffer_write_long(fa_atomic_ring_buffer_t ringBuffer,
+                                      long long_);
 
 /** @}
     @}
