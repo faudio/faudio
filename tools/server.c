@@ -15,6 +15,7 @@
 #include <fa/io.h>
 #include <fa/option.h>
 #include <fa/audio/stream.h>
+#include <fa/file_buffer.h>
 #include "common.h"
 
 #if defined(_WIN32)
@@ -188,6 +189,10 @@ int main(int argc, char const *argv[])
     /* Audio files handling */
     lo_server_thread_add_method(st, "/audio-file/list",     "i", list_audio_files_handler, server);  // id
     lo_server_thread_add_method(st, "/audio-file/load",     "is", load_audio_file_handler, server);  // audio id, path
+    lo_server_thread_add_method(st, "/audio-file/load",     "isi", load_audio_file_handler, server);  // a_id, path, max_size
+    lo_server_thread_add_method(st, "/audio-file/load",     "isiT", load_audio_file_handler, server); // a_id, p, m_s, crop
+    lo_server_thread_add_method(st, "/audio-file/load",     "isiN", load_audio_file_handler, server);
+    lo_server_thread_add_method(st, "/audio-file/load",     "isiF", load_audio_file_handler, server);
     lo_server_thread_add_method(st, "/audio-file/load/raw", "isii", load_raw_audio_file_handler, server);  // a id, path, sr, ch
     lo_server_thread_add_method(st, "/audio-file/close",    "i",  close_audio_file_handler, server); // audio id
     lo_server_thread_add_method(st, "/audio-file/save",     "i",  save_audio_file_handler, server);  // audio id
@@ -409,7 +414,7 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
         return 0;
     }
     
-    fa_buffer_t buffer = NULL;
+    fa_ptr_t buffer = NULL;
     fa_with_lock(audio_files_mutex) {
         buffer = fa_map_dget(wrap_oid(audio_id), audio_files);
     }
@@ -417,12 +422,18 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
         add_playback_semaphore(id, audio_name);
         fa_slog_info("Starting audio playback");
         fa_list_t actions = fa_list_empty();
-        fa_ptr_t sample_rate = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
-        fa_ptr_t channels    = fa_buffer_get_meta(buffer, fa_string("channels"));
-        double max_time = ((double)fa_buffer_size(buffer)) / ((double)sizeof(double) *
-            fa_peek_number(sample_rate) * fa_peek_number(channels)); // seconds
+        size_t sample_rate = fa_peek_number(fa_get_meta(buffer, fa_string("sample-rate")));
+        size_t channels = fa_peek_number(fa_get_meta(buffer, fa_string("channels")));
+        size_t frames;
+        fa_dynamic_type_repr_t buffer_type = fa_dynamic_get_type(buffer);
+        if (buffer_type == file_buffer_type_repr) {
+            frames = fa_peek_integer(fa_get_meta(buffer, fa_string("frames")));
+        } else {
+            frames = fa_buffer_size(buffer) / (sizeof(double) * channels);
+        }
+        double max_time = (double)(frames / sample_rate); // seconds
         max_time -= skip;
-        skip *= fa_peek_number(sample_rate);
+        skip *= (double)sample_rate; //fa_peek_number(sample_rate);
         
         // Schedule
         fa_push_list(pair(fa_action_send_retain(audio_name, buffer), fa_milliseconds(0)), actions);
@@ -447,10 +458,13 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
         }
         
         if (time == 0 && !in_bundle) {
+            buffer_hint(buffer, skip);
             schedule_relative(sched_delay, main_action, current_audio_stream);
         } else if (time < 0 || (time == 0 && in_bundle)) {
+            buffer_hint(buffer, skip);
             schedule_relative(fa_milliseconds(0), main_action, current_audio_stream);
         } else {
+            // TODO: send hint as action
             schedule(fa_time_from_double(time), main_action, current_audio_stream);
         }
         
@@ -534,7 +548,7 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
 
     // Convert absolute times to relative times
     actions = times_to_delta_times(actions);
-
+    
     //
     add_playback_semaphore(id, NULL);
     fa_action_t main_action;
@@ -549,6 +563,13 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
     } else {
         main_action = fa_action_while(check_playback_semaphore, wrap_oid(id), fa_action_many(actions));
     }
+
+    // printf("Before deep destroy\n");
+    // fa_action_log_count();
+    // fa_deep_destroy_always(main_action);
+    // printf("After deep destroy\n");
+    // fa_action_log_count();
+    // return 0;
 
     // Send to scheduler
     if (time == 0 && !in_bundle) {
@@ -924,8 +945,8 @@ int list_audio_files_handler(const char *path, const char *types, lo_arg ** argv
             fa_ptr_t buffer = fa_map_get(key, audio_files);
             if (buffer) {
                 int audio_id = fa_peek_integer(key);
-                fa_ptr_t sample_rate = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
-                fa_ptr_t channels    = fa_buffer_get_meta(buffer, fa_string("channels"));
+                fa_ptr_t sample_rate = fa_get_meta(buffer, fa_string("sample-rate"));
+                fa_ptr_t channels    = fa_get_meta(buffer, fa_string("channels"));
                 if (sample_rate && channels) {
                     uint32_t sr = safe_peek_i32(sample_rate);
                     uint32_t ch = safe_peek_i32(channels);
@@ -949,30 +970,60 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
 {
     oid_t id = argv[0]->i;
     fa_string_t file_path = fa_string_from_utf8(&argv[1]->s);
-    fa_buffer_t buffer = fa_buffer_read_audio(file_path);
-    if (fa_check(buffer)) {
-        fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
-        fa_destroy(file_path);
-        send_osc(message, user_data, "/audio-file/load", "iF", id);
-        return 0;
-    }
-    fa_buffer_set_meta(buffer, fa_string("file_path"), file_path);
+    fa_file_buffer_t fb = fa_file_buffer_read_audio(file_path, 1048576 * 2, float_sample_type); // 2 MB buffer
+    
+    fa_file_buffer_seek(fb, 0);
+    
+    size_t frames = fa_peek_integer(fa_get_meta(fb, fa_string("frames")));
+    size_t sr     = fa_peek_integer(fa_get_meta(fb, fa_string("sample-rate")));
+    size_t ch     = fa_peek_integer(fa_get_meta(fb, fa_string("channels")));
+    
     fa_with_lock(audio_files_mutex) {
-        audio_files = fa_map_dset(wrap_oid(id), buffer, audio_files);
-    }
-    fa_ptr_t sample_rate = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
-    fa_ptr_t channels    = fa_buffer_get_meta(buffer, fa_string("channels"));
-    if (sample_rate && channels) {
-        uint32_t sr = safe_peek_i32(sample_rate);
-        uint32_t ch = safe_peek_i32(channels);
-        size_t frames = fa_buffer_size(buffer) / (sizeof(double) * ch);
-        send_osc(message, user_data, "/audio-file/load", "iTiii", id, frames, sr, ch);
-    } else {
-        fa_fail(fa_string("sample-rate or channels not set"));
-        send_osc(message, user_data, "/audio-file/load", "iF", id);
+        audio_files = fa_map_dset(wrap_oid(id), fb, audio_files);
     }
     
+    send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, frames, sr, ch);
+    
     return 0;
+    
+    
+    // oid_t id = argv[0]->i;
+    // fa_string_t file_path = fa_string_from_utf8(&argv[1]->s);
+    // size_t max_size = argc > 2 ? argv[2]->i : 0;
+    // bool crop = argc > 3 ? (types[3] == 'T') : false;
+    // fa_buffer_t buffer = fa_buffer_read_audio_max_size(file_path, max_size, crop);
+    // if (!buffer) {
+    //     fa_destroy(file_path);
+    //     send_osc(message, user_data, "/audio-file/load", "iFs", id, "fileTooBig");
+    //     return 0;
+    // }
+    // if (fa_check(buffer)) {
+    //     fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
+    //     fa_destroy(file_path);
+    //     send_osc(message, user_data, "/audio-file/load", "iFs", id, "couldNotReadFile");
+    //     return 0;
+    // }
+    // fa_buffer_set_meta(buffer, fa_string("file_path"), file_path);
+    // fa_with_lock(audio_files_mutex) {
+    //     audio_files = fa_map_dset(wrap_oid(id), buffer, audio_files);
+    // }
+    // fa_ptr_t sample_rate = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
+    // fa_ptr_t channels    = fa_buffer_get_meta(buffer, fa_string("channels"));
+    // fa_ptr_t cropped     = fa_buffer_get_meta(buffer, fa_string("cropped"));
+    // if (sample_rate && channels) {
+    //     uint32_t sr = safe_peek_i32(sample_rate);
+    //     uint32_t ch = safe_peek_i32(channels);
+    //     size_t frames = fa_buffer_size(buffer) / (sizeof(double) * ch);
+    //     if (cropped)
+    //         send_osc(message, user_data, "/audio-file/load", "iTiiiT", id, frames, sr, ch);
+    //     else
+    //         send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, frames, sr, ch);
+    // } else {
+    //     fa_fail(fa_string("sample-rate or channels not set"));
+    //     send_osc(message, user_data, "/audio-file/load", "iFs", id, "missingMetaData");
+    // }
+    //
+    // return 0;
 }
 
 int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
@@ -985,7 +1036,7 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
     if (ch < 1 || ch > 2 || sr < 44100 || sr > 192000) {
         fa_destroy(file_path);
         fa_fail(fa_string("Bad sample rate and/or channels in load_raw_audio_file_handler"));
-        send_osc(message, user_data, "/audio-file/load", "iF", id);
+        send_osc(message, user_data, "/audio-file/load", "iFs", id, "badSampleRateOrChannels");
         return 0;
     }
     
@@ -994,7 +1045,7 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
     if (fa_check(buffer)) {
         fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
         fa_destroy(file_path);
-        send_osc(message, user_data, "/audio-file/load", "iF", id);
+        send_osc(message, user_data, "/audio-file/load", "iFs", id, "couldNotReadFile");
         return 0;
     }
     fa_buffer_set_meta(buffer, fa_string("file_path"), file_path);
@@ -1006,7 +1057,7 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
     fa_buffer_set_meta(buffer, fa_string("channels"), fa_from_int32(ch));
     
     size_t frames = fa_buffer_size(buffer) / (sizeof(double) * ch);
-    send_osc(message, user_data, "/audio-file/load", "iTiii", id, frames, sr, ch);
+    send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, frames, sr, ch);
     
     return 0;
 }
@@ -1039,7 +1090,7 @@ int save_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
         send_osc(message, user_data, "/audio-file/save", "iF", id);
         return 0;
     }
-    fa_string_t file_path = fa_buffer_get_meta(buffer, fa_string("file_path"));
+    fa_string_t file_path = fa_get_meta(buffer, fa_string("file_path"));
     if (argc >= 2) {
         file_path = fa_string(&argv[1]->s);
     } else if (file_path) {
@@ -1068,9 +1119,25 @@ int audio_file_curve_handler(const char *path, const char *types, lo_arg ** argv
     fa_with_lock(audio_files_mutex) {
         fa_buffer_t buffer = fa_map_dget(wrap_oid(id), audio_files);
         if (buffer) {
-            lo_blob blob = audio_curve(buffer);
-            send_osc(message, user_data, "/audio-file/curve", "ib", id, blob);
-            lo_blob_free(blob);
+            //lo_blob blob = audio_curve(buffer);
+            
+            fa_buffer_t curve = audio_curve(buffer);
+            size_t curve_size = fa_buffer_size(curve);
+            if (curve_size <= 16384) {
+                lo_blob blob = lo_blob_from_buffer(curve);
+                send_osc(message, user_data, "/audio-file/curve", "ib", id, blob);
+                lo_blob_free(blob);
+            } else {
+                fa_list_t segments = fa_buffer_split(curve, 16384, false);
+                size_t offset = 0;
+                fa_for_each (segment, segments) {
+                    lo_blob blob = lo_blob_from_buffer(segment);
+                    send_osc(message, user_data, "/audio-file/curve", "ibii", id, blob, offset, curve_size);
+                    lo_blob_free(blob);
+                    offset += fa_buffer_size(segment);
+                }
+            }
+            fa_destroy(curve);
         } else {
             fa_fail(fa_format_integral("There is no audio file with ID %zu", id));
             send_osc(message, user_data, "/audio-file/curve", "iF", id);
@@ -1095,11 +1162,6 @@ int audio_file_peak_handler(const char *path, const char *types, lo_arg ** argv,
     return 0;
 }
 
-fa_ptr_t default_destroy(fa_ptr_t _, fa_ptr_t data) {
-    fa_free(data);
-    return NULL;
-}
-
 int audio_file_upload_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id         =  argv[0]->i;
@@ -1112,7 +1174,7 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
     fa_with_lock(audio_files_mutex) {
         buffer = fa_map_dget(wrap_oid(audio_id), audio_files);
         if (buffer) {
-            fa_buffer_take_reference(buffer);
+            fa_take_reference(buffer);
             
             // Use only part of buffer
             // TODO: don't copy, implement a filter in fa_io_from_buffer instead, to reduce memory footprint
@@ -1121,8 +1183,8 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
                 double to_ms   = argv[5]->f;
                 if (from_ms < 0) from_ms = 0;
                 //if (to_ms < 0) to_ms = 0;
-                fa_ptr_t sr = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
-                fa_ptr_t ch = fa_buffer_get_meta(buffer, fa_string("channels"));
+                fa_ptr_t sr = fa_get_meta(buffer, fa_string("sample-rate"));
+                fa_ptr_t ch = fa_get_meta(buffer, fa_string("channels"));
                 if (sr && ch && (from_ms > 0 || to_ms >= 0)) {
                     int channels = fa_peek_integer(ch);
                     double sample_rate = fa_peek_number(sr);
@@ -1132,12 +1194,13 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
                     else to_byte = sizeof(double) * (int)round(sample_rate * (to_ms / 1000.0) * (double)channels);
                     if (to_byte > fa_buffer_size(buffer)) to_byte = fa_buffer_size(buffer);
                     size_t size = to_byte - from_byte;
+                    printf("size: %zu\n", size);
                     if (size > 0) {
                         uint8_t *src = fa_buffer_unsafe_address(buffer);
                         uint8_t *dst = fa_malloc(size);
                         memcpy(dst, src + from_byte, size);
-                        fa_buffer_release_reference(buffer);
-                        buffer = fa_buffer_wrap(dst, size, default_destroy, NULL);
+                        fa_release_reference(buffer);
+                        buffer = fa_buffer_dwrap(dst, size);
                         new_buffer = true;
                     }
                 }
@@ -1157,7 +1220,7 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
     if (new_buffer) {
         fa_destroy(buffer);
     } else {
-        fa_buffer_release_reference(buffer);
+        fa_release_reference(buffer);
     }
     
     // fa_slog_info("ogg buffer: ", ogg_buffer);

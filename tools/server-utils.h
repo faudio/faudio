@@ -238,6 +238,10 @@ lo_timetag timetag_from_time(fa_time_t time) {
     return timetag_from_double(fa_time_to_double(time));
 }
 
+lo_blob lo_blob_from_buffer(fa_buffer_t buffer) {
+    return lo_blob_new(fa_buffer_size(buffer), fa_buffer_unsafe_address(buffer));
+}
+
 void send_fa_value_osc(lo_message message, void *user_data, char *path, char *key, fa_ptr_t value) {
     fa_dynamic_type_repr_t type = fa_dynamic_get_type(value);
     switch(type) {
@@ -973,41 +977,75 @@ double audio_file_peak(fa_buffer_t buffer)
     return max_value;
 }
 
-lo_blob audio_curve(fa_buffer_t buffer)
+fa_buffer_t audio_curve(fa_ptr_t buffer)
 {
-    fa_ptr_t sr = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
-    fa_ptr_t ch = fa_buffer_get_meta(buffer, fa_string("channels"));
-    if (!sr || !ch) return NULL;
-    size_t sample_rate = fa_peek_number(sr);
-    size_t channels = fa_peek_integer(ch);
-    size_t curve_rate = 200;
-    double rel_rate = sample_rate / curve_rate;
-    size_t size = fa_buffer_size(buffer) / (rel_rate * channels * sizeof(double));
-    uint8_t *curve = fa_malloc(size);
-    //printf("Curve needs %zu bytes\n", size);
-    if (channels == 1) {
-        //double last_value = 0;
+    size_t curve_rate = 100;
+    size_t size = 0;
+    uint8_t *curve = NULL;
+    switch (fa_dynamic_get_type(buffer)) {
+        case buffer_type_repr:
+        {
+            fa_ptr_t sr = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
+            fa_ptr_t ch = fa_buffer_get_meta(buffer, fa_string("channels"));
+            if (!sr || !ch) return NULL;
+            size_t sample_rate = fa_peek_number(sr);
+            size_t channels = fa_peek_integer(ch);
+            double rel_rate = sample_rate / curve_rate;
+            size = fa_buffer_size(buffer) / (rel_rate * channels * sizeof(double));
+            curve = fa_malloc(size);
+            //printf("Curve needs %zu bytes\n", size);
+            if (channels == 1) {
+                for(int i = 0; i < size; i++) {
+                    size_t frame = i * rel_rate;
+                    curve[i] = min_uint8(0xFF, 0xFF * fabs(fa_buffer_get_double(buffer, frame * channels + 0)));
+                }
+            } else {
+                for(int i = 0; i < size; i++) {
+                    size_t frame = i * rel_rate;
+                    double left  = fabs(fa_buffer_get_double(buffer, frame * channels + 0));
+                    double right = fabs(fa_buffer_get_double(buffer, frame * channels + 1));
+                    curve[i] = min_uint8(0xFF, 0xFF * ((left + right) / 2));
+                }
+            }
+            break;
+        }
+        case file_buffer_type_repr:
+        {
+            size_t sample_rate = fa_peek_integer(fa_get_meta(buffer, fa_string("sample-rate")));
+            size_t channels = fa_peek_integer(fa_get_meta(buffer, fa_string("channels")));
+            size_t sample_size = fa_peek_integer(fa_get_meta(buffer, fa_string("sample-size")));
+            fa_sample_type_t sample_type = fa_peek_integer(fa_get_meta(buffer, fa_string("sample-type")));
+            size_t frame_size = channels * sample_size;
+            double rel_rate = sample_rate / curve_rate;
+            size = fa_peek_integer(fa_get_meta(buffer, fa_string("frames"))) / rel_rate;
+            curve = fa_malloc(size);
+            
+            for(int i = 0; i < size; i++) {
+                size_t frame = i * rel_rate;
+                fa_file_buffer_seek_if_needed(buffer, frame * frame_size);
+                double left;
+                switch (sample_type) {
+                    case float_sample_type:
+                    {
+                        left = fa_file_buffer_get_float(buffer, frame * channels + 0);
+                        break;
+                    }
+                    case double_sample_type:
+                    {
+                        left = fa_file_buffer_get_double(buffer, frame * channels + 0);
+                        break;
+                    }
+                }
+                curve[i] = min_uint8(0xFF, 0xFF * fabs(left));
+            }
+            break;
+        }
         
-        for(int i = 0; i < size; i++) {
-            size_t frame = i * rel_rate;
-            //double value = fabs(fa_buffer_get_double(buffer, frame * channels + 0));
-            //value = (value * 0.01) + (last_value * 0.99);
-            //curve[i] = min_uint8(0xFF, 0xFF * value);
-            //last_value = value;
-            curve[i] = min_uint8(0xFF, 0xFF * fabs(fa_buffer_get_double(buffer, frame * channels + 0)));
-        }
-    } else {
-        for(int i = 0; i < size; i++) {
-            size_t frame = i * rel_rate;
-            double left  = fabs(fa_buffer_get_double(buffer, frame * channels + 0));
-            double right = fabs(fa_buffer_get_double(buffer, frame * channels + 1));
-            curve[i] = min_uint8(0xFF, 0xFF * ((left + right) / 2));
-        }
+        default:
+            break;
     }
-    lo_blob blob = lo_blob_new(size, curve);
-    printf("Sending curve of %zu bytes\n", size);
-    fa_free(curve);
-    return blob;
+    if (!curve) return NULL;
+    return fa_buffer_dwrap(curve, size);
 }
 
 struct upload_buffer_info {
@@ -1165,7 +1203,7 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
             curl_easy_getinfo(curl, CURLINFO_REQUEST_SIZE, &request_size);
             //printf("Request was %ld bytes\n", request_size);
             
-            lo_blob blob = lo_blob_new(fa_buffer_size(result), fa_buffer_unsafe_address(result));
+            lo_blob blob = lo_blob_from_buffer(result); //lo_blob_new(fa_buffer_size(result), fa_buffer_unsafe_address(result));
             send_osc_async(osc_path, "iib", id, response_code, blob);
             lo_blob_free(blob);
         } else {
@@ -1363,4 +1401,14 @@ fa_thread_t create_recording_thread(oid_t id, fa_atomic_ring_buffer_t ring_buffe
     
     fa_thread_t thread = fa_thread_create(_recording_thread, args);
     return thread;
+}
+
+void buffer_hint(fa_ptr_t buffer, size_t frames)
+{
+    if (fa_dynamic_get_type(buffer) == file_buffer_type_repr) {
+        fa_file_buffer_t fb = buffer;
+        size_t channels = fa_peek_integer(fa_get_meta(buffer, fa_string("channels")));
+        size_t sample_size = fa_peek_integer(fa_get_meta(buffer, fa_string("sample-size")));
+        fa_file_buffer_hint(fb, frames * channels * sample_size);
+    }
 }
