@@ -66,7 +66,7 @@ void file_buffer_fatal(char *msg, int error);
 
 static fa_ptr_t file_buffer_thread_function(fa_ptr_t file_buffer);
 
-fa_file_buffer_t fa_file_buffer_create(size_t size)
+static fa_file_buffer_t new_file_buffer(size_t size)
 {
     assert(size > 1024 && "Too small buffer!");
     fa_ptr_t file_buffer_impl(fa_id_t interface);
@@ -101,9 +101,9 @@ fa_file_buffer_t fa_file_buffer_create(size_t size)
     file_buffer->meta = fa_map_empty();
     fa_map_set_value_destructor(file_buffer->meta, fa_destroy);
     
-    //fa_slog_info("fa_buffer_create ", fa_i32(size));
+    //fa_slog_info("new_file_buffer ", fa_i32(size));
 
-    file_buffer->cleanup_function = NULL; // TODO
+    file_buffer->cleanup_function = NULL;
     file_buffer->seek_function = NULL;
     
     file_buffer->done   = false;
@@ -183,6 +183,14 @@ static fa_ptr_t file_buffer_thread_function(fa_ptr_t file_buffer)
     return NULL;
 }
 
+static void default_buffer_close_(fa_file_buffer_t file_buffer)
+{
+    if (file_buffer->file) {
+        FILE *file = file_buffer->file;
+        file_buffer->file = NULL;
+        fclose(file);
+    }
+}
 
 static void audio_buffer_close_(fa_file_buffer_t file_buffer)
 {
@@ -279,6 +287,24 @@ double fa_file_buffer_get_double(fa_file_buffer_t file_buffer, size_t index)
 //     return file_buffer->buffer;
 // }
 
+static sf_count_t default_seek_(fa_file_buffer_t file_buffer, size_t offset) {
+    if (file_buffer->file_pos != offset) {
+        if (fseek(file_buffer->file, offset, SEEK_SET) < 0) {
+            return -1;
+        }
+    }
+    
+    if (file_buffer->nextBuffer == file_buffer->buffer1) {
+        file_buffer->offset1 = offset;
+    } else {
+        file_buffer->offset2 = offset;
+    }
+        
+    size_t bytes_read = fread(file_buffer->nextBuffer, 1, file_buffer->single_buffer_size, file_buffer->file);
+    file_buffer->file_pos = offset + bytes_read;
+    return file_buffer->file_pos;
+}
+
 static sf_count_t audio_seek_(fa_file_buffer_t file_buffer, size_t offset) {
     SNDFILE *sndfile = (SNDFILE*)file_buffer->file;
     
@@ -315,10 +341,36 @@ static sf_count_t audio_seek_(fa_file_buffer_t file_buffer, size_t offset) {
     }
     file_buffer->file_pos = *nextOffset + (sz * frame_size);
     //printf("sz: %lld  %lu    --> %zu\n", sz, frames, file_buffer->file_pos);
-    return sz;
+    return file_buffer->file_pos;
 }
 
 // --------------------------------------------------------------------------------
+
+fa_file_buffer_t fa_file_buffer_create(fa_string_t path, size_t buffer_size)
+{
+    char *cpath = fa_string_to_utf8(path);
+    FILE *file  = fopen(cpath, "r");
+    fa_free(cpath);
+    
+    if (!file) {
+        fa_string_t err = fa_string_dappend(fa_string("Could not read file "), fa_copy(path));
+        return (fa_file_buffer_t) fa_error_create_simple(error, err, fa_string("Doremir.FileBuffer"));
+    }
+    
+    // Get length of file
+    fseek(file, 0, SEEK_END);
+    long filelen = ftell(file);
+    rewind(file);
+    
+    fa_file_buffer_t file_buffer = new_file_buffer(buffer_size);
+    file_buffer->path = fa_copy(path);
+    file_buffer->cleanup_function = default_buffer_close_;
+    file_buffer->seek_function = default_seek_;
+    file_buffer->file_size = filelen;
+    file_buffer->file = (FILE*)file;
+    
+    return file_buffer;
+}
 
 fa_file_buffer_t fa_file_buffer_read_audio(fa_string_t path, size_t buffer_size, fa_sample_type_t sample_type)
 {
@@ -329,13 +381,13 @@ fa_file_buffer_t fa_file_buffer_read_audio(fa_string_t path, size_t buffer_size,
     info.format     = 0;
 
     {
-        char *cpath     = fa_string_to_utf8(path);
-        file            = sf_open(cpath, SFM_READ, &info);
+        char *cpath = fa_string_to_utf8(path);
+        file        = sf_open(cpath, SFM_READ, &info);
+        fa_free(cpath);
 
         if (sf_error(file)) {
-            char err[200];
-            snprintf(err, 200, "Could not read audio file '%s'", cpath);
-            return (fa_file_buffer_t) fa_error_create_simple(error, fa_string(err), fa_string("Doremir.FileBuffer"));
+            fa_string_t err = fa_string_dappend(fa_string("Could not read audio file "), path);
+            return (fa_file_buffer_t) fa_error_create_simple(error, err, fa_string("Doremir.FileBuffer"));
         }
         
         fa_inform(fa_string_dappend(fa_string("Reading "), fa_copy(path)));
@@ -360,7 +412,7 @@ fa_file_buffer_t fa_file_buffer_read_audio(fa_string_t path, size_t buffer_size,
             buffer_size = buffer_frames * frame_size;
         }
         //printf("Actual buffer size: %zu\n", buffer_size);
-        file_buffer = fa_file_buffer_create(buffer_size);
+        file_buffer = new_file_buffer(buffer_size);
         file_buffer->path = fa_copy(path);
         file_buffer->cleanup_function = audio_buffer_close_;
         file_buffer->seek_function = audio_seek_;

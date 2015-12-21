@@ -20,6 +20,8 @@
     @par Implements 
     - fa_destroy_t
     - fa_string_show_t
+    - fa_reference_count
+    - fa_meta_data
 
     @see 
     - [Data structures](@ref DataStructures)
@@ -35,11 +37,17 @@
 */
 typedef struct _fa_file_buffer_t * fa_file_buffer_t;
 
-/** Create a new file buffer, not connected to any file.
+/** Create a new file buffer.
+    @param path
+        A pathname.
+    @param buffer_size
+        Size of the in-memory buffer.
+    @return
+        A file_buffer
     @note
         O(n)
 */
-fa_file_buffer_t fa_file_buffer_create(size_t size_);
+fa_file_buffer_t fa_file_buffer_create(fa_string_t path, size_t buffer_size);
 
 /** Destroy the given buffer. If the reference count is greater than zero,
     the actual destruction is postponed until the reference count reaches
@@ -113,17 +121,6 @@ double fa_file_buffer_get_double(fa_file_buffer_t buffer, size_t index);
 */
 float fa_file_buffer_get_float(fa_file_buffer_t buffer, size_t index);
 
-
-
-/**
-    Reads a buffer from a file.
-
-    @param path
-        Path to the file to read.
-    @return
-        A new buffer.
-*/
-fa_file_buffer_t fa_file_buffer_read_raw(fa_string_t path);
 
 /**
     Write a buffer to a file.

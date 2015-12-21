@@ -3,6 +3,9 @@
 #ifndef __SERVER_GLOBALS
 #define __SERVER_GLOBALS
 
+#define kMaxInMemoryFile 5242880 // 5 MB
+#define kFileBufferSize  2097152 // 2 MB
+
 oid_t last_used_id = 0;
 uint32_t ping_counter = 0;
 

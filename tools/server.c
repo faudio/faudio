@@ -968,7 +968,7 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
 {
     oid_t id = argv[0]->i;
     fa_string_t file_path = fa_string_from_utf8(&argv[1]->s);
-    size_t max_size = argc > 2 ? argv[2]->i : 1048576 * 5; // Default 5 MB
+    size_t max_size = argc > 2 ? argv[2]->i : kMaxInMemoryFile;
     fa_ptr_t buffer = fa_buffer_read_audio_max_size(file_path, max_size, false);
     
     // The audio file fit into max_size bytes of memory, so we now have the
@@ -988,7 +988,7 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
     else {
         fa_slog_info("File was too big to load into memory, so we use a file_buffer instead");
     
-        buffer = fa_file_buffer_read_audio(file_path, 1048576 * 2, float_sample_type); // 2 MB buffer
+        buffer = fa_file_buffer_read_audio(file_path, kFileBufferSize, float_sample_type); // 2 MB buffer
         if (fa_check(buffer)) {
             fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
             fa_destroy(file_path);
@@ -1037,22 +1037,37 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
     }
     
     
-    fa_buffer_t buffer = fa_buffer_read_raw(file_path);
-    if (fa_check(buffer)) {
-        fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
-        fa_destroy(file_path);
-        send_osc(message, user_data, "/audio-file/load", "iFs", id, "couldNotReadFile");
-        return 0;
+    fa_ptr_t buffer = fa_buffer_read_raw_max_size(file_path, kMaxInMemoryFile);
+    if (buffer) {
+        if (fa_check(buffer)) {
+            fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
+            fa_destroy(file_path);
+            send_osc(message, user_data, "/audio-file/load", "iFs", id, "couldNotReadFile");
+            return 0;
+        }
+        fa_slog_info("Read raw file into memory");
+    } else {
+        buffer = fa_file_buffer_create(file_path, kFileBufferSize);
+        if (fa_check(buffer)) {
+            fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
+            fa_destroy(file_path);
+            send_osc(message, user_data, "/audio-file/load", "iFs", id, "couldNotReadFile");
+            return 0;
+        }
+        fa_slog_info("Opened file_buffer for raw file");
     }
     fa_set_meta(buffer, fa_string("file_path"), file_path);
     fa_with_lock(audio_files_mutex) {
         audio_files = fa_map_dset(wrap_oid(id), buffer, audio_files);
     }
-    
+
+    size_t frames = fa_buffer_size(buffer) / (sizeof(double) * ch);
     fa_set_meta(buffer, fa_string("sample-rate"), fa_from_int32(sr));
     fa_set_meta(buffer, fa_string("channels"), fa_from_int32(ch));
-    
-    size_t frames = fa_buffer_size(buffer) / (sizeof(double) * ch);
+    fa_set_meta(buffer, fa_string("frames"), fa_from_int64(frames));
+    fa_set_meta(buffer, fa_string("sample-size"), fa_i8(fa_sample_type_size(double_sample_type)));
+    fa_set_meta(buffer, fa_string("sample-type"), fa_i8(double_sample_type));
+
     send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, frames, sr, ch);
     
     return 0;
