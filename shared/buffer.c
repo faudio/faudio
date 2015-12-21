@@ -405,6 +405,7 @@ fa_buffer_t fa_buffer_read_audio_max_size(fa_string_t path, size_t max_size, boo
         fa_buffer_set_meta(buffer, fa_string("channels"), fa_i32(info.channels));
         fa_buffer_set_meta(buffer, fa_string("format"), fa_i32(info.format));
         fa_buffer_set_meta(buffer, fa_string("cropped"), fa_from_bool(cropped));
+        fa_buffer_set_meta(buffer, fa_string("frames"), fa_i64(sz / info.channels));
 
         fa_let(str, (char *) sf_get_string(file, SF_STR_TITLE))
         fa_buffer_set_meta(buffer, fa_string("title"), fa_string(str ? str : ""));

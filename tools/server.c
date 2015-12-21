@@ -422,18 +422,16 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
         add_playback_semaphore(id, audio_name);
         fa_slog_info("Starting audio playback");
         fa_list_t actions = fa_list_empty();
-        size_t sample_rate = fa_peek_number(fa_get_meta(buffer, fa_string("sample-rate")));
-        size_t channels = fa_peek_number(fa_get_meta(buffer, fa_string("channels")));
-        size_t frames;
-        fa_dynamic_type_repr_t buffer_type = fa_dynamic_get_type(buffer);
-        if (buffer_type == file_buffer_type_repr) {
-            frames = fa_peek_integer(fa_get_meta(buffer, fa_string("frames")));
-        } else {
-            frames = fa_buffer_size(buffer) / (sizeof(double) * channels);
-        }
-        double max_time = (double)(frames / sample_rate); // seconds
+        double sample_rate = fa_peek_number(fa_get_meta(buffer, fa_string("sample-rate")));
+        size_t frames = fa_peek_integer(fa_get_meta(buffer, fa_string("frames")));
+        double max_time = (double) frames / sample_rate; // seconds
         max_time -= skip;
-        skip *= (double)sample_rate; //fa_peek_number(sample_rate);
+        skip *= sample_rate;
+        
+        if (max_time <= 0) {
+            send_osc(message, user_data, "/error", "isi", id, "skipping-past-end", audio_id);
+            return 0;
+        }
         
         // Schedule
         fa_push_list(pair(fa_action_send_retain(audio_name, buffer), fa_milliseconds(0)), actions);
@@ -970,60 +968,58 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
 {
     oid_t id = argv[0]->i;
     fa_string_t file_path = fa_string_from_utf8(&argv[1]->s);
-    fa_file_buffer_t fb = fa_file_buffer_read_audio(file_path, 1048576 * 2, float_sample_type); // 2 MB buffer
+    size_t max_size = argc > 2 ? argv[2]->i : 1048576 * 5; // Default 5 MB
+    fa_ptr_t buffer = fa_buffer_read_audio_max_size(file_path, max_size, false);
     
-    fa_file_buffer_seek(fb, 0);
-    
-    size_t frames = fa_peek_integer(fa_get_meta(fb, fa_string("frames")));
-    size_t sr     = fa_peek_integer(fa_get_meta(fb, fa_string("sample-rate")));
-    size_t ch     = fa_peek_integer(fa_get_meta(fb, fa_string("channels")));
-    
-    fa_with_lock(audio_files_mutex) {
-        audio_files = fa_map_dset(wrap_oid(id), fb, audio_files);
+    // The audio file fit into max_size bytes of memory, so we now have the
+    // audio file in a memory buffer (or possibly an error value)
+    if (buffer) {
+        if (fa_check(buffer)) {
+            fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
+            fa_destroy(file_path);
+            send_osc(message, user_data, "/audio-file/load", "iFs", id, "couldNotReadFile");
+            return 0;
+        }
+        fa_slog_info("File was loaded into memory");
     }
     
-    send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, frames, sr, ch);
+    // fa_buffer_read_audio_max_size returned NULL, which means that the audio file
+    // was too big. Instead, we create a file_buffer.
+    else {
+        fa_slog_info("File was too big to load into memory, so we use a file_buffer instead");
     
+        buffer = fa_file_buffer_read_audio(file_path, 1048576 * 2, float_sample_type); // 2 MB buffer
+        if (fa_check(buffer)) {
+            fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
+            fa_destroy(file_path);
+            send_osc(message, user_data, "/audio-file/load", "iFs", id, "couldNotReadFile");
+            return 0;
+        }
+    }
+    
+    fa_set_meta(buffer, fa_string("file_path"), file_path); // leave ownership of file_path
+    fa_with_lock(audio_files_mutex) {
+        audio_files = fa_map_dset(wrap_oid(id), buffer, audio_files);
+    }
+    fa_ptr_t frames      = fa_get_meta(buffer, fa_string("frames"));
+    fa_ptr_t sample_rate = fa_get_meta(buffer, fa_string("sample-rate"));
+    fa_ptr_t channels    = fa_get_meta(buffer, fa_string("channels"));
+    fa_ptr_t cropped     = fa_get_meta(buffer, fa_string("cropped"));
+    if (frames && sample_rate && channels) {
+        int64_t fr = fa_peek_integer(frames);
+        uint32_t sr = safe_peek_i32(sample_rate);
+        uint32_t ch = safe_peek_i32(channels);
+        if (cropped && fa_peek_bool(cropped))
+            send_osc(message, user_data, "/audio-file/load", "iTiiiT", id, fr, sr, ch);
+        else
+            send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, fr, sr, ch);
+    } else {
+        fa_fail(fa_string("frames, sample-rate or channels not set"));
+        send_osc(message, user_data, "/audio-file/load", "iFs", id, "missingMetaData");
+    }
+
     return 0;
     
-    
-    // oid_t id = argv[0]->i;
-    // fa_string_t file_path = fa_string_from_utf8(&argv[1]->s);
-    // size_t max_size = argc > 2 ? argv[2]->i : 0;
-    // bool crop = argc > 3 ? (types[3] == 'T') : false;
-    // fa_buffer_t buffer = fa_buffer_read_audio_max_size(file_path, max_size, crop);
-    // if (!buffer) {
-    //     fa_destroy(file_path);
-    //     send_osc(message, user_data, "/audio-file/load", "iFs", id, "fileTooBig");
-    //     return 0;
-    // }
-    // if (fa_check(buffer)) {
-    //     fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
-    //     fa_destroy(file_path);
-    //     send_osc(message, user_data, "/audio-file/load", "iFs", id, "couldNotReadFile");
-    //     return 0;
-    // }
-    // fa_buffer_set_meta(buffer, fa_string("file_path"), file_path);
-    // fa_with_lock(audio_files_mutex) {
-    //     audio_files = fa_map_dset(wrap_oid(id), buffer, audio_files);
-    // }
-    // fa_ptr_t sample_rate = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
-    // fa_ptr_t channels    = fa_buffer_get_meta(buffer, fa_string("channels"));
-    // fa_ptr_t cropped     = fa_buffer_get_meta(buffer, fa_string("cropped"));
-    // if (sample_rate && channels) {
-    //     uint32_t sr = safe_peek_i32(sample_rate);
-    //     uint32_t ch = safe_peek_i32(channels);
-    //     size_t frames = fa_buffer_size(buffer) / (sizeof(double) * ch);
-    //     if (cropped)
-    //         send_osc(message, user_data, "/audio-file/load", "iTiiiT", id, frames, sr, ch);
-    //     else
-    //         send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, frames, sr, ch);
-    // } else {
-    //     fa_fail(fa_string("sample-rate or channels not set"));
-    //     send_osc(message, user_data, "/audio-file/load", "iFs", id, "missingMetaData");
-    // }
-    //
-    // return 0;
 }
 
 int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
@@ -1048,13 +1044,13 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
         send_osc(message, user_data, "/audio-file/load", "iFs", id, "couldNotReadFile");
         return 0;
     }
-    fa_buffer_set_meta(buffer, fa_string("file_path"), file_path);
+    fa_set_meta(buffer, fa_string("file_path"), file_path);
     fa_with_lock(audio_files_mutex) {
         audio_files = fa_map_dset(wrap_oid(id), buffer, audio_files);
     }
     
-    fa_buffer_set_meta(buffer, fa_string("sample-rate"), fa_from_int32(sr));
-    fa_buffer_set_meta(buffer, fa_string("channels"), fa_from_int32(ch));
+    fa_set_meta(buffer, fa_string("sample-rate"), fa_from_int32(sr));
+    fa_set_meta(buffer, fa_string("channels"), fa_from_int32(ch));
     
     size_t frames = fa_buffer_size(buffer) / (sizeof(double) * ch);
     send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, frames, sr, ch);
@@ -1108,7 +1104,7 @@ int save_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
         return 0;
     }
     fa_slog_info("Saved audio file at ", file_path);
-    fa_buffer_set_meta(buffer, fa_string("file_path"), file_path);
+    fa_set_meta(buffer, fa_string("file_path"), file_path);
     send_osc(message, user_data, "/audio-file/save", "iT", id);
     return 0;
 }
