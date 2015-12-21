@@ -18,6 +18,8 @@
     - fa_copy_t
     - fa_destroy_t
     - fa_string_show_t
+    - fa_reference_count
+    - fa_meta_data
 
     @see 
     - [Data structures](@ref DataStructures)
@@ -233,6 +235,18 @@ module Fa.Buffer
             A new buffer.
      */
     readRaw : (path : String) -> Buffer;
+    
+    /**
+        Reads a buffer from a file, if the file is not bigger than max_size bytes.
+    
+        @param path
+            Path to the file to read.
+        @param max_size
+            Maximum file size in bytes
+        @return
+            A new buffer, an error object, or NULL if the file was too big.
+    */
+    readRawMaxSize : (path : String, maxSize : Size) -> Buffer;
     
     /**
         Write a buffer to a file.

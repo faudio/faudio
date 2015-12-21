@@ -459,7 +459,7 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
     return NULL;
 }
 
-fa_buffer_t fa_buffer_read_raw(fa_string_t path)
+fa_buffer_t fa_buffer_read_raw_max_size(fa_string_t path, size_t max_size)
 {
     char* path2 = fa_string_to_utf8(path);
     FILE* file = fopen(path2, "rb");
@@ -474,6 +474,10 @@ fa_buffer_t fa_buffer_read_raw(fa_string_t path)
     fseek(file, 0, SEEK_END);
     long filelen = ftell(file);
     rewind(file);
+    
+    if (max_size && filelen > max_size) {
+        return NULL;
+    }
 
     // Read entire file
     uint8_t *buffer = fa_malloc(filelen);
@@ -481,6 +485,11 @@ fa_buffer_t fa_buffer_read_raw(fa_string_t path)
     fclose(file);
     
     return fa_buffer_wrap(buffer, filelen, default_destroy, NULL);
+}
+
+fa_buffer_t fa_buffer_read_raw(fa_string_t path)
+{
+    return fa_buffer_read_raw_max_size(path, 0);
 }
 
 bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer)

@@ -28,6 +28,8 @@
     - fa_copy_t
     - fa_destroy_t
     - fa_string_show_t
+    - fa_reference_count
+    - fa_meta_data
 
     @see 
     - [Data structures](@ref DataStructures)
@@ -266,6 +268,18 @@ fa_pair_t fa_buffer_unzip(fa_buffer_t buffer);
         A new buffer.
 */
 fa_buffer_t fa_buffer_read_raw(fa_string_t path);
+
+/**
+    Reads a buffer from a file, if the file is not bigger than max_size bytes.
+
+    @param path
+        Path to the file to read.
+    @param max_size
+        Maximum file size in bytes
+    @return
+        A new buffer, an error object, or NULL if the file was too big.
+*/
+fa_buffer_t fa_buffer_read_raw_max_size(fa_string_t path, size_t max_size);
 
 /**
     Write a buffer to a file.
