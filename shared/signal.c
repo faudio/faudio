@@ -2430,7 +2430,11 @@ fa_ptr_t play_buffer_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_
                     if (context->buffer) {
                         fa_release_reference(context->buffer);
                     }
+                    if (context->file_buffer) {
+                        fa_release_reference(context->file_buffer);
+                    }
                     context->buffer = buffer;
+                    context->file_buffer = NULL;
                     context->channels = fa_peek_number(fa_get_meta(buffer, fa_string("channels")));
                     size_t size = fa_buffer_size(buffer);
                     context->max_pos = (size / ((sizeof(double)) * context->channels)) - 1;
@@ -2450,7 +2454,11 @@ fa_ptr_t play_buffer_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_
                     if (context->file_buffer) {
                         fa_release_reference(context->file_buffer);
                     }
+                    if (context->buffer) {
+                        fa_release_reference(context->buffer);
+                    }
                     context->file_buffer = buffer;
+                    context->buffer = NULL;
                     context->channels = fa_peek_number(fa_get_meta(buffer, fa_string("channels")));
                     context->max_pos = fa_peek_integer(fa_get_meta(buffer, fa_string("frames")));
                     double buffer_rate = fa_peek_number(fa_get_meta(buffer, fa_string("sample-rate")));
