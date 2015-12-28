@@ -154,7 +154,7 @@ fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t ringBuffer);
         For now requires input to be mono, 44100, 64-bit floating.
       
 */
-fa_io_filter_t fa_io_create_ogg_encoder();
+fa_io_filter_t fa_io_create_ogg_encoder(long sampleRate, long channels);
 
 /** Continously data from the given source and push it into the sink.
 

@@ -45,6 +45,7 @@ fa_list_t current_midi_input_streams = NULL;
 fa_list_t current_midi_output_streams = NULL;
 fa_ptr_t current_midi_echo_stream = NULL;
 fa_clock_t current_clock = NULL;
+double current_sample_rate = 0;
 
 fa_atomic_ring_buffer_t recording_ring_buffer = NULL;
 fa_thread_t recording_thread = NULL;

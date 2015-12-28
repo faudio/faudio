@@ -699,7 +699,12 @@ void start_streams() {
                 fa_log_warning(fa_string("Sample rate mismatch, disabling input"));
                 send_osc_async("/error", "Nsdd", "sample-rate-mismatch", sr_in, sr_out);
                 current_audio_input_device = NULL;
+                current_sample_rate = sr_out;
             }
+        } else if (current_audio_input_device) {
+            current_sample_rate = fa_audio_current_sample_rate(current_audio_input_device);
+        } else if (current_audio_output_device) {
+            current_sample_rate = fa_audio_current_sample_rate(current_audio_output_device);
         }
         
         fa_list_t out_signal = construct_output_signal_tree();
@@ -1271,6 +1276,8 @@ struct recording_thread_args {
     char *filename;
     char *url;
     char *cookies;
+    long sample_rate;
+    long channels;
 };
 
 void _recording_receive(fa_ptr_t context, fa_buffer_t buffer) {
@@ -1305,6 +1312,8 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
     char* filename = args->filename;
     char* url = args->url;
     char* cookies = args->cookies;
+    long sr = args->sample_rate;
+    long ch = args->channels;
     fa_free(args);
     
     //printf("url: %s  cookies: %s\n", url, cookies);
@@ -1316,9 +1325,9 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
     if (url && filename) {
         // If url is specified, create the file sink as a split filter
         fa_io_sink_t file_sink = fa_io_write_file(fa_string(filename));
-        source = fa_io_apply(fa_io_apply(source, fa_io_split(file_sink)), fa_io_create_ogg_encoder());
+        source = fa_io_apply(fa_io_apply(source, fa_io_split(file_sink)), fa_io_create_ogg_encoder(sr, ch));
     } else if (url) {
-        source = fa_io_apply(source, fa_io_create_ogg_encoder());
+        source = fa_io_apply(source, fa_io_create_ogg_encoder(sr, ch));
     } else {
         printf("Creating file sink\n");
         sink = fa_io_write_file(fa_string(filename));
@@ -1390,7 +1399,8 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
 }
 
 
-fa_thread_t create_recording_thread(oid_t id, fa_atomic_ring_buffer_t ring_buffer, char* filename, char* url, char* cookies)
+fa_thread_t create_recording_thread(oid_t id, fa_atomic_ring_buffer_t ring_buffer, char* filename, char* url, char* cookies,
+                                    long sample_rate, long channels)
 {
     struct recording_thread_args *args = fa_new_struct(recording_thread_args);
     args->id          = id;
@@ -1398,6 +1408,8 @@ fa_thread_t create_recording_thread(oid_t id, fa_atomic_ring_buffer_t ring_buffe
     args->filename    = strdup_or_null(filename);
     args->url         = strdup_or_null(url);
     args->cookies     = strdup_or_null(cookies);
+    args->sample_rate = sample_rate;
+    args->channels    = channels;
     
     fa_thread_t thread = fa_thread_create(_recording_thread, args);
     return thread;

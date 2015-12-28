@@ -101,7 +101,7 @@ module Fa.Io
         @warning
             For now requires input to be mono, 44100, 64-bit floating.
       */
-    createOggEncoder : () -> Filter;
+    createOggEncoder : (sampleRate : Long, channels : Long) -> Filter;
 
     /** Continously pull data from the given source and push it into the sink.
 
