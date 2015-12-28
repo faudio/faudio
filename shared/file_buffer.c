@@ -232,6 +232,16 @@ size_t fa_file_buffer_buffer_size(fa_file_buffer_t file_buffer)
     return file_buffer->total_buffer_size;
 }
 
+size_t fa_file_buffer_file_size(fa_file_buffer_t file_buffer)
+{
+    return file_buffer->file_size;
+}
+
+fa_string_t fa_file_buffer_path(fa_file_buffer_t file_buffer)
+{
+    return file_buffer->path;
+}
+
 fa_ptr_t fa_file_buffer_get_meta(fa_file_buffer_t file_buffer, fa_string_t name)
 {
     return fa_map_dget(name, file_buffer->meta);
@@ -349,7 +359,7 @@ static sf_count_t audio_seek_(fa_file_buffer_t file_buffer, size_t offset) {
 fa_file_buffer_t fa_file_buffer_create(fa_string_t path, size_t buffer_size)
 {
     char *cpath = fa_string_to_utf8(path);
-    FILE *file  = fopen(cpath, "r");
+    FILE *file  = fopen(cpath, "rb");
     fa_free(cpath);
     
     if (!file) {

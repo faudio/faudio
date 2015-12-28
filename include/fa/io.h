@@ -126,8 +126,22 @@ fa_io_filter_t fa_io_create_simple_filter(fa_io_callback_t callback,
 fa_io_filter_t fa_io_split(fa_io_sink_t sink);
 
 /** Create source that reads from a file. 
+    The path is consumed.
 */
-fa_io_source_t fa_io_read_file(fa_string_t string);
+fa_io_source_t fa_io_read_file(fa_string_t path);
+
+/** Create source that reads from a file. 
+*/
+fa_io_source_t fa_io_read_file_between(fa_string_t path, fa_ptr_t start, fa_ptr_t end);
+
+/** Create source that reads audio data from an audio file. 
+    The path is consumed.
+*/
+fa_io_source_t fa_io_read_audio_file(fa_string_t path);
+
+/** Create source that reads audio data from an audio file. 
+*/
+fa_io_source_t fa_io_read_audio_file_between(fa_string_t path, fa_ptr_t startFrames, fa_ptr_t endFrames);
 
 /** Create sink that writes to a file. 
 */

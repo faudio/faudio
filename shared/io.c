@@ -11,6 +11,8 @@
 #include <fa/io.h>
 #include <fa/util.h>
 
+#include <sndfile.h>
+
 struct filter_base {
     fa_impl_t impl;
     fa_ptr_t data1, data2, data3;
@@ -225,10 +227,15 @@ FILTER_IMPLEMENTATION(write_filter);
 
 void read_filter_destroy(fa_ptr_t x)
 {
-    fa_warn(fa_string("Unimplemented IO destroy"));
+    fa_inform(fa_string("In read_filter_destroy"));
+    struct filter_base *filter = ((struct filter_base *) x);
+    if (filter->data1) fa_destroy(filter->data1);
+    if (filter->data2) fa_destroy(filter->data2);
+    if (filter->data3) fa_destroy(filter->data3);
+    fa_free(filter);
 }
 
-fa_string_t  read_filter_show(fa_ptr_t x)
+fa_string_t read_filter_show(fa_ptr_t x)
 {
     return fa_string("<ReadSource>");
 }
@@ -236,16 +243,23 @@ fa_string_t  read_filter_show(fa_ptr_t x)
 void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
 {
     // inform(fa_string("In read_filter push"));
-
-    fa_string_t path = fa_copy(((struct filter_base *) x)->data1);
-    FILE *fp = fopen(fa_unstring(path), "rb");
+    struct filter_base *filter = ((struct filter_base *) x);
+    fa_string_t path = fa_copy(filter->data1);
+    fa_ptr_t start = filter->data2;
+    fa_ptr_t end   = filter->data3;
+    size_t startBytes = start ? fa_peek_integer(start) : 0;
+    if (end) fa_fail(fa_string("read_filter parameter end not implemented"));
+    char *cpath = fa_unstring(path);
+    FILE *fp = fopen(cpath, "rb");
+    fa_free(cpath);
 
     if (!fp) {
         fa_fail(fa_string_dappend(fa_string("Could not read file: "), path));
     } else {
         byte_t raw[1024 * 8];
         size_t read;
-
+        
+        fseek(fp, startBytes, SEEK_SET);
         while (!ferror(fp) && !feof(fp)) {
             read = fread(raw, 1, sizeof(raw), fp);
             callback(data, fa_copy(fa_buffer_wrap(raw, read, NULL, NULL)));
@@ -254,7 +268,9 @@ void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t call
     }
 
     callback(data, NULL);
-
+    
+    fa_destroy(path);
+    
     fclose(fp);
 }
 
@@ -262,6 +278,86 @@ void read_filter_push(fa_ptr_t _, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
 }
 FILTER_IMPLEMENTATION(read_filter);
+
+
+// ------------------------------------------------------------------------------------------
+
+void read_audio_filter_destroy(fa_ptr_t x)
+{
+    fa_inform(fa_string("In read_audio_filter_destroy"));
+    struct filter_base *filter = ((struct filter_base *) x);
+    if (filter->data1) fa_destroy(filter->data1);
+    if (filter->data2) fa_destroy(filter->data2);
+    if (filter->data3) fa_destroy(filter->data3);
+    fa_free(filter);
+}
+
+fa_string_t read_audio_filter_show(fa_ptr_t x)
+{
+    return fa_string("<ReadAudioSource>");
+}
+
+void read_audio_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
+{
+    // inform(fa_string("In read_filter push"));
+
+    struct filter_base *filter = ((struct filter_base *) x);
+    fa_string_t path    = fa_copy(filter->data1);
+    fa_ptr_t start      = filter->data2;
+    fa_ptr_t end        = filter->data3;
+    size_t start_frames = start ? fa_peek_integer(start) : 0;
+    
+    char *cpath = fa_unstring(path);
+    SF_INFO info;
+    info.format = 0;
+    SNDFILE *sndfile = sf_open(cpath, SFM_READ, &info);
+    fa_free(cpath);
+
+    if (sf_error(sndfile)) {
+        fa_fail(fa_string_dappend(fa_string("Could not read audio file: "), path));
+    } else if (start_frames && !info.seekable) {
+        fa_fail(fa_string_dappend(fa_string("Audio file not seekable: "), path));
+    } else if (start_frames > info.frames) {
+        fa_fail(fa_string_dappend(fa_string("Start is beyond end of file: "), path));
+    } else {
+        size_t end_frames = end ? fa_peek_integer(end) : info.frames;
+        if (end_frames > info.frames) end_frames = info.frames;
+        
+        fa_sample_type_t sample_type = double_sample_type; // TODO: don't hardcode sample_type
+        uint8_t sample_size = fa_sample_type_size(sample_type);
+        uint8_t frame_size = sample_size * info.channels;
+        if (start_frames) {
+            sf_seek(sndfile, start_frames, SEEK_SET);
+        }
+        
+        size_t buffer_frames = 1024;
+        size_t buffer_size = buffer_frames * frame_size;
+        byte_t *raw = fa_malloc(buffer_size);
+        size_t frames_left = end_frames - start_frames;
+        
+        while (!sf_error(sndfile) && frames_left > 0) {
+            size_t frames_to_read = (frames_left < buffer_frames) ? frames_left : buffer_frames;
+            size_t frames_read = sf_readf_double(sndfile, ((double *) raw), frames_to_read);
+            fa_buffer_t buffer = fa_buffer_wrap(raw, frames_read * frame_size, NULL, NULL);
+            callback(data, buffer);
+            fa_destroy(buffer);
+            frames_left -= frames_read;
+        }
+        
+        fa_free(raw);
+    }
+
+    callback(data, NULL);
+    
+    fa_destroy(path);
+    
+    sf_close(sndfile);
+}
+
+void read_audio_filter_push(fa_ptr_t _, fa_io_sink_t downstream, fa_buffer_t buffer)
+{
+}
+FILTER_IMPLEMENTATION(read_audio_filter);
 
 
 // ------------------------------------------------------------------------------------------
@@ -488,12 +584,34 @@ fa_io_sink_t fa_io_write_file(fa_string_t path)
     return (fa_io_sink_t) x;
 }
 
-fa_io_source_t fa_io_read_file(fa_string_t path)
+fa_io_source_t fa_io_read_file_between(fa_string_t path, fa_ptr_t start, fa_ptr_t end)
 {
     struct filter_base *x = fa_new_struct(filter_base);
     x->impl = &read_filter_impl;
-    x->data1 = fa_copy(path);
+    x->data1 = path;
+    x->data2 = start;
+    x->data3 = end;
     return (fa_io_source_t) x;
+}
+
+fa_io_source_t fa_io_read_file(fa_string_t path)
+{
+    return fa_io_read_file_between(path, NULL, NULL);
+}
+
+fa_io_source_t fa_io_read_audio_file_between(fa_string_t path, fa_ptr_t startFrames, fa_ptr_t endFrames)
+{
+    struct filter_base *x = fa_new_struct(filter_base);
+    x->impl = &read_audio_filter_impl;
+    x->data1 = path;
+    x->data2 = startFrames;
+    x->data3 = endFrames;
+    return (fa_io_source_t) x;
+}
+
+fa_io_source_t fa_io_read_audio_file(fa_string_t path)
+{
+    return fa_io_read_audio_file_between(path, NULL, NULL);
 }
 
 

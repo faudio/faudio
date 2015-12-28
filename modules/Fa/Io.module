@@ -84,7 +84,13 @@ module Fa.Io
     /** Create a filter that writes data passed through it to the given sink. */
     split : Sink -> Filter;
     /** Create source that reads from a file. */
-    readFile : String -> Source;
+    readFile : (path : String) -> Source;
+    /** Create source that reads from a file. */
+    readFileBetween : (path : String, start : Ptr, end: Ptr) -> Source;
+    /** Create source that reads from a file. */
+    readAudioFile : (path : String) -> Source;
+    /** Create source that reads from a file. */
+    readAudioFileBetween : (path : String, start : Ptr, end: Ptr) -> Source;
     /** Create sink that writes to a file. */
     writeFile : String -> Sink;
     /** Create source that reads from the standard input. */

@@ -1179,13 +1179,22 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
     oid_t audio_id   =  argv[1]->i;
     char* url        = &argv[2]->s;
     char* cookie     = &argv[3]->s;
-    fa_buffer_t buffer = NULL;
+    fa_ptr_t buffer  = NULL;
+    size_t sample_rate;
+    size_t channels;
+    
     bool new_buffer = false;
+    fa_io_source_t raw_source = NULL;
     
     fa_with_lock(audio_files_mutex) {
         buffer = fa_map_dget(wrap_oid(audio_id), audio_files);
-        if (buffer) {
+        switch (fa_dynamic_get_type(buffer)) {
+        case buffer_type_repr: {
             fa_take_reference(buffer);
+            fa_ptr_t sr = fa_get_meta(buffer, fa_string("sample-rate"));
+            fa_ptr_t ch = fa_get_meta(buffer, fa_string("channels"));
+            channels = fa_peek_integer(ch);
+            sample_rate = fa_peek_number(sr);
             
             // Use only part of buffer
             // TODO: don't copy, implement a filter in fa_io_from_buffer instead, to reduce memory footprint
@@ -1194,15 +1203,11 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
                 double to_ms   = argv[5]->f;
                 if (from_ms < 0) from_ms = 0;
                 //if (to_ms < 0) to_ms = 0;
-                fa_ptr_t sr = fa_get_meta(buffer, fa_string("sample-rate"));
-                fa_ptr_t ch = fa_get_meta(buffer, fa_string("channels"));
-                if (sr && ch && (from_ms > 0 || to_ms >= 0)) {
-                    int channels = fa_peek_integer(ch);
-                    double sample_rate = fa_peek_number(sr);
-                    size_t from_byte = sizeof(double) * (int)round(sample_rate * (from_ms / 1000.0) * (double)channels);
+                if (from_ms > 0 || to_ms >= 0) {
+                    size_t from_byte = sizeof(double) * (int)round((double)sample_rate * (from_ms / 1000.0) * (double)channels);
                     size_t to_byte;
                     if (to_ms < 0) to_byte = fa_buffer_size(buffer);
-                    else to_byte = sizeof(double) * (int)round(sample_rate * (to_ms / 1000.0) * (double)channels);
+                    else to_byte = sizeof(double) * (int)round((double)sample_rate * (to_ms / 1000.0) * (double)channels);
                     if (to_byte > fa_buffer_size(buffer)) to_byte = fa_buffer_size(buffer);
                     size_t size = to_byte - from_byte;
                     printf("size: %zu\n", size);
@@ -1216,15 +1221,45 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
                     }
                 }
             }
+            raw_source = fa_io_from_buffer(buffer);
+            break;
+        }
+        case file_buffer_type_repr: {
+            fa_take_reference(buffer);
+            fa_ptr_t sr = fa_get_meta(buffer, fa_string("sample-rate"));
+            fa_ptr_t ch = fa_get_meta(buffer, fa_string("channels"));
+            channels = fa_peek_integer(ch);
+            sample_rate = fa_peek_number(sr);
             
-        } else {
+            fa_file_buffer_t file_buffer = buffer;
+            fa_string_t path = fa_copy(fa_file_buffer_path(file_buffer));
+            
+            if (argc >= 5) {
+                double from_ms = argv[4]->f;
+                double to_ms   = argv[5]->f;
+                if (from_ms < 0) from_ms = 0;
+                size_t from_frame = (int)round((double)sample_rate * (from_ms / 1000.0));
+                size_t to_frame = (int)round((double)sample_rate * (to_ms / 1000.0));
+                raw_source = fa_io_read_audio_file_between(path, fa_i32(from_frame), (to_ms >= 0) ? fa_i32(to_frame) : NULL);
+            } else {
+                raw_source = fa_io_read_audio_file(path);
+            }
+            
+            break;
+        }
+        default: {
             fa_fail(fa_format_integral("There is no audio file with ID %zu", audio_id));
             send_osc(message, user_data, "/audio-file/upload", "iF", id);
+            buffer = NULL;
+            break;
         }
+        } // switch
     }
-    if (!buffer) return 0;
+    if (!raw_source) {
+        return 0;
+    }
     
-    fa_io_source_t source = fa_io_apply(fa_io_from_buffer(buffer), fa_io_create_ogg_encoder());
+    fa_io_source_t source = fa_io_apply(raw_source, fa_io_create_ogg_encoder(sample_rate, channels));
     fa_buffer_t ogg_buffer = fa_io_pull_to_buffer(source);
     size_t ogg_size = fa_buffer_size(ogg_buffer);
     fa_destroy(source);
@@ -1478,7 +1513,7 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
     
     fa_atomic_ring_buffer_reset(recording_ring_buffer);
     
-    recording_thread = create_recording_thread(id, recording_ring_buffer, filename, url, cookies);
+    recording_thread = create_recording_thread(id, recording_ring_buffer, filename, url, cookies, current_sample_rate, 1);
     
     fa_action_t action = fa_action_send_retain(record_left_name, recording_ring_buffer);
     if (rel_time == 0) {

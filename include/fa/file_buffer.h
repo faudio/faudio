@@ -72,7 +72,21 @@ void fa_file_buffer_release_reference(fa_file_buffer_t buffer);
     @note
         O(1)
 */
-size_t fa_file_buffer_size(fa_file_buffer_t buffer);
+size_t fa_file_buffer_buffer_size(fa_file_buffer_t buffer);
+
+/** Return the "virtual size" of the file. If the file is opened with
+    fa_file_buffer_create, this is the actual file size.
+    However if the file_buffer is created with fa_file_buffer_read_audio,
+    the file_size returned is the size of the uncompressed audio
+    contents of the file, excluding any headers.
+    @note
+        O(1)
+*/
+size_t fa_file_buffer_file_size(fa_file_buffer_t file_buffer);
+
+/** Return the file path of the buffer.
+*/
+fa_string_t fa_file_buffer_path(fa_file_buffer_t buffer);
 
 /** Get the value of some meta-data attribute of the given buffer.
     @param buffer The buffer.
