@@ -138,8 +138,10 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/send/note", "fiii", simple_note_handler, server); // f0, velocity, length (ms), channel
     
     /* Emulate incoming midi */
-    lo_server_thread_add_method(st, "/receive/midi", "ii",  receive_midi_handler, server);
-    lo_server_thread_add_method(st, "/receive/midi", "iii", receive_midi_handler, server);
+    lo_server_thread_add_method(st, "/receive/midi", "ii",   receive_midi_handler, NULL);
+    lo_server_thread_add_method(st, "/receive/midi", "iii",  receive_midi_handler, NULL);
+    lo_server_thread_add_method(st, "/receive/midi", "iiT",  receive_midi_handler, (void*)true);
+    lo_server_thread_add_method(st, "/receive/midi", "iiiT", receive_midi_handler, (void*)true);
     
     /* Quitting, restart */
     lo_server_thread_add_method(st, "/quit", "", quit_handler, server);
@@ -184,6 +186,9 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/play/midi", "ib", play_midi_handler, server);
     lo_server_thread_add_method(st, "/play/midi", "ibf", play_midi_handler, server);
     lo_server_thread_add_method(st, "/play/midi", "ibff", play_midi_handler, server);
+    lo_server_thread_add_method(st, "/play/midi", "ibffT", play_midi_handler, server); // auto-stop, same as default
+    lo_server_thread_add_method(st, "/play/midi", "ibffF", play_midi_handler, server); // no auto-stop
+
     lo_server_thread_add_method(st, "/stop", "i", stop_handler, server);
 
     /* Audio files handling */
@@ -224,12 +229,6 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/recording/start", "isssff", start_recording_handler, server);
     lo_server_thread_add_method(st, "/recording/stop",  "i", stop_recording_handler, server);
     
-    lo_server_thread_add_method(st, "/choose/midi/input",   "",    choose_device_handler, (void*)CHOOSE_MIDI_INPUT_NONE);
-    lo_server_thread_add_method(st, "/choose/midi/input",   "T",   choose_device_handler, (void*)CHOOSE_MIDI_INPUT_ALL);
-    lo_server_thread_add_method(st, "/choose/midi/input",   "ss",  choose_device_handler, (void*)CHOOSE_MIDI_INPUT_DEVICE);
-    lo_server_thread_add_method(st, "/choose/midi/output",  "",    choose_device_handler, (void*)CHOOSE_MIDI_OUTPUT_NONE);
-    lo_server_thread_add_method(st, "/choose/midi/output",  "T",   choose_device_handler, (void*)CHOOSE_MIDI_OUTPUT_ALL);
-    lo_server_thread_add_method(st, "/choose/midi/output",  "ss",  choose_device_handler, (void*)CHOOSE_MIDI_OUTPUT_DEVICE);
     lo_server_thread_add_method(st, "/choose/audio/input",  "",    choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_NONE);
     lo_server_thread_add_method(st, "/choose/audio/input",  "N",   choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_NONE);
     lo_server_thread_add_method(st, "/choose/audio/input",  "T",   choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_DEFAULT);
@@ -238,10 +237,21 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/choose/audio/output", "N",   choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_NONE);
     lo_server_thread_add_method(st, "/choose/audio/output", "T",   choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_DEFAULT);
     lo_server_thread_add_method(st, "/choose/audio/output", "ss",  choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_DEVICE);
+    lo_server_thread_add_method(st, "/choose/midi/input",   "",    choose_device_handler, (void*)CHOOSE_MIDI_INPUT_NONE);
+    lo_server_thread_add_method(st, "/choose/midi/input",   "T",   choose_device_handler, (void*)CHOOSE_MIDI_INPUT_ALL);
+    lo_server_thread_add_method(st, "/choose/midi/input",   "ss",  choose_device_handler, (void*)CHOOSE_MIDI_INPUT_DEVICE);
+    lo_server_thread_add_method(st, "/choose/midi/playback", "",   choose_device_handler, (void*)CHOOSE_MIDI_PLAYBACK_NONE);
+    lo_server_thread_add_method(st, "/choose/midi/playback", "N",  choose_device_handler, (void*)CHOOSE_MIDI_PLAYBACK_NONE);
+    lo_server_thread_add_method(st, "/choose/midi/playback", "T",  choose_device_handler, (void*)CHOOSE_MIDI_PLAYBACK_AUDIO);
+    lo_server_thread_add_method(st, "/choose/midi/playback", "ss", choose_device_handler, (void*)CHOOSE_MIDI_PLAYBACK_DEVICE);
     lo_server_thread_add_method(st, "/choose/midi/echo",    "",    choose_device_handler, (void*)CHOOSE_MIDI_ECHO_NONE);
     lo_server_thread_add_method(st, "/choose/midi/echo",    "N",   choose_device_handler, (void*)CHOOSE_MIDI_ECHO_NONE);
-    lo_server_thread_add_method(st, "/choose/midi/echo",    "T",   choose_device_handler, (void*)CHOOSE_MIDI_ECHO_AUDIO);
+    lo_server_thread_add_method(st, "/choose/midi/echo",    "T",   choose_device_handler, (void*)CHOOSE_MIDI_ECHO_PLAYBACK);
+    lo_server_thread_add_method(st, "/choose/midi/echo",    "F",   choose_device_handler, (void*)CHOOSE_MIDI_ECHO_AUDIO);
     lo_server_thread_add_method(st, "/choose/midi/echo",    "ss",  choose_device_handler, (void*)CHOOSE_MIDI_ECHO_DEVICE);
+    lo_server_thread_add_method(st, "/choose/midi/echo/channel", "", choose_device_handler, (void*)CHOOSE_MIDI_ECHO_CHANNEL);
+    lo_server_thread_add_method(st, "/choose/midi/echo/channel", "N", choose_device_handler, (void*)CHOOSE_MIDI_ECHO_CHANNEL);
+    lo_server_thread_add_method(st, "/choose/midi/echo/channel", "i", choose_device_handler, (void*)CHOOSE_MIDI_ECHO_CHANNEL);
     
     /* add method that will match any path and args */
     lo_server_thread_add_method(st, NULL, NULL, fallback_handler, server);
@@ -395,8 +405,8 @@ fa_ptr_t _playback_stopped(fa_ptr_t context, fa_time_t time, fa_time_t now)
     if (remove_playback_semaphore(id)) {
         send_osc_async("/playback/stopped", "itT", id, timetag_from_time(now));
         stop_time_echo();
-        if (current_midi_echo_stream) {
-            do_schedule_relative(sched_delay, all_notes_off_action(), current_midi_echo_stream);
+        if (current_midi_playback_stream) {
+            do_schedule_relative(sched_delay, all_notes_off_action(), current_midi_playback_stream);
         }
     }
     return NULL;
@@ -483,6 +493,7 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
     // > 0   absolute time
     double time            = argc >= 3 ? (argv[2]->f / 1000.0) : 0.0; // convert from ms to s
     double repeat_interval = argc >= 4 ? (argv[3]->f / 1000.0) : 0.0;
+    bool auto_stop = (strlen(types) >= 5 && types[4] == 'F') ? false : true;
     time = time + 0; // ?
     check_id(id);
     int data_size = lo_blob_datasize(data);
@@ -492,7 +503,7 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
         return 0;
     }
     if ((data_size % 12) != 0) {
-        printf("data_size (%d) not a multiple of 12\n", data_size);
+        printf("data_size (%d) not a multiple of 12 in /play/midi\n", data_size);
         return 0;
     }
 
@@ -541,7 +552,10 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
 
     if (repeat_interval == 0) {
         fa_push_list(pair(fa_action_do_with_time(_playback_started, wrap_oid(id)), fa_milliseconds(0)), actions);
-        fa_push_list(pair(fa_action_do_with_time(_playback_stopped, wrap_oid(id)), fa_milliseconds(max_time + 10)), actions);
+        if (auto_stop) {
+            max_time += 10; // add 10 ms margin
+            fa_push_list(pair(fa_action_do_with_time(_playback_stopped, wrap_oid(id)), fa_milliseconds(max_time)), actions);
+        }
     }
 
     // Convert absolute times to relative times
@@ -571,11 +585,11 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
 
     // Send to scheduler
     if (time == 0 && !in_bundle) {
-        schedule_relative(sched_delay, main_action, current_midi_echo_stream);
+        schedule_relative(sched_delay, main_action, current_midi_playback_stream);
     } else if (time < 0 || (time == 0 && in_bundle)) {
-        schedule_relative(fa_milliseconds(0), main_action, current_midi_echo_stream);
+        schedule_relative(fa_milliseconds(0), main_action, current_midi_playback_stream);
     } else {
-        schedule(fa_time_from_double(time), main_action, current_midi_echo_stream);
+        schedule(fa_time_from_double(time), main_action, current_midi_playback_stream);
     }
 
     start_time_echo();
@@ -591,12 +605,12 @@ int stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, 
         send_osc(message, user_data, "/playback/stopped", "itF", argv[0]->i, timetag_from_time(now));
         fa_destroy(now);
         stop_time_echo();
-        if (current_midi_echo_stream) {
+        if (current_midi_playback_stream) {
             // Stop sounding notes as fast as possible...
-            do_schedule_now(all_notes_off_action(), current_midi_echo_stream);
+            do_schedule_now(all_notes_off_action(), current_midi_playback_stream);
             // ... but also schedule a note-off for notes that may
             // already have been sent to the audio thread
-            do_schedule_relative(sched_delay, all_notes_off_action(), current_midi_echo_stream);
+            do_schedule_relative(sched_delay, all_notes_off_action(), current_midi_playback_stream);
         }
     } else {
         fa_warn(fa_format_integral("Could not remove semaphore for id %d", argv[0]->i));
@@ -821,16 +835,35 @@ void send_current_devices(lo_message message, void *user_data)
         send_osc(message, user_data, "/current/audio/output", "N");
     }
 
-    // TODO: MIDI devices
+    // TODO: MIDI inputs
+    
+    switch (current_midi_playback) {
+    case FA_MIDI_NO_OUTPUT:
+        send_osc(message, user_data, "/current/midi/playback", "N");
+        break;
+    case FA_MIDI_TO_AUDIO:
+        send_osc(message, user_data, "/current/midi/playback", "T");
+        break;
+    case FA_MIDI_TO_DEVICE:
+        assert(current_midi_playback_device && "current_midi_playback_device is NULL in current_devices_handler");
+        char *host_name = fa_dunstring(fa_audio_host_name(current_midi_playback_device));
+        char *name = fa_dunstring(fa_audio_name(current_midi_playback_device));
+        send_osc(message, user_data, "/current/midi/playback", "ssii", host_name, name,
+            fa_midi_has_input(current_midi_playback_device) ? 1 : 0,
+            fa_midi_has_output(current_midi_playback_device) ? 1 : 0);
+        fa_free(host_name);
+        fa_free(name);
+        break;
+    }
     
     switch (current_midi_echo) {
-    case FA_ECHO_NO_ECHO:
+    case FA_MIDI_NO_OUTPUT:
         send_osc(message, user_data, "/current/midi/echo", "N");
         break;
-    case FA_ECHO_AUDIO:
+    case FA_MIDI_TO_AUDIO:
         send_osc(message, user_data, "/current/midi/echo", "T");
         break;
-    case FA_ECHO_DEVICE:
+    case FA_MIDI_TO_DEVICE:
         assert(current_midi_echo_device && "current_midi_echo_device is NULL in current_devices_handler");
         char *host_name = fa_dunstring(fa_audio_host_name(current_midi_echo_device));
         char *name = fa_dunstring(fa_audio_name(current_midi_echo_device));
@@ -879,7 +912,7 @@ int simple_midi_handler(const char *path, const char *types, lo_arg ** argv, int
 {
     fa_midi_message_t midi_message = fa_midi_message_create_simple(argv[0]->i, argv[1]->i, (argc > 2) ? argv[2]->i : 0);
     fa_action_t action = fa_action_send(synth_name, midi_message);
-    schedule_now(action, current_midi_echo_stream);
+    schedule_now(action, current_midi_playback_stream);
     return 0;
 }
 
@@ -902,7 +935,7 @@ int simple_note_handler(const char *path, const char *types, lo_arg ** argv, int
     //     fa_pair_create(
     //         fa_action_send(synth_name, fa_midi_message_create_simple(0x90 + ch, f0, 0)), fa_now()
     //             )));
-    // schedule_relative(fa_now(), action, current_midi_echo_stream);
+    // schedule_relative(fa_now(), action, current_midi_playback_stream);
     
     int pitch = round(f0);
     uint8_t cents = ch == 9 ? 0 : round((double)(f0 - pitch) * (double)100.0);
@@ -911,8 +944,8 @@ int simple_note_handler(const char *path, const char *types, lo_arg ** argv, int
     
     fa_action_t noteOn  = fa_action_send(synth_name, fa_midi_message_create_extended(0x90 + ch, pitch, vel, cents));
     fa_action_t noteOff = fa_action_send(synth_name, fa_midi_message_create_extended(0x90 + ch, pitch, 0, cents));
-    schedule_now(noteOn, current_midi_echo_stream);
-    schedule_relative(fa_milliseconds(argv[2]->i), noteOff, current_midi_echo_stream);
+    schedule_now(noteOn, current_midi_playback_stream);
+    schedule_relative(fa_milliseconds(argv[2]->i), noteOff, current_midi_playback_stream);
     return 0;
 }
 
@@ -923,7 +956,8 @@ int simple_note_handler(const char *path, const char *types, lo_arg ** argv, int
 int receive_midi_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
 {
     fa_midi_message_t midi_message = fa_midi_message_create_simple(argv[0]->i, argv[1]->i, (argc > 2) ? argv[2]->i : 0);
-    handle_incoming_midi(fa_clock_time(current_clock), midi_message);
+    bool echo_to_playback = (bool)user_data;
+    handle_incoming_midi(fa_clock_time(current_clock), midi_message, echo_to_playback);
     return 0;
 }
 
@@ -1289,7 +1323,7 @@ int main_volume_handler(const char *path, const char *types, lo_arg ** argv, int
 {
     int ch = argv[0]->i;
     int vol = argv[1]->i;
-    schedule_now(main_volume_action(ch, vol), current_midi_echo_stream);
+    schedule_now(main_volume_action(ch, vol), current_midi_playback_stream);
     return 0;
 }
 
@@ -1301,7 +1335,7 @@ int pan_handler(const char *path, const char *types, lo_arg ** argv, int argc, l
 {
     int ch = argv[0]->i;
     float pan = argv[1]->f;
-    schedule_now(pan_action(ch, pan), current_midi_echo_stream);
+    schedule_now(pan_action(ch, pan), current_midi_playback_stream);
     return 0;
 }
 
@@ -1317,7 +1351,7 @@ int program_change_handler(const char *path, const char *types, lo_arg ** argv, 
     fa_action_t action = fa_action_many(list(
         fa_pair_create(program_change_action(ch, prog), fa_now()),
         fa_pair_create(bank_select_action(ch, bank), fa_now())));
-    schedule_now(action, current_midi_echo_stream);
+    schedule_now(action, current_midi_playback_stream);
     return 0;
 }
 
@@ -1329,7 +1363,7 @@ int pitch_wheel_handler(const char *path, const char *types, lo_arg ** argv, int
 {
     int ch = argv[0]->i;
     float pitch = argv[1]->f;
-    schedule_now(pitch_wheel_action(ch, pitch), current_midi_echo_stream);
+    schedule_now(pitch_wheel_action(ch, pitch), current_midi_playback_stream);
     return 0;
 }
 
@@ -1341,7 +1375,7 @@ int sustain_handler(const char *path, const char *types, lo_arg ** argv, int arg
 {
     int ch = argv[0]->i;
     bool sustain = argv[1]->i > 0;
-    schedule_now(sustain_action(ch, sustain), current_midi_echo_stream);
+    schedule_now(sustain_action(ch, sustain), current_midi_playback_stream);
     return 0;
 }
 
@@ -1377,7 +1411,7 @@ int channel_reset_handler(const char *path, const char *types, lo_arg ** argv, i
         pitch_wheel_action(ch, pitch_wheel),
         sustain_action(ch, sustain)));
 
-    schedule_now(action, current_midi_echo_stream);
+    schedule_now(action, current_midi_playback_stream);
     return 0;
 }
 
@@ -1595,29 +1629,7 @@ int stop_recording_handler(const char *path, const char *types, lo_arg ** argv, 
 int choose_device_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     switch ((int)user_data) {
-    case CHOOSE_MIDI_INPUT_NONE:
-        if (selected_midi_input_devices) fa_deep_destroy_always(selected_midi_input_devices);
-        selected_midi_input_devices = fa_list_empty();
-        break;
-    case CHOOSE_MIDI_INPUT_ALL:
-        if (selected_midi_input_devices) fa_deep_destroy_always(selected_midi_input_devices);
-        selected_midi_input_devices = NULL;
-        break;
-    case CHOOSE_MIDI_INPUT_DEVICE:
-        if (selected_midi_input_devices) fa_deep_destroy_always(selected_midi_input_devices);
-        selected_midi_input_devices = list(pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s)));
-        break;
-    case CHOOSE_MIDI_OUTPUT_NONE:
-        if (selected_midi_output_devices) fa_deep_destroy_always(selected_midi_output_devices);
-        selected_midi_output_devices = fa_list_empty();
-        break;
-    case CHOOSE_MIDI_OUTPUT_ALL:
-        selected_midi_output_devices = NULL;
-        break;
-    case CHOOSE_MIDI_OUTPUT_DEVICE:
-        if (selected_midi_input_devices) fa_deep_destroy_always(selected_midi_input_devices);
-        selected_midi_input_devices = list(pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s)));
-        break;
+    // Audio input
     case CHOOSE_AUDIO_INPUT_NONE:
         if (selected_audio_input_device) fa_deep_destroy_always(selected_audio_input_device);
         selected_audio_input_device = NULL;
@@ -1630,6 +1642,7 @@ int choose_device_handler(const char *path, const char *types, lo_arg ** argv, i
         if (selected_audio_input_device) fa_deep_destroy_always(selected_audio_input_device);
         selected_audio_input_device = pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s));
         break;
+    // Audio output
     case CHOOSE_AUDIO_OUTPUT_NONE:
         if (selected_audio_output_device) fa_deep_destroy_always(selected_audio_output_device);
         selected_audio_output_device = NULL;
@@ -1642,18 +1655,59 @@ int choose_device_handler(const char *path, const char *types, lo_arg ** argv, i
         if (selected_audio_output_device) fa_deep_destroy_always(selected_audio_output_device);
         selected_audio_output_device = pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s));
         break;
+    // MIDI input
+    case CHOOSE_MIDI_INPUT_NONE:
+        if (selected_midi_input_devices) fa_deep_destroy_always(selected_midi_input_devices);
+        selected_midi_input_devices = fa_list_empty();
+        break;
+    case CHOOSE_MIDI_INPUT_ALL:
+        if (selected_midi_input_devices) fa_deep_destroy_always(selected_midi_input_devices);
+        selected_midi_input_devices = NULL;
+        break;
+    case CHOOSE_MIDI_INPUT_DEVICE:
+        if (selected_midi_input_devices) fa_deep_destroy_always(selected_midi_input_devices);
+        selected_midi_input_devices = list(pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s)));
+        break;
+    // MIDI playback
+    case CHOOSE_MIDI_PLAYBACK_NONE:
+        selected_midi_playback = FA_MIDI_NO_OUTPUT;
+        break;
+    case CHOOSE_MIDI_PLAYBACK_AUDIO:
+        selected_midi_playback = FA_MIDI_TO_AUDIO;
+        break;
+    case CHOOSE_MIDI_PLAYBACK_DEVICE:
+        selected_midi_playback = FA_MIDI_TO_DEVICE;
+        if (selected_midi_playback_device) fa_deep_destroy_always(selected_midi_playback_device);
+        selected_midi_playback_device = pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s));
+        break;
+    // MIDI echo type
     case CHOOSE_MIDI_ECHO_NONE:
         selected_midi_echo = FA_ECHO_NO_ECHO;
         break;
+    case CHOOSE_MIDI_ECHO_PLAYBACK:
+        selected_midi_echo = FA_ECHO_TO_PLAYBACK;
     case CHOOSE_MIDI_ECHO_AUDIO:
-        selected_midi_echo = FA_ECHO_AUDIO;
+        selected_midi_echo = FA_ECHO_TO_AUDIO;
         break;
     case CHOOSE_MIDI_ECHO_DEVICE:
-        selected_midi_echo = FA_ECHO_DEVICE;
+        selected_midi_echo = FA_ECHO_TO_DEVICE;
         if (selected_midi_echo_device) fa_deep_destroy_always(selected_midi_echo_device);
         selected_midi_echo_device = pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s));
         break;
-        
+    // MIDI echo channel
+    case CHOOSE_MIDI_ECHO_CHANNEL:
+        {
+            int ch = -1;
+            if (argc > 0) {
+                ch = argv[0]->i;
+                if (ch < -1 || ch >= 16) {
+                    fa_fail(fa_string_format_integral("Bad channel: %d", ch));
+                    break;
+                }
+            }
+            midi_echo_channel = ch;
+            break;
+        }
     default:
         assert(false && "Never reached");
     }

@@ -461,22 +461,33 @@ fa_list_t construct_output_signal_tree() {
     return tree;
 }
 
-void handle_incoming_midi(fa_time_t time, fa_midi_message_t msg)
+void handle_incoming_midi(fa_time_t time, fa_midi_message_t msg, bool echo_to_playback)
 {
-    uint8_t status, data1, data2;
+    uint8_t statusCh, data1, data2;
     bool simple = fa_midi_message_is_simple(msg);
-    if (simple) fa_midi_message_decons(msg, &status, &data1, &data2);
+    if (simple) fa_midi_message_decons(msg, &statusCh, &data1, &data2);
     
     //fa_slog_info("Received MIDI message: ", msg);
     
-    if (current_midi_echo_stream) {
-        do_schedule_now(fa_action_send(synth_name, msg), current_midi_echo_stream);
+    fa_ptr_t echo_stream = echo_to_playback ? current_midi_playback_stream : current_midi_echo_stream;
+    
+    if (echo_stream) {
+        // If this is a simple message and midi_echo_channel is set, create a new message with that channel
+        if (simple && midi_echo_channel >= 0 && midi_echo_channel < 16) {
+            uint8_t status = statusCh & 0xf0;
+            fa_midi_message_t new_msg = fa_midi_message_create_simple(status + midi_echo_channel, data1, data2);
+            do_schedule_now(fa_action_send(synth_name, new_msg), echo_stream);
+            fa_destroy(msg);
+        } else {
+            // Otherwise, just echo the message
+            do_schedule_now(fa_action_send(synth_name, msg), echo_stream);
+        }
     } else {
         fa_destroy(msg);
     }
     
     if (simple) {     // don't forward SYSEX via OSC for now
-        send_osc_async("/receive/midi", "tiii", timetag_from_time(time), status, data1, data2);
+        send_osc_async("/receive/midi", "tiii", timetag_from_time(time), statusCh, data1, data2);
     }
 
     fa_destroy(time);
@@ -488,7 +499,7 @@ fa_ptr_t _incoming_midi(fa_ptr_t x, fa_ptr_t time_message)
     fa_time_t time         = fa_pair_first(time_message);
     fa_midi_message_t msg  = fa_pair_second(time_message);
     fa_destroy(time_message);
-    handle_incoming_midi(time, msg);
+    handle_incoming_midi(time, msg, false);
     return NULL;
 }
 
@@ -516,9 +527,11 @@ void resolve_devices() {
     current_audio_output_device = NULL;
     if (current_midi_input_devices) fa_destroy(current_midi_input_devices);
     current_midi_input_devices = fa_list_empty();
-    if (current_midi_output_devices) fa_destroy(current_midi_output_devices);
-    current_midi_output_devices = fa_list_empty();
-    current_midi_echo = FA_ECHO_NO_ECHO;
+    //if (current_midi_output_devices) fa_destroy(current_midi_output_devices);
+    current_midi_playback = FA_MIDI_NO_OUTPUT;
+    current_midi_echo = FA_MIDI_NO_OUTPUT;
+    current_midi_playback_device = NULL;
+    current_midi_echo_device = NULL;
     
     fa_list_t midi_devices = fa_midi_all(current_midi_session);
     fa_list_t audio_devices = fa_audio_all(current_audio_session);
@@ -550,7 +563,7 @@ void resolve_devices() {
         }
     }
     
-    // MIDI devices
+    // MIDI input devices
     if (!selected_midi_input_devices) { // NULL = all
         fa_for_each(device, midi_devices) {
             if (fa_midi_has_input(device)) fa_push_list(device, current_midi_input_devices);
@@ -566,41 +579,50 @@ void resolve_devices() {
             }
         }
     }
-    if (!selected_midi_output_devices) { // NULL == all
+    
+    // MIDI playback
+    if (selected_midi_playback == FA_MIDI_TO_DEVICE) {
+        assert(selected_midi_playback_device && "selected_midi_playback_device is NULL!");
         fa_for_each(device, midi_devices) {
-            if (fa_midi_has_output(device)) fa_push_list(device, current_midi_output_devices);
-        }
-    } else if (!fa_list_is_empty(selected_midi_output_devices)) {
-        fa_for_each(device, midi_devices) {
-            if (fa_midi_has_output(device)) {
-                fa_for_each(d, selected_midi_output_devices) {
-                    if (midi_device_matches(device, d)) {
-                        fa_push_list(device, current_midi_output_devices);
-                    }
-                }
+            if (fa_midi_has_input(device) && midi_device_matches(device, selected_midi_playback_device)) {
+                current_midi_playback_device = device;
+                current_midi_playback = FA_MIDI_TO_DEVICE;
             }
         }
+    } else {
+        current_midi_playback = selected_midi_playback;
     }
-
+    
     // MIDI echo
-    if (selected_midi_echo == FA_ECHO_DEVICE) {
+    switch (selected_midi_echo) {
+    case FA_ECHO_NO_ECHO:
+        current_midi_echo = FA_MIDI_NO_OUTPUT;
+        break;
+    case FA_ECHO_TO_PLAYBACK:
+        current_midi_echo_device = current_midi_playback_device;
+        current_midi_echo = current_midi_playback;
+        break;
+    case FA_ECHO_TO_AUDIO:
+        current_midi_echo = FA_MIDI_TO_AUDIO;
+        break;
+    case FA_ECHO_TO_DEVICE:
         assert(selected_midi_echo_device && "selected_midi_echo_device is NULL!");
         fa_for_each(device, midi_devices) {
             if (fa_midi_has_input(device) && midi_device_matches(device, selected_midi_echo_device)) {
                 current_midi_echo_device = device;
-                current_midi_echo = FA_ECHO_DEVICE;
+                current_midi_echo = FA_MIDI_TO_DEVICE;
             }
         }
-    } else {
-        current_midi_echo = selected_midi_echo;
+        break;
     }
     
-    fa_slog_info("Audio input:      ", selected_audio_input_device, current_audio_input_device);
-    fa_slog_info("Audio output:     ", selected_audio_output_device, current_audio_output_device);
-    fa_slog_info("MIDI input:       ", selected_midi_input_devices, current_midi_input_devices);
-    fa_slog_info("MIDI output:      ", selected_midi_output_devices, current_midi_output_devices);
-    fa_slog_info("MIDI echo:        ", fa_from_int8(selected_midi_echo), fa_from_int8(current_midi_echo));
-    fa_slog_info("MIDI echo device: ", selected_midi_echo_device, current_midi_echo_device);
+    fa_slog_info("Audio input:          ", selected_audio_input_device, current_audio_input_device);
+    fa_slog_info("Audio output:         ", selected_audio_output_device, current_audio_output_device);
+    fa_slog_info("MIDI input:           ", selected_midi_input_devices, current_midi_input_devices);
+    fa_slog_info("MIDI playback:        ", fa_from_int8(selected_midi_playback), fa_from_int8(current_midi_playback));
+    fa_slog_info("MIDI playback device: ", selected_midi_playback_device, current_midi_playback_device);
+    fa_slog_info("MIDI echo:            ", fa_from_int8(selected_midi_echo), fa_from_int8(current_midi_echo));
+    fa_slog_info("MIDI echo device:     ", selected_midi_echo_device, current_midi_echo_device);
     
     fa_destroy(midi_devices);  // just the list
     fa_destroy(audio_devices); // just the list
@@ -608,7 +630,6 @@ void resolve_devices() {
 
 void stop_streams() {
     fa_slog_info("Stopping streams...");
-    current_midi_echo_stream = NULL;
     current_clock = fa_clock_standard();
     
     // MIDI input streams
@@ -618,12 +639,21 @@ void stop_streams() {
     fa_destroy(current_midi_input_streams);
     current_midi_input_streams = fa_list_empty();
     
-    // MIDI output streams
-    fa_for_each(stream, current_midi_output_streams) {
-        fa_midi_close_stream(stream);
+    // MIDI echo stream
+    if (current_midi_echo_stream && current_midi_echo_stream != current_midi_playback_stream) {
+        if (fa_dynamic_get_type(current_midi_echo_stream) == midi_stream_type_repr) {
+            fa_midi_close_stream(current_midi_echo_stream);
+        }
     }
-    fa_destroy(current_midi_output_streams);
-    current_midi_output_streams = fa_list_empty();
+    current_midi_echo_stream = NULL;
+    
+    // MIDI playback stream
+    if (current_midi_playback_stream) {
+        if (fa_dynamic_get_type(current_midi_playback_stream) == midi_stream_type_repr) {
+            fa_midi_close_stream(current_midi_playback_stream);
+        }
+        current_midi_playback_stream = NULL;
+    }
     
     // Audio stream
     if (current_audio_stream) {
@@ -695,11 +725,11 @@ void start_streams() {
         if (current_audio_input_device && current_audio_output_device) {
             double sr_in  = fa_audio_current_sample_rate(current_audio_input_device);
             double sr_out = fa_audio_current_sample_rate(current_audio_output_device);
+            current_sample_rate = sr_out;
             if (sr_in != sr_out) {
                 fa_log_warning(fa_string("Sample rate mismatch, disabling input"));
                 send_osc_async("/error", "Nsdd", "sample-rate-mismatch", sr_in, sr_out);
                 current_audio_input_device = NULL;
-                current_sample_rate = sr_out;
             }
         } else if (current_audio_input_device) {
             current_sample_rate = fa_audio_current_sample_rate(current_audio_input_device);
@@ -707,16 +737,21 @@ void start_streams() {
             current_sample_rate = fa_audio_current_sample_rate(current_audio_output_device);
         }
         
+        // printf("current_sample_rate now set to %f\n", current_sample_rate);
+        
         fa_list_t out_signal = construct_output_signal_tree();
         fa_audio_stream_t audio_stream =
             fa_audio_open_stream(current_audio_input_device, current_audio_output_device, just, out_signal);
         error_check(audio_stream, "Could not start audio stream!");
         current_audio_stream = audio_stream;
         current_clock = fa_audio_get_clock(audio_stream);
-        if (current_midi_echo == FA_ECHO_AUDIO) {
+        if (current_midi_playback == FA_MIDI_TO_AUDIO) {
+            current_midi_playback_stream = audio_stream;
+        }
+        if (current_midi_echo == FA_MIDI_TO_AUDIO) {
             current_midi_echo_stream = audio_stream;
         }
-                
+        
         // Set volumes
         if (current_audio_stream) {
             fa_list_t actions = list(pair(fa_action_set(kSynthLeft, synth_volume), fa_now()),
@@ -751,18 +786,26 @@ void start_streams() {
         midi_input_count++;
     }
     
-    // Start one MIDI output stream for each device in current_midi_output_devices
+    // Start MIDI output stream
     size_t midi_output_count = 0;
-    fa_for_each(device, current_midi_output_devices) {
-        fa_midi_stream_t midi_stream = fa_midi_open_stream(device);
+    if (current_midi_playback_device) {
+        fa_midi_stream_t midi_stream = fa_midi_open_stream(current_midi_playback_device);
         error_check(midi_stream, "Could not start MIDI output stream!");
         fa_midi_set_clock(midi_stream, current_clock);
-        if (current_midi_echo == FA_ECHO_DEVICE && device == current_midi_echo_device) {
+        if (current_midi_echo == FA_MIDI_TO_DEVICE && current_midi_playback_device == current_midi_echo_device) {
              current_midi_echo_stream = midi_stream;
         }
-        fa_push_list(midi_stream, current_midi_output_streams);
+        current_midi_playback_stream = midi_stream;
         midi_output_count++;
     }
+    // Start MIDI echo stream
+    if (current_midi_echo_device && (current_midi_echo_device != current_midi_playback_device)) {
+        current_midi_echo_stream = fa_midi_open_stream(current_midi_playback_device);
+        error_check(current_midi_echo_stream, "Could not start MIDI echo stream!");
+        fa_midi_set_clock(current_midi_echo_stream, current_clock);
+        midi_output_count++;
+    }
+    
     fa_log_info(fa_string_dappend(fa_format_integral("%d MIDI inputs, ", midi_input_count),
                                   fa_format_integral("%d MIDI outputs", midi_output_count)));
                                   
@@ -899,7 +942,7 @@ int start_time_echo()
             time_echo_id++;
             fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), 0, fa_action_do_with_time(_echo_time, NULL));
             fa_action_t while_action = fa_action_while(_echo_time_p, fa_from_int16(time_echo_id), repeat_action);
-            schedule_relative(sched_delay, while_action, current_midi_echo_stream);
+            schedule_relative(sched_delay, while_action, current_midi_playback_stream);
         } else {
             time_echo++;
         }
@@ -944,7 +987,7 @@ int start_level_echo()
                                      pair(fa_action_do(_echo_level, NULL), fa_now()));
             fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(50), 0, fa_action_many(actions));
             fa_action_t while_action = fa_action_while(_echo_level_p, NULL, repeat_action);
-            schedule_relative(sched_delay, while_action, current_midi_echo_stream);
+            schedule_relative(sched_delay, while_action, current_midi_playback_stream);
         } else {
             level_echo++;
         }

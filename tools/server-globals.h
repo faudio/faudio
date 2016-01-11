@@ -29,20 +29,24 @@ fa_string_t soundfont_path = NULL;
 fa_pair_t selected_audio_input_device = NULL;
 fa_pair_t selected_audio_output_device = NULL;
 fa_list_t selected_midi_input_devices = NULL;
-fa_list_t selected_midi_output_devices = NULL;
-fa_echo_type_t selected_midi_echo = FA_ECHO_AUDIO;
+fa_midi_type_t selected_midi_playback = FA_MIDI_TO_AUDIO;
+fa_echo_type_t selected_midi_echo = FA_ECHO_TO_PLAYBACK;
+fa_pair_t selected_midi_playback_device = NULL;
 fa_pair_t selected_midi_echo_device = NULL;
 
 fa_audio_device_t current_audio_input_device = NULL;
 fa_audio_device_t current_audio_output_device = NULL;
 fa_list_t current_midi_input_devices = NULL;
-fa_list_t current_midi_output_devices = NULL;
-fa_echo_type_t current_midi_echo = FA_ECHO_AUDIO;
+fa_midi_type_t current_midi_playback = FA_MIDI_TO_AUDIO;
+fa_midi_type_t current_midi_echo = FA_MIDI_TO_AUDIO;
+fa_ptr_t current_midi_playback_device = NULL;
 fa_ptr_t current_midi_echo_device = NULL;
+
+int midi_echo_channel = -1;
 
 fa_audio_stream_t current_audio_stream = NULL;
 fa_list_t current_midi_input_streams = NULL;
-fa_list_t current_midi_output_streams = NULL;
+fa_ptr_t current_midi_playback_stream = NULL;
 fa_ptr_t current_midi_echo_stream = NULL;
 fa_clock_t current_clock = NULL;
 double current_sample_rate = 0;
@@ -126,12 +130,15 @@ static inline void init_globals() {
     uploads = fa_map_empty();
     uploads_mutex = fa_thread_create_mutex();
     
-    selected_midi_input_devices  = fa_list_empty();
-    selected_midi_output_devices = fa_list_empty();
-    current_midi_input_devices   = fa_list_empty();
-    current_midi_output_devices  = fa_list_empty();
-    current_midi_input_streams   = fa_list_empty();
-    current_midi_output_streams  = fa_list_empty();
+    selected_midi_input_devices   = fa_list_empty();
+    selected_midi_playback_device = NULL;
+    selected_midi_echo_device     = NULL;
+    current_midi_input_devices    = fa_list_empty();
+    current_midi_playback_device  = NULL;
+    current_midi_echo_device      = NULL;
+    current_midi_input_streams    = fa_list_empty();
+    current_midi_playback_stream  = NULL;
+    current_midi_echo_stream      = NULL;
     
     // Using global ring buffer means no parallel recordings, but
     // that is an acceptable limitation for now
@@ -170,11 +177,8 @@ static inline void destroy_globals() {
     
     fa_slog_info("Destroying device references...");
     if (selected_midi_input_devices) fa_destroy(selected_midi_input_devices);
-    if (selected_midi_output_devices) fa_destroy(selected_midi_output_devices);
     fa_destroy(current_midi_input_devices);
-    fa_destroy(current_midi_output_devices);
     fa_destroy(current_midi_input_streams);
-    fa_destroy(current_midi_output_streams);
     
     fa_slog_info("Destroying ring buffer...");
     fa_destroy(recording_ring_buffer);
