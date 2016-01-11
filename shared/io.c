@@ -15,7 +15,7 @@
 
 struct filter_base {
     fa_impl_t impl;
-    fa_ptr_t data1, data2, data3;
+    fa_ptr_t data1, data2, data3, data4;
 };
 
 #define byte_t uint8_t
@@ -465,7 +465,12 @@ FILTER_IMPLEMENTATION(composed_filter);
 
 void simple_filter_destroy(fa_ptr_t x)
 {
-    fa_warn(fa_string("Unimplemented IO destroy"));
+    fa_inform(fa_string("simple filter destroy"));
+    fa_nullary_t destructor = ((struct filter_base *) x)->data4;
+    if (destructor) {
+        destructor(x);
+    }
+    // fa_free(x); // ?
 }
 
 fa_string_t simple_filter_show(fa_ptr_t x)
@@ -624,6 +629,17 @@ fa_io_filter_t fa_io_create_simple_filter(fa_io_callback_t callback,
     x->data1 = callback;
     x->data2 = readCallback;
     x->data3 = data;
+    x->data4 = NULL;
+    return (fa_io_filter_t) x;
+}
+
+fa_io_filter_t fa_io_create_simple_filter_with_destructor(fa_io_callback_t callback,
+                                                          fa_io_read_callback_t readCallback,
+                                                          fa_ptr_t data,
+                                                          fa_nullary_t destructor)
+{
+    struct filter_base *x = (struct filter_base *)fa_io_create_simple_filter(callback, readCallback, data);
+    x->data4 = destructor;
     return (fa_io_filter_t) x;
 }
 

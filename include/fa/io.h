@@ -114,12 +114,20 @@ fa_io_source_t fa_io_apply(fa_io_source_t source,
 fa_io_sink_t fa_io_coapply(fa_io_filter_t filter,
                            fa_io_sink_t sink);
 
-/** Create a simple stateful  filter.
+/** Create a simple stateful filter.
     The callback is invoked on push and the read callback on pull.
 */
 fa_io_filter_t fa_io_create_simple_filter(fa_io_callback_t callback,
                                           fa_io_read_callback_t readCallback,
                                           fa_ptr_t ptr);
+/** Create a simple stateful filter.
+    The callback is invoked on push and the read callback on pull.
+    The destructor is called just before the actual filter is destroyed.
+*/
+fa_io_filter_t fa_io_create_simple_filter_with_destructor(fa_io_callback_t callback,
+                                                          fa_io_read_callback_t readCallback,
+                                                          fa_ptr_t data,
+                                                          fa_nullary_t destructor);
 
 /** Create a filter that writes data passed through it to the given sink. 
 */
