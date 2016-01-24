@@ -206,6 +206,7 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/audio-file/load",     "isiN", load_audio_file_handler, server);
     lo_server_thread_add_method(st, "/audio-file/load",     "isiF", load_audio_file_handler, server);
     lo_server_thread_add_method(st, "/audio-file/load/raw", "isii", load_raw_audio_file_handler, server);  // a id, path, sr, ch
+    lo_server_thread_add_method(st, "/audio-file/load/raw", "isiif", load_raw_audio_file_handler, server);  // + latency (ms)
     lo_server_thread_add_method(st, "/audio-file/close",    "i",  close_audio_file_handler, server); // audio id
     lo_server_thread_add_method(st, "/audio-file/save",     "i",  save_audio_file_handler, server);  // audio id
     lo_server_thread_add_method(st, "/audio-file/save",     "is", save_audio_file_handler, server);  // audio id, path
@@ -411,12 +412,14 @@ fa_ptr_t _playback_started(fa_ptr_t context, fa_time_t time, fa_time_t now)
 fa_ptr_t _playback_stopped(fa_ptr_t context, fa_time_t time, fa_time_t now)
 {
     oid_t id = peek_oid(context);
+    //printf("_playback_stopped (%hu)\n", id);
     if (remove_playback_semaphore(id)) {
         send_osc_async("/playback/stopped", "itT", id, timetag_from_time(now));
+        printf("calling stop_time_echo from _playback_stopped (%hu)\n", id);
         stop_time_echo();
-        if (current_midi_playback_stream) {
-            do_schedule_relative(sched_delay, all_notes_off_action(), current_midi_playback_stream);
-        }
+        //if (current_midi_playback_stream) {
+        //    do_schedule_relative(sched_delay, all_notes_off_action(), current_midi_playback_stream);
+        //}
     }
     return NULL;
 }
@@ -507,9 +510,13 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
     check_id(id);
     int data_size = lo_blob_datasize(data);
     uint8_t* ptr = lo_blob_dataptr(data);
-    if (data_size == 0) {
-        printf("zero-length blob sent to /play/midi\n");
+    if (data_size == 0 && repeat_interval > 0) {
+        fa_slog_error("/play/midi: cannot repeat zero midi events!");
         return 0;
+    }
+    if (data_size == 0 && (repeat_interval > 0 || auto_stop)) {
+        fa_slog_warning("/play/midi: no events to play\n");
+        //return 0;
     }
     if ((data_size % 12) != 0) {
         printf("data_size (%d) not a multiple of 12 in /play/midi\n", data_size);
@@ -613,6 +620,7 @@ int stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, 
         fa_time_t now = fa_clock_time(current_clock);
         send_osc(message, user_data, "/playback/stopped", "itF", argv[0]->i, timetag_from_time(now));
         fa_destroy(now);
+        //printf("calling stop_time_echo from stop_handler (%d)\n", argv[0]->i);
         stop_time_echo();
         if (current_midi_playback_stream) {
             // Stop sounding notes as fast as possible...
@@ -1067,10 +1075,11 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
 
 int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
-    oid_t id  = argv[0]->i;
+    oid_t id      = argv[0]->i;
     fa_string_t file_path = fa_string_from_utf8(&argv[1]->s);
-    int sr    = argv[2]->i;
-    int ch    = argv[3]->i;
+    int sr        = argv[2]->i;
+    int ch        = argv[3]->i;
+    float latency = argc > 4 ? argv[4]->f : 0;
     
     if (ch < 1 || ch > 2 || sr < 44100 || sr > 192000) {
         fa_destroy(file_path);
@@ -1088,7 +1097,13 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
             send_osc(message, user_data, "/audio-file/load", "iFs", id, "couldNotReadFile");
             return 0;
         }
-        fa_slog_info("Read raw file into memory");
+        if (fa_buffer_size(buffer) == 0) {
+            fa_destroy(file_path);
+            fa_destroy(buffer);
+            send_osc(message, user_data, "/audio-file/load", "iFs", id, "emptyFile");
+            return 0;
+        }
+        fa_slog_info("Read raw file into memory", buffer, file_path, fa_i32(fa_buffer_size(buffer)));
     } else {
         buffer = fa_file_buffer_create(file_path, kFileBufferSize);
         if (fa_check(buffer)) {
@@ -1099,17 +1114,19 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
         }
         fa_slog_info("Opened file_buffer for raw file");
     }
-    fa_set_meta(buffer, fa_string("file_path"), file_path);
-    fa_with_lock(audio_files_mutex) {
-        audio_files = fa_map_dset(wrap_oid(id), buffer, audio_files);
-    }
-
+    
     size_t frames = fa_buffer_size(buffer) / (sizeof(double) * ch);
+    fa_set_meta(buffer, fa_string("file_path"), file_path);
+    fa_set_meta(buffer, fa_string("latency"), fa_from_float(latency));
     fa_set_meta(buffer, fa_string("sample-rate"), fa_from_int32(sr));
     fa_set_meta(buffer, fa_string("channels"), fa_from_int32(ch));
     fa_set_meta(buffer, fa_string("frames"), fa_from_int64(frames));
     fa_set_meta(buffer, fa_string("sample-size"), fa_i8(fa_sample_type_size(double_sample_type)));
     fa_set_meta(buffer, fa_string("sample-type"), fa_i8(double_sample_type));
+    
+    fa_with_lock(audio_files_mutex) {
+        audio_files = fa_map_dset(wrap_oid(id), buffer, audio_files);
+    }
 
     send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, frames, sr, ch);
     
@@ -1176,16 +1193,27 @@ int audio_file_curve_handler(const char *path, const char *types, lo_arg ** argv
             //lo_blob blob = audio_curve(buffer);
             
             fa_buffer_t curve = audio_curve(buffer);
+            //fa_slog_info("audio_file_curve_handler  curve: ", curve);
+            if (!curve) {
+                fa_fail(fa_format_integral("Could not generate audio curve for audio file %zu", id));
+                send_osc(message, user_data, "/audio-file/curve", "iF", id);
+                continue; // cannot return directly, that won't release the lock
+            }
             size_t curve_size = fa_buffer_size(curve);
+            //printf("audio_file_curve_handler curve_size: %zu", curve_size);
             if (curve_size <= 16384) {
                 lo_blob blob = lo_blob_from_buffer(curve);
+                //printf("audio_file_curve_handler curve_size <= 16384, blob: %p", blob);
                 send_osc(message, user_data, "/audio-file/curve", "ib", id, blob);
                 lo_blob_free(blob);
             } else {
                 fa_list_t segments = fa_buffer_split(curve, 16384, false);
+                //fa_slog_info("audio_file_curve_handler curve_size > 16384, segments: segments", segments);
                 size_t offset = 0;
                 fa_for_each (segment, segments) {
+                    //fa_slog_info("segments: ", segment);
                     lo_blob blob = lo_blob_from_buffer(segment);
+                    //printf(" => blob: %p", blob);
                     send_osc(message, user_data, "/audio-file/curve", "ibii", id, blob, offset, curve_size);
                     lo_blob_free(blob);
                     offset += fa_buffer_size(segment);
@@ -1468,7 +1496,11 @@ fa_ptr_t _recording_started(fa_ptr_t context, fa_time_t time, fa_time_t now)
     fa_with_lock(recording_state_mutex) {
         recording_state = RECORDING_RUNNING;
     }
-    send_osc_async("/recording/started", "it", peek_oid(context), timetag_from_time(time));
+    if (time) {
+        send_osc_async("/recording/started", "it", peek_oid(context), timetag_from_time(time));
+    } else {
+        send_osc_async("/recording/started", "iN", peek_oid(context));
+    }
     return NULL;
 }
 
@@ -1493,7 +1525,7 @@ fa_ptr_t _stop_recording(fa_ptr_t context) {
     
     oid_t id = peek_oid(context);
     if (remove_recording_semaphore(id)) {
-        send_osc_async("/recording/stopped", "iT", peek_oid(context)); //, timetag_from_time(now));
+        send_osc_async("/recording/stopped", "is", peek_oid(context), "auto"); //, timetag_from_time(now));
     }
     return NULL;
 }
@@ -1559,15 +1591,15 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
     recording_thread = create_recording_thread(id, recording_ring_buffer, filename, url, cookies, current_sample_rate, 1);
     
     fa_action_t action = fa_action_send_retain(record_left_name, recording_ring_buffer);
-    if (rel_time == 0) {
-        schedule_now(action, current_audio_stream);
-        _recording_started(wrap_oid(id), NULL, NULL); // TODO: time
-    } else {
-        action = fa_action_if(check_recording_semaphore, wrap_oid(id),
-                    fa_action_many(list(pair(action, fa_now()),
-                                        pair(fa_action_do_with_time(_recording_started, wrap_oid(id)), fa_now()))));
-        schedule_relative(fa_time_from_double(rel_time), action, current_audio_stream);
-    }
+    //if (rel_time == 0) {
+    //    schedule_now(action, current_audio_stream);
+    //    _recording_started(wrap_oid(id), NULL, NULL); // TODO: time
+    //} else {
+    action = fa_action_if(check_recording_semaphore, wrap_oid(id),
+                fa_action_many(list(pair(action, fa_now()),
+                                    pair(fa_action_do_with_time(_recording_started, wrap_oid(id)), fa_now()))));
+    schedule_relative(fa_time_from_double(rel_time), action, current_audio_stream);
+    //}
     
     if (max_length < 0) {
         fa_warn(fa_string("start_recording_handler: negative max length! Disabling max length (setting to 0)"));
@@ -1602,7 +1634,7 @@ int stop_recording_handler(const char *path, const char *types, lo_arg ** argv, 
                     pair(fa_action_send(record_left_name, NULL), fa_now()),
                     pair(fa_action_send(record_right_name, NULL), fa_now())));
                 schedule_now(action, current_audio_stream);
-                send_osc(message, user_data, "/recording/stopped", "iT", id);
+                send_osc(message, user_data, "/recording/stopped", "is", id, "early");
             } else {
                 fa_slog_info("Recording is initializing under another ID");
                 send_osc(message, user_data, "/recording/stop", "iFs", id, "not-recording");
@@ -1626,7 +1658,7 @@ int stop_recording_handler(const char *path, const char *types, lo_arg ** argv, 
                 pair(fa_action_send(record_left_name, NULL), fa_now()),
                 pair(fa_action_send(record_right_name, NULL), fa_now())));
             schedule_now(action, current_audio_stream);
-            send_osc_async("/recording/stopped", "iT", id);
+            send_osc_async("/recording/stopped", "is", id, "stopped");
         } else {
             fa_slog_warning("Could not remove recording semaphore (strange!) ", wrap_oid(id));
             send_osc(message, user_data, "/recording/stop", "iFs", id, "strange-error");
@@ -1738,6 +1770,7 @@ int restart_streams_handler(const char *path, const char *types, lo_arg ** argv,
     if (argc > 0) {
         send_osc(message, user_data, "/restart/streams", "i", argv[0]->i);
     }
+    // printf("In restart_streams_handler, current_sample_rate: %f\n", current_sample_rate);
     return 0;
 }
 
@@ -1757,6 +1790,7 @@ int restart_sessions_handler(const char *path, const char *types, lo_arg ** argv
     if (argc > 0) {
         send_osc(message, user_data, "/restart/sessions", "i", argv[0]->i);
     }
+    // printf("In restart_sessions_handler, current_sample_rate: %f\n", current_sample_rate);
     return 0;
 }
 
