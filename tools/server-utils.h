@@ -1040,7 +1040,16 @@ fa_buffer_t audio_curve(fa_ptr_t buffer)
             size_t channels = fa_peek_integer(ch);
             double rel_rate = sample_rate / curve_rate;
             size = fa_buffer_size(buffer) / (rel_rate * channels * sizeof(double));
+            if (!size) {
+                printf("audio_curve: curve size is 0, returning NULL\n");
+                return NULL;
+            }
             curve = fa_malloc(size);
+            if (!curve) {
+                assert(false && "Could not allocate memory for audio curve!");
+                printf("Could not allocate memory for audio curve!\n");
+                return NULL;
+            }
             //printf("Curve needs %zu bytes\n", size);
             if (channels == 1) {
                 for(int i = 0; i < size; i++) {

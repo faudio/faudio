@@ -100,6 +100,7 @@ fa_ptr_t _status_callback(fa_ptr_t session);
 
 int main(int argc, char const *argv[])
 {
+    printf("main\n");
     fa_set_log_std();
     
     char port[14]; // enough to hold all int32 numbers
@@ -110,18 +111,24 @@ int main(int argc, char const *argv[])
         #endif
     }
     
+    printf("port = %s\n", port);
+    
     // Init curl. This MUST be called before any other threads are spawned, even
     // if they are not using libcurl (according to the libcurl documentation).
+    printf("Initializing curl\n");
     curl_global_init(CURL_GLOBAL_DEFAULT);
   
     /* start a new server  */
+    printf("Starting OSC listener thread...\n");
     lo_server_thread st = lo_server_thread_new_with_proto(port, LO_TCP, liblo_error);
     if (!st) {
         printf("Could not start OSC server, exiting\n");
         curl_global_cleanup();
-        exit(1);
+        exit(3);
     }
     server = lo_server_thread_get_server(st);
+
+    printf("Adding OSC handlers...\n");
 
     /* add bundle handlers */
     lo_server_add_bundle_handlers(server, bundle_start_handler, bundle_end_handler, NULL);
@@ -255,6 +262,8 @@ int main(int argc, char const *argv[])
     
     /* add method that will match any path and args */
     lo_server_thread_add_method(st, NULL, NULL, fallback_handler, server);
+
+    printf("Starting FAudio...\n");
 
     fa_with_faudio() {
         
