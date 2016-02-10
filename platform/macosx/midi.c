@@ -755,11 +755,10 @@ void push_sysex_byte(stream_t stream, uint8_t x)
 
 fa_buffer_t copy_sysex_to_new_buffer(stream_t stream)
 {
-    // TODO do not double-allocate
-    return fa_copy(fa_buffer_wrap((void *) stream->sysex_in_buffer.data,
-                                  stream->sysex_in_buffer.count,
-                                  NULL,
-                                  NULL));
+    size_t size = stream->sysex_in_buffer.count;
+    void *data = fa_malloc(size);
+    memcpy(data, (void *) stream->sysex_in_buffer.data, size);
+    return fa_buffer_dwrap(data, size);
 }
 
 void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
