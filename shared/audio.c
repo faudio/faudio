@@ -790,22 +790,28 @@ void print_audio_info(device_t input, device_t output)
     fa_inform(fa_string_dappend(fa_string("    Input: "), input ? fa_audio_full_name(input) : fa_string("N/A")));
 
     if (input) {
-        fa_inform(fa_string_dappend(fa_string("        Default Latency: "),
+        fa_inform(fa_string_dappend(fa_string("        Default Latency:      "),
 									dshow_range(fa_pair_first(fa_audio_recommended_latency(input)))));
+        fa_inform(fa_string_format_floating("        Current Sample Rate:  %2f", fa_audio_current_sample_rate(input)));
     }
 
     fa_inform(fa_string_dappend(fa_string("    Output: "), output ? fa_audio_full_name(output) : fa_string("N/A")));
 
     if (output) {
-        fa_inform(fa_string_dappend(fa_string("        Default Latency: "),
+        fa_inform(fa_string_dappend(fa_string("        Default Latency:      "),
 									dshow_range(fa_pair_first(fa_audio_recommended_latency(output)))));
+        fa_inform(fa_string_format_floating("        Current Sample Rate:  %2f", fa_audio_current_sample_rate(output)));
     }
 
     fa_let(session, input ? input->session : output->session) {
-        fa_inform(fa_string_format_floating("    Sample Rate:    %2f", session->parameters.sample_rate));
-        fa_inform(fa_string_format_floating("    Input Latency:  %3f", session->parameters.latency[0]));
-        fa_inform(fa_string_format_floating("    Output Latency: %3f", session->parameters.latency[1]));
-        fa_inform(fa_string_format_integral("    Vector Size:    %d",  session->parameters.vector_size));
+        if (session->parameters.sample_rate == 0) {
+            fa_inform(fa_string("    Suggested Sample Rate:    [Use Output Default]"));
+        } else {
+            fa_inform(fa_string_format_floating("    Suggested Sample Rate:    %2f", session->parameters.sample_rate));
+        }
+        fa_inform(fa_string_format_floating("    Suggested Input Latency:  %3f", session->parameters.latency[0]));
+        fa_inform(fa_string_format_floating("    Suggested Output Latency: %3f", session->parameters.latency[1]));
+        fa_inform(fa_string_format_integral("    Vector Size:              %d",  session->parameters.vector_size));
 
         if (is_wasapi_device(input) || is_wasapi_device(output)) {
             fa_inform(fa_string_dappend(fa_string("    Exclusive Mode: "),  fa_string(session->parameters.exclusive ? "Yes" : "No")));
@@ -853,6 +859,11 @@ stream_t fa_audio_open_stream(device_t input,
 
     unsigned long   buffer_size = (input ? input : output)->session->parameters.vector_size;
     double          sample_rate = (input ? input : output)->session->parameters.sample_rate;
+    // sample_rate == 0 means that we are going to use the sample rate of the output device
+    // (or the input device, if there is not output)
+    if (sample_rate == 0) {
+        sample_rate = fa_audio_current_sample_rate(output ? output : input);
+    }
     stream_t        stream = new_stream(input, output, sample_rate, buffer_size);
 
     {
@@ -1212,8 +1223,8 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
 
 void before_processing(stream_t stream)
 {
-    session_t session  = stream->input ? stream->input->session : stream->output->session;
-    stream->state      = new_state(session->parameters.sample_rate); // FIXME
+    //session_t session  = stream->input ? stream->input->session : stream->output->session;
+    stream->state      = new_state(stream->sample_rate);
 
     fa_signal_t merged = fa_signal_constant(0);
 
@@ -1235,7 +1246,7 @@ void before_processing(stream_t stream)
     }
 
     merged = fa_signal_simplify(merged);
-    print_fa_signal_tree(merged);
+    //print_fa_signal_tree(merged);
 
     merged = fa_signal_route_processors(proc_map, merged);
     print_fa_signal_tree(merged);

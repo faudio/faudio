@@ -415,7 +415,7 @@ fa_ptr_t _playback_stopped(fa_ptr_t context, fa_time_t time, fa_time_t now)
     //printf("_playback_stopped (%hu)\n", id);
     if (remove_playback_semaphore(id)) {
         send_osc_async("/playback/stopped", "itT", id, timetag_from_time(now));
-        printf("calling stop_time_echo from _playback_stopped (%hu)\n", id);
+        //printf("calling stop_time_echo from _playback_stopped (%hu)\n", id);
         stop_time_echo();
         //if (current_midi_playback_stream) {
         //    do_schedule_relative(sched_delay, all_notes_off_action(), current_midi_playback_stream);
@@ -430,7 +430,7 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
     double skip            = argc >= 3 ? (argv[2]->f / 1000.0) : 0.0; // convert from ms to s
     double time            = argc >= 4 ? (argv[3]->f / 1000.0) : 0.0;
     double repeat_interval = argc >= 5 ? (argv[4]->f / 1000.0) : 0.0;
-    check_id(id);
+    check_id(id, message, user_data);
     if (!current_audio_stream) {
         send_osc(message, user_data, "/error", "is", id, "no-audio-stream");
         return 0;
@@ -507,19 +507,26 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
     double repeat_interval = argc >= 4 ? (argv[3]->f / 1000.0) : 0.0;
     bool auto_stop = (strlen(types) >= 5 && types[4] == 'F') ? false : true;
     time = time + 0; // ?
-    check_id(id);
+    check_id(id, message, user_data);
     int data_size = lo_blob_datasize(data);
     uint8_t* ptr = lo_blob_dataptr(data);
     if (data_size == 0 && repeat_interval > 0) {
         fa_slog_error("/play/midi: cannot repeat zero midi events!");
+        send_osc(message, user_data, "/error", "is", id, "cannot-repeat-zero-events");
         return 0;
     }
     if (data_size == 0 && (repeat_interval > 0 || auto_stop)) {
-        fa_slog_warning("/play/midi: no events to play\n");
+        fa_slog_warning("/play/midi: no events to play");
         //return 0;
     }
     if ((data_size % 12) != 0) {
         printf("data_size (%d) not a multiple of 12 in /play/midi\n", data_size);
+        send_osc(message, user_data, "/error", "is", id, "bad-midi-data");
+        return 0;
+    }
+    if (!current_midi_playback_stream) {
+        fa_slog_warning("/play/midi: cannot play, there is no playback stream");
+        send_osc(message, user_data, "/error", "is", id, "no-playback-stream");
         return 0;
     }
 
@@ -1541,7 +1548,7 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
     double max_length = argc > 5 ? argv[5]->f : 0;
     bool cancel = false;
     
-    check_id(id);
+    check_id(id, message, user_data);
     
     // No input device
     if (!current_audio_input_device) {

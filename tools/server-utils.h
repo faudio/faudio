@@ -39,21 +39,28 @@ uint8_t min_uint8(uint8_t a, uint8_t b) { return a < b ? a : b; }
 #define send_osc(m, s, ...) lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__)
 #define send_osc_async(...) if (last_address) lo_send_from(last_address, server, LO_TT_IMMEDIATE, __VA_ARGS__)
 
-#define check_id(id) \
+#define check_id(id, message, user_data) \
 if (id > last_used_id) {    \
     last_used_id = id;      \
 } else {                    \
     fa_fail(fa_string_dappend(fa_string_format_integral("ID %zu is lower than", id), \
                               fa_string_format_integral(" last used ID (%zu)", last_used_id))); \
+    if (message && user_data) {   \
+        send_osc(message, user_data, "/error", "isi", id, "bad-id", id); \
+    }  \
     return 0; \
 }
 
-#define error_check(_obj, _msg)     \
-if (fa_check(_obj)) {               \
-    fa_log_error(fa_string(_msg));  \
-    fa_error_log(_obj, NULL);       \
-    return;                         \
+#define error_check(_obj, _msg)             \
+if (fa_check(_obj)) {                       \
+    fa_log_error(fa_string(_msg));          \
+    fa_error_log(NULL, (fa_error_t) _obj);  \
+    return;                                 \
 }
+
+    //fa_slog_error("Obj: ", _obj);   
+    //if (_obj) fa_destroy(_obj);     
+
 
 #define safe_peek_i32(ptr) (ptr ? (int32_t) fa_peek_number(ptr) : 0)
 
@@ -742,7 +749,15 @@ void start_streams() {
         fa_list_t out_signal = construct_output_signal_tree();
         fa_audio_stream_t audio_stream =
             fa_audio_open_stream(current_audio_input_device, current_audio_output_device, just, out_signal);
-        error_check(audio_stream, "Could not start audio stream!");
+        if (fa_check(audio_stream)) {
+            current_audio_stream = NULL;
+            fa_error_t error = (fa_error_t) audio_stream;
+            char* msg = fa_unstring(fa_error_message(error));
+            send_osc_async("/error", "Nss", "could-not-start-stream", msg);
+            fa_free(msg);
+            fa_destroy(error);
+            return;
+        }
         current_audio_stream = audio_stream;
         current_clock = fa_audio_get_clock(audio_stream);
         if (current_midi_playback == FA_MIDI_TO_AUDIO) {
