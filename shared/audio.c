@@ -1665,7 +1665,7 @@ fa_error_t audio_device_error_with(fa_string_t msg, int code)
                                                               // format_integral(" (error code %d)", code)
                                                              ),
                                             fa_string("Doremir.Device.Audio"));
-    fa_error_log(NULL, err);
+    fa_error_log(NULL, fa_copy(err));
     return err;
 }
 
