@@ -116,18 +116,20 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
 
 fa_buffer_t fa_buffer_dwrap(fa_ptr_t pointer, size_t size)
 {
+    //printf("fa_buffer_dwrap  pointer: %p, size: %zu\n", pointer, size);
+    assert(pointer && size && "Cannot wrap a NULL pointer!");
     return fa_buffer_wrap(pointer, size, default_destroy, NULL);
 }
 
 fa_buffer_t fa_buffer_copy(fa_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+    assert(false && "fa_buffer_copy not implemented");
     return fa_buffer_resize(buffer->size, buffer);
 }
 
 fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+    assert(false && "fa_buffer_resize not implemented");
 //     fa_ptr_t buffer_impl(fa_id_t interface);
 //
 //     fa_buffer_t copy        = fa_new(buffer);
