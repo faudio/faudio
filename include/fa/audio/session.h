@@ -90,9 +90,9 @@ void fa_audio_with_session(fa_audio_session_callback_t sessionCallback,
     Name                 | Description
     ---------------------|------------------------------------------------------------------------
     `latency`            | Suggested latency for both input and output in seconds (integer or floating-point).
-    `input-latency`      | Suggested latency for both input and output in seconds (integer or floating-point).
-    `output-latency`     | Suggested latency for both input and output in seconds (integer or floating-point).
-    `sample-rate`        | Suggested sample rate in Hertz (floating-point).
+    `input-latency`      | Suggested latency for input in seconds (integer or floating-point).
+    `output-latency`     | Suggested latency for output in seconds (integer or floating-point).
+    `sample-rate`        | Suggested sample rate in Hertz (floating-point). Set to 0 to use the sample rate of the device.
     `vector-size`        | Suggested internal vector size (integer).
     `scheduler-interval` | Scheduler update interval in milliseconds (integer).
     `exclusive`          | Use exclusive mode if available (boolean or integer). This will force `faudio` to claim exclusive access to each audio device it uses.
