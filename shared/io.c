@@ -788,11 +788,11 @@ struct _pull_to_buffer_info {
     size_t growth;
 };
 
-static fa_ptr_t default_destroy(fa_ptr_t _, fa_ptr_t data)
-{
-    fa_free(data);
-    return NULL;
-}
+// static fa_ptr_t default_destroy(fa_ptr_t _, fa_ptr_t data)
+// {
+//     fa_free(data);
+//     return NULL;
+// }
 
 static void _pull_to_buffer(fa_ptr_t i, fa_buffer_t buf)
 {
@@ -837,7 +837,7 @@ fa_buffer_t fa_io_pull_to_buffer(fa_io_source_t source)
         fa_io_pull(source, _pull_to_buffer, (fa_ptr_t)&info);
     }
     if (info.ptr && info.used) {
-        return fa_buffer_wrap(info.ptr, info.used, default_destroy, NULL);
+        return fa_buffer_dwrap(info.ptr, info.used);
     } else {
         if (info.ptr) {
             fa_free(info.ptr);
