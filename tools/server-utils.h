@@ -1128,25 +1128,35 @@ struct upload_buffer_info {
   long sizeleft;
 };
 
+// Read function for upload; i.e. the function providing data for the curl upload
+// It reads from the provided buffer.
+// (The corresponding function for normal buffers is _upload_read_ring_buffer)
 static size_t _upload_read_buffer(void *ptr, size_t size, size_t nmemb, void *data)
 {
     struct upload_buffer_info *info = (struct upload_buffer_info *)data;
     
+    // curl wants size*nmemb bytes
+
     if(size*nmemb < 1)
         return 0;
 
+    // If there is any data left, read from it
     if (info->sizeleft) {
         size_t bytes = MIN(size*nmemb, info->sizeleft);
-        printf("upload_read_function: %zu bytes\n", bytes);
+        printf("_upload_read_buffer: uploading %zu bytes (%zu bytes left)\n", bytes, info->sizeleft);
         memcpy(ptr, info->readptr, bytes);
         info->readptr += bytes;
         info->sizeleft -= bytes;
         return size*nmemb;
     }
 
+    // No more data. Return 0 to curl, which tells curl that the transfer is complete.
     return 0;
 }
 
+// Read function for upload; i.e. the function providing data for the curl upload
+// It reads from the provided ring buffer.
+// (The corresponding function for normal buffers is _upload_read_buffer)
 static size_t _upload_read_ring_buffer(void *ptr, size_t size, size_t nmemb, void *data)
 {
     fa_atomic_ring_buffer_t ring_buffer = (fa_atomic_ring_buffer_t)data;
@@ -1156,23 +1166,24 @@ static size_t _upload_read_ring_buffer(void *ptr, size_t size, size_t nmemb, voi
     //     printf("  Closed\n");
     //     return 0;
     // }
-
-
+	
+	// curl wants size*nmemb bytes from us.
     // If there is enough data available, read as much as possible
     if (fa_atomic_ring_buffer_can_read(ring_buffer, size*nmemb)) {
-        printf("  Reading block of %zu bytes\n", size*nmemb);
+        printf("_upload_read_ring_buffer: Reading block of %zu bytes\n", size*nmemb);
         void *dest = ptr;
         for (size_t i = 0; i < size*nmemb; ++i) {
             bool success = fa_atomic_ring_buffer_read(ring_buffer, dest);
-            assert(success && "Could not read from ring buffer");
+            assert(success && "_upload_read_ring_buffer: Could not read from ring buffer");
             dest++;
         }
         return size*nmemb;
     }
 
-    // Otherwise, read one byte at a time until
+    // Otherwise, read one byte at a time until there is more data available,
+	// or until the ring buffer is closed.
     void *dest = ptr;
-    printf("  Trying to read %zu bytes one at a time\n", size*nmemb);
+    printf("_upload_read_ring_buffer: Trying to read %zu bytes one at a time\n", size*nmemb);
     size_t i = 0;
     while (i < size*nmemb) {
         if (fa_atomic_ring_buffer_can_read(ring_buffer, 1)) {
@@ -1182,7 +1193,10 @@ static size_t _upload_read_ring_buffer(void *ptr, size_t size, size_t nmemb, voi
         } else {
             // Cannot read. If it is because the buffer is closed, then return
             if (fa_atomic_ring_buffer_is_closed(ring_buffer)) {
-                printf("Cannot read and buffer was closed. Returning %zu\n", i);
+                printf("_upload_read_ring_buffer: Cannot read and buffer was closed. Returning %zu\n", i);
+                // If data has already been read during this function call, i will be positive,
+                // and curl will call us once more. At that point, no more data is to be read,
+                // i will be 0, and returning 0 tells curl that the transfer is complete.
                 return i;
             }
             // Otherwise, wait for more data
@@ -1193,6 +1207,7 @@ static size_t _upload_read_ring_buffer(void *ptr, size_t size, size_t nmemb, voi
     return size*nmemb;
 }
 
+// _upload_write is the function taking care of the server response
 static size_t _upload_write(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
     fa_buffer_t buffer = (fa_buffer_t)userdata;
@@ -1200,7 +1215,7 @@ static size_t _upload_write(char *ptr, size_t size, size_t nmemb, void *userdata
     fa_buffer_dresize(old_size + (size * nmemb), buffer);
     void *dest = fa_buffer_unsafe_address(buffer) + old_size;
     memcpy(dest, ptr, (size * nmemb));
-    printf("Received %zu bytes (%zu * %zu)\n", size*nmemb, size, nmemb);
+    printf("_upload_write: received %zu bytes (%zu * %zu) from the server\n", size*nmemb, size, nmemb);
     return size*nmemb;
 }
 
@@ -1231,7 +1246,7 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
     struct upload_buffer_info info;
     
     fa_slog_info("  In upload thread ", buffer, ring_buffer);
-    
+	
     CURL *curl = curl_easy_init();
     if (curl) {
         printf("Uploading to %s\n", url);
@@ -1350,18 +1365,22 @@ struct recording_thread_args {
     long channels;
 };
 
+// _recording_receive: this is an IO callback, called with streamed ogg data from the on-going
+// recording. The data is written to a ring_buffer, which is uploaded in parallel in another
+// thread. Note that this callback is only used for upload; for file-only recording, it is
+// never inserted into the IO chain.
 void _recording_receive(fa_ptr_t context, fa_buffer_t buffer) {
     fa_atomic_ring_buffer_t ring_buffer = context;
     if (!buffer) {
-        printf("Received NULL, closing ring buffer\n");
+        printf("_recording_receive: Received NULL, closing ring buffer\n");
         fa_atomic_ring_buffer_close(ring_buffer);
-    } else if (recording_state == RECORDING_STOPPING && !fa_atomic_ring_buffer_is_closed(ring_buffer)) {
-        printf("recording_state == RECORDING_STOPPING, closing ring buffer\n");
-        fa_atomic_ring_buffer_close(ring_buffer);
+    // } else if (recording_state == RECORDING_STOPPING && !fa_atomic_ring_buffer_is_closed(ring_buffer)) {
+    //     printf("_recording_receive: recording_state == RECORDING_STOPPING, closing ring buffer\n");
+    //     fa_atomic_ring_buffer_close(ring_buffer);
     } else {
         uint8_t *ptr = fa_buffer_unsafe_address(buffer);
         size_t size = fa_buffer_size(buffer);
-        printf("Received %zu bytes of ogg\n", size);
+        printf("_recording_receive: Received %zu bytes of ogg\n", size);
         if (fa_atomic_ring_buffer_can_write(ring_buffer, size)) {
             for (size_t i = 0; i < fa_buffer_size(buffer); i++) {
                  fa_atomic_ring_buffer_write(ring_buffer, *ptr);
@@ -1369,7 +1388,7 @@ void _recording_receive(fa_ptr_t context, fa_buffer_t buffer) {
              }
         } else {
             // TODO: handle this error!
-            fa_fail(fa_string("Upload ring buffer overflow!"));
+            fa_fail(fa_string("_recording_receive: Upload ring buffer overflow!"));
         }
     }
 }
@@ -1441,6 +1460,8 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
         fa_slog_info("Recording thread: sempahore is not set, skipping io_run");
     }
     
+	printf("_recording_thread 4.5, before detaching sink\n");
+	
     // Make sure sink is detached (especially important if io_run is never called,
     // otherwise the upload callback will never return!)
     fa_io_push(sink, NULL);

@@ -1067,10 +1067,11 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
         int64_t fr = fa_peek_integer(frames);
         uint32_t sr = safe_peek_i32(sample_rate);
         uint32_t ch = safe_peek_i32(channels);
-        if (cropped && fa_peek_bool(cropped))
+        if (cropped && fa_peek_bool(cropped)) {
             send_osc(message, user_data, "/audio-file/load", "iTiiiT", id, fr, sr, ch);
-        else
+        } else {
             send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, fr, sr, ch);
+        }
     } else {
         fa_fail(fa_string("frames, sample-rate or channels not set"));
         send_osc(message, user_data, "/audio-file/load", "iFs", id, "missingMetaData");
@@ -1119,7 +1120,7 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
             send_osc(message, user_data, "/audio-file/load", "iFs", id, "couldNotReadFile");
             return 0;
         }
-        fa_slog_info("Opened file_buffer for raw file");
+        fa_slog_info("Opened file_buffer for raw file", buffer, fa_i32(fa_file_buffer_file_size(buffer)));
     }
     
     size_t frames = fa_buffer_size(buffer) / (sizeof(double) * ch);
@@ -1134,6 +1135,9 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
     fa_with_lock(audio_files_mutex) {
         audio_files = fa_map_dset(wrap_oid(id), buffer, audio_files);
     }
+	
+	fa_slog_info("Raw file info: ", fa_get_meta(buffer, fa_string("sample-rate")), fa_get_meta(buffer, fa_string("channels")));
+	fa_slog_info("(continued)  : ", fa_get_meta(buffer, fa_string("frames")), fa_get_meta(buffer, fa_string("sample-size")));
 
     send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, frames, sr, ch);
     
@@ -1618,7 +1622,7 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
             fa_action_many(list(
                 pair(fa_action_send(record_left_name, NULL), fa_now()),
                 pair(fa_action_send(record_right_name, NULL), fa_now()),
-                pair(fa_action_do(_stop_recording, wrap_oid(id)), fa_now())))); // has to be after the sends!
+                pair(fa_action_do(_stop_recording, wrap_oid(id)), fa_now())))); // has to be after the sends! May still be too early
         schedule_relative(fa_time_from_double(rel_time + max_length), action, current_audio_stream);
     }
     
@@ -1630,6 +1634,8 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
 int stop_recording_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id = argv[0]->i;
+	
+	printf("stop_recording_handler called with id %hu\n", id);
 
     fa_with_lock(recording_state_mutex) {
         if (recording_state == RECORDING_INITIALIZING) {
