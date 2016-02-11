@@ -1536,7 +1536,11 @@ fa_ptr_t _stop_recording(fa_ptr_t context) {
     
     oid_t id = peek_oid(context);
     if (remove_recording_semaphore(id)) {
-        send_osc_async("/recording/stopped", "is", peek_oid(context), "auto"); //, timetag_from_time(now));
+        fa_slog_info("_stop_recording: successfully removed semaphore");
+        // Don't send osc here, the recording may not be entirely finished
+        //send_osc_async("/recording/stopped", "is", peek_oid(context), "auto"); //, timetag_from_time(now));
+    } else {
+        fa_slog_warning("_stop_recording: could not remove semaphore");
     }
     return NULL;
 }
@@ -1671,7 +1675,7 @@ int stop_recording_handler(const char *path, const char *types, lo_arg ** argv, 
                 pair(fa_action_send(record_left_name, NULL), fa_now()),
                 pair(fa_action_send(record_right_name, NULL), fa_now())));
             schedule_now(action, current_audio_stream);
-            send_osc_async("/recording/stopped", "is", id, "stopped");
+            //send_osc_async("/recording/stopped", "is", id, "stopped"); // May be too early!!
         } else {
             fa_slog_warning("Could not remove recording semaphore (strange!) ", wrap_oid(id));
             send_osc(message, user_data, "/recording/stop", "iFs", id, "strange-error");

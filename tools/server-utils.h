@@ -1486,6 +1486,9 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
         recording_state = NOT_RECORDING;
     }
     
+    fa_slog_info("Sending /recording/stopped");
+    send_osc_async("/recording/stopped", "is", id, "stopped");
+    
     return NULL;
 }
 
