@@ -36,8 +36,11 @@
 
 uint8_t min_uint8(uint8_t a, uint8_t b) { return a < b ? a : b; }
 
-#define send_osc(m, s, ...) lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__)
-#define send_osc_async(...) if (last_address) lo_send_from(last_address, server, LO_TT_IMMEDIATE, __VA_ARGS__)
+#define send_osc(m, s, ...) \
+  fa_with_lock(osc_mutex) { lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__); }
+
+#define send_osc_async(...) \
+  if (last_address) { fa_with_lock(osc_mutex) { lo_send_from(last_address, server, LO_TT_IMMEDIATE, __VA_ARGS__); } }
 
 #define check_id(id, message, user_data) \
 if (id > last_used_id) {    \

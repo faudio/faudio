@@ -59,6 +59,8 @@ fa_map_t host_input_latency = NULL;
 fa_map_t host_output_latency = NULL;
 fa_map_t host_vector_size = NULL;
 
+fa_thread_mutex_t osc_mutex = NULL;
+
 #ifdef _WIN32
 double synth_volume   = 1.0;
 #else
@@ -150,6 +152,8 @@ static inline void init_globals() {
     fa_map_set_value_destructor(host_input_latency, fa_destroy);
     fa_map_set_value_destructor(host_output_latency, fa_destroy);
     fa_map_set_value_destructor(host_vector_size, fa_destroy);
+    
+    osc_mutex = fa_thread_create_mutex();
 }
 
 static inline void destroy_globals() {
@@ -187,6 +191,8 @@ static inline void destroy_globals() {
     fa_destroy(host_input_latency);
     fa_destroy(host_output_latency);
     fa_destroy(host_vector_size);
+    
+    fa_destroy(osc_mutex);
 }
 
 #endif
