@@ -1477,8 +1477,6 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
     //fa_destroy(ring_buffer); // currently, we are using a global ring buffer, so don't free it
     //fa_destroy(result);
     
-    fa_slog_info("End of recording thread function");
-    
     fa_with_lock(recording_state_mutex) {
         if (recording_state != RECORDING_RUNNING && recording_state != RECORDING_STOPPING) {
             fa_warn(fa_string_format_integral("  !! recording_state is %d", recording_state));
@@ -1486,8 +1484,10 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
         recording_state = NOT_RECORDING;
     }
     
-    fa_slog_info("Sending /recording/stopped");
+    fa_slog_info("Sent /recording/stopped");
     send_osc_async("/recording/stopped", "is", id, "stopped");
+    
+    fa_slog_info("End of recording thread function");
     
     return NULL;
 }
