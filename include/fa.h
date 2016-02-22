@@ -375,7 +375,8 @@ fa_ptr_t fa_dabsolute(fa_ptr_t ptr);
     
 */
 typedef struct {
-            fa_ptr_t (* copy)(fa_ptr_t); fa_ptr_t (* deep_copy)(fa_ptr_t);
+            fa_ptr_t (* copy)(fa_ptr_t);
+            fa_ptr_t (* deep_copy)(fa_ptr_t);
         } fa_copy_t;
 
 /** Generic destruction interface.
@@ -385,7 +386,7 @@ typedef struct {
             void (* destroy)(fa_ptr_t);
             void (* deep_destroy)(fa_ptr_t, fa_deep_destroy_pred_t);
         } fa_destroy_t;
-
+    
 /** Copy the given value.
     @see [Copy](@ref fa_copy_t)
       
@@ -426,6 +427,49 @@ bool fa_d_e_s_t_r_o_y_a_l_w_a_y_s(fa_ptr_t ptr);
 
 
 void fa_deep_destroy_always(fa_ptr_t ptr);
+
+
+/** Generic reference count interface.
+    
+*/
+typedef struct {
+            void (* take_reference)(fa_ptr_t);
+            void (* release_reference)(fa_ptr_t);
+} fa_reference_count_t;
+
+/** Take a reference to a reference counted object.
+    @see [Reference counted objects](@ref fa_reference_count_t)
+      
+*/
+void fa_take_reference(fa_ptr_t ptr);
+
+/** Release a reference to a reference counted object.
+    @see [Reference counted objects](@ref fa_reference_count_t)
+      
+*/
+void fa_release_reference(fa_ptr_t ptr);
+
+
+/** Generic meta-data interface.
+    
+*/
+typedef struct {
+            fa_ptr_t (* get_meta)(fa_ptr_t, fa_ptr_t);
+            void (* set_meta)(fa_ptr_t, fa_ptr_t, fa_ptr_t);
+} fa_meta_data_t;
+
+/** Get a meta data entry for an object.
+    @see [Meta data](@ref fa_meta_data_t)
+      
+*/
+fa_ptr_t fa_get_meta(fa_ptr_t object, fa_ptr_t key);
+
+/** Set a meta data entry for an object.
+    @see [Meta data](@ref fa_meta_data_t)
+      
+*/
+void fa_set_meta(fa_ptr_t object, fa_ptr_t key, fa_ptr_t value);
+
 
 /** Generic append operation interface. 
 */
@@ -480,6 +524,14 @@ void fa_print_ln(fa_ptr_t ptr);
 
 
 void fa_dprint_ln(fa_ptr_t ptr);
+
+
+typedef enum {
+            float_sample_type,
+            double_sample_type
+        } fa_sample_type_t;
+
+uint8_t fa_sample_type_size(fa_sample_type_t sample_type);
 
 /** @}
     */

@@ -114,7 +114,7 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
 
     // fa_thread_sleep(10500); // DEBUG Wait until rec done to remove ring buffer contention
 
-    fa_io_filter_t ogg = (!gVorbis ? fa_io_identity() : fa_io_create_ogg_encoder());
+    fa_io_filter_t ogg = (!gVorbis ? fa_io_identity() : fa_io_create_ogg_encoder(44100, 1));
     fa_io_filter_t end = (!gEndian ? fa_io_identity() : fa_io_create_endian_filter());
     fa_io_filter_t filt = fa_io_compose(ogg, end);
     fa_io_run(

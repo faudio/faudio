@@ -70,7 +70,7 @@ typedef struct _state_base_t *state_base_t;
 
 /** Maximum number of internal buses (for delay and loop).
  */
-#define kMaxBuses                       256
+#define kMaxBuses                       128
 
 /** Maximum delay in seconds.
  */

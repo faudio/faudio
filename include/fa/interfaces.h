@@ -19,7 +19,9 @@ enum fa_interfaces {
     fa_io_filter_interface_i,
     fa_string_show_i,
     fa_semigroup_i,
-    fa_monoid_i
+    fa_monoid_i,
+    fa_reference_count_i,
+    fa_meta_data_i
 };
 
 #endif // _FA_INTERFACES

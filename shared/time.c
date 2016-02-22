@@ -296,7 +296,8 @@ fa_ptr_t time_impl(fa_id_t interface)
 
 void fa_time_log_count()
 {
-  fa_log_info(fa_string_dappend(fa_string("Times allocated: "), fa_string_dshow(fa_i32((int)fa_atomic_get(gTimeCount)))));
+    int count = gTimeCount ? (int) fa_atomic_get(gTimeCount) : 0;
+    fa_log_info(fa_string_dappend(fa_string("Times allocated: "), fa_string_dshow(fa_i32(count))));
 }
 
 

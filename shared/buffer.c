@@ -114,15 +114,22 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
     return b;
 }
 
+fa_buffer_t fa_buffer_dwrap(fa_ptr_t pointer, size_t size)
+{
+    //printf("fa_buffer_dwrap  pointer: %p, size: %zu\n", pointer, size);
+    assert(pointer && size && "Cannot wrap a NULL pointer!");
+    return fa_buffer_wrap(pointer, size, default_destroy, NULL);
+}
+
 fa_buffer_t fa_buffer_copy(fa_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+    assert(false && "fa_buffer_copy not implemented");
     return fa_buffer_resize(buffer->size, buffer);
 }
 
 fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+    assert(false && "fa_buffer_resize not implemented");
 //     fa_ptr_t buffer_impl(fa_id_t interface);
 //
 //     fa_buffer_t copy        = fa_new(buffer);
@@ -350,11 +357,17 @@ void *fa_buffer_unsafe_address(fa_buffer_t buffer)
 
 fa_buffer_t fa_buffer_read_audio(fa_string_t path)
 {
+    return fa_buffer_read_audio_max_size(path, 0, false);
+}
+
+fa_buffer_t fa_buffer_read_audio_max_size(fa_string_t path, size_t max_size, bool crop)
+{
     fa_buffer_t     buffer;
 
     SNDFILE         *file;
     SF_INFO         info;
     info.format     = 0;
+    bool cropped    = false;
 
     {
         char *cpath     = fa_string_to_utf8(path);
@@ -370,6 +383,18 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
     }
     {
         size_t bufSize  = info.frames * info.channels * sizeof(double);
+        
+        // Required size is too big
+        if (max_size && bufSize > max_size) {
+            if (crop) {
+                bufSize = max_size;
+                cropped = true;
+            } else {
+                fa_slog_warning("Audio file too big");
+                return NULL;
+            }
+        }
+        
         buffer          = fa_buffer_create(bufSize);
         double *raw     = fa_buffer_unsafe_address(buffer);
 
@@ -381,6 +406,8 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
         fa_buffer_set_meta(buffer, fa_string("sample-rate"), fa_i32(info.samplerate));
         fa_buffer_set_meta(buffer, fa_string("channels"), fa_i32(info.channels));
         fa_buffer_set_meta(buffer, fa_string("format"), fa_i32(info.format));
+        fa_buffer_set_meta(buffer, fa_string("cropped"), fa_from_bool(cropped));
+        fa_buffer_set_meta(buffer, fa_string("frames"), fa_i64(sz / info.channels));
 
         fa_let(str, (char *) sf_get_string(file, SF_STR_TITLE))
         fa_buffer_set_meta(buffer, fa_string("title"), fa_string(str ? str : ""));
@@ -418,8 +445,7 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
     if (sf_error(file)) {
         char err[100];
         snprintf(err, 100, "Could not write audio file '%s' (%s)", cpath, sf_strerror(file));
-        return (fa_pair_t) fa_error_create_simple(
-                   error, fa_string(err), fa_string("Doremir.Buffer"));
+        return fa_error_create_simple(error, fa_string(err), fa_string("Doremir.Buffer"));
     }
 
     sf_count_t written = sf_write_double(file, ptr, size);
@@ -435,7 +461,7 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
     return NULL;
 }
 
-fa_buffer_t fa_buffer_read_raw(fa_string_t path)
+fa_buffer_t fa_buffer_read_raw_max_size(fa_string_t path, size_t max_size)
 {
     char* path2 = fa_string_to_utf8(path);
     FILE* file = fopen(path2, "rb");
@@ -443,13 +469,17 @@ fa_buffer_t fa_buffer_read_raw(fa_string_t path)
     
     if (!file) {
         fa_warn(fa_dappend(fa_string("Could not open "), fa_copy(path)));
-        return NULL;
+        return (fa_buffer_t) fa_error_create_simple(error, fa_string("Could not open file"), fa_string("Doremir.Buffer"));
     }
 
     // Get length of file
     fseek(file, 0, SEEK_END);
     long filelen = ftell(file);
     rewind(file);
+    
+    if (max_size && filelen > max_size) {
+        return NULL;
+    }
 
     // Read entire file
     uint8_t *buffer = fa_malloc(filelen);
@@ -457,6 +487,11 @@ fa_buffer_t fa_buffer_read_raw(fa_string_t path)
     fclose(file);
     
     return fa_buffer_wrap(buffer, filelen, default_destroy, NULL);
+}
+
+fa_buffer_t fa_buffer_read_raw(fa_string_t path)
+{
+    return fa_buffer_read_raw_max_size(path, 0);
 }
 
 bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer)
@@ -471,6 +506,27 @@ bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer)
     } else {
         return false;
     }
+}
+
+fa_list_t fa_buffer_split(fa_buffer_t buffer, size_t size, bool copy)
+{
+    fa_list_t segments = fa_list_empty();
+    size_t total_size = fa_buffer_size(buffer);
+    uint8_t *buffer_ptr = fa_buffer_unsafe_address(buffer);
+    for (size_t offset = 0; offset < total_size; offset += size) {
+        size_t segment_size = size;
+        if ((offset + size) > total_size) segment_size = total_size - offset;
+        fa_buffer_t segment = NULL;
+        if (copy) {
+            uint8_t *data = fa_malloc(segment_size);
+            memcpy(data, buffer_ptr + offset, segment_size);
+            segment = fa_buffer_dwrap(data, segment_size);
+        } else {
+            segment = fa_buffer_wrap(buffer_ptr + offset, segment_size, NULL, NULL);
+        }
+        fa_push_list(segment, segments);
+    }
+    return fa_list_dreverse(segments);
 }
 
 
@@ -519,6 +575,26 @@ fa_string_t buffer_show(fa_ptr_t a)
     return str;
 }
 
+static void buffer_take_reference(fa_ptr_t a)
+{
+    fa_buffer_take_reference(a);
+}
+
+static void buffer_release_reference(fa_ptr_t a)
+{
+    fa_buffer_release_reference(a);
+}
+
+fa_ptr_t buffer_get_meta(fa_ptr_t obj, fa_ptr_t key)
+{
+    return fa_buffer_get_meta(obj, key);
+}
+
+void buffer_set_meta(fa_ptr_t obj, fa_ptr_t key, fa_ptr_t value)
+{
+    fa_buffer_set_meta(obj, key, value);
+}
+
 fa_dynamic_type_repr_t buffer_get_type(fa_ptr_t a)
 {
     return buffer_type_repr;
@@ -529,6 +605,8 @@ fa_ptr_t buffer_impl(fa_id_t interface)
     static fa_string_show_t buffer_show_impl = { buffer_show };
     static fa_copy_t buffer_copy_impl = { buffer_copy, buffer_deep_copy };
     static fa_destroy_t buffer_destroy_impl = { buffer_destroy, buffer_deep_destroy };
+    static fa_reference_count_t buffer_reference_count_impl = { buffer_take_reference, buffer_release_reference };
+    static fa_meta_data_t buffer_meta_data_impl = { buffer_get_meta, buffer_set_meta };
     static fa_dynamic_t buffer_dynamic_impl = { buffer_get_type };
 
     switch (interface) {
@@ -543,6 +621,12 @@ fa_ptr_t buffer_impl(fa_id_t interface)
         
     case fa_dynamic_i:
         return &buffer_dynamic_impl;
+        
+    case fa_reference_count_i:
+        return &buffer_reference_count_impl;
+        
+    case fa_meta_data_i:
+        return &buffer_meta_data_impl;
 
     default:
         return NULL;

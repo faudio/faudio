@@ -19,7 +19,6 @@
 #include <fa/util.h>
 #include <fa/time.h>
 #include <pthread.h>
-
 #include <portaudio.h>
 #include <pa_win_wasapi.h>
 #include "signal.h"
@@ -65,7 +64,7 @@ struct _fa_audio_session_t {
 
     struct {
         double          sample_rate;
-        double          latency[2];
+        double          latency[2];         // Suggested latency
         int             vector_size;
         int             scheduler_interval; // Scheduling interval in milliseconds
         bool            exclusive;          // Use exclusive mode (if available)
@@ -106,6 +105,8 @@ struct _fa_audio_stream_t {
     fa_signal_t         signals[kMaxSignals];
     state_t             state;              // DSP state
     int64_t             last_time;          // Cached time in milliseconds
+    double              roundtripLatency;   // "Actual" latency calculated from time values reported by PA
+    
     //int64_t             start_time;
 
     unsigned            input_channels, output_channels;
@@ -283,6 +284,7 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
     stream->state           = NULL;
     stream->last_time       = 0;
     //stream->start_time      = 0;
+    stream->roundtripLatency = 0;
 
     stream->signal_count    = 0;
     stream->pa_flags        = 0;
@@ -788,22 +790,28 @@ void print_audio_info(device_t input, device_t output)
     fa_inform(fa_string_dappend(fa_string("    Input: "), input ? fa_audio_full_name(input) : fa_string("N/A")));
 
     if (input) {
-        fa_inform(fa_string_dappend(fa_string("        Default Latency: "),
+        fa_inform(fa_string_dappend(fa_string("        Default Latency:      "),
 									dshow_range(fa_pair_first(fa_audio_recommended_latency(input)))));
+        fa_inform(fa_string_format_floating("        Current Sample Rate:  %2f", fa_audio_current_sample_rate(input)));
     }
 
     fa_inform(fa_string_dappend(fa_string("    Output: "), output ? fa_audio_full_name(output) : fa_string("N/A")));
 
     if (output) {
-        fa_inform(fa_string_dappend(fa_string("        Default Latency: "),
+        fa_inform(fa_string_dappend(fa_string("        Default Latency:      "),
 									dshow_range(fa_pair_first(fa_audio_recommended_latency(output)))));
+        fa_inform(fa_string_format_floating("        Current Sample Rate:  %2f", fa_audio_current_sample_rate(output)));
     }
 
     fa_let(session, input ? input->session : output->session) {
-        fa_inform(fa_string_format_floating("    Sample Rate:    %2f", session->parameters.sample_rate));
-        fa_inform(fa_string_format_floating("    Input Latency:  %3f", session->parameters.latency[0]));
-        fa_inform(fa_string_format_floating("    Output Latency: %3f", session->parameters.latency[1]));
-        fa_inform(fa_string_format_integral("    Vector Size:    %d",  session->parameters.vector_size));
+        if (session->parameters.sample_rate == 0) {
+            fa_inform(fa_string("    Suggested Sample Rate:    [Use Output Default]"));
+        } else {
+            fa_inform(fa_string_format_floating("    Suggested Sample Rate:    %2f", session->parameters.sample_rate));
+        }
+        fa_inform(fa_string_format_floating("    Suggested Input Latency:  %3f", session->parameters.latency[0]));
+        fa_inform(fa_string_format_floating("    Suggested Output Latency: %3f", session->parameters.latency[1]));
+        fa_inform(fa_string_format_integral("    Vector Size:              %d",  session->parameters.vector_size));
 
         if (is_wasapi_device(input) || is_wasapi_device(output)) {
             fa_inform(fa_string_dappend(fa_string("    Exclusive Mode: "),  fa_string(session->parameters.exclusive ? "Yes" : "No")));
@@ -851,6 +859,11 @@ stream_t fa_audio_open_stream(device_t input,
 
     unsigned long   buffer_size = (input ? input : output)->session->parameters.vector_size;
     double          sample_rate = (input ? input : output)->session->parameters.sample_rate;
+    // sample_rate == 0 means that we are going to use the sample rate of the output device
+    // (or the input device, if there is not output)
+    if (sample_rate == 0) {
+        sample_rate = fa_audio_current_sample_rate(output ? output : input);
+    }
     stream_t        stream = new_stream(input, output, sample_rate, buffer_size);
 
     {
@@ -905,9 +918,9 @@ stream_t fa_audio_open_stream(device_t input,
             .channelCount               = stream->output_channels
         };
 
-        PaStreamFlags    flags    = paNoFlag;
+        PaStreamFlags     flags    = paNoFlag;
         PaStreamCallback *callback = native_audio_callback;
-        fa_ptr_t            data     = stream;
+        fa_ptr_t          data     = stream;
 
         status = Pa_OpenStream(
                      &stream->native,
@@ -923,7 +936,7 @@ stream_t fa_audio_open_stream(device_t input,
         }
 
         status = Pa_SetStreamFinishedCallback(stream->native, native_finished_callback);
-
+        
         if (status != paNoError) {
             after_failed_processing(stream);
             return (stream_t) audio_device_error_with(fa_string("Could not start stream"), status);
@@ -1094,6 +1107,20 @@ void fa_audio_schedule_now(fa_action_t action, fa_audio_stream_t stream)
     }
 }
 
+fa_map_t fa_audio_stream_get_info(fa_audio_stream_t stream)
+{
+    const PaStreamInfo *streamInfo = Pa_GetStreamInfo(stream->native);
+    //printf("Actual input latency: %f\n", streamInfo->inputLatency);
+    //printf("Actual output latency: %f\n", streamInfo->outputLatency);
+    fa_map_t map = fa_map_empty();
+    fa_map_set_value_destructor(map, fa_destroy);
+    map = fa_map_dadd(fa_string("inputLatency"), fa_from_double(streamInfo->inputLatency), map);
+    map = fa_map_dadd(fa_string("outputLatency"), fa_from_double(streamInfo->outputLatency), map);
+    map = fa_map_dadd(fa_string("sampleRate"), fa_from_double(streamInfo->sampleRate), map);
+    map = fa_map_dadd(fa_string("roundtripLatency"), fa_from_double(stream->roundtripLatency), map);
+    return map;
+}
+
 
 fa_ptr_t forward_action_to_audio_thread(fa_ptr_t x, fa_ptr_t action, fa_ptr_t t)
 {
@@ -1196,8 +1223,8 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
 
 void before_processing(stream_t stream)
 {
-    session_t session  = stream->input ? stream->input->session : stream->output->session;
-    stream->state      = new_state(session->parameters.sample_rate); // FIXME
+    //session_t session  = stream->input ? stream->input->session : stream->output->session;
+    stream->state      = new_state(stream->sample_rate);
 
     fa_signal_t merged = fa_signal_constant(0);
 
@@ -1219,7 +1246,7 @@ void before_processing(stream_t stream)
     }
 
     merged = fa_signal_simplify(merged);
-    print_fa_signal_tree(merged);
+    //print_fa_signal_tree(merged);
 
     merged = fa_signal_route_processors(proc_map, merged);
     print_fa_signal_tree(merged);
@@ -1394,6 +1421,9 @@ int native_audio_callback(const void                       *input,
     stream_t stream = data;
 
     if (stream->state) {
+        // Cache "actual" latency
+        stream->roundtripLatency = time_info->outputBufferDacTime - time_info->inputBufferAdcTime;
+        
         during_processing(stream, count, time_info->outputBufferDacTime, (float **) input, (float **) output);
         stream->pa_flags |= flags;
     }
@@ -1624,7 +1654,21 @@ fa_error_t audio_device_error(fa_string_t msg)
 
 fa_error_t audio_device_error_with(fa_string_t msg, int code)
 {
-    fa_string_t pa_error_str = fa_string(code != 0 ? (char *) Pa_GetErrorText(code) : "");
+    fa_string_t pa_error_str;
+    if (code == 0) {
+        pa_error_str = fa_string("");
+    } else if (code == paUnanticipatedHostError) {
+        const PaHostErrorInfo* herr = Pa_GetLastHostErrorInfo();
+        if (herr) {
+            pa_error_str = fa_dappend(
+                fa_format_integral("Unanticipated Host Error, number: %ld, text: ", herr->errorCode),
+                fa_string((char*)herr->errorText));
+        } else {
+            pa_error_str = fa_string("Unanticipated Host Error, Pa_GetLastHostErrorInfo() failed!");
+        }
+    } else {
+        pa_error_str = fa_string((char *) Pa_GetErrorText(code));
+    }
 
     fa_error_t err = fa_error_create_simple(error,
                                             fa_string_dappend(msg,
@@ -1632,7 +1676,7 @@ fa_error_t audio_device_error_with(fa_string_t msg, int code)
                                                               // format_integral(" (error code %d)", code)
                                                              ),
                                             fa_string("Doremir.Device.Audio"));
-    fa_error_log(NULL, err);
+    fa_error_log(NULL, fa_copy(err));
     return err;
 }
 

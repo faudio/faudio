@@ -331,6 +331,13 @@ double fa_peek_number(fa_ptr_t a)
         return ((fa_##I##_t*) fa_interface(fa_##I##_i, a))->F(a, b);            \
     }
 
+#define GENERIC3(I,F,A,B,C,D) \
+    D fa_##F(A a, B b, C c)                                                     \
+    {                                                                           \
+        assert(fa_interface(fa_##I##_i, a) && "Must implement " #I);            \
+        return ((fa_##I##_t*) fa_interface(fa_##I##_i, a))->F(a, b, c);         \
+    }
+
 
 //GENERIC2(equal,     equal,          fa_ptr_t, fa_ptr_t, bool); // use special implementaion for equal
 GENERIC2(order,     less_than,      fa_ptr_t, fa_ptr_t, bool);
@@ -422,6 +429,12 @@ GENERIC1(destroy,    destroy,        fa_ptr_t, void);
 GENERIC2(destroy,    deep_destroy,   fa_ptr_t, fa_deep_destroy_pred_t, void);
 GENERIC2(semigroup,  append,         fa_ptr_t, fa_ptr_t, fa_ptr_t);
 GENERIC1(monoid,     empty,          fa_ptr_t, fa_ptr_t);
+
+GENERIC1(reference_count, take_reference, fa_ptr_t, void);
+GENERIC1(reference_count, release_reference, fa_ptr_t, void);
+GENERIC2(meta_data,  get_meta,       fa_ptr_t, fa_ptr_t, fa_ptr_t);
+GENERIC3(meta_data,  set_meta,       fa_ptr_t, fa_ptr_t, fa_ptr_t, void);
+
 
 fa_ptr_t fa_dappend(fa_ptr_t a, fa_ptr_t b)
 {
@@ -756,4 +769,11 @@ bool DESTROY_ALWAYS(fa_ptr_t ptr) {
 }
 void fa_deep_destroy_always(fa_ptr_t ptr) {
     fa_deep_destroy(ptr, DESTROY_ALWAYS);
+}
+
+uint8_t fa_sample_type_size(fa_sample_type_t sample_type) {
+    switch (sample_type) {
+        case float_sample_type:  return sizeof(float);
+        case double_sample_type: return sizeof(double);
+    }
 }

@@ -104,14 +104,14 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
             switch (status) {
             case 0x8: // off
                 if (FLUID_OK != fluid_synth_noteoff(synth, channel, data1)) {
-                    fa_warn(fa_string("Fluidsynth: Could not send message"));
+                    fa_warn(fa_string("Fluidsynth: Could not send noteoff message"));
                 }
 
                 break;
 
             case 0x9: // 9 on
                 if (FLUID_OK != fluid_synth_noteon(synth, channel, data1, data2)) {
-                    fa_warn(fa_string("Fluidsynth: Could not send message"));
+                    fa_warn(fa_string("Fluidsynth: Could not send noteon message"));
                 }
 
                 break;
@@ -122,21 +122,21 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
             case 0xb: // 11 control
                 if (FLUID_OK != fluid_synth_cc(synth, channel, data1, data2)) {
-                    fa_warn(fa_string("Fluidsynth: Could not send message"));
+                    fa_warn(fa_string_format_integral("Fluidsynth: Could not send control message %u", data1));
                 }
 
                 break;
 
             case 0xc: // 12 program
                 if (FLUID_OK != fluid_synth_program_change(synth, channel, data1)) {
-                    fa_warn(fa_string("Fluidsynth: Could not send message"));
+                    fa_warn(fa_string_format_integral("Fluidsynth: Could not send program change message %u", data1));
                 }
 
                 break;
 
             case 0xd: // 13 channel press
                 if (FLUID_OK != fluid_synth_channel_pressure(synth, channel, data1)) {
-                    fa_warn(fa_string("Fluidsynth: Could not send message"));
+                    fa_warn(fa_string("Fluidsynth: Could not send channel pressure message"));
                 }
 
                 break;
@@ -149,7 +149,7 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
                 bend |= (unsigned short)data1;
 
                 if (FLUID_OK != fluid_synth_pitch_bend(synth, channel, bend)) {
-                    fa_warn(fa_string("Fluidsynth: Could not send message"));
+                    fa_warn(fa_string("Fluidsynth: Could not send pitch bend message"));
                 }
 
                 break;

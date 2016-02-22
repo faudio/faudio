@@ -161,6 +161,7 @@ fa_string_t fa_string_dappend(fa_string_t str1,
 
 void fa_string_destroy(fa_string_t str)
 {
+    // TODO: atomic add and get in same operation
     fa_atomic_add(str->count, -1);
     if (fa_atomic_get(str->count) == 0) {
         fa_free(str->data);
@@ -667,7 +668,7 @@ inline static fa_string_t escape(fa_string_t string)
 
 static bool string_equal(fa_ptr_t as, fa_ptr_t bs)
 {
-    if (as == bs) return true; // May be more common than one would think, since strings are reference counted
+    if (as == bs) return true; // May be more common than one would think, as strings are reference counted
     fa_string_t cs, ds;
     cs = (fa_string_t) as;
     ds = (fa_string_t) bs;

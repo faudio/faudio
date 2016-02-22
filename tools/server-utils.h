@@ -36,24 +36,34 @@
 
 uint8_t min_uint8(uint8_t a, uint8_t b) { return a < b ? a : b; }
 
-#define send_osc(m, s, ...) lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__)
-#define send_osc_async(...) if (last_address) lo_send_from(last_address, server, LO_TT_IMMEDIATE, __VA_ARGS__)
+#define send_osc(m, s, ...) \
+  fa_with_lock(osc_mutex) { lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__); }
 
-#define check_id(id) \
+#define send_osc_async(...) \
+  if (last_address) { fa_with_lock(osc_mutex) { lo_send_from(last_address, server, LO_TT_IMMEDIATE, __VA_ARGS__); } }
+
+#define check_id(id, message, user_data) \
 if (id > last_used_id) {    \
     last_used_id = id;      \
 } else {                    \
     fa_fail(fa_string_dappend(fa_string_format_integral("ID %zu is lower than", id), \
                               fa_string_format_integral(" last used ID (%zu)", last_used_id))); \
+    if (message && user_data) {   \
+        send_osc(message, user_data, "/error", "isi", id, "bad-id", id); \
+    }  \
     return 0; \
 }
 
-#define error_check(_obj, _msg)     \
-if (fa_check(_obj)) {               \
-    fa_log_error(fa_string(_msg));  \
-    fa_error_log(_obj, NULL);       \
-    return;                         \
+#define error_check(_obj, _msg)             \
+if (fa_check(_obj)) {                       \
+    fa_log_error(fa_string(_msg));          \
+    fa_error_log(NULL, (fa_error_t) _obj);  \
+    return;                                 \
 }
+
+    //fa_slog_error("Obj: ", _obj);   
+    //if (_obj) fa_destroy(_obj);     
+
 
 #define safe_peek_i32(ptr) (ptr ? (int32_t) fa_peek_number(ptr) : 0)
 
@@ -116,16 +126,23 @@ void do_schedule_now(fa_action_t action, fa_ptr_t stream) {
 }
 
 void schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
-    if (in_bundle) {
-        if (bundle_stream) {
-            assert(bundle_stream == stream && "Cannot send to different streams in same bundle");
-        } else {
-            bundle_stream = stream;
-        }
-        fa_push_list(pair(action, time), bundle_actions);
-    } else {
+    
+    // Scheduling on absolute times does not need to be bundled,
+    // so schedule it directly
+    //
+    // This solves the problem of pushing a mix of absolute and
+    // relative times onto the bundle_actions list
+    
+    // if (in_bundle) {
+    //     if (bundle_stream) {
+    //         assert(bundle_stream == stream && "Cannot send to different streams in same bundle");
+    //     } else {
+    //         bundle_stream = stream;
+    //     }
+    //     fa_push_list(pair(action, time), bundle_actions);
+    // } else {
         do_schedule(time, action, stream);
-    }
+    //}
 }
 
 void schedule_relative(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
@@ -215,7 +232,7 @@ fa_ptr_t create_fa_value(lo_type type, void *data) {
     case LO_FALSE:      return fa_from_bool(false);
     case LO_NIL:        return NULL; // ?
     default:
-        fa_fail(fa_string("liblo_to_faudio: Cannot handle that type"));
+        fa_fail(fa_string("create_fa_value: Cannot handle that type"));
         return NULL;
     }
 }
@@ -231,7 +248,41 @@ lo_timetag timetag_from_time(fa_time_t time) {
     return timetag_from_double(fa_time_to_double(time));
 }
 
+lo_blob lo_blob_from_buffer(fa_buffer_t buffer) {
+    return lo_blob_new(fa_buffer_size(buffer), fa_buffer_unsafe_address(buffer));
+}
 
+void send_fa_value_osc(lo_message message, void *user_data, char *path, char *key, fa_ptr_t value) {
+    fa_dynamic_type_repr_t type = fa_dynamic_get_type(value);
+    switch(type) {
+    case null_type_repr:
+        send_osc(message, user_data, path, "sN", key);
+        break;
+    case f32_type_repr:
+        send_osc(message, user_data, path, "sf", key, fa_peek_float(value));
+        break;
+    case f64_type_repr:
+        send_osc(message, user_data, path, "sd", key, fa_peek_double(value));
+        break;
+    case string_type_repr:
+        send_osc(message, user_data, path, "ss", key, fa_unstring(value));
+        break;
+    case bool_type_repr:
+        if (fa_peek_bool(value)) {
+            send_osc(message, user_data, path, "sT", key);
+        } else {
+            send_osc(message, user_data, path, "sF", key);
+        }
+        break;
+    case i8_type_repr:
+    case i16_type_repr:
+    case i32_type_repr:
+        send_osc(message, user_data, path, "si", key, fa_peek_integer(value));
+        break;
+    default:
+        fa_slog_warning("Don't know how to send value via osc: ", value);
+    }
+}
 
 
 // void schedule_to_midi_echo_stream(fa_time_t time, fa_action_t action)
@@ -420,22 +471,33 @@ fa_list_t construct_output_signal_tree() {
     return tree;
 }
 
-void handle_incoming_midi(fa_time_t time, fa_midi_message_t msg)
+void handle_incoming_midi(fa_time_t time, fa_midi_message_t msg, bool echo_to_playback)
 {
-    uint8_t status, data1, data2;
+    uint8_t statusCh, data1, data2;
     bool simple = fa_midi_message_is_simple(msg);
-    if (simple) fa_midi_message_decons(msg, &status, &data1, &data2);
+    if (simple) fa_midi_message_decons(msg, &statusCh, &data1, &data2);
     
     //fa_slog_info("Received MIDI message: ", msg);
     
-    if (current_midi_echo_stream) {
-        do_schedule_now(fa_action_send(synth_name, msg), current_midi_echo_stream);
+    fa_ptr_t echo_stream = echo_to_playback ? current_midi_playback_stream : current_midi_echo_stream;
+    
+    if (echo_stream) {
+        // If this is a simple message and midi_echo_channel is set, create a new message with that channel
+        if (simple && midi_echo_channel >= 0 && midi_echo_channel < 16) {
+            uint8_t status = statusCh & 0xf0;
+            fa_midi_message_t new_msg = fa_midi_message_create_simple(status + midi_echo_channel, data1, data2);
+            do_schedule_now(fa_action_send(synth_name, new_msg), echo_stream);
+            fa_destroy(msg);
+        } else {
+            // Otherwise, just echo the message
+            do_schedule_now(fa_action_send(synth_name, msg), echo_stream);
+        }
     } else {
         fa_destroy(msg);
     }
     
     if (simple) {     // don't forward SYSEX via OSC for now
-        send_osc_async("/receive/midi", "tiii", timetag_from_time(time), status, data1, data2);
+        send_osc_async("/receive/midi", "tiii", timetag_from_time(time), statusCh, data1, data2);
     }
 
     fa_destroy(time);
@@ -447,7 +509,7 @@ fa_ptr_t _incoming_midi(fa_ptr_t x, fa_ptr_t time_message)
     fa_time_t time         = fa_pair_first(time_message);
     fa_midi_message_t msg  = fa_pair_second(time_message);
     fa_destroy(time_message);
-    handle_incoming_midi(time, msg);
+    handle_incoming_midi(time, msg, false);
     return NULL;
 }
 
@@ -475,9 +537,11 @@ void resolve_devices() {
     current_audio_output_device = NULL;
     if (current_midi_input_devices) fa_destroy(current_midi_input_devices);
     current_midi_input_devices = fa_list_empty();
-    if (current_midi_output_devices) fa_destroy(current_midi_output_devices);
-    current_midi_output_devices = fa_list_empty();
-    current_midi_echo = FA_ECHO_NO_ECHO;
+    //if (current_midi_output_devices) fa_destroy(current_midi_output_devices);
+    current_midi_playback = FA_MIDI_NO_OUTPUT;
+    current_midi_echo = FA_MIDI_NO_OUTPUT;
+    current_midi_playback_device = NULL;
+    current_midi_echo_device = NULL;
     
     fa_list_t midi_devices = fa_midi_all(current_midi_session);
     fa_list_t audio_devices = fa_audio_all(current_audio_session);
@@ -509,7 +573,7 @@ void resolve_devices() {
         }
     }
     
-    // MIDI devices
+    // MIDI input devices
     if (!selected_midi_input_devices) { // NULL = all
         fa_for_each(device, midi_devices) {
             if (fa_midi_has_input(device)) fa_push_list(device, current_midi_input_devices);
@@ -525,41 +589,50 @@ void resolve_devices() {
             }
         }
     }
-    if (!selected_midi_output_devices) { // NULL == all
+    
+    // MIDI playback
+    if (selected_midi_playback == FA_MIDI_TO_DEVICE) {
+        assert(selected_midi_playback_device && "selected_midi_playback_device is NULL!");
         fa_for_each(device, midi_devices) {
-            if (fa_midi_has_output(device)) fa_push_list(device, current_midi_output_devices);
-        }
-    } else if (!fa_list_is_empty(selected_midi_output_devices)) {
-        fa_for_each(device, midi_devices) {
-            if (fa_midi_has_output(device)) {
-                fa_for_each(d, selected_midi_output_devices) {
-                    if (midi_device_matches(device, d)) {
-                        fa_push_list(device, current_midi_output_devices);
-                    }
-                }
+            if (fa_midi_has_input(device) && midi_device_matches(device, selected_midi_playback_device)) {
+                current_midi_playback_device = device;
+                current_midi_playback = FA_MIDI_TO_DEVICE;
             }
         }
+    } else {
+        current_midi_playback = selected_midi_playback;
     }
-
+    
     // MIDI echo
-    if (selected_midi_echo == FA_ECHO_DEVICE) {
+    switch (selected_midi_echo) {
+    case FA_ECHO_NO_ECHO:
+        current_midi_echo = FA_MIDI_NO_OUTPUT;
+        break;
+    case FA_ECHO_TO_PLAYBACK:
+        current_midi_echo_device = current_midi_playback_device;
+        current_midi_echo = current_midi_playback;
+        break;
+    case FA_ECHO_TO_AUDIO:
+        current_midi_echo = FA_MIDI_TO_AUDIO;
+        break;
+    case FA_ECHO_TO_DEVICE:
         assert(selected_midi_echo_device && "selected_midi_echo_device is NULL!");
         fa_for_each(device, midi_devices) {
             if (fa_midi_has_input(device) && midi_device_matches(device, selected_midi_echo_device)) {
                 current_midi_echo_device = device;
-                current_midi_echo = FA_ECHO_DEVICE;
+                current_midi_echo = FA_MIDI_TO_DEVICE;
             }
         }
-    } else {
-        current_midi_echo = selected_midi_echo;
+        break;
     }
     
-    fa_slog_info("Audio input:      ", selected_audio_input_device, current_audio_input_device);
-    fa_slog_info("Audio output:     ", selected_audio_output_device, current_audio_output_device);
-    fa_slog_info("MIDI input:       ", selected_midi_input_devices, current_midi_input_devices);
-    fa_slog_info("MIDI output:      ", selected_midi_output_devices, current_midi_output_devices);
-    fa_slog_info("MIDI echo:        ", fa_from_int8(selected_midi_echo), fa_from_int8(current_midi_echo));
-    fa_slog_info("MIDI echo device: ", selected_midi_echo_device, current_midi_echo_device);
+    fa_slog_info("Audio input:          ", selected_audio_input_device, current_audio_input_device);
+    fa_slog_info("Audio output:         ", selected_audio_output_device, current_audio_output_device);
+    fa_slog_info("MIDI input:           ", selected_midi_input_devices, current_midi_input_devices);
+    fa_slog_info("MIDI playback:        ", fa_from_int8(selected_midi_playback), fa_from_int8(current_midi_playback));
+    fa_slog_info("MIDI playback device: ", selected_midi_playback_device, current_midi_playback_device);
+    fa_slog_info("MIDI echo:            ", fa_from_int8(selected_midi_echo), fa_from_int8(current_midi_echo));
+    fa_slog_info("MIDI echo device:     ", selected_midi_echo_device, current_midi_echo_device);
     
     fa_destroy(midi_devices);  // just the list
     fa_destroy(audio_devices); // just the list
@@ -567,7 +640,6 @@ void resolve_devices() {
 
 void stop_streams() {
     fa_slog_info("Stopping streams...");
-    current_midi_echo_stream = NULL;
     current_clock = fa_clock_standard();
     
     // MIDI input streams
@@ -577,18 +649,31 @@ void stop_streams() {
     fa_destroy(current_midi_input_streams);
     current_midi_input_streams = fa_list_empty();
     
-    // MIDI output streams
-    fa_for_each(stream, current_midi_output_streams) {
-        fa_midi_close_stream(stream);
+    // MIDI echo stream
+    if (current_midi_echo_stream && current_midi_echo_stream != current_midi_playback_stream) {
+        if (fa_dynamic_get_type(current_midi_echo_stream) == midi_stream_type_repr) {
+            fa_midi_close_stream(current_midi_echo_stream);
+        }
     }
-    fa_destroy(current_midi_output_streams);
-    current_midi_output_streams = fa_list_empty();
+    current_midi_echo_stream = NULL;
+    
+    // MIDI playback stream
+    if (current_midi_playback_stream) {
+        if (fa_dynamic_get_type(current_midi_playback_stream) == midi_stream_type_repr) {
+            fa_midi_close_stream(current_midi_playback_stream);
+        }
+        current_midi_playback_stream = NULL;
+    }
     
     // Audio stream
     if (current_audio_stream) {
         fa_audio_close_stream(current_audio_stream);
         current_audio_stream = NULL;
     }
+    
+    // Reset counters
+    time_echo = 0;
+    level_echo = 0;
 }
 
 void start_streams() {
@@ -645,16 +730,46 @@ void start_streams() {
     
     // Start audio stream first
     if (current_audio_input_device || current_audio_output_device) {
+        
+        // Check that the devices have the same sample-rate
+        if (current_audio_input_device && current_audio_output_device) {
+            double sr_in  = fa_audio_current_sample_rate(current_audio_input_device);
+            double sr_out = fa_audio_current_sample_rate(current_audio_output_device);
+            current_sample_rate = sr_out;
+            if (sr_in != sr_out) {
+                fa_log_warning(fa_string("Sample rate mismatch, disabling input"));
+                send_osc_async("/error", "Nsdd", "sample-rate-mismatch", sr_in, sr_out);
+                current_audio_input_device = NULL;
+            }
+        } else if (current_audio_input_device) {
+            current_sample_rate = fa_audio_current_sample_rate(current_audio_input_device);
+        } else if (current_audio_output_device) {
+            current_sample_rate = fa_audio_current_sample_rate(current_audio_output_device);
+        }
+        
+        // printf("current_sample_rate now set to %f\n", current_sample_rate);
+        
         fa_list_t out_signal = construct_output_signal_tree();
         fa_audio_stream_t audio_stream =
             fa_audio_open_stream(current_audio_input_device, current_audio_output_device, just, out_signal);
-        error_check(audio_stream, "Could not start audio stream!");
+        if (fa_check(audio_stream)) {
+            current_audio_stream = NULL;
+            fa_error_t error = (fa_error_t) audio_stream;
+            char* msg = fa_unstring(fa_error_message(error));
+            send_osc_async("/error", "Nss", "could-not-start-stream", msg);
+            fa_free(msg);
+            fa_destroy(error);
+            return;
+        }
         current_audio_stream = audio_stream;
         current_clock = fa_audio_get_clock(audio_stream);
-        if (current_midi_echo == FA_ECHO_AUDIO) {
+        if (current_midi_playback == FA_MIDI_TO_AUDIO) {
+            current_midi_playback_stream = audio_stream;
+        }
+        if (current_midi_echo == FA_MIDI_TO_AUDIO) {
             current_midi_echo_stream = audio_stream;
         }
-                
+        
         // Set volumes
         if (current_audio_stream) {
             fa_list_t actions = list(pair(fa_action_set(kSynthLeft, synth_volume), fa_now()),
@@ -665,8 +780,16 @@ void start_streams() {
                                      pair(fa_action_set(kMonitorRight, monitor_volume), fa_now()));
             do_schedule_now(fa_action_many(actions), current_audio_stream);
         }
+        
+        // Get some info
+        if (current_audio_stream) {
+            fa_map_t info = fa_audio_stream_get_info(current_audio_stream);
+            fa_slog_info("Actual values reported from PortAudio: ", info);
+            fa_free(info);
+        }
+        
     } else {
-        fa_log_warning(fa_string("No audio output device, won't start an audio stream"));
+        fa_log_warning(fa_string("No audio input or output device, won't start an audio stream"));
     }
     
     // Start one MIDI input stream for each device in current_midi_input_devices
@@ -681,22 +804,30 @@ void start_streams() {
         midi_input_count++;
     }
     
-    // Start one MIDI output stream for each device in current_midi_output_devices
+    // Start MIDI output stream
     size_t midi_output_count = 0;
-    fa_for_each(device, current_midi_output_devices) {
-        fa_midi_stream_t midi_stream = fa_midi_open_stream(device);
+    if (current_midi_playback_device) {
+        fa_midi_stream_t midi_stream = fa_midi_open_stream(current_midi_playback_device);
         error_check(midi_stream, "Could not start MIDI output stream!");
         fa_midi_set_clock(midi_stream, current_clock);
-        if (current_midi_echo == FA_ECHO_DEVICE && device == current_midi_echo_device) {
+        if (current_midi_echo == FA_MIDI_TO_DEVICE && current_midi_playback_device == current_midi_echo_device) {
              current_midi_echo_stream = midi_stream;
         }
-        fa_push_list(midi_stream, current_midi_output_streams);
+        current_midi_playback_stream = midi_stream;
         midi_output_count++;
     }
+    // Start MIDI echo stream
+    if (current_midi_echo_device && (current_midi_echo_device != current_midi_playback_device)) {
+        current_midi_echo_stream = fa_midi_open_stream(current_midi_playback_device);
+        error_check(current_midi_echo_stream, "Could not start MIDI echo stream!");
+        fa_midi_set_clock(current_midi_echo_stream, current_clock);
+        midi_output_count++;
+    }
+    
     fa_log_info(fa_string_dappend(fa_format_integral("%d MIDI inputs, ", midi_input_count),
                                   fa_format_integral("%d MIDI outputs", midi_output_count)));
                                   
-    // Turn off reverb for all channels
+    // Turn off reverb for all MIDI channels
     if (current_midi_echo_stream) {
         for(uint8_t ch = 0; ch < 16; ch++) {
             fa_midi_message_t msg = fa_midi_message_create_simple(msg_control_change + ch, 0x5B, 0);
@@ -817,7 +948,7 @@ fa_ptr_t _echo_time(fa_ptr_t context, fa_time_t time, fa_time_t now) {
 }
 
 bool _echo_time_p(fa_ptr_t context, fa_ptr_t dummy) {
-    return time_echo > 0;
+    return time_echo > 0 && fa_peek_int16(context) == time_echo_id;
 }
 
 int start_time_echo()
@@ -826,9 +957,10 @@ int start_time_echo()
     fa_with_lock(time_echo_mutex) {
         if (!time_echo) {
             time_echo++;
+            time_echo_id++;
             fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(200), 0, fa_action_do_with_time(_echo_time, NULL));
-            fa_action_t while_action = fa_action_while(_echo_time_p, NULL, repeat_action);
-            schedule_relative(sched_delay, while_action, current_midi_echo_stream);
+            fa_action_t while_action = fa_action_while(_echo_time_p, fa_from_int16(time_echo_id), repeat_action);
+            schedule_relative(sched_delay, while_action, current_midi_playback_stream);
         } else {
             time_echo++;
         }
@@ -873,7 +1005,7 @@ int start_level_echo()
                                      pair(fa_action_do(_echo_level, NULL), fa_now()));
             fa_action_t repeat_action = fa_action_repeat(fa_milliseconds(50), 0, fa_action_many(actions));
             fa_action_t while_action = fa_action_while(_echo_level_p, NULL, repeat_action);
-            schedule_relative(sched_delay, while_action, current_midi_echo_stream);
+            schedule_relative(sched_delay, while_action, current_midi_playback_stream);
         } else {
             level_echo++;
         }
@@ -911,41 +1043,84 @@ double audio_file_peak(fa_buffer_t buffer)
     return max_value;
 }
 
-lo_blob audio_curve(fa_buffer_t buffer)
+fa_buffer_t audio_curve(fa_ptr_t buffer)
 {
-    fa_ptr_t sr = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
-    fa_ptr_t ch = fa_buffer_get_meta(buffer, fa_string("channels"));
-    if (!sr || !ch) return NULL;
-    size_t sample_rate = fa_peek_number(sr);
-    size_t channels = fa_peek_integer(ch);
-    size_t curve_rate = 200;
-    double rel_rate = sample_rate / curve_rate;
-    size_t size = fa_buffer_size(buffer) / (rel_rate * channels * sizeof(double));
-    uint8_t *curve = fa_malloc(size);
-    //printf("Curve needs %zu bytes\n", size);
-    if (channels == 1) {
-        //double last_value = 0;
+    size_t curve_rate = 100;
+    size_t size = 0;
+    uint8_t *curve = NULL;
+    switch (fa_dynamic_get_type(buffer)) {
+        case buffer_type_repr:
+        {
+            fa_ptr_t sr = fa_buffer_get_meta(buffer, fa_string("sample-rate"));
+            fa_ptr_t ch = fa_buffer_get_meta(buffer, fa_string("channels"));
+            if (!sr || !ch) return NULL;
+            size_t sample_rate = fa_peek_number(sr);
+            size_t channels = fa_peek_integer(ch);
+            double rel_rate = sample_rate / curve_rate;
+            size = fa_buffer_size(buffer) / (rel_rate * channels * sizeof(double));
+            if (!size) {
+                printf("audio_curve: curve size is 0, returning NULL\n");
+                return NULL;
+            }
+            curve = fa_malloc(size);
+            if (!curve) {
+                assert(false && "Could not allocate memory for audio curve!");
+                printf("Could not allocate memory for audio curve!\n");
+                return NULL;
+            }
+            //printf("Curve needs %zu bytes\n", size);
+            if (channels == 1) {
+                for(int i = 0; i < size; i++) {
+                    size_t frame = i * rel_rate;
+                    curve[i] = min_uint8(0xFF, 0xFF * fabs(fa_buffer_get_double(buffer, frame * channels + 0)));
+                }
+            } else {
+                for(int i = 0; i < size; i++) {
+                    size_t frame = i * rel_rate;
+                    double left  = fabs(fa_buffer_get_double(buffer, frame * channels + 0));
+                    double right = fabs(fa_buffer_get_double(buffer, frame * channels + 1));
+                    curve[i] = min_uint8(0xFF, 0xFF * ((left + right) / 2));
+                }
+            }
+            break;
+        }
+        case file_buffer_type_repr:
+        {
+            size_t sample_rate = fa_peek_integer(fa_get_meta(buffer, fa_string("sample-rate")));
+            size_t channels = fa_peek_integer(fa_get_meta(buffer, fa_string("channels")));
+            size_t sample_size = fa_peek_integer(fa_get_meta(buffer, fa_string("sample-size")));
+            fa_sample_type_t sample_type = fa_peek_integer(fa_get_meta(buffer, fa_string("sample-type")));
+            size_t frame_size = channels * sample_size;
+            double rel_rate = sample_rate / curve_rate;
+            size = fa_peek_integer(fa_get_meta(buffer, fa_string("frames"))) / rel_rate;
+            curve = fa_malloc(size);
+            
+            for(int i = 0; i < size; i++) {
+                size_t frame = i * rel_rate;
+                fa_file_buffer_seek_if_needed(buffer, frame * frame_size);
+                double left;
+                switch (sample_type) {
+                    case float_sample_type:
+                    {
+                        left = fa_file_buffer_get_float(buffer, frame * channels + 0);
+                        break;
+                    }
+                    case double_sample_type:
+                    {
+                        left = fa_file_buffer_get_double(buffer, frame * channels + 0);
+                        break;
+                    }
+                }
+                curve[i] = min_uint8(0xFF, 0xFF * fabs(left));
+            }
+            break;
+        }
         
-        for(int i = 0; i < size; i++) {
-            size_t frame = i * rel_rate;
-            //double value = fabs(fa_buffer_get_double(buffer, frame * channels + 0));
-            //value = (value * 0.01) + (last_value * 0.99);
-            //curve[i] = min_uint8(0xFF, 0xFF * value);
-            //last_value = value;
-            curve[i] = min_uint8(0xFF, 0xFF * fabs(fa_buffer_get_double(buffer, frame * channels + 0)));
-        }
-    } else {
-        for(int i = 0; i < size; i++) {
-            size_t frame = i * rel_rate;
-            double left  = fabs(fa_buffer_get_double(buffer, frame * channels + 0));
-            double right = fabs(fa_buffer_get_double(buffer, frame * channels + 1));
-            curve[i] = min_uint8(0xFF, 0xFF * ((left + right) / 2));
-        }
+        default:
+            break;
     }
-    lo_blob blob = lo_blob_new(size, curve);
-    printf("Sending curve of %zu bytes\n", size);
-    fa_free(curve);
-    return blob;
+    if (!curve) return NULL;
+    return fa_buffer_dwrap(curve, size);
 }
 
 struct upload_buffer_info {
@@ -953,25 +1128,35 @@ struct upload_buffer_info {
   long sizeleft;
 };
 
+// Read function for upload; i.e. the function providing data for the curl upload
+// It reads from the provided buffer.
+// (The corresponding function for normal buffers is _upload_read_ring_buffer)
 static size_t _upload_read_buffer(void *ptr, size_t size, size_t nmemb, void *data)
 {
     struct upload_buffer_info *info = (struct upload_buffer_info *)data;
     
+    // curl wants size*nmemb bytes
+
     if(size*nmemb < 1)
         return 0;
 
+    // If there is any data left, read from it
     if (info->sizeleft) {
         size_t bytes = MIN(size*nmemb, info->sizeleft);
-        //printf("upload_read_function: %zu bytes\n", bytes);
+        printf("_upload_read_buffer: uploading %zu bytes (%zu bytes left)\n", bytes, info->sizeleft);
         memcpy(ptr, info->readptr, bytes);
         info->readptr += bytes;
         info->sizeleft -= bytes;
         return size*nmemb;
     }
 
+    // No more data. Return 0 to curl, which tells curl that the transfer is complete.
     return 0;
 }
 
+// Read function for upload; i.e. the function providing data for the curl upload
+// It reads from the provided ring buffer.
+// (The corresponding function for normal buffers is _upload_read_buffer)
 static size_t _upload_read_ring_buffer(void *ptr, size_t size, size_t nmemb, void *data)
 {
     fa_atomic_ring_buffer_t ring_buffer = (fa_atomic_ring_buffer_t)data;
@@ -981,23 +1166,24 @@ static size_t _upload_read_ring_buffer(void *ptr, size_t size, size_t nmemb, voi
     //     printf("  Closed\n");
     //     return 0;
     // }
-
-
+	
+	// curl wants size*nmemb bytes from us.
     // If there is enough data available, read as much as possible
     if (fa_atomic_ring_buffer_can_read(ring_buffer, size*nmemb)) {
-        printf("  Reading block of %zu bytes\n", size*nmemb);
+        printf("_upload_read_ring_buffer: Reading block of %zu bytes\n", size*nmemb);
         void *dest = ptr;
         for (size_t i = 0; i < size*nmemb; ++i) {
             bool success = fa_atomic_ring_buffer_read(ring_buffer, dest);
-            assert(success && "Could not read from ring buffer");
+            assert(success && "_upload_read_ring_buffer: Could not read from ring buffer");
             dest++;
         }
         return size*nmemb;
     }
 
-    // Otherwise, read one byte at a time until
+    // Otherwise, read one byte at a time until there is more data available,
+	// or until the ring buffer is closed.
     void *dest = ptr;
-    printf("  Trying to read %zu bytes one at a time\n", size*nmemb);
+    printf("_upload_read_ring_buffer: Trying to read %zu bytes one at a time\n", size*nmemb);
     size_t i = 0;
     while (i < size*nmemb) {
         if (fa_atomic_ring_buffer_can_read(ring_buffer, 1)) {
@@ -1007,16 +1193,21 @@ static size_t _upload_read_ring_buffer(void *ptr, size_t size, size_t nmemb, voi
         } else {
             // Cannot read. If it is because the buffer is closed, then return
             if (fa_atomic_ring_buffer_is_closed(ring_buffer)) {
-                printf("Cannot read and buffer was closed. Returning %zu\n", i);
+                printf("_upload_read_ring_buffer: Cannot read and buffer was closed. Returning %zu\n", i);
+                // If data has already been read during this function call, i will be positive,
+                // and curl will call us once more. At that point, no more data is to be read,
+                // i will be 0, and returning 0 tells curl that the transfer is complete.
                 return i;
             }
             // Otherwise, wait for more data
-            fa_thread_sleep(2);
+            // printf("Waiting for data... (ring buffer is not closed)\n");
+            fa_thread_sleep(50);
         }
     }
     return size*nmemb;
 }
 
+// _upload_write is the function taking care of the server response
 static size_t _upload_write(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
     fa_buffer_t buffer = (fa_buffer_t)userdata;
@@ -1024,7 +1215,7 @@ static size_t _upload_write(char *ptr, size_t size, size_t nmemb, void *userdata
     fa_buffer_dresize(old_size + (size * nmemb), buffer);
     void *dest = fa_buffer_unsafe_address(buffer) + old_size;
     memcpy(dest, ptr, (size * nmemb));
-    printf("Received %zu bytes (%zu * %zu)\n", size*nmemb, size, nmemb);
+    printf("_upload_write: received %zu bytes (%zu * %zu) from the server\n", size*nmemb, size, nmemb);
     return size*nmemb;
 }
 
@@ -1055,7 +1246,7 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
     struct upload_buffer_info info;
     
     fa_slog_info("  In upload thread ", buffer, ring_buffer);
-    
+	
     CURL *curl = curl_easy_init();
     if (curl) {
         printf("Uploading to %s\n", url);
@@ -1073,7 +1264,15 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
             
         } else {
             // Normal buffer: we know the size of the data, so send it in advance
-            curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, fa_buffer_size(buffer));
+            //curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, fa_buffer_size(buffer));
+            
+            // *** NOTE ***
+            // As of 2015-12-04, the DoReMIR server seems to handle only
+            // chunked requests, otherwise it answers with an empty response!
+            struct curl_slist *chunk = NULL;
+            chunk = curl_slist_append(chunk, "Transfer-Encoding: chunked");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+            
             // Set read function and data
             info.readptr = fa_buffer_unsafe_address(buffer);
             info.sizeleft = (long)fa_buffer_size(buffer);
@@ -1094,7 +1293,7 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
             curl_easy_getinfo(curl, CURLINFO_REQUEST_SIZE, &request_size);
             //printf("Request was %ld bytes\n", request_size);
             
-            lo_blob blob = lo_blob_new(fa_buffer_size(result), fa_buffer_unsafe_address(result));
+            lo_blob blob = lo_blob_from_buffer(result); //lo_blob_new(fa_buffer_size(result), fa_buffer_unsafe_address(result));
             send_osc_async(osc_path, "iib", id, response_code, blob);
             lo_blob_free(blob);
         } else {
@@ -1162,14 +1361,26 @@ struct recording_thread_args {
     char *filename;
     char *url;
     char *cookies;
+    long sample_rate;
+    long channels;
 };
 
+// _recording_receive: this is an IO callback, called with streamed ogg data from the on-going
+// recording. The data is written to a ring_buffer, which is uploaded in parallel in another
+// thread. Note that this callback is only used for upload; for file-only recording, it is
+// never inserted into the IO chain.
 void _recording_receive(fa_ptr_t context, fa_buffer_t buffer) {
     fa_atomic_ring_buffer_t ring_buffer = context;
-    if (buffer) {
+    if (!buffer) {
+        printf("_recording_receive: Received NULL, closing ring buffer\n");
+        fa_atomic_ring_buffer_close(ring_buffer);
+    // } else if (recording_state == RECORDING_STOPPING && !fa_atomic_ring_buffer_is_closed(ring_buffer)) {
+    //     printf("_recording_receive: recording_state == RECORDING_STOPPING, closing ring buffer\n");
+    //     fa_atomic_ring_buffer_close(ring_buffer);
+    } else {
         uint8_t *ptr = fa_buffer_unsafe_address(buffer);
         size_t size = fa_buffer_size(buffer);
-        printf("Received %zu bytes of ogg\n", size);
+        printf("_recording_receive: Received %zu bytes of ogg\n", size);
         if (fa_atomic_ring_buffer_can_write(ring_buffer, size)) {
             for (size_t i = 0; i < fa_buffer_size(buffer); i++) {
                  fa_atomic_ring_buffer_write(ring_buffer, *ptr);
@@ -1177,11 +1388,8 @@ void _recording_receive(fa_ptr_t context, fa_buffer_t buffer) {
              }
         } else {
             // TODO: handle this error!
-            fa_fail(fa_string("Upload ring buffer overflow!"));
+            fa_fail(fa_string("_recording_receive: Upload ring buffer overflow!"));
         }
-    } else {
-        printf("Received NULL, closing ring buffer\n");
-        fa_atomic_ring_buffer_close(ring_buffer);
     }
 }
 
@@ -1193,6 +1401,8 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
     char* filename = args->filename;
     char* url = args->url;
     char* cookies = args->cookies;
+    long sr = args->sample_rate;
+    long ch = args->channels;
     fa_free(args);
     
     //printf("url: %s  cookies: %s\n", url, cookies);
@@ -1204,9 +1414,9 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
     if (url && filename) {
         // If url is specified, create the file sink as a split filter
         fa_io_sink_t file_sink = fa_io_write_file(fa_string(filename));
-        source = fa_io_apply(fa_io_apply(source, fa_io_split(file_sink)), fa_io_create_ogg_encoder());
+        source = fa_io_apply(fa_io_apply(source, fa_io_split(file_sink)), fa_io_create_ogg_encoder(sr, ch));
     } else if (url) {
-        source = fa_io_apply(source, fa_io_create_ogg_encoder());
+        source = fa_io_apply(source, fa_io_create_ogg_encoder(sr, ch));
     } else {
         printf("Creating file sink\n");
         sink = fa_io_write_file(fa_string(filename));
@@ -1225,18 +1435,39 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
         fa_thread_detach(thread);
     }
     
-    printf("_recording_thread 4\n");
+    printf("_recording_thread 4, recording_state: %d\n", recording_state);
     
-    // This will block until the source is drained
-    fa_io_run(source, sink);
+    if (check_recording_semaphore(wrap_oid(id), NULL)) {
+        if (recording_state == RECORDING_RUNNING || recording_state == RECORDING_INITIALIZING) {
+            // If still initializing, wait here...
+            while (recording_state == RECORDING_INITIALIZING) {
+                fa_thread_sleep(100);
+            }
+
+            if (recording_state == RECORDING_RUNNING) {
+                // This will block until the source is drained
+                fa_slog_info("Recording thread: recording_state is now RUNNING, calling io_run");
+                fa_io_run(source, sink);
+                
+                
+            } else {
+                fa_slog_info("Recording thread: recording_state went from INITIALIZING to STOPPING, skipping io_run");
+            }
+        } else {
+            fa_slog_info("Recording thread: recording_state is not RUNNING or INITIALIZING, skipping io_run");
+        }
+    } else {
+        fa_slog_info("Recording thread: sempahore is not set, skipping io_run");
+    }
     
-    printf("_recording_thread 5\n");
-    
-    // Make sure sink is detached (why is this needed?)
+	printf("_recording_thread 4.5, before detaching sink\n");
+	
+    // Make sure sink is detached (especially important if io_run is never called,
+    // otherwise the upload callback will never return!)
     fa_io_push(sink, NULL);
     
-    printf("_recording_thread 6\n");
-    
+    printf("_recording_thread 5\n");
+        
     // Cleanup
     if (filename) free(filename);
     if (url) free(url);
@@ -1246,15 +1477,24 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
     //fa_destroy(ring_buffer); // currently, we are using a global ring buffer, so don't free it
     //fa_destroy(result);
     
-    fa_slog_info("End of recording thread function");
+    fa_with_lock(recording_state_mutex) {
+        if (recording_state != RECORDING_RUNNING && recording_state != RECORDING_STOPPING) {
+            fa_warn(fa_string_format_integral("  !! recording_state is %d", recording_state));
+        }
+        recording_state = NOT_RECORDING;
+    }
     
-    recording_state = NOT_RECORDING;
+    fa_slog_info("Sent /recording/stopped");
+    send_osc_async("/recording/stopped", "is", id, "stopped");
+    
+    fa_slog_info("End of recording thread function");
     
     return NULL;
 }
 
 
-fa_thread_t create_recording_thread(oid_t id, fa_atomic_ring_buffer_t ring_buffer, char* filename, char* url, char* cookies)
+fa_thread_t create_recording_thread(oid_t id, fa_atomic_ring_buffer_t ring_buffer, char* filename, char* url, char* cookies,
+                                    long sample_rate, long channels)
 {
     struct recording_thread_args *args = fa_new_struct(recording_thread_args);
     args->id          = id;
@@ -1262,7 +1502,19 @@ fa_thread_t create_recording_thread(oid_t id, fa_atomic_ring_buffer_t ring_buffe
     args->filename    = strdup_or_null(filename);
     args->url         = strdup_or_null(url);
     args->cookies     = strdup_or_null(cookies);
+    args->sample_rate = sample_rate;
+    args->channels    = channels;
     
     fa_thread_t thread = fa_thread_create(_recording_thread, args);
     return thread;
+}
+
+void buffer_hint(fa_ptr_t buffer, size_t frames)
+{
+    if (fa_dynamic_get_type(buffer) == file_buffer_type_repr) {
+        fa_file_buffer_t fb = buffer;
+        size_t channels = fa_peek_integer(fa_get_meta(buffer, fa_string("channels")));
+        size_t sample_size = fa_peek_integer(fa_get_meta(buffer, fa_string("sample-size")));
+        fa_file_buffer_hint(fb, frames * channels * sample_size);
+    }
 }

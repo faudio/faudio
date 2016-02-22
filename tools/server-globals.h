@@ -3,7 +3,11 @@
 #ifndef __SERVER_GLOBALS
 #define __SERVER_GLOBALS
 
+#define kMaxInMemoryFile 5242880 // 5 MB
+#define kFileBufferSize  2097152 // 2 MB
+
 oid_t last_used_id = 0;
+uint32_t ping_counter = 0;
 
 int in_bundle = 0;
 fa_list_t bundle_actions = NULL;
@@ -25,24 +29,28 @@ fa_string_t soundfont_path = NULL;
 fa_pair_t selected_audio_input_device = NULL;
 fa_pair_t selected_audio_output_device = NULL;
 fa_list_t selected_midi_input_devices = NULL;
-fa_list_t selected_midi_output_devices = NULL;
-fa_echo_type_t selected_midi_echo = FA_ECHO_AUDIO;
+fa_midi_type_t selected_midi_playback = FA_MIDI_TO_AUDIO;
+fa_echo_type_t selected_midi_echo = FA_ECHO_TO_PLAYBACK;
+fa_pair_t selected_midi_playback_device = NULL;
 fa_pair_t selected_midi_echo_device = NULL;
 
 fa_audio_device_t current_audio_input_device = NULL;
 fa_audio_device_t current_audio_output_device = NULL;
 fa_list_t current_midi_input_devices = NULL;
-fa_list_t current_midi_output_devices = NULL;
-fa_echo_type_t current_midi_echo = FA_ECHO_AUDIO;
+fa_midi_type_t current_midi_playback = FA_MIDI_TO_AUDIO;
+fa_midi_type_t current_midi_echo = FA_MIDI_TO_AUDIO;
+fa_ptr_t current_midi_playback_device = NULL;
 fa_ptr_t current_midi_echo_device = NULL;
+
+int midi_echo_channel = -1;
 
 fa_audio_stream_t current_audio_stream = NULL;
 fa_list_t current_midi_input_streams = NULL;
-fa_list_t current_midi_output_streams = NULL;
+fa_ptr_t current_midi_playback_stream = NULL;
 fa_ptr_t current_midi_echo_stream = NULL;
 fa_clock_t current_clock = NULL;
+double current_sample_rate = 0;
 
-recording_state_t recording_state = NOT_RECORDING;
 fa_atomic_ring_buffer_t recording_ring_buffer = NULL;
 fa_thread_t recording_thread = NULL;
 // bool recording_flag = false;
@@ -50,6 +58,8 @@ fa_thread_t recording_thread = NULL;
 fa_map_t host_input_latency = NULL;
 fa_map_t host_output_latency = NULL;
 fa_map_t host_vector_size = NULL;
+
+fa_thread_mutex_t osc_mutex = NULL;
 
 #ifdef _WIN32
 double synth_volume   = 1.0;
@@ -61,12 +71,16 @@ double monitor_volume = 0.0;
 
 #define with_mutex(type, var) type var = 0; fa_thread_mutex_t var ## _mutex = NULL
 
+with_mutex(recording_state_t, recording_state);
 with_mutex(fa_map_t, playback_semaphores);
 with_mutex(fa_map_t, recording_semaphores);
 with_mutex(fa_map_t, audio_files);
 with_mutex(volatile int, time_echo);
 with_mutex(volatile int, level_echo);
 with_mutex(fa_map_t, uploads);
+
+int time_echo_id  = 0;
+int level_echo_id = 0;
 
 #define kRingBufferSize (44100 * 8 * 20) // 20 seconds
 
@@ -105,6 +119,8 @@ static inline void init_globals() {
     
     bundle_actions = fa_list_empty();
     
+    recording_state = NOT_RECORDING;
+    recording_state_mutex = fa_thread_create_mutex();
     playback_semaphores = fa_map_empty();
     playback_semaphores_mutex = fa_thread_create_mutex();
     recording_semaphores = fa_map_empty();
@@ -116,12 +132,15 @@ static inline void init_globals() {
     uploads = fa_map_empty();
     uploads_mutex = fa_thread_create_mutex();
     
-    selected_midi_input_devices  = fa_list_empty();
-    selected_midi_output_devices = fa_list_empty();
-    current_midi_input_devices   = fa_list_empty();
-    current_midi_output_devices  = fa_list_empty();
-    current_midi_input_streams   = fa_list_empty();
-    current_midi_output_streams  = fa_list_empty();
+    selected_midi_input_devices   = fa_list_empty();
+    selected_midi_playback_device = NULL;
+    selected_midi_echo_device     = NULL;
+    current_midi_input_devices    = fa_list_empty();
+    current_midi_playback_device  = NULL;
+    current_midi_echo_device      = NULL;
+    current_midi_input_streams    = fa_list_empty();
+    current_midi_playback_stream  = NULL;
+    current_midi_echo_stream      = NULL;
     
     // Using global ring buffer means no parallel recordings, but
     // that is an acceptable limitation for now
@@ -133,11 +152,16 @@ static inline void init_globals() {
     fa_map_set_value_destructor(host_input_latency, fa_destroy);
     fa_map_set_value_destructor(host_output_latency, fa_destroy);
     fa_map_set_value_destructor(host_vector_size, fa_destroy);
+    
+    osc_mutex = fa_thread_create_mutex();
 }
 
 static inline void destroy_globals() {
+    fa_slog_info("Destroying bundle_actions...");
     fa_destroy(bundle_actions);
     
+    fa_slog_info("Destroying mutex...");
+    fa_destroy(recording_state_mutex);
     fa_destroy(playback_semaphores);
     fa_destroy(playback_semaphores_mutex);
     fa_destroy(recording_semaphores);
@@ -149,23 +173,26 @@ static inline void destroy_globals() {
     fa_destroy(uploads);
     fa_destroy(uploads_mutex);
     
+    fa_slog_info("Destroying strings...");
     fa_destroy(synth_name);
     fa_destroy(audio_name);
     fa_destroy(record_left_name);
     fa_destroy(record_right_name);
     
+    fa_slog_info("Destroying device references...");
     if (selected_midi_input_devices) fa_destroy(selected_midi_input_devices);
-    if (selected_midi_output_devices) fa_destroy(selected_midi_output_devices);
     fa_destroy(current_midi_input_devices);
-    fa_destroy(current_midi_output_devices);
     fa_destroy(current_midi_input_streams);
-    fa_destroy(current_midi_output_streams);
     
+    fa_slog_info("Destroying ring buffer...");
     fa_destroy(recording_ring_buffer);
     
+    fa_slog_info("Destroying settings...");
     fa_destroy(host_input_latency);
     fa_destroy(host_output_latency);
     fa_destroy(host_vector_size);
+    
+    fa_destroy(osc_mutex);
 }
 
 #endif

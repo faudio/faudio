@@ -18,12 +18,19 @@ typedef enum {
 //     fa_string_t name;
 // } *fa_device_descriptor_t;
 
+typedef enum {
+    FA_MIDI_NO_OUTPUT = 0,
+    FA_MIDI_TO_AUDIO = 1,
+    FA_MIDI_TO_DEVICE = 2
+} fa_midi_type_t;
 
 typedef enum {
     FA_ECHO_NO_ECHO = 0,
-    FA_ECHO_AUDIO = 1,
-    FA_ECHO_DEVICE = 2
+    FA_ECHO_TO_PLAYBACK = 1,
+    FA_ECHO_TO_AUDIO = 2,
+    FA_ECHO_TO_DEVICE = 3
 } fa_echo_type_t;
+
 
 // typedef struct {
 //     lo_address address;
@@ -32,21 +39,23 @@ typedef enum {
 // } playback_context_t;
 
 typedef enum {
-    CHOOSE_MIDI_INPUT_NONE,
-    CHOOSE_MIDI_INPUT_ALL,
-    CHOOSE_MIDI_INPUT_DEVICE,
-    CHOOSE_MIDI_OUTPUT_NONE,
-    CHOOSE_MIDI_OUTPUT_ALL,
-    CHOOSE_MIDI_OUTPUT_DEVICE,
     CHOOSE_AUDIO_INPUT_NONE,
     CHOOSE_AUDIO_INPUT_DEFAULT,
     CHOOSE_AUDIO_INPUT_DEVICE,
     CHOOSE_AUDIO_OUTPUT_NONE,
     CHOOSE_AUDIO_OUTPUT_DEFAULT,
     CHOOSE_AUDIO_OUTPUT_DEVICE,
+    CHOOSE_MIDI_INPUT_NONE,
+    CHOOSE_MIDI_INPUT_ALL,
+    CHOOSE_MIDI_INPUT_DEVICE,
+    CHOOSE_MIDI_PLAYBACK_NONE,
+    CHOOSE_MIDI_PLAYBACK_AUDIO,
+    CHOOSE_MIDI_PLAYBACK_DEVICE,
     CHOOSE_MIDI_ECHO_NONE,
+    CHOOSE_MIDI_ECHO_PLAYBACK,
     CHOOSE_MIDI_ECHO_AUDIO,
-    CHOOSE_MIDI_ECHO_DEVICE
+    CHOOSE_MIDI_ECHO_DEVICE,
+    CHOOSE_MIDI_ECHO_CHANNEL
 } choose_device_t;
 
 typedef enum {

@@ -86,6 +86,10 @@ module Fa.Atomic.RingBuffer
     /** Read a single double value.
      */
     readDouble  : (RingBuffer, Double*) -> Bool;
+    
+    /** Read a single long value.
+     */
+    readLong  : (RingBuffer, Long*) -> Bool;
 
     /** Write a single byte value.
      */
@@ -98,5 +102,10 @@ module Fa.Atomic.RingBuffer
     /** Write a single double value.
      */
     writeDouble : (RingBuffer, Double) -> Bool;
+    
+    /** Write a single long value.
+     */
+    writeLong : (RingBuffer, Long) -> Bool;
+    
 }
 

@@ -93,7 +93,7 @@ fa_midi_message_t fa_midi_message_copy(fa_midi_message_t midi_message)
     m->is_sysex = midi_message->is_sysex;
 
     if (!midi_message->is_sysex) {
-        memcpy(m->data.simple, midi_message->data.simple, 3);
+        memcpy(m->data.simple, midi_message->data.simple, 4);
     } else {
         m->data.sysex = fa_copy(midi_message->data.sysex);
     }

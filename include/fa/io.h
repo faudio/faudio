@@ -114,20 +114,42 @@ fa_io_source_t fa_io_apply(fa_io_source_t source,
 fa_io_sink_t fa_io_coapply(fa_io_filter_t filter,
                            fa_io_sink_t sink);
 
-/** Create a simple stateful  filter.
+/** Create a simple stateful filter.
     The callback is invoked on push and the read callback on pull.
 */
 fa_io_filter_t fa_io_create_simple_filter(fa_io_callback_t callback,
                                           fa_io_read_callback_t readCallback,
                                           fa_ptr_t ptr);
+/** Create a simple stateful filter.
+    The callback is invoked on push and the read callback on pull.
+    The destructor is called just before the actual filter is destroyed.
+*/
+fa_io_filter_t fa_io_create_simple_filter_with_destructor(fa_io_callback_t callback,
+                                                          fa_io_read_callback_t readCallback,
+                                                          fa_ptr_t data,
+                                                          fa_nullary_t destructor);
 
 /** Create a filter that writes data passed through it to the given sink. 
 */
 fa_io_filter_t fa_io_split(fa_io_sink_t sink);
 
 /** Create source that reads from a file. 
+    The path is consumed.
 */
-fa_io_source_t fa_io_read_file(fa_string_t string);
+fa_io_source_t fa_io_read_file(fa_string_t path);
+
+/** Create source that reads from a file. 
+*/
+fa_io_source_t fa_io_read_file_between(fa_string_t path, fa_ptr_t start, fa_ptr_t end);
+
+/** Create source that reads audio data from an audio file. 
+    The path is consumed.
+*/
+fa_io_source_t fa_io_read_audio_file(fa_string_t path);
+
+/** Create source that reads audio data from an audio file. 
+*/
+fa_io_source_t fa_io_read_audio_file_between(fa_string_t path, fa_ptr_t startFrames, fa_ptr_t endFrames);
 
 /** Create sink that writes to a file. 
 */
@@ -154,7 +176,7 @@ fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t ringBuffer);
         For now requires input to be mono, 44100, 64-bit floating.
       
 */
-fa_io_filter_t fa_io_create_ogg_encoder();
+fa_io_filter_t fa_io_create_ogg_encoder(long sampleRate, long channels);
 
 /** Continously data from the given source and push it into the sink.
 

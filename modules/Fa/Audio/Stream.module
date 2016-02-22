@@ -167,4 +167,10 @@ module "transient" Fa.Audio.Stream
      */
     scheduleNow : (Action, Stream) -> Void;
     
+    /**
+        Return info of the stream, in form of a map.
+    
+        The map should be destroyed by the caller.
+    */
+    streamGetInfo : (Stream) -> Map;
 }

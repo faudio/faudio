@@ -755,11 +755,10 @@ void push_sysex_byte(stream_t stream, uint8_t x)
 
 fa_buffer_t copy_sysex_to_new_buffer(stream_t stream)
 {
-    // TODO do not double-allocate
-    return fa_copy(fa_buffer_wrap((void *) stream->sysex_in_buffer.data,
-                                  stream->sysex_in_buffer.count,
-                                  NULL,
-                                  NULL));
+    size_t size = stream->sysex_in_buffer.count;
+    void *data = fa_malloc(size);
+    memcpy(data, (void *) stream->sysex_in_buffer.data, size);
+    return fa_buffer_dwrap(data, size);
 }
 
 void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
@@ -1051,13 +1050,8 @@ void fa_midi_schedule_relative(fa_time_t        time,
                                fa_action_t       action,
                                fa_midi_stream_t  stream)
 {
-    // if (fa_time_is_zero(time) && !fa_action_is_compound(action) && !fa_action_is_do(action)) {
-    //     // Pass directly to output
-    //     fa_atomic_queue_write(stream->short_controls, action);
-    // } else {
-        fa_time_t now = fa_clock_time(stream->clock);
-        fa_midi_schedule(fa_dadd(now, time), action, stream);
-    // }
+    fa_time_t now = fa_clock_time(stream->clock);
+    fa_midi_schedule(fa_dadd(now, time), action, stream);
 }
 
 void fa_midi_schedule_now(fa_action_t action, fa_midi_stream_t stream)

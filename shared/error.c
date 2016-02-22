@@ -54,7 +54,8 @@ fa_error_t fa_error_copy_simple(simple_fa_error_t simple)
 
 void fa_error_destroy_simple(simple_fa_error_t simple)
 {
-    fa_destroy(simple->message);
+    if (simple->message)
+        fa_destroy(simple->message);
     if (simple->origin)
 		fa_destroy(simple->origin);
     fa_delete(simple);
@@ -126,7 +127,11 @@ fa_string_t fa_error_format(bool colored, fa_error_t a)
         str = fa_string_dappend(str, colored ? fa_string(":\x1b[0m ") : fa_string(": "));
     }
 
-    str = fa_string_dappend(str, fa_copy(simple->message));
+    if (simple->message) {
+        str = fa_string_dappend(str, fa_copy(simple->message));
+    } else {
+        str = fa_string_dappend(str, fa_string("[NULL]"));
+    }
 
     return str;
 }

@@ -518,7 +518,7 @@ fa_ptr_t map_impl(fa_id_t interface)
 
 void fa_map_log_count()
 {
-  fa_log_info(fa_string_dappend(fa_string("maps/entrys allocated: "),
+  fa_log_info(fa_string_dappend(fa_string("Maps/entrys allocated: "),
       fa_string_dappend(fa_string_dshow(fa_i32(gMapCount)),
       fa_string_dappend(fa_string(" / "), fa_string_dshow(fa_i32(gEntryCount))))));
 }

@@ -15,6 +15,8 @@
 #include <vorbis/codec.h>
 
 struct ogg_encoder {
+    long channels;
+    long sample_rate;
     struct {
         vorbis_block        block;
         vorbis_dsp_state    dsp;
@@ -26,8 +28,8 @@ struct ogg_encoder {
     bool                    header_sent;
 };
 
-#define kSR       44100
-#define kChannels 1
+// #define kSR       44100
+// #define kChannels 1
 
 #define byte_t uint8_t
 
@@ -36,17 +38,23 @@ struct ogg_encoder {
 
 void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb, fa_ptr_t data);
 
-void prepare(fa_ptr_t x)
+void prepare(fa_ptr_t x, long sample_rate, long channels)
 {
     struct ogg_encoder *encoder = (struct ogg_encoder *) x;
-    fa_mark_used(encoder);
+    
+    encoder->sample_rate = sample_rate;
+    encoder->channels    = channels;
 
     vorbis_info_init(&encoder->vorbis.info);
 
     int ret;
     // TODO
-    ret = vorbis_encode_init_vbr(&encoder->vorbis.info, kChannels, kSR, 1.0f);
-    assert((ret == 0) && "Unknown error");
+    ret = vorbis_encode_init_vbr(&encoder->vorbis.info, encoder->channels, encoder->sample_rate, 1.0f);
+    if (ret) {
+        fa_fail(fa_string_dappend(fa_string("Vorbis error: "), fa_string_dshow(fa_i32(ret))));
+        printf("sample_rate: %ld, channels: %ld\n", sample_rate, channels);
+        assert(false && "Vorbis error");
+    }
 
     /* set up the analysis state and auxiliary encoding storage */
     vorbis_analysis_init(&encoder->vorbis.dsp, &encoder->vorbis.info);
@@ -119,29 +127,27 @@ void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
     // warn(string("OGG encoder assumes mono 44100"));
 
     if (buffer) {
-        int samples = fa_buffer_size(buffer) / (8/**2*/);     // Samples vs frames?
+        size_t frames = fa_buffer_size(buffer) / (sizeof(double) * encoder->channels);
 
         // This is not really documented but apparently libvorbis drops samples
         // if the buffer size is bigger than 1024
-        assert(samples <= 1024 && "Vorbis analysis requre buffer size <= 1024");
+        assert(frames <= 1024 && "Vorbis analysis requre buffer size <= 1024");
 
         float **vorbis_buffers = vorbis_analysis_buffer(
                                      &encoder->vorbis.dsp,
-                                     samples
+                                     frames
                                  );
         // Use double2float without dealloc
-        dfill_vorbis_buffers(vorbis_buffers, double2float(buffer), kChannels);
+        dfill_vorbis_buffers(vorbis_buffers, double2float(buffer), encoder->channels);
         vorbis_analysis_wrote(
             &encoder->vorbis.dsp,
-            samples
+            frames
         );
 
-        ogg_printf("Vorbis analysis: samples=%d\n", samples);
+        ogg_printf("Vorbis analysis: frames=%d\n", frames);
     } else {
         vorbis_analysis_wrote(&encoder->vorbis.dsp, 0);
     }
-
-    fa_mark_used(encoder);
 }
 
 void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
@@ -162,8 +168,7 @@ void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
         vorbis_comment_add_tag(&comment, "ENCODER", "Faudio Vorbis encoder");
 
         vorbis_analysis_headerout(&encoder->vorbis.dsp, &comment, &header, &header_comm, &header_code);
-        ogg_stream_packetin(&encoder->ogg.stream, &header); /* automatically placed in its own
-                                           page */
+        ogg_stream_packetin(&encoder->ogg.stream, &header); /* automatically placed in its own page */
         ogg_stream_packetin(&encoder->ogg.stream, &header_comm);
         ogg_stream_packetin(&encoder->ogg.stream, &header_code);
         vorbis_comment_clear(&comment);
@@ -221,10 +226,6 @@ void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
     fa_mark_used(encoder);
 }
 
-fa_ptr_t default_destroy(fa_ptr_t _, fa_ptr_t data);
-    // fa_free(data);
-    // return NULL;
-
 
 void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb, fa_ptr_t data)
 {
@@ -236,19 +237,33 @@ void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb
     memcpy(raw, page->header, headerSize);
     memcpy(raw + headerSize, page->body, bodySize);
 
-    // TODO cleanup of wrapped memory
     ogg_printf("                    <<< Ogg sending %zu bytes\n", bufferSize);
-    fa_buffer_t buf = fa_buffer_wrap(raw, bufferSize, default_destroy, NULL);
+    fa_buffer_t buf = fa_buffer_dwrap(raw, bufferSize);
     cb(data, buf);
-    //fa_destroy(buf);
-    //fa_free(raw);
+    fa_destroy(buf);
 }
 
+fa_ptr_t _destroy_ogg_encoder(fa_ptr_t x) {
+    fa_slog_info("Cleaning up ogg encoder");
+    struct ogg_encoder *encoder = (struct ogg_encoder *) x;
+    ogg_stream_clear(&encoder->ogg.stream);
+    vorbis_block_clear(&encoder->vorbis.block);
+    vorbis_dsp_clear(&encoder->vorbis.dsp);
+    vorbis_info_clear(&encoder->vorbis.info);
+    return NULL;
+}
 
-fa_io_filter_t fa_io_create_ogg_encoder()
+fa_io_filter_t fa_io_create_ogg_encoder(long sample_rate, long channels)
 {
+    if (channels < 1 || channels > 2) {
+        fa_fail(fa_string_format_integral("Bad number of channels in fa_io_create_ogg_encoder: %ld", channels));
+        assert(false);
+    }
+    if (sample_rate < 11025 || sample_rate > 192400) {
+        fa_fail(fa_string_format_integral("Bad sample_rate in fa_io_create_ogg_encoder: %ld", sample_rate));
+        assert(false);
+    }
     struct encoder *encoder = fa_new_struct(ogg_encoder);
-    prepare(encoder);
-    // TODO free encoder
-    return fa_io_create_simple_filter(push_uncompressed, pull_compressed, encoder);
+    prepare(encoder, sample_rate, channels);
+    return fa_io_create_simple_filter_with_destructor(push_uncompressed, pull_compressed, encoder, _destroy_ogg_encoder);
 }
