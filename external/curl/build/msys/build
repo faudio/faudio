@@ -4,7 +4,10 @@ git submodule update external/curl/source;
 
 pushd external/curl/source;
 
+./buildconf
+
 ./configure \
+    --with-ssl
     --prefix=`pwd`/../result \
     --with-winssl \
     && make \
