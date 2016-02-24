@@ -6,6 +6,7 @@ pushd external/curl/source;
 
 ./configure \
     --prefix=`pwd`/../result \
+    --with-winssl \
     && make \
     && make install
 
