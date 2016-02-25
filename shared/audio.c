@@ -106,6 +106,7 @@ struct _fa_audio_stream_t {
     state_t             state;              // DSP state
     int64_t             last_time;          // Cached time in milliseconds
     double              roundtripLatency;   // "Actual" latency calculated from time values reported by PA
+    bool                exclusive_mode;     // Is exclusive mode actually used
     
     //int64_t             start_time;
 
@@ -820,7 +821,14 @@ void print_audio_info(device_t input, device_t output)
         fa_inform(fa_string_format_integral("    Vector Size:              %d",  session->parameters.vector_size));
 
         if (is_wasapi_device(input) || is_wasapi_device(output)) {
-            fa_inform(fa_string_dappend(fa_string("    Exclusive Mode: "),  fa_string(session->parameters.exclusive ? "Yes" : "No")));
+            fa_string_t exclusive;
+            switch(session->parameters.exclusive) {
+            case em_never:  exclusive = fa_string("No"); break;
+            case em_always: exclusive = fa_string("Yes"); break;
+            case em_try:    exclusive = fa_string("Try"); break;
+            default: exclusive = fa_string("Unknown value"); break;
+            }
+            fa_inform(fa_string_dappend(fa_string("    Exclusive Mode: "), exclusive));
         }
     }
 }
@@ -891,6 +899,7 @@ stream_t fa_audio_open_stream(device_t input,
     }
     fa_let(session, input ? input->session : output->session) {
 
+        bool wasapi = (input && is_wasapi_device(input)) || (output && is_wasapi_device(output));
         PaWasapiFlags wasapiFlags = 0;
         wasapiFlags |= (session->parameters.exclusive ? paWinWasapiExclusive : 0);
 
@@ -910,7 +919,7 @@ stream_t fa_audio_open_stream(device_t input,
          */
         PaStreamParameters input_stream_parameters = {
             .suggestedLatency           = session->parameters.latency[0],
-            .hostApiSpecificStreamInfo  = ((input && is_wasapi_device(input)) ? &wasapiInfo : 0),
+            .hostApiSpecificStreamInfo  = (wasapi ? &wasapiInfo : 0),
             .device                     = (input ? input->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
             .channelCount               = stream->input_channels
@@ -918,7 +927,7 @@ stream_t fa_audio_open_stream(device_t input,
 
         PaStreamParameters output_stream_parameters = {
             .suggestedLatency           = session->parameters.latency[1],
-            .hostApiSpecificStreamInfo  = ((output && is_wasapi_device(output)) ? &wasapiInfo : 0),
+            .hostApiSpecificStreamInfo  = (wasapi ? &wasapiInfo : 0),
             .device                     = (output ? output->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
             .channelCount               = stream->output_channels
@@ -935,6 +944,23 @@ stream_t fa_audio_open_stream(device_t input,
                      sample_rate, buffer_size, flags,
                      callback, data
                  );
+                   
+        // Retry in shared mode
+        if ((status != paNoError) && wasapi && session->parameters.exclusive == em_try) {
+            fa_slog_info("Could not open WASAPI stream in exclusive mode, trying shared mode...");
+            
+            wasapiInfo.flags = 0;
+            input_stream_parameters.hostApiSpecificStreamInfo = &wasapiInfo;
+            output_stream_parameters.hostApiSpecificStreamInfo = &wasapiInfo;
+            
+            status = Pa_OpenStream(
+                         &stream->native,
+                         input ? &input_stream_parameters : NULL,
+                         output ? &output_stream_parameters : NULL,
+                         sample_rate, buffer_size, flags,
+                         callback, data
+                     );
+        }
 
         if (status != paNoError) {
             after_failed_processing(stream);
@@ -1124,6 +1150,7 @@ fa_map_t fa_audio_stream_get_info(fa_audio_stream_t stream)
     map = fa_map_dadd(fa_string("outputLatency"), fa_from_double(streamInfo->outputLatency), map);
     map = fa_map_dadd(fa_string("sampleRate"), fa_from_double(streamInfo->sampleRate), map);
     map = fa_map_dadd(fa_string("roundtripLatency"), fa_from_double(stream->roundtripLatency), map);
+    map = fa_map_dadd(fa_string("exclusive"), fa_from_bool(stream->exclusive_mode), map);
     return map;
 }
 
