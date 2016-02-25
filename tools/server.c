@@ -53,6 +53,7 @@ define_handler(fallback);
 define_handler(quit);
 define_handler(restart_streams);
 define_handler(restart_sessions);
+define_handler(stop_streams);
 define_handler(settings);
 define_handler(host_settings);
 
@@ -159,6 +160,8 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/restart/streams",  "i", restart_streams_handler, server); // id
     lo_server_thread_add_method(st, "/restart/sessions", "",  restart_sessions_handler, server);
     lo_server_thread_add_method(st, "/restart/sessions", "i", restart_sessions_handler, server); // id
+    lo_server_thread_add_method(st, "/stop/streams", "",      stop_streams_handler, server);
+    lo_server_thread_add_method(st, "/stop/streams", "i",     stop_streams_handler, server); // id
     
     /* Settings */
     lo_server_thread_add_method(st, "/set/latency",           "i",  host_settings_handler, (void*)HOST_SETTINGS_LATENCY);
@@ -1814,4 +1817,17 @@ int restart_sessions_handler(const char *path, const char *types, lo_arg ** argv
     return 0;
 }
 
+int stop_streams_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    fa_slog_info("Stopping streams");
+    if (recording_state != NOT_RECORDING) {
+        fa_slog_warning("Recording in progress, callbacks will probably not be called correctly");
+        recording_state = NOT_RECORDING;
+    }
+    stop_streams();
+    if (argc > 0) {
+        send_osc(message, user_data, "/stop/streams", "i", argv[0]->i);
+    }
+    return 0;
+}
 
