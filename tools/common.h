@@ -12,6 +12,7 @@ fa_list_t just(fa_ptr_t x, fa_list_t xs)
 #define fa_map_get_int32(KEY, MAP) fa_map_get_the(int32, KEY, MAP)
 #define fa_map_get_int64(KEY, MAP) fa_map_get_the(int64, KEY, MAP)
 #define fa_map_get_double(KEY, MAP) fa_map_get_the(double, KEY, MAP)
+#define fa_map_get_string(KEY, MAP) fa_map_get_the(string, KEY, MAP)
 
 #define fa_map_get_or(TYPE, KEY, DEFAULT, MAP) \
     (fa_map_get(KEY, opts) ? fa_peek_##TYPE(fa_map_get(KEY, MAP)) : DEFAULT)

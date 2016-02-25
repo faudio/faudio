@@ -107,12 +107,15 @@ int main(int argc, char const *argv[])
     fa_with_options(option_declaration, argc, argv, options, args) {
         sprintf(port, "%d", fa_map_get_int32(fa_string("port"), options));
         #ifdef _WIN32
-        soundfont_path = fa_map_get_string(fa_string("soundfont"), options);
+        soundfont_path = fa_map_dget(fa_string("soundfont"), options);
         #endif
     }
     
     printf("port = %s\n", port);
-    
+    #ifdef _WIN32
+    fa_slog_info("Soundfont path: ", soundfont_path);
+    #endif
+
     // Init curl. This MUST be called before any other threads are spawned, even
     // if they are not using libcurl (according to the libcurl documentation).
     printf("Initializing curl\n");
