@@ -3,6 +3,8 @@
 #include "server-globals.h"
 #include "fa/signal.h"
 
+#include <string.h>
+
 // int lo_message_add_varargs_internal(lo_message m, const char *types,
 //                                     va_list ap, const char *file,
 //                                     int line); // message.c
@@ -66,6 +68,15 @@ if (fa_check(_obj)) {                       \
 
 
 #define safe_peek_i32(ptr) (ptr ? (int32_t) fa_peek_number(ptr) : 0)
+
+// Windows doesn't have strdup
+#ifdef _WIN32
+static char *strdup(const char *s) {
+    char *p = malloc(strlen(s) + 1);
+    if(p) { strcpy(p, s); }
+    return p;
+}
+#endif
 
 static inline char* strdup_or_null(char* s) {
     return (s && *s) ? strdup(s) : NULL;
