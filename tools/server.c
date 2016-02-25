@@ -707,7 +707,7 @@ int time_handler(const char *path, const char *types, lo_arg ** argv, int argc, 
     if (last_address) {
         lo_address_free(last_address);
     }
-    last_address = lo_address_clone(lo_message_get_source(message));
+    last_address = lo_address_new_from_copy(lo_message_get_source(message));
     
     
     if (current_clock) {
@@ -751,7 +751,7 @@ int next_id_handler(const char *path, const char *types, lo_arg ** argv, int arg
     if (last_address) {
         lo_address_free(last_address);
     }
-    last_address = lo_address_clone(lo_message_get_source(message));
+    last_address = lo_address_new_from_copy(lo_message_get_source(message));
     
     send_osc(message, user_data, "/next-id", "i", last_used_id + 1);
     return 0;
