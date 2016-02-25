@@ -454,6 +454,11 @@ fa_list_t construct_output_signal_tree() {
     fa_pair_t synth = fa_signal_dls(synth_name);
     #endif
     
+    if (!synth) {
+        fa_slog_error("Could not create synth!");
+        synth = pair(fa_signal_constant(0), fa_signal_constant(0));
+    }
+
     fa_signal_t synth_left = fa_pair_first(synth);
     fa_signal_t synth_right = fa_pair_second(synth);
     fa_destroy(synth); // only destroys the pair
