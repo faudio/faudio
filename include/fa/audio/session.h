@@ -45,6 +45,14 @@ typedef fa_audio_session_t (* fa_audio_session_callback_t)(fa_ptr_t,
 */
 typedef fa_nullary_t fa_audio_status_callback_t;
 
+/** Type specifying whether to use exclusive mode (WASAPI only)
+ */
+typedef enum {
+        em_never,
+        em_always,
+        em_try
+    } fa_exclusive_mode_t;
+
 /** Begin a new audio session.
 
      @return

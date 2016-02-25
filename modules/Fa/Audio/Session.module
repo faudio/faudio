@@ -33,6 +33,14 @@ module "transient" Fa.Audio.Session
     /** A callback to be invoked upon changes to the audio setup.
      */
     type StatusCallback = Nullary;
+    
+    /** Type specifying whether to use exclusive mode (WASAPI only)
+     */
+    type ExclusiveMode = enum {
+        emNever,
+        emAlways,
+        emTry
+    }
 
     /** Begin a new audio session.
 

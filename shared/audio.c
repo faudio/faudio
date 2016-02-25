@@ -63,12 +63,12 @@ struct _fa_audio_session_t {
     fa_list_t           streams;            // All streams started on this sessiuon (list of stream_t)
 
     struct {
-        double          sample_rate;
-        double          latency[2];         // Suggested latency
-        int             vector_size;
-        int             scheduler_interval; // Scheduling interval in milliseconds
-        bool            exclusive;          // Use exclusive mode (if available)
-    }                   parameters;         // Parameters, which may be updated by set_parameter
+        double               sample_rate;
+        double               latency[2];          // Suggested latency
+        int                  vector_size;
+        int                  scheduler_interval;  // Scheduling interval in milliseconds
+        fa_exclusive_mode_t  exclusive;           // Use exclusive mode (if available)
+    }                        parameters;          // Parameters, which may be updated by set_parameter
 
     struct {
         int                         count;
@@ -219,7 +219,7 @@ inline static void session_init_devices(session_t session)
     session->parameters.vector_size         = kDefVectorSize;
     session->parameters.latency[0]          = kDefLatency;
     session->parameters.latency[1]          = kDefLatency;
-    session->parameters.exclusive           = false;
+    session->parameters.exclusive           = em_never;
 }
 
 inline static void delete_session(session_t session)
@@ -575,7 +575,7 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
     }
 
     if (strcmp(name, "exclusive") == 0) {
-        bool x;
+        int x;
 
         switch (fa_dynamic_get_type(value)) {
         case i32_type_repr:
@@ -587,15 +587,21 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
             break;
 
         case bool_type_repr:
-            x = fa_from_bool(value);
+            x = fa_to_bool(value);
             break;
 
         default:
             fa_warn(fa_string("Wrong type"));
             return;
         }
+        
+        switch(x) {
+        case 0: session->parameters.exclusive = em_never; break;
+        case 1: session->parameters.exclusive = em_always; break;
+        case 2: session->parameters.exclusive = em_try; break;
+        default: fa_warn(fa_string_format_integral("Exclusive mode %d unknown, ignoring parameter.", x)); break;
+        }
 
-        session->parameters.exclusive = x;
         return;
     }
     fa_warn(fa_dappend(fa_string("Unknown setting: "), fa_string(name)));
@@ -932,14 +938,14 @@ stream_t fa_audio_open_stream(device_t input,
 
         if (status != paNoError) {
             after_failed_processing(stream);
-            return (stream_t) audio_device_error_with(fa_string("Could not start stream"), status);
+            return (stream_t) audio_device_error_with(fa_string("Could not open stream"), status);
         }
 
         status = Pa_SetStreamFinishedCallback(stream->native, native_finished_callback);
         
         if (status != paNoError) {
             after_failed_processing(stream);
-            return (stream_t) audio_device_error_with(fa_string("Could not start stream"), status);
+            return (stream_t) audio_device_error_with(fa_string("Could not set stream finished callback"), status);
         }
     }
     {
