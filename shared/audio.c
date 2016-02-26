@@ -437,7 +437,7 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
             break;
 
         default:
-            fa_warn(fa_string("Wrong type"));
+            fa_warn(fa_string("Wrong type for set_parameter sample-rate"));
             return;
         }
 
@@ -462,7 +462,7 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
             break;
 
         default:
-            fa_warn(fa_string("Wrong type"));
+            fa_warn(fa_string("Wrong type for set_parameter scheduler-interval"));
             return;
         }
 
@@ -487,7 +487,7 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
             break;
 
         default:
-            fa_warn(fa_string("Wrong type"));
+            fa_warn(fa_string("Wrong type for set_parameter latency"));
             return;
         }
 
@@ -513,7 +513,7 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
             break;
 
         default:
-            fa_warn(fa_string("Wrong type"));
+            fa_warn(fa_string("Wrong type for set_parameter input-latency"));
             return;
         }
 
@@ -538,7 +538,7 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
             break;
 
         default:
-            fa_warn(fa_string("Wrong type"));
+            fa_warn(fa_string("Wrong type for set_parameter output-latency"));
             return;
         }
 
@@ -563,7 +563,7 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
             break;
 
         default:
-            fa_warn(fa_string("Wrong type"));
+            fa_warn(fa_string("Wrong type for set_parameter vector-size"));
             return;
         }
 
@@ -592,7 +592,7 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
             break;
 
         default:
-            fa_warn(fa_string("Wrong type"));
+            fa_warn(fa_string("Wrong type for set_parameter exclusive"));
             return;
         }
         
