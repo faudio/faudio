@@ -937,6 +937,18 @@ stream_t fa_audio_open_stream(device_t input,
         PaStreamCallback *callback = native_audio_callback;
         fa_ptr_t          data     = stream;
 
+        // Before trying to open the stream, check that the format is supported
+        status = Pa_IsFormatSupported(
+            input ? &input_stream_parameters : NULL,
+            output ? &output_stream_parameters : NULL,
+            sample_rate
+            );
+
+        if (status != paNoError) {
+            after_failed_processing(stream);
+            return (stream_t) audio_device_error_with(fa_string("Stream parameters not supported"), status);
+        }
+
         status = Pa_OpenStream(
                      &stream->native,
                      input ? &input_stream_parameters : NULL,
