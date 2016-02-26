@@ -445,6 +445,28 @@ fa_signal_t low_pass(fa_signal_t sig) {
     return fa_signal_loop(_low_pass, sig);
 }
 
+// fa_pair_t construct_buffer_mixer(unsigned char channels, char *name_prefix) {
+//     if (channels == 0) return NULL;
+//     if (channels > kMaxAudioBufferSignals) {
+//         fa_warn(fa_format_integral("Cannot create %d playback signals", channels));
+//         fa_inform(fa_format_integral("Setting to %d, which is the maximum", (int)kMaxAudioBufferSignals));
+//         channels = kMaxAudioBufferSignals;
+//     }
+//
+//     fa_list_t left_signals = fa_list_empty();
+//     fa_list_t right_signals = fa_list_empty();
+//     for (int ch = 0; ch < channels; ch++) {
+//         fa_pair_t play_signal = fa_signal_play_buffer(fa_format_integral("%s%d", name_prefix, 0));
+//         fa_signal_t left = fa_pair_first(play_signal);
+//         fa_signal_t right = fa_pair_second(play_signal);
+//         fa_destroy(play_signal); // only destroys the pair
+//         left = sig_mul(left, fa_signal_input(kSynthLeft)),
+//         right = sig_mul(right, fa_signal_input)
+//     }
+//
+//     return play_signal;
+// }
+
 fa_list_t construct_output_signal_tree() {
     
     // Synth
@@ -464,7 +486,7 @@ fa_list_t construct_output_signal_tree() {
     fa_destroy(synth); // only destroys the pair
     
     // Audio buffer playback
-    fa_pair_t play_buffer = fa_signal_play_buffer(audio_name);
+    fa_pair_t play_buffer = fa_signal_play_buffers(audio_name, kMaxAudioBufferSignals);
     fa_signal_t play_buffer_left = fa_pair_first(play_buffer);
     fa_signal_t play_buffer_right = fa_pair_second(play_buffer);
     fa_destroy(play_buffer); // only destroys the pair
@@ -880,12 +902,11 @@ void stop_sessions() {
     current_midi_session = NULL;
 }
 
-void add_playback_semaphore(oid_t id, fa_string_t signal_name) {
-    if (!signal_name) signal_name = fa_from_bool(true);
+void add_playback_semaphore(oid_t id, fa_string_t signal_name, int slot) {
+    fa_ptr_t value = signal_name ? pair(signal_name, fa_i16(slot)) : fa_from_bool(true);
     fa_with_lock(playback_semaphores_mutex) {
-        playback_semaphores = fa_map_dset(wrap_oid(id), signal_name, playback_semaphores);
+        playback_semaphores = fa_map_dset(wrap_oid(id), value, playback_semaphores);
     }
-    //return a_bool;
 }
 
 bool check_playback_semaphore(fa_ptr_t context, fa_ptr_t dummy)
@@ -906,8 +927,11 @@ bool remove_playback_semaphore(oid_t id) {
     fa_with_lock(playback_semaphores_mutex) {
         fa_ptr_t s = fa_map_dget(wrap_oid(id), playback_semaphores);
         if (s) {
-            if (fa_dynamic_get_type(s) == string_type_repr) {
-                schedule_now(fa_action_send(s, fa_string("free")), current_audio_stream);
+            if (fa_dynamic_get_type(s) == pair_type_repr) {
+                fa_ptr_t signal_name = fa_pair_first(s);
+                fa_ptr_t slot = fa_pair_second(s);
+                schedule_now(fa_action_send(signal_name, pair(slot, fa_string("free"))), current_audio_stream);
+                fa_destroy(s); // the pair only
             }
             playback_semaphores = fa_map_dremove(wrap_oid(id), playback_semaphores);
             removed = true;

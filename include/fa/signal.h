@@ -333,13 +333,51 @@ fa_signal_t fa_signal_trigger(fa_string_t name, double init);
 */
 fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t signal);
 
-/** A signal that plays an audio buffer.
+/** A signal that plays multiple audio buffers.
+    
+    Control the signal by sending pairs to it (using @ref fa_action_send).
+    The pair should consist of a slot number and a command, where the command can be either of:
+    - A @ref fa_buffer_t -- the buffer is loaded into the signal
+    - A @ref fa_file_buffer_t -- the file buffer is loaded into the signal
+    - The string "play" -- start playback
+    - The string "stop" -- stop playback
+    - The string "free" -- unload the current buffer
+    - A (wrapped) number -- move to the corresponding frame
+    - A pair, consisting of the string "volume" and a float -- set volume for the slot (1.0 = reference volume)
+    - A pair, consisting of the string "pan" and a float -- set pan for the slot (-1.0 to 1.0)
+    
+    @param name
+        A name to identify the signal, use with @ref fa_action_send
+    @param count
+        Number of slots. Each slot is able to play one buffer at a time.
+    @return
+        A pair of @ref fa_signal_t (left and right output).
+    
+    @note
+        Use @ref fa_action_send_retain rather than @fa_action_send to pass
+        buffers to the signal, otherwise the buffer will be destroyed by
+        the scheduler. (TODO: This will currently leak the pair and the number)
+    @note
+        Only one buffer or file_buffer can be loaded in each slot at a time.
+        Loading a new buffer automatically unloads the previous.
+    @note
+        When a buffer or file_buffer is loaded, a reference is taken, which is
+        released when the buffer is unloaded. Therefore it is safe calling
+        @ref fa_destroy on the buffer even after scheduling.
+*/
+
+fa_pair_t fa_signal_play_buffers(fa_string_t name, int count);
+
+/** A signal that plays audio buffers, one at a time.
     
     Control the signal by sending one of the following to it (using @ref fa_action_send):
     - A @ref fa_buffer_t -- the buffer is loaded into the signal
     - The string "play" -- start playback
     - The string "stop" -- stop playback
+    - The string "free" -- unload the current buffer
     - A (wrapped) number -- move to the corresponding frame
+    - A pair, consisting of the string "volume" and a float -- set volume for the slot (1.0 = reference volume)
+    - A pair, consisting of the string "pan" and a float -- set pan for the slot (-1.0 to 1.0)
     
     @param name
         A name to identify the signal, use with @ref fa_action_send
@@ -347,8 +385,8 @@ fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t signal);
         A pair of @ref fa_signal_t (left and right output).
     
     @note
-        This custom signal is provided for convenience. An equivalent signal could be
-        constructed from combinations of play, count and trigger signals.
+        This is a convenience wrapper equivalent to fa_signal_play_buffers(name, 1)
+        See @fa_signal_play_buffers for further information.
     
 */
 fa_pair_t fa_signal_play_buffer(fa_string_t name);

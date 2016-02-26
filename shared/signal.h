@@ -44,9 +44,9 @@ typedef struct _state_base_t *state_base_t;
  */
 #define kMaxSignalTreeDepth             90
 
-/** Maximal allowed sample rate.
- */
-#define kMaxSignalTreeDepth             90
+// /** Maximal allowed sample rate.
+//  */
+// #define kMaxSignalTreeDepth             90
 
 /** Default sample rate.
  */

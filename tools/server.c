@@ -64,6 +64,7 @@ define_handler(simple_note);
 define_handler(receive_midi);
 define_handler(play_midi);
 define_handler(play_audio);
+define_handler(mix_audio);
 define_handler(stop);
 
 define_handler(time);
@@ -190,13 +191,14 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/stream/info", "", stream_info_handler, server);
     
     /* Playback */
-    //  /play/audio  id,  audio id,  skip (ms),  start-time (ms),  repeat-interval (ms)
+    //  /play/audio  id,  audio id,  slot,  skip (ms),  start-time (ms),  repeat-interval (ms)
     //  /play/midi   id,  data,  start-time (ms),  repeat-interval (ms)
     //  /stop        id
     lo_server_thread_add_method(st, "/play/audio", "ii", play_audio_handler, server);
-    lo_server_thread_add_method(st, "/play/audio", "iif", play_audio_handler, server);
-    lo_server_thread_add_method(st, "/play/audio", "iiff", play_audio_handler, server);
-    lo_server_thread_add_method(st, "/play/audio", "iifff", play_audio_handler, server);
+    lo_server_thread_add_method(st, "/play/audio", "iii", play_audio_handler, server);
+    lo_server_thread_add_method(st, "/play/audio", "iiif", play_audio_handler, server);
+    lo_server_thread_add_method(st, "/play/audio", "iiiff", play_audio_handler, server);
+    lo_server_thread_add_method(st, "/play/audio", "iiifff", play_audio_handler, server);
     lo_server_thread_add_method(st, "/play/midi", "ib", play_midi_handler, server);
     lo_server_thread_add_method(st, "/play/midi", "ibf", play_midi_handler, server);
     lo_server_thread_add_method(st, "/play/midi", "ibff", play_midi_handler, server);
@@ -204,6 +206,10 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/play/midi", "ibffF", play_midi_handler, server); // no auto-stop
 
     lo_server_thread_add_method(st, "/stop", "i", stop_handler, server);
+    
+    /* Audio play_buffer settings   (slot, value) */
+    lo_server_thread_add_method(st, "/audio/volume", "if", mix_audio_handler, "volume");
+    lo_server_thread_add_method(st, "/audio/pan",    "if", mix_audio_handler, "pan");
 
     /* Audio files handling */
     lo_server_thread_add_method(st, "/audio-file/list",     "i", list_audio_files_handler, server);  // id
@@ -434,12 +440,19 @@ fa_ptr_t _playback_stopped(fa_ptr_t context, fa_time_t time, fa_time_t now)
 int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
     oid_t id               = argv[0]->i;
     oid_t audio_id         = argv[1]->i;
-    double skip            = argc >= 3 ? (argv[2]->f / 1000.0) : 0.0; // convert from ms to s
-    double time            = argc >= 4 ? (argv[3]->f / 1000.0) : 0.0;
-    double repeat_interval = argc >= 5 ? (argv[4]->f / 1000.0) : 0.0;
+    int slot               = argc >= 3 ? argv[2]->i : 0;
+    double skip            = argc >= 4 ? (argv[3]->f / 1000.0) : 0.0; // convert from ms to s
+    double time            = argc >= 5 ? (argv[4]->f / 1000.0) : 0.0;
+    double repeat_interval = argc >= 6 ? (argv[5]->f / 1000.0) : 0.0;
     check_id(id, message, user_data);
     if (!current_audio_stream) {
         send_osc(message, user_data, "/error", "is", id, "no-audio-stream");
+        return 0;
+    }
+    if (slot < 0 || slot >= kMaxAudioBufferSignals) {
+        fa_fail(fa_format_integral("Bad audio slot %d", slot));
+        fa_inform(fa_format_integral("Supported slots: 0-%d", kMaxAudioBufferSignals-1));
+        send_osc(message, user_data, "/error", "isii", id, "bad-audio-slot", slot, kMaxAudioBufferSignals);
         return 0;
     }
     
@@ -448,8 +461,8 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
         buffer = fa_map_dget(wrap_oid(audio_id), audio_files);
     }
     if (buffer) {
-        add_playback_semaphore(id, audio_name);
-        fa_slog_info("Starting audio playback");
+        add_playback_semaphore(id, audio_name, slot);
+        fa_inform(fa_format_integral("Starting audio playback on slot %d", slot));
         fa_list_t actions = fa_list_empty();
         double sample_rate = fa_peek_number(fa_get_meta(buffer, fa_string("sample-rate")));
         size_t frames = fa_peek_integer(fa_get_meta(buffer, fa_string("frames")));
@@ -463,9 +476,9 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
         }
         
         // Schedule
-        fa_push_list(pair(fa_action_send_retain(audio_name, buffer), fa_milliseconds(0)), actions);
-        fa_push_list(pair(fa_action_send(audio_name, fa_from_double(skip)), fa_milliseconds(0)), actions);
-        fa_push_list(pair(fa_action_send(audio_name, fa_string("play")), fa_milliseconds(0)), actions);
+        fa_push_list(pair(fa_action_send_retain(audio_name, pair(fa_i16(slot), buffer)), fa_milliseconds(0)), actions);
+        fa_push_list(pair(fa_action_send(audio_name, pair(fa_i16(slot), fa_from_double(skip))), fa_milliseconds(0)), actions);
+        fa_push_list(pair(fa_action_send(audio_name, pair(fa_i16(slot), fa_string("play"))), fa_milliseconds(0)), actions);
         if (repeat_interval == 0) {
             fa_push_list(pair(fa_action_do_with_time(_playback_started, wrap_oid(id)), fa_milliseconds(0)), actions);
             fa_push_list(pair(fa_action_do_with_time(_playback_stopped, wrap_oid(id)), fa_time_from_double(max_time + 0.010)), actions);
@@ -499,6 +512,15 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
     } else {
         send_osc(message, user_data, "/error", "isi", id, "no-such-audio-file", audio_id);
     }
+    return 0;
+}
+
+int mix_audio_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
+    fa_string_t parameter = fa_string(user_data);
+    fa_ptr_t slot = create_fa_value(types[0], argv[0]);
+    fa_ptr_t value = create_fa_value(types[1], argv[1]);
+    fa_action_t action = fa_action_send(audio_name, pair(slot, pair(parameter, value)));
+    schedule_now(action, current_audio_stream);
     return 0;
 }
 
@@ -592,7 +614,7 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
     actions = times_to_delta_times(actions);
     
     //
-    add_playback_semaphore(id, NULL);
+    add_playback_semaphore(id, NULL, 0);
     fa_action_t main_action;
     if (repeat_interval > 0) {
         main_action =
