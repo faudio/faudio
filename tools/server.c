@@ -32,9 +32,10 @@
 
 fa_option_t option_declaration[] = {
     #ifdef _WIN32
-    { "s", "soundfont", "Soundfont path", fa_option_string,   "FluidR3_GM.sf2" },
+    { "s", "soundfont",    "Soundfont path",                  fa_option_string,   "FluidR3_GM.sf2" },
     #endif
-    { "p", "port",      "Port number",    fa_option_integral, "7770" }
+    { "p", "port",         "Port number",                     fa_option_integral, "7770" },
+    { "a", "audio-slots",  "Max simultaneous audio sources",  fa_option_integral, "8"}
 };
 
 #define define_handler(name) \
@@ -102,16 +103,27 @@ fa_ptr_t _status_callback(fa_ptr_t session);
 
 int main(int argc, char const *argv[])
 {
-    printf("main\n");
     fa_set_log_std();
+    
+    bool help_only = true;
     
     char port[14]; // enough to hold all int32 numbers
     fa_with_options(option_declaration, argc, argv, options, args) {
         sprintf(port, "%d", fa_map_get_int32(fa_string("port"), options));
+        audio_buffer_signals = fa_map_get_int32(fa_string("audio-slots"), options);
         #ifdef _WIN32
         soundfont_path = fa_map_dget(fa_string("soundfont"), options);
         #endif
+        help_only = false;
     }
+    
+    if (help_only) exit(0);
+    
+    if (audio_buffer_signals < 1 || audio_buffer_signals > kMaxAudioBufferSignals) {
+        printf("Invalid number of audio slots (%d), must be between 1 and %d\n", audio_buffer_signals, kMaxAudioBufferSignals);
+        exit(4);
+    }
+    printf("Using %d audio slots\n", audio_buffer_signals);
     
     printf("port = %s\n", port);
     #ifdef _WIN32

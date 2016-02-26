@@ -486,7 +486,7 @@ fa_list_t construct_output_signal_tree() {
     fa_destroy(synth); // only destroys the pair
     
     // Audio buffer playback
-    fa_pair_t play_buffer = fa_signal_play_buffers(audio_name, kMaxAudioBufferSignals);
+    fa_pair_t play_buffer = fa_signal_play_buffers(audio_name, audio_buffer_signals);
     fa_signal_t play_buffer_left = fa_pair_first(play_buffer);
     fa_signal_t play_buffer_right = fa_pair_second(play_buffer);
     fa_destroy(play_buffer); // only destroys the pair

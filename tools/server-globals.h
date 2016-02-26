@@ -5,10 +5,11 @@
 
 #define kMaxInMemoryFile 5242880 // 5 MB
 #define kFileBufferSize  2097152 // 2 MB
-#define kMaxAudioBufferSignals 9
+#define kMaxAudioBufferSignals 32
 
 oid_t last_used_id = 0;
 uint32_t ping_counter = 0;
+int audio_buffer_signals = 8;
 
 int in_bundle = 0;
 fa_list_t bundle_actions = NULL;
