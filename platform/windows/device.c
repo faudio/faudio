@@ -24,7 +24,7 @@ typedef struct nullary_closure *closure_t;
 static
 int     gInitializedOnce = 0;
 
-static fa_thread_mutex_t   windows_device_mutex;
+static fa_thread_mutex_t   windows_device_mutex = NULL;
 
 closure_t gMidiCallbackTable[1000];
 fa_pair_t gAudioCallbackTable[1000];
