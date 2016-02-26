@@ -119,6 +119,7 @@ void fa_initialize()
 
 	fa_log_region_count(fa_string("Before audio initialize:"));
 
+    fa_device_initialize();
     fa_audio_initialize();
     fa_midi_initialize();
 	
