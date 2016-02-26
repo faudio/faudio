@@ -177,6 +177,7 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/set/exclusive",          "T",  settings_handler, "exclusive");
     lo_server_thread_add_method(st, "/set/exclusive",          "F",  settings_handler, "exclusive");
     lo_server_thread_add_method(st, "/set/exclusive",          "N",  settings_handler, "exclusive");
+    lo_server_thread_add_method(st, "/set/exclusive",          "i",  settings_handler, "exclusive");
     //lo_server_thread_add_method(st, "/set/schedule-delay",     "i",  settings_handler, "schedule-delay"); // not implemented
       
     /* Get info */
