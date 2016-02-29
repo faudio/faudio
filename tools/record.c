@@ -64,7 +64,7 @@ int main(int argc, char const *argv[])
         if (argc < 2) {
             fa_print_ln(fa_string("Usage: fa_record [file]"));
         } else {
-            helper_function(fa_string((fa_string_utf8_t) argv[1]));
+            helper_function(fa_string(argv[1]));
         }
     }
 }

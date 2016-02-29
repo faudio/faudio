@@ -241,7 +241,7 @@ void iconv_fail()
 }
 
 inline static
-size_t raw_size(char *s)
+size_t raw_size(const char *s)
 {
     size_t i = 0;
 
@@ -253,7 +253,7 @@ size_t raw_size(char *s)
 }
 
 inline static
-size_t raw_size_16(uint16_t *s)
+size_t raw_size_16(const uint16_t *s)
 {
     size_t i = 0;
 
@@ -264,7 +264,7 @@ size_t raw_size_16(uint16_t *s)
     return i;
 }
 
-fa_string_utf8_t fa_string_to_utf8(fa_string_t str)
+fa_char8_t* fa_string_to_utf8(fa_string_t str)
 {
     size_t inSize, outSize, cstrSize;
     char *in, *out, *cstr;
@@ -293,7 +293,7 @@ fa_string_utf8_t fa_string_to_utf8(fa_string_t str)
     return cstr;
 }
 
-fa_string_cp1252_t fa_string_to_cp1252(fa_string_t str)
+fa_char8_t* fa_string_to_cp1252(fa_string_t str)
 {
     size_t inSize, outSize, cstrSize;
     char *in, *out, *cstr;
@@ -323,7 +323,7 @@ fa_string_cp1252_t fa_string_to_cp1252(fa_string_t str)
 }
 
 
-fa_string_utf16_t fa_string_to_utf16(fa_string_t as)
+fa_char16_t* fa_string_to_utf16(fa_string_t as)
 {
     size_t size = as->size;
     uint16_t *cstr = fa_malloc((size + 1) * kStandardCodeSize);
@@ -332,14 +332,14 @@ fa_string_utf16_t fa_string_to_utf16(fa_string_t as)
     return cstr;
 }
 
-fa_string_t fa_string_from_utf8(fa_string_utf8_t cstr)
+fa_string_t fa_string_from_utf8(const fa_char8_t* cstr)
 {
     size_t inSize, outSize, strSize;
     char *in, *out, *str;
 
     inSize  = raw_size(cstr);    // char count is in [inSize/4,inSize]
     outSize = inSize * 2;        // worst case, we shrink after iconv
-    in      = cstr;
+    in      = (char*) cstr;
     out     = fa_malloc(outSize);
     str     = out;
 
@@ -359,14 +359,14 @@ fa_string_t fa_string_from_utf8(fa_string_utf8_t cstr)
     return new_string(strSize / kStandardCodeSize, (uint16_t *) str);
 }
 
-fa_string_t fa_string_from_cp1252(fa_string_cp1252_t cstr)
+fa_string_t fa_string_from_cp1252(const fa_char8_t* cstr)
 {
     size_t inSize, outSize, strSize;
     char *in, *out, *str;
 
     inSize  = raw_size(cstr);    // char count is in [inSize/4,inSize]
     outSize = inSize * 2;        // worst case, we shrink after iconv
-    in      = cstr;
+    in      = (char*) cstr;
     out     = fa_malloc(outSize);
     str     = out;
 
@@ -386,14 +386,14 @@ fa_string_t fa_string_from_cp1252(fa_string_cp1252_t cstr)
     return new_string(strSize / kStandardCodeSize, (uint16_t *) str);
 }
 
-fa_string_t fa_string_from_mac_roman(fa_string_mac_roman_t cstr)
+fa_string_t fa_string_from_mac_roman(const fa_char8_t* cstr)
 {
     size_t inSize, outSize, strSize;
     char *in, *out, *str;
 
     inSize  = raw_size(cstr);    // char count is in [inSize/4,inSize]
     outSize = inSize * 2;        // worst case, we shrink after iconv
-    in      = cstr;
+    in      = (char*) cstr;
     out     = fa_malloc(outSize);
     str     = out;
 
@@ -413,7 +413,7 @@ fa_string_t fa_string_from_mac_roman(fa_string_mac_roman_t cstr)
     return new_string(strSize / kStandardCodeSize, (uint16_t *) str);
 }
 
-fa_string_t fa_string_from_utf16(fa_string_utf16_t cstr)
+fa_string_t fa_string_from_utf16(const fa_char16_t* cstr)
 {
     size_t size = raw_size_16(cstr);
     fa_string_t as = new_string(size, fa_malloc(size * kStandardCodeSize));

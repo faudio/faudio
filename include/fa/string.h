@@ -44,42 +44,6 @@
     */
 
 /**
-    @typedef fa_string_utf8_t
-    A UTF-8 encoded raw string.
-    This type use the endianness of the system, and is terminated by a null character.
-
-    @typedef fa_string_cp1252_t
-    A CP1252 (also known as Windows-1252) encoded raw string.
-    This type use the endianness of the system, and is terminated by a null character.
-
-    @typedef fa_string_mac_roman_t
-    A MacRoman encoded string.
-    This type use the endianness of the system, and is terminated by a null character.
-
-    @typedef fa_string_utf16_t
-    A UTF-16 encoded raw string.
-    This type use the endianness of the system, and is terminated by a null character.
-
-    @typedef fa_string_utf32_t
-    A UTF-32 encoded raw string.
-    This type use the endianness of the system, and is terminated by a null character.
-
-*/
-typedef fa_char8_t * fa_string_utf8_t;
-
-
-typedef fa_char8_t * fa_string_cp1252_t;
-
-
-typedef fa_char8_t * fa_string_mac_roman_t;
-
-
-typedef fa_char16_t * fa_string_utf16_t;
-
-
-typedef fa_char32_t * fa_string_utf32_t;
-
-/**
     @typedef fa_string_t
     An immutable Unicode string.
 
@@ -190,7 +154,7 @@ fa_ptr_t fa_string_from_json(fa_string_t string);
     @return
     qA new encoded string.
 */
-fa_string_utf8_t fa_string_to_utf8(fa_string_t string);
+fa_char8_t* fa_string_to_utf8(fa_string_t string);
 
 /** Encode a string as CP1252, also known as the standard Windows charset.
 
@@ -198,7 +162,7 @@ fa_string_utf8_t fa_string_to_utf8(fa_string_t string);
     @return
         A new encoded string.
 */
-fa_string_cp1252_t fa_string_to_cp1252(fa_string_t string);
+fa_char8_t* fa_string_to_cp1252(fa_string_t string);
 
 /** Encode the given string as UTF-16.
 
@@ -206,7 +170,7 @@ fa_string_cp1252_t fa_string_to_cp1252(fa_string_t string);
     @return
         A heap-allocated encoded string.
 */
-fa_string_utf16_t fa_string_to_utf16(fa_string_t string);
+fa_char16_t* fa_string_to_utf16(fa_string_t string);
 
 /** Convert a string to a the string representation used by the platform.
 
@@ -220,7 +184,7 @@ fa_ptr_t fa_string_to_native(fa_string_t string);
     @return
         A new string.
 */
-fa_string_t fa_string_from_utf8(fa_string_utf8_t utf8);
+fa_string_t fa_string_from_utf8(const fa_char8_t* utf8);
 
 /** Deencode a string from CP1252, also known as the standard Windows charset.
 
@@ -228,7 +192,7 @@ fa_string_t fa_string_from_utf8(fa_string_utf8_t utf8);
     @return
         A new string.
 */
-fa_string_t fa_string_from_cp1252(fa_string_cp1252_t cp1252);
+fa_string_t fa_string_from_cp1252(const fa_char8_t* cp1252);
 
 /** Deencode a string from Mac OS X Roman, also known as the standard Windows charset.
 
@@ -236,7 +200,7 @@ fa_string_t fa_string_from_cp1252(fa_string_cp1252_t cp1252);
     @return
         A new string.
 */
-fa_string_t fa_string_from_mac_roman(fa_string_mac_roman_t macRoman);
+fa_string_t fa_string_from_mac_roman(const fa_char8_t* macRoman);
 
 /** Deencode a string from UTF-16.
 
@@ -244,7 +208,7 @@ fa_string_t fa_string_from_mac_roman(fa_string_mac_roman_t macRoman);
     @return
         A new string.
 */
-fa_string_t fa_string_from_utf16(fa_string_utf16_t utf16);
+fa_string_t fa_string_from_utf16(const fa_char16_t* utf16);
 
 /** Convert a value of the string representation used by the platform to a string.
 
