@@ -120,4 +120,11 @@ module "transient" Fa.Audio.Session
             A list of @ref fa_audio_device_t.
      */
     all : Session -> List;      // [Device]
+    
+    /** Get available hosts.
+    
+        Returns a list of strings with the names of the available hosts.
+    */
+    hosts : Session -> List;
+    
 }

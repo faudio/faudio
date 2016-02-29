@@ -62,6 +62,8 @@ struct _fa_audio_session_t {
 
     fa_list_t           streams;            // All streams started on this sessiuon (list of stream_t)
 
+    fa_list_t           host_names;         // Cached host list
+
     struct {
         double               sample_rate;
         double               latency[2];          // Suggested latency
@@ -351,12 +353,21 @@ session_t fa_audio_begin_session()
         if (pa_status) {
             session = (session_t) audio_device_error(fa_string("Overlapping real-time audio sessions"));
         } else {
-            fa_inform(fa_string("    Starting up PortAudio"));
+            fa_slog_info("    Starting up PortAudio");
             Pa_Initialize();
             pa_status = true;
-            fa_inform(fa_string("    Done starting PortAudio"));
-
+            fa_slog_info("    Done starting PortAudio");
+            
             session = new_session();
+            
+            PaHostApiIndex count = Pa_GetHostApiCount();
+            session->host_names = fa_empty();
+            for (PaHostApiIndex i = 0; i < count; i++) {
+                const PaHostApiInfo *info = Pa_GetHostApiInfo(i);
+                fa_push_list(fa_string(info->name), session->host_names);
+            }
+            fa_slog_info("    Available hosts: ", session->host_names);
+            
             session_init_devices(session);
 
             current_session = session;
@@ -398,6 +409,7 @@ void fa_audio_end_session(session_t session)
     }
 
     fa_inform(fa_string("Finished terminating session"));
+    fa_deep_destroy_always(session->host_names);
     delete_session(session);
 }
 
@@ -639,6 +651,31 @@ fa_ptr_t fa_audio_end_all_sessions()
 fa_list_t fa_audio_all(session_t session)
 {
     return fa_copy(session->devices);
+}
+
+// fa_list_t fa_audio_hosts()
+// {
+//     PaHostApiIndex count = Pa_GetHostApiCount();
+//     PaHostApiIndex default_api = Pa_GetDefaultHostApi();
+//     fa_list_t result = fa_list_empty();
+//     for (PaHostApiIndex i = 0; i < count; i++) {
+//         const PaHostApiInfo *info = Pa_GetHostApiInfo(i);
+//         fa_map_t map = fa_map_empty();
+//         fa_map_set_value_destructor(map, fa_destroy);
+//         fa_map_dset(fa_string("type"), fa_i16(info->type), map);
+//         fa_map_dset(fa_string("name"), fa_string(info->name), map);
+//         fa_map_dset(fa_string("deviceCount"), fa_i16(info->deviceCount), map);
+//         if (i == default_api) {
+//             fa_map_dset(fa_string("default"), fa_from_bool(true), map);
+//         }
+//         fa_push_list(map, result);
+//     }
+//     return fa_list_dreverse(result);
+// }
+
+fa_list_t fa_audio_host_names(session_t session)
+{
+    return fa_deep_copy(session->host_names);
 }
 
 #define fail_if_no_input(type) \

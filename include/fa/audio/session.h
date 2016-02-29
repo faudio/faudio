@@ -135,6 +135,12 @@ fa_ptr_t fa_audio_end_all_sessions();
 */
 fa_list_t fa_audio_all(fa_audio_session_t session);
 
+/** Get available hosts.
+    
+    Returns a list of strings with the names of the available hosts.
+*/
+fa_list_t fa_audio_hosts(fa_audio_session_t session);
+
 /** @}
     @}
     @}
