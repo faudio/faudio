@@ -417,7 +417,7 @@ fa_string_t fa_string_from_utf16(fa_string_utf16_t cstr)
 {
     size_t size = raw_size_16(cstr);
     fa_string_t as = new_string(size, fa_malloc(size * kStandardCodeSize));
-    memcpy(cstr, as->data, as->size * kStandardCodeSize);
+    memcpy(as->data, cstr, as->size * kStandardCodeSize);
     return as;
 }
 
