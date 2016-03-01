@@ -6,6 +6,11 @@
 #define kMaxInMemoryFile 5242880 // 5 MB
 #define kFileBufferSize  2097152 // 2 MB
 #define kMaxAudioBufferSignals 32
+#ifdef _WIN32
+#define kDefaultAudioHost "Windows WASAPI"
+#else
+#define kDefaultAudioHost "Core Audio"
+#endif
 
 oid_t last_used_id = 0;
 uint32_t ping_counter = 0;
@@ -27,6 +32,7 @@ fa_string_t record_right_name = NULL;
 #ifdef _WIN32
 fa_string_t soundfont_path = NULL;
 #endif
+fa_string_t default_audio_host = NULL;
 
 fa_pair_t selected_audio_input_device = NULL;
 fa_pair_t selected_audio_output_device = NULL;

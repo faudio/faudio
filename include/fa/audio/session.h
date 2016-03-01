@@ -63,6 +63,20 @@ typedef enum {
 */
 fa_audio_session_t fa_audio_begin_session();
 
+/** Begin a new audio session with a preferred default host.
+    This host is used for getting the default input and output
+    devices, see @ref fa_audio_default_input and @ref fa_audio_default_output
+
+    @param preferred_host_name
+        A string with the name of the preferred host, or NULL.
+    @return
+        A new session (errable).
+    @par Errors
+        Returns an error if the session could not be started.
+    
+*/
+fa_audio_session_t fa_audio_begin_session_with_preferred_host(fa_string_t host_name);
+
 /** End the given session.
 
     @param session
