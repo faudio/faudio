@@ -66,8 +66,10 @@ struct _fa_audio_session_t {
 
     struct {
         double               sample_rate;
-        double               latency[2];          // Suggested latency
-        int                  vector_size;
+        double               latency_ex[2];       // Suggested latency for exclusive mode (only used with WASAPI)
+        double               latency_sh[2];       // Suggested latency for shared mode
+        int                  vector_size_ex;      // Vector size for exclusive mode (only used with WASAPI)
+        int                  vector_size_sh;      // Vector size for shared mode
         int                  scheduler_interval;  // Scheduling interval in milliseconds
         fa_exclusive_mode_t  exclusive;           // Use exclusive mode (if available)
     }                        parameters;          // Parameters, which may be updated by set_parameter
@@ -154,7 +156,7 @@ inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
 inline static device_t new_device(session_t session, native_index_t index);
 //inline static void delete_device(device_t device);
-inline static stream_t new_stream(device_t input, device_t output, double sample_rate, long max_buffer_size);
+inline static stream_t new_stream(device_t input, device_t output, double sample_rate);
 inline static void delete_stream(stream_t stream);
 
 void before_processing(stream_t stream);
@@ -219,9 +221,12 @@ inline static void session_init_devices(session_t session)
 
     session->parameters.sample_rate         = kDefSampleRate;
     session->parameters.scheduler_interval  = kAudioSchedulerIntervalMillis;
-    session->parameters.vector_size         = kDefVectorSize;
-    session->parameters.latency[0]          = kDefLatency;
-    session->parameters.latency[1]          = kDefLatency;
+    session->parameters.vector_size_ex      = kDefVectorSize;
+    session->parameters.vector_size_sh      = kDefVectorSize;
+    session->parameters.latency_ex[0]       = kDefLatency;
+    session->parameters.latency_ex[1]       = kDefLatency;
+    session->parameters.latency_sh[0]       = kDefLatency;
+    session->parameters.latency_sh[1]       = kDefLatency;
     session->parameters.exclusive           = em_never;
 }
 
@@ -271,7 +276,7 @@ inline static device_t new_device(session_t session, native_index_t index)
 //     fa_delete(device);
 // }
 
-inline static stream_t new_stream(device_t input, device_t output, double sample_rate, long max_buffer_size)
+inline static stream_t new_stream(device_t input, device_t output, double sample_rate)
 {
     stream_t stream         = fa_new(audio_stream);
 
@@ -283,7 +288,7 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
     stream->output_channels = (!output) ? 0 : fa_audio_output_channels(output);
 
     stream->sample_rate     = sample_rate;
-    stream->max_buffer_size = max_buffer_size;
+    stream->max_buffer_size = 0; // set later
     stream->state           = NULL;
     stream->last_time       = 0;
     //stream->start_time      = 0;
@@ -430,22 +435,16 @@ void fa_audio_with_session(session_callback_t session_callback,
     fa_audio_end_session(session);
 }
 
-static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
+static inline void set_parameter(const char *name, fa_ptr_t value, session_t session)
 {
     if (strcmp(name, "sample-rate") == 0) {
         double x;
 
         switch (fa_dynamic_get_type(value)) {
         case i32_type_repr:
-            x = fa_peek_int32(value);
-            break;
-
         case f32_type_repr:
-            x = fa_peek_float(value);
-            break;
-
-        case f64_type_repr:
-            x = fa_peek_double(value);
+        case f64_type_repr:        
+            x = fa_peek_number(value);
             break;
 
         default:
@@ -462,15 +461,9 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
 
         switch (fa_dynamic_get_type(value)) {
         case i32_type_repr:
-            x = fa_peek_int32(value);
-            break;
-
         case f32_type_repr:
-            x = fa_peek_float(value);
-            break;
-
         case f64_type_repr:
-            x = fa_peek_double(value);
+            x = fa_peek_number(value);
             break;
 
         default:
@@ -487,15 +480,9 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
 
         switch (fa_dynamic_get_type(value)) {
         case i32_type_repr:
-            x = fa_peek_int32(value);
-            break;
-
         case f32_type_repr:
-            x = fa_peek_float(value);
-            break;
-
         case f64_type_repr:
-            x = fa_peek_double(value);
+            x = fa_peek_number(value);
             break;
 
         default:
@@ -503,8 +490,28 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
             return;
         }
 
-        session->parameters.latency[0] = x;
-        session->parameters.latency[1] = x;
+        session->parameters.latency_sh[0] = x;
+        session->parameters.latency_sh[1] = x;
+        return;
+    }
+    
+    if (strcmp(name, "latency-exclusive") == 0) {
+        double x;
+
+        switch (fa_dynamic_get_type(value)) {
+        case i32_type_repr:
+        case f32_type_repr:
+        case f64_type_repr:
+            x = fa_peek_number(value);
+            break;
+
+        default:
+            fa_warn(fa_string("Wrong type for set_parameter latency-exclusive"));
+            return;
+        }
+
+        session->parameters.latency_ex[0] = x;
+        session->parameters.latency_ex[1] = x;
         return;
     }
 
@@ -513,15 +520,9 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
 
         switch (fa_dynamic_get_type(value)) {
         case i32_type_repr:
-            x = fa_peek_int32(value);
-            break;
-
         case f32_type_repr:
-            x = fa_peek_float(value);
-            break;
-
         case f64_type_repr:
-            x = fa_peek_double(value);
+            x = fa_peek_number(value);
             break;
 
         default:
@@ -529,7 +530,26 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
             return;
         }
 
-        session->parameters.latency[0] = x;
+        session->parameters.latency_sh[0] = x;
+        return;
+    }
+    
+    if (strcmp(name, "input-latency-exclusive") == 0) {
+        double x;
+
+        switch (fa_dynamic_get_type(value)) {
+        case i32_type_repr:
+        case f32_type_repr:
+        case f64_type_repr:
+            x = fa_peek_number(value);
+            break;
+
+        default:
+            fa_warn(fa_string("Wrong type for set_parameter input-latency-exclusive"));
+            return;
+        }
+
+        session->parameters.latency_ex[0] = x;
         return;
     }
 
@@ -538,15 +558,9 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
 
         switch (fa_dynamic_get_type(value)) {
         case i32_type_repr:
-            x = fa_peek_int32(value);
-            break;
-
         case f32_type_repr:
-            x = fa_peek_float(value);
-            break;
-
         case f64_type_repr:
-            x = fa_peek_double(value);
+            x = fa_peek_number(value);
             break;
 
         default:
@@ -554,7 +568,26 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
             return;
         }
 
-        session->parameters.latency[1] = x;
+        session->parameters.latency_sh[1] = x;
+        return;
+    }
+    
+    if (strcmp(name, "output-latency-exclusive") == 0) {
+        double x;
+
+        switch (fa_dynamic_get_type(value)) {
+            case i32_type_repr:
+            case f32_type_repr:
+            case f64_type_repr:
+            x = fa_peek_number(value);
+            break;
+
+        default:
+            fa_warn(fa_string("Wrong type for set_parameter output-latency-exclusive"));
+            return;
+        }
+
+        session->parameters.latency_ex[1] = x;
         return;
     }
 
@@ -563,15 +596,9 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
 
         switch (fa_dynamic_get_type(value)) {
         case i32_type_repr:
-            x = fa_peek_int32(value);
-            break;
-
         case f32_type_repr:
-            x = fa_peek_float(value);
-            break;
-
         case f64_type_repr:
-            x = fa_peek_double(value);
+            x = fa_peek_number(value);
             break;
 
         default:
@@ -580,19 +607,44 @@ static inline void set_parameter(char *name, fa_ptr_t value, session_t session)
         }
 
         if (x <= kMaxVectorSize) {
-            session->parameters.vector_size = x;
+            session->parameters.vector_size_sh = x;
         } else {
-            fa_warn(fa_string_format_integral("Vector size %d too large, ignoring parameter.", x));
+            fa_warn(fa_string_format_integral("vector-size %d too large, ignoring parameter.", x));
+        }
+        return;
+    }
+    
+    if (strcmp(name, "vector-size-exclusive") == 0) {
+        int x;
+
+        switch (fa_dynamic_get_type(value)) {
+        case i32_type_repr:
+        case f32_type_repr:
+        case f64_type_repr:
+            x = fa_peek_number(value);
+            break;
+
+        default:
+            fa_warn(fa_string("Wrong type for set_parameter vector-size-exclusive"));
+            return;
+        }
+
+        if (x <= kMaxVectorSize) {
+            session->parameters.vector_size_ex = x;
+        } else {
+            fa_warn(fa_string_format_integral("vector-size-exclusive %d too large, ignoring parameter.", x));
         }
         return;
     }
 
     if (strcmp(name, "exclusive") == 0) {
-        int x;
+        int64_t x;
 
         switch (fa_dynamic_get_type(value)) {
+        case i8_type_repr:
+        case i16_type_repr:
         case i32_type_repr:
-            x = fa_peek_int32(value);
+            x = fa_peek_integer(value);
             break;
 
         case i64_type_repr:
@@ -853,19 +905,34 @@ void print_audio_info(device_t input, device_t output)
         } else {
             fa_inform(fa_string_format_floating("    Suggested Sample Rate:    %2f", session->parameters.sample_rate));
         }
-        fa_inform(fa_string_format_floating("    Suggested Input Latency:  %3f", session->parameters.latency[0]));
-        fa_inform(fa_string_format_floating("    Suggested Output Latency: %3f", session->parameters.latency[1]));
-        fa_inform(fa_string_format_integral("    Vector Size:              %d",  session->parameters.vector_size));
 
         if (is_wasapi_device(input) || is_wasapi_device(output)) {
-            fa_string_t exclusive;
-            switch(session->parameters.exclusive) {
-            case em_never:  exclusive = fa_string("No"); break;
-            case em_always: exclusive = fa_string("Yes"); break;
-            case em_try:    exclusive = fa_string("Try"); break;
-            default: exclusive = fa_string("Unknown value"); break;
+            if (session->parameters.exclusive == em_never) {
+                fa_inform(fa_string("    Exclusive Mode:           No"));
+                fa_inform(fa_string_format_floating("    Suggested Input Latency:  %3f", session->parameters.latency_sh[0]));
+                fa_inform(fa_string_format_floating("    Suggested Output Latency: %3f", session->parameters.latency_sh[1]));
+                fa_inform(fa_string_format_integral("    Vector Size:              %d",  session->parameters.vector_size_sh));
+            } else if (session->parameters.exclusive == em_always) {
+                fa_inform(fa_string("    Exclusive Mode:           Yes"));
+                fa_inform(fa_string_format_floating("    Suggested Input Latency:  %3f", session->parameters.latency_ex[0]));
+                fa_inform(fa_string_format_floating("    Suggested Output Latency: %3f", session->parameters.latency_ex[1]));
+                fa_inform(fa_string_format_integral("    Vector Size:              %d",  session->parameters.vector_size_ex));
+            } else {
+                fa_inform(fa_string("    Exclusive Mode:           Try"));
+                fa_inform(fa_string_dappend(
+                    fa_string_format_floating("    Suggested Input Latency:  %3f", session->parameters.latency_ex[0]),
+                    fa_string_format_floating(" / %3f", session->parameters.latency_sh[0])));
+                fa_inform(fa_string_dappend(
+                    fa_string_format_floating("    Suggested Output Latency: %3f", session->parameters.latency_ex[1]),
+                    fa_string_format_floating(" / %3f", session->parameters.latency_sh[1])));
+                fa_inform(fa_string_dappend(
+                    fa_string_format_integral("    Vector Size Sh:              %d",  session->parameters.vector_size_ex),
+                    fa_string_format_integral(" / %d", session->parameters.vector_size_sh)));
             }
-            fa_inform(fa_string_dappend(fa_string("    Exclusive Mode: "), exclusive));
+        } else {
+            fa_inform(fa_string_format_floating("    Suggested Input Latency:  %3f", session->parameters.latency_sh[0]));
+            fa_inform(fa_string_format_floating("    Suggested Output Latency: %3f", session->parameters.latency_sh[1]));
+            fa_inform(fa_string_format_integral("    Vector Size:              %d",  session->parameters.vector_size_sh));
         }
     }
 }
@@ -908,14 +975,13 @@ stream_t fa_audio_open_stream(device_t input,
                    fa_string("Can not open a stream on devices from different sessions"), 0);
     }
 
-    unsigned long   buffer_size = (input ? input : output)->session->parameters.vector_size;
     double          sample_rate = (input ? input : output)->session->parameters.sample_rate;
     // sample_rate == 0 means that we are going to use the sample rate of the output device
     // (or the input device, if there is not output)
     if (sample_rate == 0) {
         sample_rate = fa_audio_current_sample_rate(output ? output : input);
     }
-    stream_t        stream = new_stream(input, output, sample_rate, buffer_size);
+    stream_t        stream = new_stream(input, output, sample_rate);
 
     {
         // TODO allow any number of inputs
@@ -937,9 +1003,10 @@ stream_t fa_audio_open_stream(device_t input,
     fa_let(session, input ? input->session : output->session) {
 
         bool wasapi = (input && is_wasapi_device(input)) || (output && is_wasapi_device(output));
+        bool exclusive = wasapi && session->parameters.exclusive;
         PaWasapiFlags wasapiFlags = 0;
-        wasapiFlags |= (session->parameters.exclusive ? paWinWasapiExclusive : 0);
-
+        wasapiFlags |= (exclusive ? paWinWasapiExclusive : 0);
+        
         struct PaWasapiStreamInfo wasapiInfo = {
             .size                       = sizeof(PaWasapiStreamInfo),
             .hostApiType                = paWASAPI,
@@ -955,7 +1022,7 @@ stream_t fa_audio_open_stream(device_t input,
             Open and set native stream.
          */
         PaStreamParameters input_stream_parameters = {
-            .suggestedLatency           = session->parameters.latency[0],
+            .suggestedLatency           = exclusive ? session->parameters.latency_ex[0] : session->parameters.latency_sh[0],
             .hostApiSpecificStreamInfo  = (wasapi ? &wasapiInfo : 0),
             .device                     = (input ? input->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -963,7 +1030,7 @@ stream_t fa_audio_open_stream(device_t input,
         };
 
         PaStreamParameters output_stream_parameters = {
-            .suggestedLatency           = session->parameters.latency[1],
+            .suggestedLatency           = exclusive ? session->parameters.latency_ex[1] : session->parameters.latency_sh[1],
             .hostApiSpecificStreamInfo  = (wasapi ? &wasapiInfo : 0),
             .device                     = (output ? output->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -985,6 +1052,8 @@ stream_t fa_audio_open_stream(device_t input,
             after_failed_processing(stream);
             return (stream_t) audio_device_error_with(fa_string("Stream parameters not supported"), status);
         }
+        
+        unsigned long buffer_size = exclusive ? session->parameters.vector_size_ex : session->parameters.vector_size_sh;
 
         status = Pa_OpenStream(
                      &stream->native,
@@ -1001,6 +1070,10 @@ stream_t fa_audio_open_stream(device_t input,
             wasapiInfo.flags = 0;
             input_stream_parameters.hostApiSpecificStreamInfo = &wasapiInfo;
             output_stream_parameters.hostApiSpecificStreamInfo = &wasapiInfo;
+            buffer_size = session->parameters.vector_size_sh;
+            input_stream_parameters.suggestedLatency = session->parameters.latency_sh[0];
+            output_stream_parameters.suggestedLatency = session->parameters.latency_sh[1];
+            
             
             status = Pa_OpenStream(
                          &stream->native,
@@ -1010,11 +1083,13 @@ stream_t fa_audio_open_stream(device_t input,
                          callback, data
                      );
         }
-
+        
         if (status != paNoError) {
             after_failed_processing(stream);
             return (stream_t) audio_device_error_with(fa_string("Could not open stream"), status);
         }
+
+        stream->max_buffer_size = buffer_size;
 
         status = Pa_SetStreamFinishedCallback(stream->native, native_finished_callback);
         
