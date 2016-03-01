@@ -109,7 +109,7 @@ struct _fa_audio_stream_t {
     fa_signal_t         signals[kMaxSignals];
     state_t             state;              // DSP state
     int64_t             last_time;          // Cached time in milliseconds
-    double              roundtripLatency;   // "Actual" latency calculated from time values reported by PA
+    double              roundtrip_latency;  // "Actual" latency calculated from time values reported by PA
     bool                exclusive_mode;     // Is exclusive mode actually used
     
     //int64_t             start_time;
@@ -278,33 +278,34 @@ inline static device_t new_device(session_t session, native_index_t index)
 
 inline static stream_t new_stream(device_t input, device_t output, double sample_rate)
 {
-    stream_t stream         = fa_new(audio_stream);
+    stream_t stream           = fa_new(audio_stream);
 
-    stream->impl            = &audio_stream_impl;
+    stream->impl              = &audio_stream_impl;
 
-    stream->input           = input;
-    stream->output          = output;
-    stream->input_channels  = (!input) ? 0 : fa_audio_input_channels(input);
-    stream->output_channels = (!output) ? 0 : fa_audio_output_channels(output);
+    stream->input             = input;
+    stream->output            = output;
+    stream->input_channels    = (!input) ? 0 : fa_audio_input_channels(input);
+    stream->output_channels   = (!output) ? 0 : fa_audio_output_channels(output);
 
-    stream->sample_rate     = sample_rate;
-    stream->max_buffer_size = 0; // set later
-    stream->state           = NULL;
-    stream->last_time       = 0;
+    stream->sample_rate       = sample_rate;
+    stream->max_buffer_size   = 0; // set later
+    stream->state             = NULL;
+    stream->last_time         = 0;
     //stream->start_time      = 0;
-    stream->roundtripLatency = 0;
+    stream->roundtrip_latency = 0;
+    stream->exclusive_mode    = false;
 
-    stream->signal_count    = 0;
-    stream->pa_flags        = 0;
+    stream->signal_count      = 0;
+    stream->pa_flags          = 0;
 
-    stream->before_controls = fa_atomic_queue();
-    stream->in_controls     = fa_atomic_queue();
-    stream->short_controls  = fa_atomic_queue();
-    stream->controls        = fa_priority_queue();
+    stream->before_controls   = fa_atomic_queue();
+    stream->in_controls       = fa_atomic_queue();
+    stream->short_controls    = fa_atomic_queue();
+    stream->controls          = fa_priority_queue();
 
-    stream->out_controls    = fa_atomic_queue();
+    stream->out_controls      = fa_atomic_queue();
 
-    stream->callbacks.count = 0;
+    stream->callbacks.count   = 0;
 
     return stream;
 }
@@ -883,7 +884,7 @@ inline static
 void print_audio_info(device_t input, device_t output)
 {
     fa_inform(fa_string("Opening real-time audio stream"));
-    fa_inform(fa_string_dappend(fa_string("    Input: "), input ? fa_audio_full_name(input) : fa_string("N/A")));
+    fa_inform(fa_string_dappend(fa_string("    Input: "), input ? fa_audio_full_name(input) : fa_string("(none)")));
 
     if (input) {
         fa_inform(fa_string_dappend(fa_string("        Default Latency:      "),
@@ -891,7 +892,7 @@ void print_audio_info(device_t input, device_t output)
         fa_inform(fa_string_format_floating("        Current Sample Rate:  %2f", fa_audio_current_sample_rate(input)));
     }
 
-    fa_inform(fa_string_dappend(fa_string("    Output: "), output ? fa_audio_full_name(output) : fa_string("N/A")));
+    fa_inform(fa_string_dappend(fa_string("    Output: "), output ? fa_audio_full_name(output) : fa_string("(none)")));
 
     if (output) {
         fa_inform(fa_string_dappend(fa_string("        Default Latency:      "),
@@ -975,13 +976,13 @@ stream_t fa_audio_open_stream(device_t input,
                    fa_string("Can not open a stream on devices from different sessions"), 0);
     }
 
-    double          sample_rate = (input ? input : output)->session->parameters.sample_rate;
+    double sample_rate = (input ? input : output)->session->parameters.sample_rate;
     // sample_rate == 0 means that we are going to use the sample rate of the output device
     // (or the input device, if there is not output)
     if (sample_rate == 0) {
         sample_rate = fa_audio_current_sample_rate(output ? output : input);
     }
-    stream_t        stream = new_stream(input, output, sample_rate);
+    stream_t stream = new_stream(input, output, sample_rate);
 
     {
         // TODO allow any number of inputs
@@ -1004,6 +1005,8 @@ stream_t fa_audio_open_stream(device_t input,
 
         bool wasapi = (input && is_wasapi_device(input)) || (output && is_wasapi_device(output));
         bool exclusive = wasapi && session->parameters.exclusive;
+        double inputLatency  = exclusive ? session->parameters.latency_ex[0] : session->parameters.latency_sh[0];
+        double outputLatency = exclusive ? session->parameters.latency_ex[1] : session->parameters.latency_sh[1];
         PaWasapiFlags wasapiFlags = 0;
         wasapiFlags |= (exclusive ? paWinWasapiExclusive : 0);
         
@@ -1022,7 +1025,7 @@ stream_t fa_audio_open_stream(device_t input,
             Open and set native stream.
          */
         PaStreamParameters input_stream_parameters = {
-            .suggestedLatency           = exclusive ? session->parameters.latency_ex[0] : session->parameters.latency_sh[0],
+            .suggestedLatency           = inputLatency,
             .hostApiSpecificStreamInfo  = (wasapi ? &wasapiInfo : 0),
             .device                     = (input ? input->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -1030,7 +1033,7 @@ stream_t fa_audio_open_stream(device_t input,
         };
 
         PaStreamParameters output_stream_parameters = {
-            .suggestedLatency           = exclusive ? session->parameters.latency_ex[1] : session->parameters.latency_sh[1],
+            .suggestedLatency           = outputLatency,
             .hostApiSpecificStreamInfo  = (wasapi ? &wasapiInfo : 0),
             .device                     = (output ? output->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -1042,15 +1045,20 @@ stream_t fa_audio_open_stream(device_t input,
         fa_ptr_t          data     = stream;
 
         // Before trying to open the stream, check that the format is supported
-        status = Pa_IsFormatSupported(
-            input ? &input_stream_parameters : NULL,
-            output ? &output_stream_parameters : NULL,
-            sample_rate
-            );
+        // (But don't do that if we are prepared to retry with another format)
+        // TODO: Do this also for exclusive mode, but make sure it
+        //       will retry correctly even if this test fails
+        if (!(exclusive && session->parameters.exclusive == em_try)) {
+            status = Pa_IsFormatSupported(
+                input ? &input_stream_parameters : NULL,
+                output ? &output_stream_parameters : NULL,
+                sample_rate
+                );
 
-        if (status != paNoError) {
-            after_failed_processing(stream);
-            return (stream_t) audio_device_error_with(fa_string("Stream parameters not supported"), status);
+            if (status != paNoError) {
+                after_failed_processing(stream);
+                return (stream_t) audio_device_error_with(fa_string("Stream parameters not supported"), status);
+            }
         }
         
         unsigned long buffer_size = exclusive ? session->parameters.vector_size_ex : session->parameters.vector_size_sh;
@@ -1064,16 +1072,19 @@ stream_t fa_audio_open_stream(device_t input,
                  );
                    
         // Retry in shared mode
-        if ((status != paNoError) && wasapi && session->parameters.exclusive == em_try) {
+        if ((status != paNoError) && exclusive && session->parameters.exclusive == em_try) {
             fa_slog_info("Could not open WASAPI stream in exclusive mode, trying shared mode...");
+            
+            exclusive = false;
+            buffer_size = session->parameters.vector_size_sh;
+            inputLatency = session->parameters.latency_sh[0];
+            outputLatency = session->parameters.latency_sh[1];
             
             wasapiInfo.flags = 0;
             input_stream_parameters.hostApiSpecificStreamInfo = &wasapiInfo;
             output_stream_parameters.hostApiSpecificStreamInfo = &wasapiInfo;
-            buffer_size = session->parameters.vector_size_sh;
-            input_stream_parameters.suggestedLatency = session->parameters.latency_sh[0];
-            output_stream_parameters.suggestedLatency = session->parameters.latency_sh[1];
-            
+            input_stream_parameters.suggestedLatency = inputLatency;
+            output_stream_parameters.suggestedLatency = outputLatency;
             
             status = Pa_OpenStream(
                          &stream->native,
@@ -1090,6 +1101,7 @@ stream_t fa_audio_open_stream(device_t input,
         }
 
         stream->max_buffer_size = buffer_size;
+        stream->exclusive_mode  = exclusive;
 
         status = Pa_SetStreamFinishedCallback(stream->native, native_finished_callback);
         
@@ -1097,7 +1109,22 @@ stream_t fa_audio_open_stream(device_t input,
             after_failed_processing(stream);
             return (stream_t) audio_device_error_with(fa_string("Could not set stream finished callback"), status);
         }
+    
+        fa_inform(fa_string("Started stream using these values:"));
+        if (wasapi) {
+            fa_inform(fa_dappend(fa_string("    Exclusive Mode:           "), fa_string(exclusive ? "Yes" : "No")));
+        } else {
+            fa_inform(fa_string("    Exclusive Mode:           n/a"));
+        }
+        fa_inform(fa_string_format_floating("    Sample Rate:              %2f", sample_rate));
+        fa_inform(fa_dappend(fa_string("    Suggested Input Latency:  "),
+            input ? fa_string_format_floating("%3f", inputLatency) : fa_string("n/a")));
+        fa_inform(fa_dappend(fa_string("    Suggested Output Latency: "),
+            output ? fa_string_format_floating("%3f", outputLatency) : fa_string("n/a")));
+        fa_inform(fa_string_format_integral("    Vector Size:              %d",  buffer_size));
+    
     }
+    
     {
         /*
             Prepare and launch DSP thread.
@@ -1273,7 +1300,7 @@ fa_map_t fa_audio_stream_get_info(fa_audio_stream_t stream)
     map = fa_map_dadd(fa_string("inputLatency"), fa_from_double(streamInfo->inputLatency), map);
     map = fa_map_dadd(fa_string("outputLatency"), fa_from_double(streamInfo->outputLatency), map);
     map = fa_map_dadd(fa_string("sampleRate"), fa_from_double(streamInfo->sampleRate), map);
-    map = fa_map_dadd(fa_string("roundtripLatency"), fa_from_double(stream->roundtripLatency), map);
+    map = fa_map_dadd(fa_string("roundtripLatency"), fa_from_double(stream->roundtrip_latency), map);
     map = fa_map_dadd(fa_string("exclusive"), fa_from_bool(stream->exclusive_mode), map);
     return map;
 }
@@ -1579,7 +1606,7 @@ int native_audio_callback(const void                       *input,
 
     if (stream->state) {
         // Cache "actual" latency
-        stream->roundtripLatency = time_info->outputBufferDacTime - time_info->inputBufferAdcTime;
+        stream->roundtrip_latency = time_info->outputBufferDacTime - time_info->inputBufferAdcTime;
         
         during_processing(stream, count, time_info->outputBufferDacTime, (float **) input, (float **) output);
         stream->pa_flags |= flags;
