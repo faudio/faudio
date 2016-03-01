@@ -200,16 +200,15 @@ inline static session_t new_session()
 
 inline static void session_init_devices(session_t session)
 {
-    native_index_t count;
-    fa_list_t         devices;
+    native_index_t count    = Pa_GetDeviceCount();
+    fa_list_t      devices  = fa_empty();
 
-    count   = Pa_GetDeviceCount();
-    devices = fa_empty();
-
+    fa_slog_info("    Available Audio Devices:");
     for (size_t i = 0; i < count; ++i) {
         device_t device = new_device(session, i);
 
         if (device) {
+            fa_slog_info("      ", device);
             devices = fa_list_dcons(device, devices);
         }
     }
