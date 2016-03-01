@@ -117,14 +117,10 @@ void fa_initialize()
     // Audio and midi needs to be initalized last as they
     // depend on threads and other stuff.
 
-	fa_log_region_count(fa_string("Before audio initialize:"));
-
     fa_device_initialize();
     fa_audio_initialize();
     fa_midi_initialize();
 	
-	fa_log_region_count(fa_string("After audio initialize:"));
-
     fa_log_info(fa_string("Done initializing faudio"));
 
     gInitCount++;
