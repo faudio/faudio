@@ -1595,9 +1595,13 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
     char* cookies     = &argv[3]->s;
     double rel_time   = argc > 4 ? argv[4]->f : 0;
     double max_length = argc > 5 ? argv[5]->f : 0;
-    bool cancel = false;
     
     check_id(id, message, user_data);
+    
+    if (!url || (*url == 0)) {
+        fa_slog_info("Recording without upload");
+        url = NULL; // Empty URL is same as no URL
+    }
     
     // No input device
     if (!current_audio_input_device) {
@@ -1607,7 +1611,7 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
     }
     
     // Check that either filename or URL is provided (or both)
-    if (*filename == 0 && *url == 0) {
+    if (*filename == 0 && !url) {
         fa_fail(fa_string("Cannot record: URL or filename must be provided!"));
         send_osc(message, user_data, "/recording/start", "iFs", id, "no-url-or-filename");
         return 0;
@@ -1627,16 +1631,19 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
     }
     
     // Already recording
-    fa_with_lock(recording_state_mutex) {
-        if (recording_state == NOT_RECORDING) {
-            recording_state = RECORDING_INITIALIZING;
-        } else {
-            fa_slog_warning("Cannot record: already recording, state: ", fa_from_int8(recording_state));
-            send_osc(message, user_data, "/recording/start", "iFs", id, "already-recording");
-            cancel = true; // cannot return here, lock wouldn't be released
+    {
+        bool cancel = false;
+        fa_with_lock(recording_state_mutex) {
+            if (recording_state == NOT_RECORDING) {
+                recording_state = RECORDING_INITIALIZING;
+            } else {
+                fa_slog_warning("Cannot record: already recording, state: ", fa_from_int8(recording_state));
+                send_osc(message, user_data, "/recording/start", "iFs", id, "already-recording");
+                cancel = true; // cannot return here, lock wouldn't be released
+            }
         }
+        if (cancel) return 0;
     }
-    if (cancel) return 0;
     
     add_recording_semaphore(id);
     
