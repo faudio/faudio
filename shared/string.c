@@ -183,7 +183,7 @@ uint16_t fa_string_char_at(int pos, fa_string_t str)
     return str->data[pos];
 }
 
-fa_string_t fa_string_format_integral(char *format, long value)
+fa_string_t fa_string_format_integral(const char *format, long value)
 {
     char buffer[100];
     int  numChars;
@@ -198,7 +198,7 @@ fa_string_t fa_string_format_integral(char *format, long value)
     return fa_string_from_utf8(buffer);
 }
 
-fa_string_t fa_string_format_floating(char *format, double value)
+fa_string_t fa_string_format_floating(const char *format, double value)
 {
     char buffer[100];
     int  numChars;

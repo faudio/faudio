@@ -230,7 +230,7 @@ bool fa_string_matches(fa_string_t string, fa_string_t string_);
     @return
         A new formatted string.
 */
-fa_string_t fa_string_format_integral(char *, long long_);
+fa_string_t fa_string_format_integral(const char *, long long_);
 
 /** Format a floating-point value.
     @param format
@@ -240,7 +240,7 @@ fa_string_t fa_string_format_integral(char *, long long_);
     @return
         A new formatted string.
 */
-fa_string_t fa_string_format_floating(char *, double double_);
+fa_string_t fa_string_format_floating(const char *, double double_);
 
 
 void fa_string_log_count();
