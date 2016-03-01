@@ -63,6 +63,7 @@ struct _fa_audio_session_t {
     fa_list_t           streams;            // All streams started on this sessiuon (list of stream_t)
 
     fa_list_t           host_names;         // Cached host list
+    fa_string_t         default_host_name;  // Name of preferred audio host
 
     struct {
         double               sample_rate;
@@ -190,11 +191,12 @@ fa_ptr_t _status_callback(fa_ptr_t x)
     return x;
 }
 
-inline static session_t new_session()
+inline static session_t new_session(fa_string_t default_host_name)
 {
     session_t session = fa_new(audio_session);
     session->impl = &audio_session_impl;
     session->callbacks.count = 0;
+    session->default_host_name = default_host_name;
     return session;
 }
 
@@ -215,9 +217,51 @@ inline static void session_init_devices(session_t session)
     }
 
     session->devices      = fa_list_dreverse(devices);
-    session->def_input    = new_device(session, Pa_GetDefaultInputDevice());
-    session->def_output   = new_device(session, Pa_GetDefaultOutputDevice());
     session->streams      = fa_empty();
+
+    // Default devices
+    bool is_set = false;
+    if (session->default_host_name) {
+        
+        fa_slog_info("    Preferred host:  ", session->default_host_name);
+        
+        PaHostApiIndex count = Pa_GetHostApiCount();
+        bool found_host = false;
+        for (PaHostApiIndex i = 0; i < count; i++) {
+            const PaHostApiInfo *info = Pa_GetHostApiInfo(i);
+            if (fa_dequal(fa_string(info->name), fa_copy(session->default_host_name))) {
+                session->def_input = new_device(session, info->defaultInputDevice);
+                session->def_output = new_device(session, info->defaultOutputDevice);
+                is_set = true;
+                found_host = true;
+                break;
+            }
+        }
+        if (found_host) {
+            if (!session->def_input && !session->def_output) {
+                fa_warn(fa_dappend(
+                    fa_copy(session->default_host_name),
+                    fa_string(" has no default input or output, falling back to default host")));
+                    is_set = false;
+            } else if (!session->def_input) {
+                fa_warn(fa_dappend(fa_copy(session->default_host_name), fa_string(" has no default input")));
+            } else if (!session->def_output) {
+                fa_warn(fa_dappend(fa_copy(session->default_host_name), fa_string(" has no default output")));
+            }
+        } else {
+            fa_slog_error("      Preferred host not found: ", session->default_host_name);
+        }
+    } else {
+        fa_slog_info("    Preferred host: (none)");
+    }
+    
+    if (!is_set) {
+        session->def_input   = new_device(session, Pa_GetDefaultInputDevice());
+        session->def_output  = new_device(session, Pa_GetDefaultOutputDevice());
+    }
+
+    fa_slog_info("    Default input:   ", session->def_input);
+    fa_slog_info("    Default output:  ", session->def_output);
 
     session->parameters.sample_rate         = kDefSampleRate;
     session->parameters.scheduler_interval  = kAudioSchedulerIntervalMillis;
@@ -232,7 +276,10 @@ inline static void session_init_devices(session_t session)
 
 inline static void delete_session(session_t session)
 {
-    // TODO free device list
+    if (session->def_input)         fa_destroy(session->def_input);
+    if (session->def_output)        fa_destroy(session->def_output);
+    if (session->devices)           fa_deep_destroy_always(session->devices);
+    if (session->default_host_name) fa_destroy(session->default_host_name);
     fa_delete(session);
 }
 
@@ -348,6 +395,11 @@ void remove_audio_status_listener(fa_pair_t closure);
 
 session_t fa_audio_begin_session()
 {
+    return fa_audio_begin_session_with_preferred_host(NULL);
+}
+
+session_t fa_audio_begin_session_with_preferred_host(fa_string_t preferred_host_name)
+{
     if (!pa_mutex) {
         assert(false && "Module not initalized");
     }
@@ -364,13 +416,14 @@ session_t fa_audio_begin_session()
             pa_status = true;
             fa_slog_info("    Done starting PortAudio");
             
-            session = new_session();
+            session = new_session(preferred_host_name);
             
             PaHostApiIndex count = Pa_GetHostApiCount();
             session->host_names = fa_empty();
             for (PaHostApiIndex i = 0; i < count; i++) {
                 const PaHostApiInfo *info = Pa_GetHostApiInfo(i);
-                fa_push_list(fa_string(info->name), session->host_names);
+                fa_string_t host_name = fa_string(info->name);
+                fa_push_list(host_name, session->host_names);
             }
             fa_slog_info("    Available hosts: ", session->host_names);
             

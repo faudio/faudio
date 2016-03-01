@@ -35,7 +35,8 @@ fa_option_t option_declaration[] = {
     { "s", "soundfont",    "Soundfont path",                  fa_option_string,   "FluidR3_GM.sf2" },
     #endif
     { "p", "port",         "Port number",                     fa_option_integral, "7770" },
-    { "a", "audio-slots",  "Max simultaneous audio sources",  fa_option_integral, "8"}
+    { "a", "audio-slots",  "Max simultaneous audio sources",  fa_option_integral, "8"},
+    { "h", "default-host", "Default audio host",              fa_option_string, kDefaultAudioHost }
 };
 
 #define define_handler(name) \
@@ -114,6 +115,7 @@ int main(int argc, char const *argv[])
         #ifdef _WIN32
         soundfont_path = fa_map_dget(fa_string("soundfont"), options);
         #endif
+        default_audio_host = fa_map_dget(fa_string("default-host"), options);
         help_only = false;
     }
     
