@@ -177,6 +177,9 @@ void fa_log_error(fa_string_t);
 #define fa_f32                 fa_from_float
 #define fa_f64                 fa_from_double
 
+#define fa_type_of             fa_dynamic_get_type
+#define fa_type_name_of(x)     fa_dynamic_type_name(fa_dynamic_get_type(x))
+
 #define fa_mark_used(X) X = *(&X)
 
 

@@ -17,11 +17,12 @@
 
 typedef fa_log_func_t log_func_t;
 
-static unsigned       gInitCount    = 0;
-static long           gBytesAlloc   = 0;
-static long           gRegionCount  = 0;
-static log_func_t     gLogFunc      = NULL;
-static fa_ptr_t       gLogData      = NULL;
+static unsigned             gInitCount    = 0;
+static long                 gBytesAlloc   = 0;
+static long                 gRegionCount  = 0;
+static log_func_t           gLogFunc      = NULL;
+static fa_ptr_t             gLogData      = NULL;
+static fa_error_severity_t  gLogLevel     = info;
 
 static struct {
     char *pre;
@@ -239,11 +240,17 @@ void fa_set_log(fa_log_func_t f, fa_ptr_t data)
     gLogData  = data;
 }
 
+void fa_set_log_level(fa_error_severity_t level)
+{
+    gLogLevel = level;
+}
+
 
 // --------------------------------------------------------------------------------
 
 void fa_log(fa_ptr_t data, fa_error_t e)
 {
+    if (fa_error_severity(e) < gLogLevel) return;
     if (gLogFunc) {
         gLogFunc(gLogData, (fa_ptr_t) time(NULL), e);
     }
@@ -279,12 +286,14 @@ void fa_log_error(fa_string_t msg)
 
 void fa_log_info_from(fa_string_t msg, fa_string_t origin)
 {
+    if (gLogLevel > info) return;
     fa_error_t err = fa_error_create_simple(info, msg, origin);
     fa_log(NULL, err);
 }
 
 void fa_log_warning_from(fa_string_t msg, fa_string_t origin)
 {
+    if (gLogLevel > warning) return;
     fa_error_t err = fa_error_create_simple(warning, msg, origin);
     fa_log(NULL, err);
 }

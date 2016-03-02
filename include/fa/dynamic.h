@@ -34,7 +34,9 @@ typedef enum {
             ratio_type_repr,
             midi_message_type_repr,
             action_type_repr,
+            audio_device_type_repr,
             audio_stream_type_repr,
+            midi_device_type_repr,
             midi_stream_type_repr,
             buffer_type_repr,
             atomic_ring_buffer_type_repr,
@@ -57,6 +59,11 @@ bool fa_dynamic_check(fa_ptr_t ptr);
     must implement @ref fa_dynamic_t. 
 */
 fa_dynamic_type_repr_t fa_dynamic_get_type(fa_ptr_t ptr);
+
+/**
+    Returns a string with the name of the given type specifier.
+*/
+fa_string_t fa_dynamic_type_name(fa_dynamic_type_repr_t type);
 
 /** @}
     @}

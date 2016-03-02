@@ -17,7 +17,10 @@
 
 
 typedef enum {
-            info, warning, error, misc
+            misc = 0,
+            info = 1,
+            warning = 2,
+            error = 3
         } fa_error_severity_t;
 
 /** Error interface.

@@ -79,6 +79,11 @@ module "transient" Fa.Utility
     /** Instruct Fa to pass log messages to the given handler.
      */
     setLog : (LogFunc,Ptr) -> Void;
+    
+    /** Set minimum error level to log. Default is misc (everything is logged).
+        Other valid values are info, warning and error.
+    */
+    setLogLevel : (level : ErrorSeverity) -> Void;
 
     /** Write a log message.
 

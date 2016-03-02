@@ -87,6 +87,11 @@ void fa_set_log_std();
 */
 void fa_set_log(fa_log_func_t logFunc, fa_ptr_t ptr);
 
+/** Set minimum error level to log. Default is misc (everything is logged).
+    Other valid values are info, warning and error.
+*/
+void fa_set_log_level(fa_error_severity_t level);
+
 /** Write a log message.
 
     @param context
