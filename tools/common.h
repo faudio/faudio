@@ -60,12 +60,16 @@ void fa_terminate2(int x)
 #define fa_with_default_out(S, O) \
     fa_let(O, fa_audio_default_output(S))
 
+// #define fa_open_stereo_out(ST, O, OUT) \
+//     fa_with_temp(ST, fa_audio_open_stream(NULL, O, just, OUT))  \
+//     if (fa_check(ST)) {                                         \
+//         fa_error_log(NULL, (fa_error_t)fa_copy(ST));            \
+//     } else
+    
 #define fa_open_stereo_out(ST, O, OUT) \
     fa_with_temp(ST, fa_audio_open_stream(NULL, O, just, OUT))  \
     if (fa_check(ST)) {                                         \
-        fa_error_log(ST, NULL);                                 \
     } else
-    
 
 inline static
 void fa_set_log_tool() {

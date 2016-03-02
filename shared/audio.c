@@ -649,15 +649,20 @@ static inline void set_parameter(const char *name, fa_ptr_t value, session_t ses
         int x;
 
         switch (fa_dynamic_get_type(value)) {
+        case i8_type_repr:
+        case i16_type_repr:
         case i32_type_repr:
         case f32_type_repr:
         case f64_type_repr:
             x = fa_peek_number(value);
             break;
 
-        default:
-            fa_warn(fa_string("Wrong type for set_parameter vector-size"));
-            return;
+        default: {
+                fa_string_t type_name = fa_type_name_of(value);
+                fa_slog_warning("Wrong type for set_parameter vector-size: ", value, type_name);
+                fa_destroy(type_name);
+                return;
+            }
         }
 
         if (x <= kMaxVectorSize) {
@@ -672,15 +677,20 @@ static inline void set_parameter(const char *name, fa_ptr_t value, session_t ses
         int x;
 
         switch (fa_dynamic_get_type(value)) {
+        case i8_type_repr:
+        case i16_type_repr:
         case i32_type_repr:
         case f32_type_repr:
         case f64_type_repr:
             x = fa_peek_number(value);
             break;
 
-        default:
-            fa_warn(fa_string("Wrong type for set_parameter vector-size-exclusive"));
-            return;
+        default: {
+                fa_string_t type_name = fa_type_name_of(value);
+                fa_slog_warning("Wrong type for set_parameter vector-size-exclusive: ", value, type_name);
+                fa_destroy(type_name);
+                return;
+            }
         }
 
         if (x <= kMaxVectorSize) {
