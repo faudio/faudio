@@ -276,9 +276,15 @@ inline static void session_init_devices(session_t session)
 
 inline static void delete_session(session_t session)
 {
-    if (session->def_input)         fa_destroy(session->def_input);
-    if (session->def_output)        fa_destroy(session->def_output);
-    if (session->devices)           fa_deep_destroy_always(session->devices);
+    // TODO
+    // Cannot destoy the device references, since they may be referenced
+    // from the outside world. The solution is probably to always give away
+    // copies of the devices.
+    
+    //if (session->def_input)         fa_destroy(session->def_input);
+    //if (session->def_output)        fa_destroy(session->def_output);
+    //if (session->devices)           fa_deep_destroy_always(session->devices);
+    if (session->devices)           fa_destroy(session->devices); // only the list
     if (session->default_host_name) fa_destroy(session->default_host_name);
     fa_delete(session);
 }
@@ -1770,12 +1776,26 @@ fa_string_t audio_device_show(fa_ptr_t a)
     return str;
 }
 
+void audio_device_destroy(fa_ptr_t a)
+{
+    
+}
+
+fa_dynamic_type_repr_t audio_device_get_type(fa_ptr_t a)
+{
+    return audio_device_type_repr;
+}
+
 fa_ptr_t audio_device_impl(fa_id_t interface)
 {
     static fa_equal_t audio_device_equal_impl
         = { audio_device_equal };
     static fa_string_show_t audio_device_show_impl
         = { audio_device_show };
+    static fa_destroy_t audio_device_destroy_impl
+        = { audio_device_destroy };
+    static fa_dynamic_t audio_device_dynamic_impl
+        = { audio_device_get_type };
 
     switch (interface) {
     case fa_equal_i:
@@ -1783,6 +1803,12 @@ fa_ptr_t audio_device_impl(fa_id_t interface)
 
     case fa_string_show_i:
         return &audio_device_show_impl;
+        
+    case fa_destroy_i:
+        return &audio_device_destroy_impl;
+        
+    case fa_dynamic_i:
+        return &audio_device_dynamic_impl;
 
     default:
         return NULL;
