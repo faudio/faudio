@@ -900,7 +900,8 @@ fa_ptr_t _midi_status_callback(fa_ptr_t session)
 void start_sessions() {
     assert(!current_audio_session && "An audio session is already running!");
     assert(!current_midi_session && "A MIDI session is already running!");
-    current_audio_session = fa_audio_begin_session_with_preferred_host(default_audio_host);
+    fa_string_t def_host = default_audio_host ? fa_copy(default_audio_host) : NULL;
+    current_audio_session = fa_audio_begin_session_with_preferred_host(def_host);
     current_midi_session = fa_midi_begin_session();
     fa_audio_add_status_callback(_audio_status_callback, current_audio_session, current_audio_session);
     fa_midi_add_status_callback(_midi_status_callback, current_midi_session, current_midi_session);
