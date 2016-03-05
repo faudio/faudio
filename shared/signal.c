@@ -938,22 +938,26 @@ void write_bus1(int n, int c, double x, state_t state)
 
 double *read_input(int c, state_t state)
 {
+    //assert(c < kMaxInputs);
     return state->inputs + (c * kMaxVectorSize);
 }
 
 double *write_input(int c, state_t state)
 {
+    //assert(c < kMaxInputs);
     return state->inputs + (c * kMaxVectorSize);
 }
 
 double *read_bus(int c, state_t state)
 {
+    //assert(c < kMaxBuses);
     int bp = buffer_pointer(state);
     return state->buses + (index_bus(bp, c, state));
 }
 
 double *write_bus(int n, int c, state_t state)
 {
+    //assert(c < kMaxBuses);
     int bp = buffer_pointer(state);
     return state->buses + (index_bus((bp + n) % max_delay(state), c, state));
 }
@@ -1279,6 +1283,9 @@ fa_list_t fa_list_r(int64_t x, int64_t y)
 {
     return x >= y ? fa_list_empty() : fa_list_cons(fa_from_int64(x), fa_list_r(1 + x, y));
 }
+
+// TODO: Why a static offset?
+// How does this relate to kMaxInputs, kMaxBuses and kMaxCustomProcs?
 
 inline static
 fa_ptr_t _add32__pointer_list_to_custom_proc_map(fa_ptr_t x)

@@ -3,6 +3,8 @@
 #include <fa/util.h>
 #include "common.h"
 
+void fa_clock_initialize();
+
 /*
     This program plays a couple of notes on the standard MIDI output.
  */
@@ -13,6 +15,8 @@ void run_midi()
 
     fa_midi_device_t o  = fa_midi_default_output(s);
     assert(!fa_check(o) && "No output");
+    
+    fa_clock_initialize();
 
     fa_midi_stream_t st = fa_midi_open_stream(o);
 
