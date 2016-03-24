@@ -1290,6 +1290,11 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
     char* url = args->url;
     char* cookies = args->cookies;
     fa_free(args);
+    
+    if (!buffer && !ring_buffer) {
+        fa_slog_warning("Both buffer and ring_buffer is NULL in upload_buffer, aborting upload");
+        return NULL;
+    }
 
     //printf("url: %s  cookies: %s\n", url, cookies);
     
@@ -1346,8 +1351,12 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
             //printf("Request was %ld bytes\n", request_size);
             
             lo_blob blob = lo_blob_from_buffer(result); //lo_blob_new(fa_buffer_size(result), fa_buffer_unsafe_address(result));
-            send_osc_async(osc_path, "iib", id, response_code, blob);
-            lo_blob_free(blob);
+            if (blob) {
+                send_osc_async(osc_path, "iib", id, response_code, blob);
+                lo_blob_free(blob);
+            } else {
+                send_osc_async(osc_path, "iiN", id, response_code);
+            }
         } else {
             fa_fail(fa_string("CURL error"));
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
