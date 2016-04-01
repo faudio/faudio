@@ -9,6 +9,7 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
+#include <portaudio.h>
 
 #include <unistd.h> // Needs isatty()
 #include "config.h"
@@ -110,6 +111,9 @@ void fa_initialize()
                                                     fa_string(" (release build)")))
 #endif
                 ));
+
+    //PaVersionInfo paInfo = Pa_GetVersionInfo();
+    fa_log_info(fa_dappend(fa_string("Using "), fa_string(Pa_GetVersionText())));
 
     // fix_stack_size();
 

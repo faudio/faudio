@@ -995,7 +995,7 @@ void print_audio_info(device_t input, device_t output)
                     fa_string_format_floating("    Suggested Output Latency: %3f", session->parameters.latency_ex[1]),
                     fa_string_format_floating(" / %3f", session->parameters.latency_sh[1])));
                 fa_inform(fa_string_dappend(
-                    fa_string_format_integral("    Vector Size Sh:              %d",  session->parameters.vector_size_ex),
+                    fa_string_format_integral("    Vector Size Ex/Sh:        %d",  session->parameters.vector_size_ex),
                     fa_string_format_integral(" / %d", session->parameters.vector_size_sh)));
             }
         } else {
