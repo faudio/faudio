@@ -1,0 +1,17 @@
+
+git submodule init   external/liblo/source;
+git submodule update external/liblo/source;
+
+pushd external/liblo/source;
+
+CFLAGS="-arch x86_64" \
+CXXFLAGS="-arch x86_64" \
+LDFLAGS="-arch x86_64" \
+./configure \
+    --prefix=`pwd`/../result \
+	  && make \
+	  && make install
+
+# 	  && cp -R include/ ../result/include/
+
+popd;

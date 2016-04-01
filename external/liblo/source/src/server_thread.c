@@ -51,6 +51,9 @@ lo_server_thread lo_server_thread_new_multicast(const char *group,
     st->s = lo_server_new_multicast(group, port, err_h);
     st->active = 0;
     st->done = 0;
+    st->init_function = NULL;
+    st->cleanup_function = NULL;
+    st->user_data = NULL;
 
     if (!st->s) {
         free(st);
@@ -69,6 +72,9 @@ lo_server_thread lo_server_thread_new_with_proto(const char *port,
     st->s = lo_server_new_with_proto(port, proto, err_h);
     st->active = 0;
     st->done = 0;
+    st->init_function = NULL;
+    st->cleanup_function = NULL;
+    st->user_data = NULL;
 
     if (!st->s) {
         free(st);
@@ -86,6 +92,9 @@ lo_server_thread lo_server_thread_new_from_url(const char *url,
     st->s = lo_server_new_from_url(url, err_h);
     st->active = 0;
     st->done = 0;
+    st->init_function = NULL;
+    st->cleanup_function = NULL;
+    st->user_data = NULL;
 
     if (!st->s) {
         free(st);
@@ -125,6 +134,15 @@ void lo_server_thread_del_method(lo_server_thread st, const char *path,
                                  const char *typespec)
 {
     lo_server_del_method(st->s, path, typespec);
+}
+
+void lo_server_thread_add_functions(lo_server_thread st,
+                                    lo_thread_init_function ifn, lo_thread_cleanup_function cfn,
+                                    void *user_data)
+{
+    st->init_function = ifn;
+    st->cleanup_function = cfn;
+    st->user_data = user_data;
 }
 
 int lo_server_thread_start(lo_server_thread st)
@@ -193,11 +211,19 @@ int lo_server_thread_events_pending(lo_server_thread st)
 static void thread_func(void *data)
 {
     lo_server_thread st = (lo_server_thread) data;
+    
+    if (st->init_function) {
+        (st->init_function)(st->user_data);
+    }
 
     while (st->active) {
         lo_server_recv_noblock(st->s, 10);
     }
     st->done = 1;
+    
+    if (st->cleanup_function) {
+        (st->cleanup_function)(st->user_data);
+    }
 
     pthread_exit(NULL);
 }
