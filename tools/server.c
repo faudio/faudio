@@ -102,6 +102,9 @@ define_handler(choose_device);
 
 fa_ptr_t _status_callback(fa_ptr_t session);
 
+int init(void *user_data);
+int cleanup(void *user_data);
+
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
@@ -293,48 +296,19 @@ int main(int argc, char const *argv[])
 
     printf("Starting FAudio...\n");
 
-    fa_with_faudio() {
-        
-        void fa_clock_initialize();
-        fa_clock_initialize();
-        
-        init_globals();
+    // start_streams(); // server-utils.h
 
-        start_sessions();
-
-        // // Audio
-        // current_audio_output_device = fa_audio_default_output(current_audio_session); // temp
-        // current_audio_input_device = fa_audio_default_input(current_audio_session); // temp
-        // // MIDI
-        // fa_list_t midi_devices = fa_midi_all(current_midi_session);
-        // fa_for_each(device, midi_devices) {
-        //     if (fa_midi_has_input(device)) fa_push_list(device, current_midi_input_devices);
-        //     if (fa_midi_has_output(device)) fa_push_list(device, current_midi_output_devices);
-        // }
-        // fa_destroy(midi_devices); // the list
-
-        
-        
-        // start_streams(); // server-utils.h
-
-        lo_server_thread_start(st);
+    lo_server_thread_add_functions(st, init, cleanup, NULL);
+    lo_server_thread_start(st);
     
-        fa_inform(fa_dappend(fa_string("Listening on TCP port "), fa_string(port)));
+    fa_inform(fa_dappend(fa_string("Listening on TCP port "), fa_string(port)));
 
-        while (!done) {
+    while (!done) {
 #ifdef WIN32
-            Sleep(1);
+        Sleep(1);
 #else
-            usleep(1000);
+        usleep(1000);
 #endif
-        }
-    
-        stop_streams();
-        fa_slog_info("Stopping sessions...");
-        stop_sessions();
-        fa_slog_info("Destroying globals...");
-        destroy_globals();
-      
     }
 
     fa_slog_info("Destroying lo server thread...");
@@ -342,8 +316,34 @@ int main(int argc, char const *argv[])
     
     fa_slog_info("CURL cleanup...");
     curl_global_cleanup(); // This must be run AFTER all other threads have exited!
+
+    return 0;
+}
+
+int init(void *user_data)
+{
+    fa_initialize();
     
-    fa_log_region_count(fa_string("At shutdown"));
+    void fa_clock_initialize();
+    fa_clock_initialize();
+    
+    init_globals();
+
+    start_sessions();
+    return 0;
+}
+
+int cleanup(void *user_data)
+{
+    fa_slog_info("Stopping streams...");
+    stop_streams();
+    fa_slog_info("Stopping sessions...");
+    stop_sessions();
+    fa_slog_info("Destroying globals...");
+    destroy_globals();
+    fa_terminate();
+    
+    fa_log_region_count(fa_string("At cleanup"));
     fa_list_log_count();
     fa_time_log_count();
     fa_pair_log_count();
@@ -351,7 +351,6 @@ int main(int argc, char const *argv[])
     fa_string_log_count();
     fa_func_ref_log_count();
     fa_action_log_count();
-
     return 0;
 }
 
