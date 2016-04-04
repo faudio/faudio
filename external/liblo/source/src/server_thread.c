@@ -85,6 +85,28 @@ lo_server_thread lo_server_thread_new_with_proto(const char *port,
     return st;
 }
 
+lo_server_thread lo_server_thread_new_with_proto_and_node(const char *port,
+                                                          int proto,
+                                                          const char *node,
+                                                          lo_err_handler err_h)
+{
+    lo_server_thread st = malloc(sizeof(struct _lo_server_thread));
+    st->s = lo_server_new_with_proto_and_node(port, proto, node, err_h);
+    st->active = 0;
+    st->done = 0;
+    st->init_function = NULL;
+    st->cleanup_function = NULL;
+    st->user_data = NULL;
+
+    if (!st->s) {
+        free(st);
+
+        return NULL;
+    }
+
+    return st;
+}
+
 lo_server_thread lo_server_thread_new_from_url(const char *url,
                                                lo_err_handler err_h)
 {

@@ -83,6 +83,16 @@ lo_server_thread lo_server_thread_new_with_proto(const char *port, int proto,
 				   lo_err_handler err_h);
 
 /**
+ * \brief Create a new server thread to handle incoming OSC
+ * messages, specifying protocol and a node to bind to.
+ *
+ * Same as lo_server_thread_new_with_proto, but with an explicit
+ * node to bind to (e.g a hostname or an IP address).
+ */
+lo_server_thread lo_server_thread_new_with_proto_and_node(const char *port, int proto,
+                                                          const char *node, lo_err_handler err_h);
+
+/**
  * \brief Create a new server thread, taking port and the optional
  * multicast group IP from an URL string.
  * 

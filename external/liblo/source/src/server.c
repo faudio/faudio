@@ -92,6 +92,7 @@ static lo_server lo_server_new_with_proto_internal(const char *group,
                                                    const char *port,
                                                    const char *iface,
                                                    const char *ip,
+                                                   const char *node,
                                                    int proto,
                                                    lo_err_handler err_h);
 static int lo_server_join_multicast_group(lo_server s, const char *group,
@@ -223,7 +224,7 @@ lo_server lo_server_new(const char *port, lo_err_handler err_h)
 lo_server lo_server_new_multicast(const char *group, const char *port,
                                   lo_err_handler err_h)
 {
-    return lo_server_new_with_proto_internal(group, port, 0, 0, LO_UDP, err_h);
+    return lo_server_new_with_proto_internal(group, port, 0, 0, 0, LO_UDP, err_h);
 }
 
 #if defined(WIN32) || defined(_MSC_VER) || defined(HAVE_GETIFADDRS)
@@ -231,14 +232,21 @@ lo_server lo_server_new_multicast_iface(const char *group, const char *port,
                                         const char *iface, const char *ip,
                                         lo_err_handler err_h)
 {
-    return lo_server_new_with_proto_internal(group, port, iface, ip, LO_UDP, err_h);
+    return lo_server_new_with_proto_internal(group, port, iface, ip, 0, LO_UDP, err_h);
 }
 #endif
 
 lo_server lo_server_new_with_proto(const char *port, int proto,
                                    lo_err_handler err_h)
 {
-    return lo_server_new_with_proto_internal(NULL, port, 0, 0, proto, err_h);
+    return lo_server_new_with_proto_internal(NULL, port, 0, 0, 0, proto, err_h);
+}
+
+lo_server lo_server_new_with_proto_and_node(const char *port, int proto,
+                                            const char *node, lo_err_handler err_h)
+
+{
+    return lo_server_new_with_proto_internal(NULL, port, 0, 0, node, proto, err_h);
 }
 
 lo_server lo_server_new_from_url(const char *url,
@@ -256,7 +264,7 @@ lo_server lo_server_new_from_url(const char *url,
     if (protocol == LO_UDP || protocol == LO_TCP) {
         group = lo_url_get_hostname(url);
         port = lo_url_get_port(url);
-        s = lo_server_new_with_proto_internal(group, port, 0, 0,
+        s = lo_server_new_with_proto_internal(group, port, 0, 0, 0,
                                               protocol, err_h);
         if (group)
             free(group);
@@ -265,7 +273,7 @@ lo_server lo_server_new_from_url(const char *url,
 #if !defined(WIN32) && !defined(_MSC_VER)
     } else if (protocol == LO_UNIX) {
         port = lo_url_get_path(url);
-        s = lo_server_new_with_proto_internal(0, port, 0, 0,
+        s = lo_server_new_with_proto_internal(0, port, 0, 0, 0,
                                               LO_UNIX, err_h);
         if (port)
             free(port);
@@ -288,6 +296,7 @@ lo_server lo_server_new_with_proto_internal(const char *group,
                                             const char *port,
                                             const char *iface,
                                             const char *ip,
+                                            const char *node,
                                             int proto,
                                             lo_err_handler err_h)
 {
@@ -432,7 +441,7 @@ lo_server lo_server_new_with_proto_internal(const char *group,
         if (ai)
             freeaddrinfo(ai);
 
-        ret = getaddrinfo(NULL, service, &hints, &ai);
+        ret = getaddrinfo(node, service, &hints, &ai);
 
         s->ai = ai;
         s->sockets[0].fd = -1;
