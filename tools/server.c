@@ -142,7 +142,7 @@ int main(int argc, char const *argv[])
   
     /* start a new server  */
     printf("Starting OSC listener thread...\n");
-    lo_server_thread st = lo_server_thread_new_with_proto(port, LO_TCP, liblo_error);
+    lo_server_thread st = lo_server_thread_new_with_proto_and_node(port, LO_TCP, "127.0.0.1", liblo_error);
     if (!st) {
         printf("Could not start OSC server, exiting\n");
         curl_global_cleanup();
