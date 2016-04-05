@@ -755,7 +755,7 @@ void start_streams() {
             fa_ptr_t value = fa_from_double(fa_peek_number(output_latency) / 1000.0);
             fa_ptr_t value_ex = fa_map_dget(fa_dappend(fa_audio_host_name(current_audio_output_device),
                 fa_string("#x")), host_output_latency);
-            if (value_ex) fa_from_double(fa_peek_number(value_ex) / 1000.0);
+            if (value_ex) value_ex = fa_from_double(fa_peek_number(value_ex) / 1000.0);
             else value_ex = fa_copy(value);
             fa_audio_set_parameter(fa_string("output-latency"), value, current_audio_session);
             fa_audio_set_parameter(fa_string("output-latency-exclusive"), value_ex, current_audio_session);
