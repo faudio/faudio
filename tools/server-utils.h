@@ -734,11 +734,12 @@ void start_streams() {
                 input_latency = fa_from_int16(30);
             }
             fa_ptr_t value = fa_from_double(fa_peek_number(input_latency) / 1000.0);
-            fa_audio_set_parameter(fa_string("input-latency"), value, current_audio_session);
             fa_ptr_t value_ex = fa_map_dget(fa_dappend(fa_audio_host_name(current_audio_input_device),
                 fa_string("#x")), host_input_latency);
-            if (!value_ex) value_ex = value;
-            fa_audio_set_parameter(fa_string("input-latency-exclusive"), fa_copy(value_ex), current_audio_session);
+            if (value_ex) value_ex = fa_from_double(fa_peek_number(value_ex) / 1000.0);
+            else value_ex = fa_copy(value);
+            fa_audio_set_parameter(fa_string("input-latency"), value, current_audio_session);
+            fa_audio_set_parameter(fa_string("input-latency-exclusive"), value_ex, current_audio_session);
         }
         if (current_audio_output_device) {
             fa_ptr_t output_latency = fa_map_dget(fa_audio_host_name(current_audio_output_device), host_output_latency);
@@ -752,11 +753,12 @@ void start_streams() {
                 output_latency = fa_from_int16(30);
             }
             fa_ptr_t value = fa_from_double(fa_peek_number(output_latency) / 1000.0);
-            fa_audio_set_parameter(fa_string("output-latency"), value, current_audio_session);
             fa_ptr_t value_ex = fa_map_dget(fa_dappend(fa_audio_host_name(current_audio_output_device),
                 fa_string("#x")), host_output_latency);
-            if (!value_ex) value_ex = value;
-            fa_audio_set_parameter(fa_string("output-latency-exclusive"), fa_copy(value_ex), current_audio_session);
+            if (value_ex) fa_from_double(fa_peek_number(value_ex) / 1000.0);
+            else value_ex = fa_copy(value);
+            fa_audio_set_parameter(fa_string("output-latency"), value, current_audio_session);
+            fa_audio_set_parameter(fa_string("output-latency-exclusive"), value_ex, current_audio_session);
         }
         if (current_audio_output_device || current_audio_input_device) {
             fa_ptr_t device = current_audio_input_device ? current_audio_input_device : current_audio_output_device;
@@ -770,9 +772,9 @@ void start_streams() {
                 fa_inform(fa_string("No generic output latency setting, using default"));
                 vector_size = fa_from_int16(64);
             }
-            fa_audio_set_parameter(fa_string("vector-size"), fa_copy(vector_size), current_audio_session);
             fa_ptr_t vector_size_ex = fa_map_dget(fa_dappend(fa_audio_host_name(device), fa_string("#x")), host_vector_size);
             if (!vector_size_ex) vector_size_ex = vector_size;
+            fa_audio_set_parameter(fa_string("vector-size"), fa_copy(vector_size), current_audio_session);
             fa_audio_set_parameter(fa_string("vector-size-exclusive"), fa_copy(vector_size_ex), current_audio_session);
         }
     }
