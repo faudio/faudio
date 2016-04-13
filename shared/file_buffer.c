@@ -82,8 +82,8 @@ static fa_file_buffer_t new_file_buffer(size_t size)
     file_buffer->ref_count = fa_atomic();
     file_buffer->marked_for_destruction = fa_atomic();
     
-    file_buffer->offset1   = 0;
-    file_buffer->buffer2   = 0;
+    file_buffer->offset1   = -1;
+    file_buffer->offset2   = -1;
     file_buffer->total_buffer_size = size;
     file_buffer->single_buffer_size = size / 2;
     file_buffer->buffer1   = fa_malloc(size);
