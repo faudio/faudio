@@ -248,7 +248,7 @@ void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t call
     fa_ptr_t start = filter->data2;
     fa_ptr_t end   = filter->data3;
     size_t startBytes = start ? fa_peek_integer(start) : 0;
-    if (end) fa_fail(fa_string("read_filter parameter end not implemented"));
+    size_t endBytes   = end   ? fa_peek_integer(end)   : 0;
     char *cpath = fa_unstring(path);
     FILE *fp = fopen(cpath, "rb");
     fa_free(cpath);
@@ -257,14 +257,19 @@ void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t call
         fa_fail(fa_string_dappend(fa_string("Could not read file: "), path));
     } else {
         byte_t raw[1024 * 8];
-        size_t read;
+        size_t buffer_bytes = sizeof(raw);
+        size_t bytes_left = endBytes - startBytes; // invalid but ignored if end is NULL
         
         fseek(fp, startBytes, SEEK_SET);
-        while (!ferror(fp) && !feof(fp)) {
-            read = fread(raw, 1, sizeof(raw), fp);
-            callback(data, fa_copy(fa_buffer_wrap(raw, read, NULL, NULL)));
-            // Wrap stack, no dealloc
+        while (!ferror(fp) && !feof(fp) && (!end || bytes_left > 0)) {
+            size_t bytes_to_read = (end && (bytes_left < buffer_bytes)) ? bytes_left : buffer_bytes;
+            size_t bytes_read = fread(raw, 1, bytes_to_read, fp);
+            fa_buffer_t buffer = fa_buffer_wrap(raw, bytes_read, NULL, NULL);
+            callback(data, buffer);
+            fa_destroy(buffer);
+            bytes_left -= bytes_read;
         }
+        // Wrapped stack, no dealloc
     }
 
     callback(data, NULL);
