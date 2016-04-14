@@ -1169,7 +1169,7 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
             send_osc(message, user_data, "/audio-file/load", "iFs", id, "emptyFile");
             return 0;
         }
-        fa_slog_info("Read raw file into memory", buffer, file_path, fa_i32(fa_buffer_size(buffer)));
+        fa_slog_info("Read raw file into memory ", buffer, file_path, fa_i32(fa_buffer_size(buffer)));
     } else {
         buffer = fa_file_buffer_create(file_path, kFileBufferSize);
         if (fa_check(buffer)) {
@@ -1178,7 +1178,7 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
             send_osc(message, user_data, "/audio-file/load", "iFs", id, "couldNotReadFile");
             return 0;
         }
-        fa_slog_info("Opened file_buffer for raw file", buffer, fa_i32(fa_file_buffer_file_size(buffer)));
+        fa_slog_info("Opened file_buffer for raw file ", buffer, fa_i32(fa_file_buffer_file_size(buffer)));
     }
     
     size_t frames = fa_buffer_size(buffer) / (sizeof(double) * ch);
