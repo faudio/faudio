@@ -833,7 +833,7 @@ fa_buffer_t fa_io_pull_to_buffer(fa_io_source_t source)
         fa_io_pull(source, _pull_to_buffer, (fa_ptr_t)&info);
     }
     if (info.ptr && info.used) {
-        printf("Shrinking to %zu\n", info.used);
+        //printf("Shrinking to %zu\n", info.used);
         fa_realloc(info.ptr, info.used); // shrink to avoid wasting memory; should be a fast operation
         return fa_buffer_dwrap(info.ptr, info.used);
     } else {
