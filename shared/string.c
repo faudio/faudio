@@ -30,6 +30,7 @@
         - Deep copying is relatively slow
 
         - Reasonable dappend (using realloc)
+          NB: realloc can be really slow on old OS X versions and several Windows platforms!
  */
 
 #define kStandardCode       "UTF-16LE"          // Internal string code

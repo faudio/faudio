@@ -336,20 +336,19 @@ void read_audio_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_
         }
         
         size_t buffer_frames = 1024;
-        size_t buffer_size = buffer_frames * frame_size;
-        byte_t *raw = fa_malloc(buffer_size);
+        byte_t raw[1024 * sizeof(double)]; // worst case, we don't want to allocate memory here since it's SLOW on Windows
         size_t frames_left = end_frames - start_frames;
         
         while (!sf_error(sndfile) && frames_left > 0) {
             size_t frames_to_read = (frames_left < buffer_frames) ? frames_left : buffer_frames;
             size_t frames_read = sf_readf_double(sndfile, ((double *) raw), frames_to_read);
-            fa_buffer_t buffer = fa_buffer_wrap(raw, frames_read * frame_size, NULL, NULL);
+            fa_buffer_t buffer = fa_buffer_wrap(&raw, frames_read * frame_size, NULL, NULL);
             callback(data, buffer);
             fa_destroy(buffer);
             frames_left -= frames_read;
         }
         
-        fa_free(raw);
+        // Wrapped stack, no free
     }
 
     callback(data, NULL);
@@ -793,14 +792,7 @@ struct _pull_to_buffer_info {
     bool ok;
     size_t allocated;
     size_t used;
-    size_t growth;
 };
-
-// static fa_ptr_t default_destroy(fa_ptr_t _, fa_ptr_t data)
-// {
-//     fa_free(data);
-//     return NULL;
-// }
 
 static void _pull_to_buffer(fa_ptr_t i, fa_buffer_t buf)
 {
@@ -813,12 +805,8 @@ static void _pull_to_buffer(fa_ptr_t i, fa_buffer_t buf)
         
         // Grow if needed
         if ((info->used + add) > info->allocated) {
-            size_t new_allocate_size = info->allocated + info->growth;
-            if (new_allocate_size < info->allocated + add) {
-                new_allocate_size = info->allocated + add;
-                info->growth = add;
-            }
-            //printf("Allocating more memory for buffer, new size: %zu\n", new_allocate_size);
+            size_t new_allocate_size = add > (info->allocated * 2) ? add : info->allocated * 2;
+            // printf("Allocating more memory for buffer, new size: %zu\n", new_allocate_size);
             info->ptr = fa_realloc(info->ptr, new_allocate_size);
             if (info->ptr) {
                 info->allocated = new_allocate_size;
@@ -840,11 +828,13 @@ static void _pull_to_buffer(fa_ptr_t i, fa_buffer_t buf)
 fa_buffer_t fa_io_pull_to_buffer(fa_io_source_t source)
 {
     size_t start_size = 65536;
-    struct _pull_to_buffer_info info = { fa_malloc(start_size), true, start_size, 0, start_size };
+    struct _pull_to_buffer_info info = { fa_malloc(start_size), true, start_size, 0 };
     while (info.ok) {
         fa_io_pull(source, _pull_to_buffer, (fa_ptr_t)&info);
     }
     if (info.ptr && info.used) {
+        printf("Shrinking to %zu\n", info.used);
+        fa_realloc(info.ptr, info.used); // shrink to avoid wasting memory; should be a fast operation
         return fa_buffer_dwrap(info.ptr, info.used);
     } else {
         if (info.ptr) {
