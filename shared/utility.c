@@ -23,6 +23,7 @@ static long                 gBytesAlloc   = 0;
 static long                 gRegionCount  = 0;
 static log_func_t           gLogFunc      = NULL;
 static fa_ptr_t             gLogData      = NULL;
+static bool                 gLogDupStdout = false; // Hack warning... but it was the easiest way to print to both
 static fa_error_severity_t  gLogLevel     = info;
 
 static struct {
@@ -222,6 +223,10 @@ static inline void stdlog(fa_ptr_t data, fa_time_system_t t, fa_error_t e)
     }
     fputs(msg, file);
     fflush(file);
+    if (gLogDupStdout && file != stdout) {
+        fputs(msg, stdout);
+        fflush(stdout);
+    }
 }
 
 void fa_set_log_file(fa_string_t path)
@@ -232,16 +237,27 @@ void fa_set_log_file(fa_string_t path)
     fa_free(cpath);
 }
 
+void fa_set_log_file_and_stdout(fa_string_t path)
+{
+    char *cpath = fa_string_to_utf8(path);
+    gLogData      = fopen(cpath, "a");
+    gLogFunc      = stdlog;
+    gLogDupStdout = true;
+    fa_free(cpath);
+}
+
 void fa_set_log_std()
 {
-    gLogData  = stdout;
-    gLogFunc  = stdlog;
+    gLogData      = stdout;
+    gLogFunc      = stdlog;
+    gLogDupStdout = false;
 }
 
 void fa_set_log(fa_log_func_t f, fa_ptr_t data)
 {
-    gLogFunc  = f;
-    gLogData  = data;
+    gLogFunc      = f;
+    gLogData      = data;
+    gLogDupStdout = false;
 }
 
 void fa_set_log_level(fa_error_severity_t level)

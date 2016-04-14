@@ -75,6 +75,10 @@ module "transient" Fa.Utility
     /** Instruct Fa to write log messages to the standard output.
      */
     setLogStd : () -> Void;
+    
+    /** Instruct Fa to write log messages to the specific file AND to stdout;
+    */
+    setLogFileAndStdout : String -> Void;
 
     /** Instruct Fa to pass log messages to the given handler.
      */

@@ -83,6 +83,10 @@ void fa_set_log_file(fa_string_t string);
 */
 void fa_set_log_std();
 
+/** Instruct Fa to write log messages to the specific file AND to stdout;
+*/
+void fa_set_log_file_and_stdout(fa_string_t string);
+
 /** Instruct Fa to pass log messages to the given handler.
 */
 void fa_set_log(fa_log_func_t logFunc, fa_ptr_t ptr);

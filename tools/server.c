@@ -110,6 +110,7 @@ int main(int argc, char const *argv[])
     fa_set_log_std();
     
     bool help_only = true;
+    fa_string_t log_path = NULL;
     
     char port[14]; // enough to hold all int32 numbers
     fa_with_options(option_declaration, argc, argv, options, args) {
@@ -119,6 +120,15 @@ int main(int argc, char const *argv[])
         soundfont_path = fa_map_dget(fa_string("soundfont"), options);
         #endif
         default_audio_host = fa_map_dget(fa_string("default-host"), options);
+        log_path = fa_map_dget(fa_string("log-file"), options);
+        if (fa_string_length(log_path) > 0) {
+            fa_set_log_file_and_stdout(log_path);
+            char *cpath = fa_unstring(log_path);
+            printf("Writing log to %s\n", cpath);
+            fa_free(cpath);
+        } else {
+            printf("No log file set\n");
+        }
         help_only = false;
     }
     
