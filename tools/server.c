@@ -253,9 +253,10 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/audio-file/save",     "is", save_audio_file_handler, server);  // audio id, path
     lo_server_thread_add_method(st, "/audio-file/curve",    "i",  audio_file_curve_handler, server); // audio id
     lo_server_thread_add_method(st, "/audio-file/peak",     "i",  audio_file_peak_handler, server);  // audio id
-    // id, audio id, url, cookies, [from_time (ms), to_time (ms)]
+    // id, audio id, url, cookies, [from_time (ms), to_time (ms), ogg_dump_filename]
     lo_server_thread_add_method(st, "/audio-file/upload",   "iiss",  audio_file_upload_handler, server);
     lo_server_thread_add_method(st, "/audio-file/upload",   "iissff",  audio_file_upload_handler, server);
+    lo_server_thread_add_method(st, "/audio-file/upload",   "iissffs",  audio_file_upload_handler, server);
     
     /* Send midi control messages */
     lo_server_thread_add_method(st, "/send/main-volume",    "ii", main_volume_handler, server);
@@ -1316,6 +1317,7 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
     oid_t audio_id   =  argv[1]->i;
     char* url        = &argv[2]->s;
     char* cookie     = &argv[3]->s;
+    char* dump_file  = argc >= 7 ? &argv[6]->s : NULL;
     fa_ptr_t buffer  = NULL;
     size_t sample_rate;
     size_t channels;
@@ -1375,11 +1377,12 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
                 double from_ms = argv[4]->f;
                 double to_ms   = argv[5]->f;
                 if (from_ms < 0) from_ms = 0;
-                size_t from_frame = (int)round((double)sample_rate * (from_ms / 1000.0));
-                size_t to_frame = (int)round((double)sample_rate * (to_ms / 1000.0));
-                raw_source = fa_io_read_audio_file_between(path, fa_i32(from_frame), (to_ms >= 0) ? fa_i32(to_frame) : NULL);
+                uint8_t frame_size = channels * fa_sample_type_size(double_sample_type); // Assume doubles
+                size_t from_byte = (int)round((double)sample_rate * (double)frame_size * (from_ms / 1000.0));
+                size_t to_byte = (int)round((double)sample_rate * (double)frame_size * (to_ms / 1000.0));
+                raw_source = fa_io_read_file_between(path, fa_i32(from_byte), (to_ms >= 0) ? fa_i32(to_byte) : NULL);
             } else {
-                raw_source = fa_io_read_audio_file(path);
+                raw_source = fa_io_read_file(path);
             }
             
             break;
@@ -1396,6 +1399,8 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
         return 0;
     }
     
+    send_osc(message, user_data, "/audio-file/upload/preparing", "i", id);
+    
     fa_io_source_t source = fa_io_apply(raw_source, fa_io_create_ogg_encoder(sample_rate, channels));
     fa_buffer_t ogg_buffer = fa_io_pull_to_buffer(source);
     size_t ogg_size = fa_buffer_size(ogg_buffer);
@@ -1409,7 +1414,12 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
     // fa_slog_info("ogg buffer: ", ogg_buffer);
     // printf("Uploading %zu bytes...\n", fa_buffer_size(ogg_buffer));
     
-    // fa_buffer_write_raw(fa_string("/Users/erik/Desktop/out2.ogg"), ogg_buffer);
+    if (dump_file && dump_file[0]) {
+        fa_slog_info("ogg buffer: ", ogg_buffer);
+        fa_inform(fa_format_integral("ogg buffer size: %zu", fa_buffer_size(ogg_buffer)));
+        fa_inform(fa_dappend(fa_string("Dumping ogg to "), fa_string(dump_file)));
+        fa_buffer_write_raw(fa_string(dump_file), ogg_buffer);
+    }
 
     fa_thread_t thread = upload_buffer_async(id, ogg_buffer, url, cookie);
     fa_thread_detach(thread);
@@ -1531,6 +1541,7 @@ int stats_handler(const char *path, const char *types, lo_arg ** argv, int argc,
     fa_action_log_count();
     fa_map_log_count();
     fa_inform(fa_string_format_integral("recording_state: %d", recording_state));
+    fa_slog_info("in_bundle: ", fa_i8(in_bundle));
     return 0;
 }
 
@@ -1611,6 +1622,8 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
     double max_length = argc > 5 ? argv[5]->f : 0;
     
     check_id(id, message, user_data);
+    
+    fa_slog_info("start_recording_handler");
     
     if (!url || (*url == 0)) {
         fa_slog_info("Recording without upload");
