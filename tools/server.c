@@ -712,10 +712,12 @@ int settings_handler(const char *path, const char *types, lo_arg ** argv, int ar
     fa_string_t parameter = fa_string(user_data);
     fa_ptr_t value = create_fa_value(types[0], argv[0]);
     if (!value) value = fa_from_bool(false);
-    fa_slog_info("settings handler: ", parameter, value);
+    // Send value to current session...
     if (current_audio_session) {
-        fa_audio_set_parameter(parameter, value, current_audio_session);
+        fa_audio_set_parameter(fa_copy(parameter), fa_copy(value), current_audio_session);
     }
+    // ... but also save settings for later, to reuse if session is restarted
+    session_settings = fa_map_dset(parameter, value, session_settings);
     return 0;
 }
 
@@ -1874,6 +1876,14 @@ int restart_sessions_handler(const char *path, const char *types, lo_arg ** argv
     recording_state = NOT_RECORDING; // no lock needed here (?)
     stop_sessions();
     start_sessions();
+    if (current_audio_session) {
+        fa_list_t keys = fa_map_get_keys(session_settings);
+        fa_for_each (key, keys) {
+            fa_ptr_t value = fa_map_get(key, session_settings);
+            fa_audio_set_parameter(fa_copy(key), fa_copy(value), current_audio_session);
+        }
+        fa_destroy(keys);
+    }
     resolve_devices();
     start_streams();
     send_all_devices(-1, message, user_data);
