@@ -75,7 +75,7 @@ void fa_io_push_through(fa_io_filter_t filter, fa_io_sink_t downstream, fa_buffe
 
 void split_filter_destroy(fa_ptr_t x)
 {
-    fa_warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy (split_filter)"));
 }
 
 fa_string_t split_filter_show(fa_ptr_t x)
@@ -117,7 +117,7 @@ FILTER_IMPLEMENTATION(split_filter);
 
 void stdin_filter_destroy(fa_ptr_t x)
 {
-    fa_warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy (stdin_filter)"));
 }
 
 fa_string_t stdin_filter_show(fa_ptr_t x)
@@ -158,7 +158,7 @@ FILTER_IMPLEMENTATION(stdin_filter);
 
 void standardout_filter_destroy(fa_ptr_t x)
 {
-    fa_warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy (standardout_filter)"));
 }
 
 fa_string_t standardout_filter_show(fa_ptr_t x)
@@ -187,7 +187,7 @@ FILTER_IMPLEMENTATION(standardout_filter);
 
 void write_filter_destroy(fa_ptr_t x)
 {
-    fa_warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy (write_filter)"));
 }
 
 fa_string_t write_filter_show(fa_ptr_t x)
@@ -227,7 +227,7 @@ FILTER_IMPLEMENTATION(write_filter);
 
 void read_filter_destroy(fa_ptr_t x)
 {
-    fa_inform(fa_string("In read_filter_destroy"));
+    //fa_inform(fa_string("In read_filter_destroy"));
     struct filter_base *filter = ((struct filter_base *) x);
     if (filter->data1) fa_destroy(filter->data1);
     if (filter->data2) fa_destroy(filter->data2);
@@ -289,7 +289,7 @@ FILTER_IMPLEMENTATION(read_filter);
 
 void read_audio_filter_destroy(fa_ptr_t x)
 {
-    fa_inform(fa_string("In read_audio_filter_destroy"));
+    //fa_inform(fa_string("In read_audio_filter_destroy"));
     struct filter_base *filter = ((struct filter_base *) x);
     if (filter->data1) fa_destroy(filter->data1);
     if (filter->data2) fa_destroy(filter->data2);
@@ -369,7 +369,7 @@ FILTER_IMPLEMENTATION(read_audio_filter);
 
 void ref_filter_destroy(fa_ptr_t x)
 {
-    fa_warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy (ref_filter)"));
 }
 
 fa_string_t ref_filter_show(fa_ptr_t x)
@@ -394,7 +394,7 @@ FILTER_IMPLEMENTATION(ref_filter);
 
 void identity_destroy(fa_ptr_t x)
 {
-    fa_warn(fa_string("Unimplemented IO destroy"));
+    fa_warn(fa_string("Unimplemented IO destroy (identity)"));
 }
 
 fa_string_t identity_show(fa_ptr_t x)
@@ -418,7 +418,10 @@ FILTER_IMPLEMENTATION(identity);
 
 void composed_filter_destroy(fa_ptr_t x)
 {
-    fa_warn(fa_string("Unimplemented IO destroy"));
+    struct filter_base *filter = ((struct filter_base *) x);
+    if (filter->data1) fa_destroy(filter->data1);
+    if (filter->data2) fa_destroy(filter->data2);
+    fa_free(filter);
 }
 
 fa_string_t  composed_filter_show(fa_ptr_t x)
@@ -470,12 +473,12 @@ FILTER_IMPLEMENTATION(composed_filter);
 
 void simple_filter_destroy(fa_ptr_t x)
 {
-    fa_inform(fa_string("simple filter destroy"));
+    //fa_inform(fa_string("simple filter destroy"));
     fa_nullary_t destructor = ((struct filter_base *) x)->data4;
     if (destructor) {
-        destructor(x);
+        destructor(((struct filter_base *) x)->data3);
     }
-    // fa_free(x); // ?
+    fa_free(x);
 }
 
 fa_string_t simple_filter_show(fa_ptr_t x)

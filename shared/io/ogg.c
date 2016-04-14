@@ -250,6 +250,7 @@ fa_ptr_t _destroy_ogg_encoder(fa_ptr_t x) {
     vorbis_block_clear(&encoder->vorbis.block);
     vorbis_dsp_clear(&encoder->vorbis.dsp);
     vorbis_info_clear(&encoder->vorbis.info);
+    fa_slog_info("Done cleaning up ogg encoder");
     return NULL;
 }
 
