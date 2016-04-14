@@ -8,7 +8,7 @@
 // Define high-resolution timer, from
 // http://stackoverflow.com/questions/2349776/how-can-i-benchmark-c-code-easily
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 double get_time()
 {
