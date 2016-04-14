@@ -26,6 +26,7 @@ fa_option_t option_declaration[] = {
     { "r", "sample-rate",     "Sample rate",      fa_option_integral, "44100" },
     { "v", "vector-size",     "Vector size",      fa_option_integral, "64"    },
     { "l", "latency",         "Latency",          fa_option_floating, "0.040" },
+    { "x", "exclusive-mode",  "WASAPI exclusive", fa_option_integral, "2"     }
 };
 
 void run_sines(fa_map_t opts)
@@ -36,7 +37,13 @@ void run_sines(fa_map_t opts)
     const int  number_of_nodes = fa_map_get_int32(fa_string("number-of-nodes"),   opts);
     const int  sample_rate     = fa_map_get_int32(fa_string("sample-rate"),       opts);
     const int  vector_size     = fa_map_get_int32(fa_string("vector-size"),       opts);
-    const double latency       = fa_map_get_double(fa_string("latency"),      opts);
+    const double latency       = fa_map_get_double(fa_string("latency"),          opts);
+    const int exclusive        = fa_map_get_int32(fa_string("exclusive-mode"),    opts);
+
+    if (exclusive < 0 || exclusive > 2) {
+        fa_fail(fa_string("exclusive-mode must be 0 (never), 1 (always) or 2 (try)"));
+        return;
+    }
 
     fa_signal_t sines = fa_constant(0);
 
@@ -62,7 +69,12 @@ void run_sines(fa_map_t opts)
         fa_with_default_out(session, output) {
             fa_audio_set_parameter(fa_string("sample-rate"), fa_f64(sample_rate), session);
             fa_audio_set_parameter(fa_string("vector-size"), fa_i32(vector_size), session);
-            fa_audio_set_parameter(fa_string("latency"),   fa_f64(latency),   session);
+            fa_audio_set_parameter(fa_string("latency"),     fa_f64(latency),   session);
+            if (exclusive) {
+                fa_audio_set_parameter(fa_string("vector-size-exclusive"), fa_i32(vector_size), session);
+                fa_audio_set_parameter(fa_string("latency-exclusive"),     fa_f64(latency),   session);
+                fa_audio_set_parameter(fa_string("exclusive"),             fa_i8(exclusive), session);
+            }
             fa_open_stereo_out(stream, output, list(sines, sines)) {
                 if (duration < 0) {
                     while (1) {
@@ -78,7 +90,7 @@ void run_sines(fa_map_t opts)
 
 int main(int argc, char const *argv[])
 {
-    fa_set_log_tool();
+    fa_set_log_std();
     fa_with_faudio() {
         fa_with_options(option_declaration, argc, argv, options, args) {
             fa_inform(fa_string("Running sine test"));

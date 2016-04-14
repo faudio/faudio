@@ -68,9 +68,11 @@ fa_audio_session_t test_audio_devices(fa_ptr_t options, fa_audio_session_t sessi
     const double latency       = fa_map_get_double(fa_string("latency"),          opts);
     
     
-    fa_audio_set_parameter(fa_string("sample-rate"), fa_f64(sample_rate), session);
-    fa_audio_set_parameter(fa_string("vector-size"), fa_i32(vector_size), session);
-    fa_audio_set_parameter(fa_string("latency"),     fa_f64(latency),     session);
+    fa_audio_set_parameter(fa_string("sample-rate"),       fa_f64(sample_rate), session);
+    fa_audio_set_parameter(fa_string("vector-size"),       fa_i32(vector_size), session);
+    fa_audio_set_parameter(fa_string("latency"),           fa_f64(latency),     session);
+    fa_audio_set_parameter(fa_string("latency-exclusive"), fa_f64(latency),     session);
+    fa_audio_set_parameter(fa_string("exclusive"),         fa_i16(2),           session);
     
     printf("TESTING OUTPUT\n\n");
     fa_for_each(x, fa_audio_all(session)) {
@@ -101,7 +103,7 @@ fa_audio_session_t test_audio_devices(fa_ptr_t options, fa_audio_session_t sessi
 
 int main(int argc, char const *argv[])
 {
-    fa_set_log_tool();
+    fa_set_log_std();
     fa_error_severity_t level = warning;
     fa_with_options(option_declaration, argc, argv, options, args) {
         fa_string_t level_str = fa_map_dget(fa_string("verbosity"), options);
