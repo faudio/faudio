@@ -309,10 +309,8 @@ int main(int argc, char const *argv[])
 
     // start_streams(); // server-utils.h
 
-    lo_server_thread_add_functions(st, init, cleanup, NULL);
+    lo_server_thread_add_functions(st, init, cleanup, port);
     lo_server_thread_start(st);
-    
-    fa_inform(fa_dappend(fa_string("Listening on TCP port "), fa_string(port)));
 
     while (!done) {
 #ifdef WIN32
@@ -333,6 +331,7 @@ int main(int argc, char const *argv[])
 
 int init(void *user_data)
 {
+    char *port = (char*)user_data;
     fa_initialize();
     
     void fa_clock_initialize();
@@ -341,6 +340,8 @@ int init(void *user_data)
     init_globals();
 
     start_sessions();
+    
+    fa_inform(fa_dappend(fa_string("Listening on TCP port "), fa_string(port)));
     return 0;
 }
 
@@ -362,6 +363,7 @@ int cleanup(void *user_data)
     fa_string_log_count();
     fa_func_ref_log_count();
     fa_action_log_count();
+    fflush(stdout);
     return 0;
 }
 
