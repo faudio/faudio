@@ -81,6 +81,19 @@ fa_buffer_t test_buffer_to_ogg(fa_string_t path) {
     return ogg_buffer;
 }
 
+void test_buffer_to_file(fa_buffer_t buffer, fa_string_t path) {
+    fa_inform(fa_string("=== BUFFER TO FILE ==="));
+    fa_inform(fa_format_integral("    -> writing %zu bytes to file", fa_buffer_size(buffer)));
+    fa_io_source_t source = fa_io_from_buffer(buffer);
+    fa_io_sink_t sink = fa_io_write_file(path);
+    double time1 = get_time();
+    fa_io_run(source, sink);
+    fa_destroy(source);
+    fa_destroy(sink);
+    double time2 = get_time();
+    fa_inform(fa_format_floating("    in %.2f ms", 1000.0 * (time2 - time1)));
+}
+
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
@@ -102,9 +115,11 @@ int main(int argc, char const *argv[])
     fa_buffer_t ogg1 = test_file_to_ogg(fa_copy(infile));
     fa_buffer_t ogg2 = test_buffer_to_ogg(infile);
     
-    fa_buffer_write_raw(fa_string("io-raw"), raw1);
+    fa_buffer_write_raw(fa_string("io-raw1"), raw1);
     fa_buffer_write_raw(fa_string("io-ogg1.ogg"), ogg1);
     fa_buffer_write_raw(fa_string("io-ogg2.ogg"), ogg2);
+    
+    test_buffer_to_file(raw1, fa_string("io-raw2"));
     
     fa_destroy(raw1);
     fa_destroy(ogg1);

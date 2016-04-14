@@ -93,6 +93,8 @@ module Fa.Io
     readAudioFileBetween : (path : String, start : Ptr, end: Ptr) -> Source;
     /** Create sink that writes to a file. */
     writeFile : String -> Sink;
+    /** Create sink that appends to a file. */
+    appendFile : String -> Sink;
     /** Create source that reads from the standard input. */
     standardIn : () -> Source;
     /** Create sink that writes to the standard output. */

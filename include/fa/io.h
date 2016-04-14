@@ -155,6 +155,10 @@ fa_io_source_t fa_io_read_audio_file_between(fa_string_t path, fa_ptr_t startFra
 */
 fa_io_sink_t fa_io_write_file(fa_string_t string);
 
+/** Create sink that appends to a file. 
+*/
+fa_io_sink_t fa_io_append_file(fa_string_t string);
+
 /** Create source that reads from the standard input. 
 */
 fa_io_source_t fa_io_standard_in();

@@ -75,7 +75,13 @@ void fa_io_push_through(fa_io_filter_t filter, fa_io_sink_t downstream, fa_buffe
 
 void split_filter_destroy(fa_ptr_t x)
 {
-    fa_warn(fa_string("Unimplemented IO destroy (split_filter)"));
+    fa_slog_info("split_filter_destroy");
+    struct filter_base *filter = (struct filter_base *) x;
+    if (filter->data1) {
+        fa_destroy(filter->data1);
+        filter->data1 = NULL;
+    }
+    fa_free(filter);
 }
 
 fa_string_t split_filter_show(fa_ptr_t x)
@@ -187,7 +193,18 @@ FILTER_IMPLEMENTATION(standardout_filter);
 
 void write_filter_destroy(fa_ptr_t x)
 {
-    fa_warn(fa_string("Unimplemented IO destroy (write_filter)"));
+    struct filter_base *filter = (struct filter_base *) x;
+    fa_slog_info("write_filter_destroy");
+    // Close file handle if still open
+    if (filter->data1) {
+        fa_slog_warning("File still open when destroying write filter, closing it now");
+        fa_slog_info("    file: ", filter->data2);
+        fa_inform(fa_format_integral("    bytes written: %d", (int)filter->data3));
+        fclose(filter->data1);
+        filter->data1 = NULL;
+    }
+    if (filter->data2) fa_destroy(filter->data2);
+    fa_free(filter);
 }
 
 fa_string_t write_filter_show(fa_ptr_t x)
@@ -201,23 +218,19 @@ void write_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t cal
 void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
     // inform(fa_string("In write_filter push"));
+    
+    struct filter_base *filter = (struct filter_base *) x;
+    FILE *fp = filter->data1;
+    if (!fp) return; // No file handle
 
     if (buffer) {
-        fa_string_t path = /*fa_copy*/(((struct filter_base *) x)->data1);
-        char* _path = fa_unstring(path);
-        FILE *fp = fopen(_path, "ab");
-        fa_free(_path);
-
-        if (!fp) {
-            fa_fail(fa_string_dappend(fa_string("Could not write file: "), fa_copy(path)));
-            fa_fail(fa_string_format_integral("  errno: %d", errno));
-            fclose(fp);
-        } else {
-            fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
-            fclose(fp);
-        }
+        size_t bytes = fa_buffer_size(buffer);
+        fwrite(fa_buffer_unsafe_address(buffer), bytes, 1, fp);
+        filter->data3 = (fa_ptr_t)(((int)filter->data3) + bytes);
     } else {
-        // TODO close
+        fa_inform(fa_format_integral("Closing file after writing %d bytes", (int)filter->data3));
+        fclose(fp);
+        filter->data1 = NULL;
     }
 }
 FILTER_IMPLEMENTATION(write_filter);
@@ -588,12 +601,35 @@ fa_io_sink_t fa_io_standard_out()
     return (fa_io_sink_t) x;
 }
 
-fa_io_sink_t fa_io_write_file(fa_string_t path)
-{
+static fa_io_sink_t io_write_file(fa_string_t path, const char* mode) {
     struct filter_base *x = fa_new_struct(filter_base);
     x->impl = &write_filter_impl;
-    x->data1 = fa_copy(path);
+    x->data1 = NULL;
+    x->data2 = fa_copy(path); // copy or not?
+    x->data3 = 0; // number of bytes written
+        
+    char* cpath = fa_unstring(path);
+    FILE *fp = fopen(cpath, mode);
+    fa_free(cpath);
+
+    if (fp) {
+        x->data1 = fp;
+    } else {
+        fa_fail(fa_string_dappend(fa_string("Could not open file for writing: "), fa_copy(path)));
+        fa_fail(fa_string_format_integral("  errno: %d", errno));
+    }
+    
     return (fa_io_sink_t) x;
+}
+
+fa_io_sink_t fa_io_write_file(fa_string_t path)
+{
+    return io_write_file(path, "wb");
+}
+
+fa_io_sink_t fa_io_append_file(fa_string_t path)
+{
+    return io_write_file(path, "ab");
 }
 
 fa_io_source_t fa_io_read_file_between(fa_string_t path, fa_ptr_t start, fa_ptr_t end)
