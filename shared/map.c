@@ -271,7 +271,7 @@ fa_map_t fa_map_dset(fa_ptr_t key, fa_ptr_t value, fa_map_t map)
     impl_for_each_entry(map, entry) {
         if (fa_equal(key, entry->key)) {
             fa_map_destructor_t destructor = map->value_dest;
-            if (destructor) {
+            if (destructor && entry->value) {
                 destructor(entry->value);
             }
             entry->value = value;

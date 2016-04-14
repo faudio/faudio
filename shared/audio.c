@@ -783,11 +783,11 @@ fa_list_t fa_audio_all(session_t session)
 //         const PaHostApiInfo *info = Pa_GetHostApiInfo(i);
 //         fa_map_t map = fa_map_empty();
 //         fa_map_set_value_destructor(map, fa_destroy);
-//         fa_map_dset(fa_string("type"), fa_i16(info->type), map);
-//         fa_map_dset(fa_string("name"), fa_string(info->name), map);
-//         fa_map_dset(fa_string("deviceCount"), fa_i16(info->deviceCount), map);
+//         map = fa_map_dset(fa_string("type"), fa_i16(info->type), map);
+//         map = fa_map_dset(fa_string("name"), fa_string(info->name), map);
+//         map = fa_map_dset(fa_string("deviceCount"), fa_i16(info->deviceCount), map);
 //         if (i == default_api) {
-//             fa_map_dset(fa_string("default"), fa_from_bool(true), map);
+//             map = fa_map_dset(fa_string("default"), fa_from_bool(true), map);
 //         }
 //         fa_push_list(map, result);
 //     }
