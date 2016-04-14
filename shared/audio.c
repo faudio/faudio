@@ -1142,7 +1142,8 @@ stream_t fa_audio_open_stream(device_t input,
         // Retry in shared mode
         if ((status != paNoError) && exclusive && session->parameters.exclusive == em_try) {
             fa_slog_info("Could not open WASAPI stream in exclusive mode, trying shared mode...");
-            
+            fa_inform(fa_string((char *) Pa_GetErrorText(status)));
+
             exclusive = false;
             buffer_size = session->parameters.vector_size_sh;
             inputLatency = session->parameters.latency_sh[0];
