@@ -83,7 +83,7 @@ fa_pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
                     args = fa_map_dadd(fa_pair_first(result), fa_pair_second(result), args);
                 }
             } else if (prev_elem_type == long_name) {
-                fa_pair_t result = maybe_parse(optc, optv, NULL, argv[i - 2] + 1, argv[i]);
+                fa_pair_t result = maybe_parse(optc, optv, NULL, argv[i - 1] + 2, argv[i]);
 
                 if (result) {
                     args = fa_map_dadd(fa_pair_first(result), fa_pair_second(result), args);
