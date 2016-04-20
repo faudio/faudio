@@ -22,6 +22,7 @@ fa_option_t option_declaration[] = {
     { "f", "frequency",       "Frequency",        fa_option_integral, "410"   },
     { "a", "amplitude",       "Amplitude",        fa_option_floating, "0.1"   },
     { "n", "number-of-nodes", "Number of nodes",  fa_option_integral, "1"     },
+    { "i", "input",           "Enable input",     fa_option_integral, "0"     },
 
     { "r", "sample-rate",     "Sample rate",      fa_option_integral, "44100" },
     { "v", "vector-size",     "Vector size",      fa_option_integral, "64"    },
@@ -35,6 +36,7 @@ void run_sines(fa_map_t opts)
     const int  frequency       = fa_map_get_int32(fa_string("frequency"),         opts);
     const double amplitude     = fa_map_get_double(fa_string("amplitude"),        opts);
     const int  number_of_nodes = fa_map_get_int32(fa_string("number-of-nodes"),   opts);
+    const int  use_input       = fa_map_get_int32(fa_string("input"),             opts);
     const int  sample_rate     = fa_map_get_int32(fa_string("sample-rate"),       opts);
     const int  vector_size     = fa_map_get_int32(fa_string("vector-size"),       opts);
     const double latency       = fa_map_get_double(fa_string("latency"),          opts);
@@ -66,24 +68,32 @@ void run_sines(fa_map_t opts)
     }
 
     fa_with_session_(session) {
-        fa_with_default_out(session, output) {
-            fa_audio_set_parameter(fa_string("sample-rate"), fa_f64(sample_rate), session);
-            fa_audio_set_parameter(fa_string("vector-size"), fa_i32(vector_size), session);
-            fa_audio_set_parameter(fa_string("latency"),     fa_f64(latency),   session);
-            if (exclusive) {
-                fa_audio_set_parameter(fa_string("vector-size-exclusive"), fa_i32(vector_size), session);
-                fa_audio_set_parameter(fa_string("latency-exclusive"),     fa_f64(latency),   session);
-                fa_audio_set_parameter(fa_string("exclusive"),             fa_i8(exclusive), session);
-            }
-            fa_open_stereo_out(stream, output, list(sines, sines)) {
-                if (duration < 0) {
-                    while (1) {
-                        fa_thread_sleep(10000);
-                    }
-                } else {
-                    fa_thread_sleep(duration);
+        fa_audio_device_t input  = use_input ? fa_audio_default_input(session) : NULL;
+        fa_audio_device_t output = fa_audio_default_output(session);
+        //fa_slog_info("Input: ", input);
+        if (use_input && (!input || fa_check(input)))  {
+            fa_slog_warning("No default input");
+            input = NULL;
+        }
+        fa_audio_set_parameter(fa_string("sample-rate"), fa_f64(sample_rate), session);
+        fa_audio_set_parameter(fa_string("vector-size"), fa_i32(vector_size), session);
+        fa_audio_set_parameter(fa_string("latency"),     fa_f64(latency),   session);
+        if (exclusive) {
+            fa_audio_set_parameter(fa_string("vector-size-exclusive"), fa_i32(vector_size), session);
+            fa_audio_set_parameter(fa_string("latency-exclusive"),     fa_f64(latency),   session);
+            fa_audio_set_parameter(fa_string("exclusive"),             fa_i8(exclusive), session);
+        }
+        fa_audio_stream_t stream = fa_audio_open_stream(input, output, just, list(sines, sines));
+        //fa_open_stereo_out(stream, output, list(sines, sines)) {
+        {
+            if (duration < 0) {
+                while (1) {
+                    fa_thread_sleep(10000);
                 }
+            } else {
+                fa_thread_sleep(duration);
             }
+            fa_destroy(stream);
         }
     }
 }
