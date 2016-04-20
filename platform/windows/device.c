@@ -334,7 +334,7 @@ INT_PTR WINAPI audio_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam
     PDEV_BROADCAST_DEVICEINTERFACE pdi;
     static HDEVNOTIFY hDeviceNotify;
 
-    fa_inform(fa_string("Call to status callback"));
+    // fa_inform(fa_string("Call to status callback"));
 
     switch (msg) {
     case WM_CREATE:
