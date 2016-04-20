@@ -676,20 +676,6 @@ void resolve_devices() {
     fa_destroy(audio_devices); // just the list
 }
 
-void set_stream_direction(stream_type_t direction) {
-    assert(direction != NO_STREAM);
-#if _WIN32
-    // Always request bidirectional streams if we are not in avoid_wasapi_exlusive_bidirectional mode
-    if (!avoid_wasapi_exclusive_bidirectional) direction = BIDIRECTIONAL;
-    // Restart streams if needed
-    if (direction != selected_audio_stream_type) {
-        stop_streams();
-        selected_audio_stream_type = direction;
-        start_streams();
-    }
-#endif
-}
-
 void stop_streams() {
     fa_slog_info("Stopping streams...");
     current_clock = fa_clock_standard();
@@ -732,11 +718,11 @@ void stop_streams() {
 void start_streams() {
 #if _WIN32
     fa_string_t dir;
-    if (selected_audio_stream_direction == BIDIRECTIONAL) dir = fa_string("bidirectional");
-    else if (selected_audio_stream_direction == INPUT_ONLY) dir = fa_string("input only");
-    else if (selected_audio_stream_direction == OUTPUT_ONLY) dir = fa_string("output only");
+    if (selected_audio_stream_type == BIDIRECTIONAL) dir = fa_string("bidirectional");
+    else if (selected_audio_stream_type == INPUT_ONLY) dir = fa_string("input only");
+    else if (selected_audio_stream_type == OUTPUT_ONLY) dir = fa_string("output only");
     else fa_string("");
-    fa_inform(fa_dappend(fa_string("Starting streams, audio ", dir)));
+    fa_inform(fa_dappend(fa_string("Starting streams, audio "), dir));
 #else
     fa_slog_info("Starting streams");
 #endif
@@ -825,7 +811,7 @@ void start_streams() {
         // TODO: we may still want to test it, to avoid the warning for other audio hosts,
         //       to prevent confusion when reading the log file...
         fa_slog_info("Avoiding WASAPI exclusive mode with bidirectional audio stream, falling back to shared mode");
-        fa_audio_set_parameter(fa_string("exclusive"), fa_bool(false), current_audio_session);
+        fa_audio_set_parameter(fa_string("exclusive"), fa_from_bool(false), current_audio_session);
     }
 #endif
     
@@ -954,6 +940,20 @@ void start_streams() {
             do_schedule_now(fa_action_send(synth_name, msg), current_midi_echo_stream);
         }
     }
+}
+
+void set_stream_direction(stream_type_t direction) {
+    assert(direction != NO_STREAM);
+#if _WIN32
+    // Always request bidirectional streams if we are not in avoid_wasapi_exlusive_bidirectional mode
+    if (!avoid_wasapi_exclusive_bidirectional) direction = BIDIRECTIONAL;
+    // Restart streams if needed
+    if (direction != selected_audio_stream_type) {
+        stop_streams();
+        selected_audio_stream_type = direction;
+        start_streams();
+    }
+#endif
 }
 
 fa_ptr_t _audio_status_callback(fa_ptr_t session)
