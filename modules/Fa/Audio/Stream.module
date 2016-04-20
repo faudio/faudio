@@ -167,6 +167,11 @@ module "transient" Fa.Audio.Stream
      */
     scheduleNow : (Action, Stream) -> Void;
     
+    /** Return the sample rate of the given stream.
+        @param stream   The stream.
+    */
+    streamSampleRate : Stream -> Double;
+    
     /**
         Return info of the stream, in form of a map.
     

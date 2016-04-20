@@ -194,6 +194,12 @@ void fa_audio_schedule_now(fa_action_t action,
                            fa_audio_stream_t stream);
 
 /**
+    Return the sample rate of the given stream.
+    @param stream   The stream.
+*/
+double fa_audio_stream_sample_rate(fa_audio_stream_t stream);
+
+/**
     Return info of the stream, in form of a map.
 
     The map should be destroyed by the caller.

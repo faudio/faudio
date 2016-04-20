@@ -890,15 +890,15 @@ void fa_audio_add_status_callback(status_callback_t function,
     session->callbacks.elements[n].data     = data;
 }
 
-double fa_audio_current_sample_rate(fa_audio_device_t device)
+double fa_audio_stream_sample_rate(fa_audio_stream_t stream)
 {
-    const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
-    return info->defaultSampleRate;
+    return stream->sample_rate;
 }
 
 double fa_audio_default_sample_rate(fa_audio_device_t device)
 {
-    return fa_audio_current_sample_rate(device);
+    const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
+    return info->defaultSampleRate;
 }
 
 fa_pair_t fa_audio_recommended_latency(fa_audio_device_t device)
@@ -957,7 +957,7 @@ void print_audio_info(device_t input, device_t output)
     if (input) {
         fa_inform(fa_string_dappend(fa_string("        Default Latency:      "),
 									dshow_range(fa_pair_first(fa_audio_recommended_latency(input)))));
-        fa_inform(fa_string_format_floating("        Current Sample Rate:  %2f", fa_audio_current_sample_rate(input)));
+        fa_inform(fa_string_format_floating("        Default Sample Rate:  %2f", fa_audio_default_sample_rate(input)));
     }
 
     fa_inform(fa_string_dappend(fa_string("    Output: "), output ? fa_audio_full_name(output) : fa_string("(none)")));
@@ -965,7 +965,7 @@ void print_audio_info(device_t input, device_t output)
     if (output) {
         fa_inform(fa_string_dappend(fa_string("        Default Latency:      "),
 									dshow_range(fa_pair_first(fa_audio_recommended_latency(output)))));
-        fa_inform(fa_string_format_floating("        Current Sample Rate:  %2f", fa_audio_current_sample_rate(output)));
+        fa_inform(fa_string_format_floating("        Default Sample Rate:  %2f", fa_audio_default_sample_rate(output)));
     }
 
     fa_let(session, input ? input->session : output->session) {
@@ -1048,7 +1048,7 @@ stream_t fa_audio_open_stream(device_t input,
     // sample_rate == 0 means that we are going to use the sample rate of the output device
     // (or the input device, if there is not output)
     if (sample_rate == 0) {
-        sample_rate = fa_audio_current_sample_rate(output ? output : input);
+        sample_rate = fa_audio_default_sample_rate(output ? output : input);
     }
     stream_t stream = new_stream(input, output, sample_rate);
 
