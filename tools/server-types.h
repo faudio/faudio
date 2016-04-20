@@ -72,5 +72,11 @@ typedef enum {
     RECORDING_STOPPING
 } recording_state_t;
 
+typedef enum {
+    NO_STREAM,
+    OUTPUT_ONLY,
+    INPUT_ONLY,
+    BIDIRECTIONAL
+} stream_type_t;
 
 #endif

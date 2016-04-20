@@ -676,6 +676,20 @@ void resolve_devices() {
     fa_destroy(audio_devices); // just the list
 }
 
+void set_stream_direction(stream_type_t direction) {
+    assert(direction != NO_STREAM);
+#if _WIN32
+    // Always request bidirectional streams if we are not in avoid_wasapi_exlusive_bidirectional mode
+    if (!avoid_wasapi_exclusive_bidirectional) direction = BIDIRECTIONAL;
+    // Restart streams if needed
+    if (direction != selected_audio_stream_type) {
+        stop_streams();
+        selected_audio_stream_type = direction;
+        start_streams();
+    }
+#endif
+}
+
 void stop_streams() {
     fa_slog_info("Stopping streams...");
     current_clock = fa_clock_standard();
@@ -707,6 +721,7 @@ void stop_streams() {
     if (current_audio_stream) {
         fa_audio_close_stream(current_audio_stream);
         current_audio_stream = NULL;
+        current_sample_rate = 0;
     }
     
     // Reset counters
@@ -715,10 +730,29 @@ void stop_streams() {
 }
 
 void start_streams() {
-    fa_slog_info("Starting streams...");
+#if _WIN32
+    fa_string_t dir;
+    if (selected_audio_stream_direction == BIDIRECTIONAL) dir = fa_string("bidirectional");
+    else if (selected_audio_stream_direction == INPUT_ONLY) dir = fa_string("input only");
+    else if (selected_audio_stream_direction == OUTPUT_ONLY) dir = fa_string("output only");
+    else fa_string("");
+    fa_inform(fa_dappend(fa_string("Starting streams, audio ", dir)));
+#else
+    fa_slog_info("Starting streams");
+#endif
     
     if (current_audio_session) {
-        fa_slog_info("Current settings:");
+        // Send settings
+        fa_slog_info("Current settings:", session_settings);
+        fa_list_t keys = fa_map_get_keys(session_settings);
+        fa_for_each (key, keys) {
+            fa_ptr_t value = fa_map_get(key, session_settings);
+            fa_audio_set_parameter(fa_copy(key), fa_copy(value), current_audio_session);
+        }
+        fa_destroy(keys);
+        
+        // Send host settings
+        fa_slog_info("Current host settings:");
         fa_slog_info("Input latency:   ", host_input_latency);
         fa_slog_info("Output latency:  ", host_output_latency);
         fa_slog_info("Vector size:     ", host_vector_size);
@@ -779,40 +813,75 @@ void start_streams() {
         }
     }
     
+
+    assert(selected_audio_stream_type != NO_STREAM);
+    fa_audio_device_t audio_input_device  = selected_audio_stream_type != OUTPUT_ONLY ? current_audio_input_device : NULL;
+    fa_audio_device_t audio_output_device = selected_audio_stream_type != INPUT_ONLY ? current_audio_output_device : NULL;
+    
+#if _WIN32
+    if (avoid_wasapi_exclusive_bidirectional && audio_input_device && audio_output_device) {
+        // NB: we don't have to test for the device being a WASAPI device, as
+        // the exclusive mode flag will only affect WASAPI devices anyway.
+        // TODO: we may still want to test it, to avoid the warning for other audio hosts,
+        //       to prevent confusion when reading the log file...
+        fa_slog_info("Avoiding WASAPI exclusive mode with bidirectional audio stream, falling back to shared mode");
+        fa_audio_set_parameter(fa_string("exclusive"), fa_bool(false), current_audio_session);
+    }
+#endif
+    
     // Start audio stream first
-    if (current_audio_input_device || current_audio_output_device) {
+    if (audio_input_device || audio_output_device) {
         
-        // Check that the devices have the same sample-rate
-        if (current_audio_input_device && current_audio_output_device) {
-            double sr_in  = fa_audio_current_sample_rate(current_audio_input_device);
-            double sr_out = fa_audio_current_sample_rate(current_audio_output_device);
-            current_sample_rate = sr_out;
-            if (sr_in != sr_out) {
-                fa_log_warning(fa_string("Sample rate mismatch, disabling input"));
-                send_osc_async("/error", "Nsdd", "sample-rate-mismatch", sr_in, sr_out);
-                current_audio_input_device = NULL;
+        if (audio_input_device && audio_output_device) {
+            if (!fa_equal(fa_audio_host_name(audio_input_device), fa_audio_host_name(audio_output_device))) {
+                fa_log_error(fa_string("Audio host mismatch, setting audio input to NULL"));
+                send_osc_async("/error", "Ns", "audio-host-mismatch");
+                audio_input_device = NULL;
             }
-        } else if (current_audio_input_device) {
-            current_sample_rate = fa_audio_current_sample_rate(current_audio_input_device);
-        } else if (current_audio_output_device) {
-            current_sample_rate = fa_audio_current_sample_rate(current_audio_output_device);
         }
-        
-        // printf("current_sample_rate now set to %f\n", current_sample_rate);
         
         fa_list_t out_signal = construct_output_signal_tree();
         fa_audio_stream_t audio_stream =
-            fa_audio_open_stream(current_audio_input_device, current_audio_output_device, just, out_signal);
+            fa_audio_open_stream(audio_input_device, audio_output_device, just, out_signal);
+        // Check for errors
         if (fa_check(audio_stream)) {
             current_audio_stream = NULL;
+            current_sample_rate = 0;
+            current_audio_stream_type = NO_STREAM;
             fa_error_t error = (fa_error_t) audio_stream;
-            char* msg = fa_unstring(fa_error_message(error));
-            send_osc_async("/error", "Nss", "could-not-start-stream", msg);
-            fa_free(msg);
+            bool handled = false;
+            // If a bidirectional stream didn't start, and the sample rates between
+            // the input and output device doesn't match, we guess that was the problem.
+            if (audio_input_device && audio_output_device) {
+                double sr_in  = fa_audio_default_sample_rate(audio_input_device);
+                double sr_out = fa_audio_default_sample_rate(audio_output_device);
+                fa_ptr_t req_sr = fa_map_dget(fa_string("sample-rate"), session_settings);
+                if (sr_in != sr_out && (!req_sr || fa_peek_number(req_sr) == 0)) {
+                    fa_log_warning(fa_string("Sample rate mismatch"));
+                    send_osc_async("/error", "Nsdd", "sample-rate-mismatch", sr_in, sr_out);
+                    handled = true;
+                }
+            }
+            // Otherwise, report a generic error
+            if (!handled) {
+                char* msg = fa_unstring(fa_error_message(error));
+                send_osc_async("/error", "Nss", "could-not-start-stream", msg);
+                fa_free(msg);
+            }
             fa_destroy(error);
             return;
         }
         current_audio_stream = audio_stream;
+        current_sample_rate = fa_audio_stream_sample_rate(current_audio_stream);
+        if (audio_input_device && audio_output_device) {
+            current_audio_stream_type = BIDIRECTIONAL;
+        } else if (audio_input_device) {
+            current_audio_stream_type = INPUT_ONLY;
+        } else if (audio_output_device) {
+            current_audio_stream_type = OUTPUT_ONLY;
+        } else {
+            assert(false && "Never reached");
+        }
         current_clock = fa_audio_get_clock(audio_stream);
         if (current_midi_playback == FA_MIDI_TO_AUDIO) {
             current_midi_playback_stream = audio_stream;
@@ -1197,7 +1266,7 @@ static size_t _upload_read_buffer(void *ptr, size_t size, size_t nmemb, void *da
     // If there is any data left, read from it
     if (info->sizeleft) {
         size_t bytes = MIN(size*nmemb, info->sizeleft);
-        printf("_upload_read_buffer: uploading %zu bytes (%zu bytes left)\n", bytes, info->sizeleft);
+        //printf("_upload_read_buffer: uploading %zu bytes (%zu bytes left)\n", bytes, info->sizeleft);
         memcpy(ptr, info->readptr, bytes);
         info->readptr += bytes;
         info->sizeleft -= bytes;

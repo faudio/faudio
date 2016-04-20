@@ -34,6 +34,10 @@ fa_string_t soundfont_path = NULL;
 #endif
 fa_string_t default_audio_host = NULL;
 
+#ifdef _WIN32
+bool avoid_wasapi_exclusive_bidirectional = true;
+#endif
+stream_type_t selected_audio_stream_type = BIDIRECTIONAL;
 fa_pair_t selected_audio_input_device = NULL;
 fa_pair_t selected_audio_output_device = NULL;
 fa_list_t selected_midi_input_devices = NULL;
@@ -52,6 +56,7 @@ fa_ptr_t current_midi_echo_device = NULL;
 
 int midi_echo_channel = -1;
 
+stream_type_t current_audio_stream_type = NO_STREAM;
 fa_audio_stream_t current_audio_stream = NULL;
 fa_list_t current_midi_input_streams   = NULL;
 fa_ptr_t current_midi_playback_stream  = NULL;

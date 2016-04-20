@@ -30,6 +30,10 @@
 #include "server-globals.h"
 #include "server-utils.h"
 
+#ifndef _WIN32
+#include "server-sleep-mac.h"
+#endif
+
 fa_option_t option_declaration[] = {
     #ifdef _WIN32
     { "s", "soundfont",    "Soundfont path",                  fa_option_string,   "FluidR3_GM.sf2" },
@@ -59,6 +63,8 @@ define_handler(restart_sessions);
 define_handler(stop_streams);
 define_handler(settings);
 define_handler(host_settings);
+define_handler(wasapi_hack);
+define_handler(stream_direction);
 
 define_handler(test);
 define_handler(stats);
@@ -207,6 +213,10 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/set/exclusive",          "F",  settings_handler, "exclusive");
     lo_server_thread_add_method(st, "/set/exclusive",          "N",  settings_handler, "exclusive");
     lo_server_thread_add_method(st, "/set/exclusive",          "i",  settings_handler, "exclusive");
+    lo_server_thread_add_method(st, "/set/wasapi-hack",        "T",  wasapi_hack_handler, server);
+    lo_server_thread_add_method(st, "/set/wasapi-hack",        "F",  wasapi_hack_handler, server);
+    lo_server_thread_add_method(st, "/set/wasapi-hack",        "N",  wasapi_hack_handler, server);
+    lo_server_thread_add_method(st, "/set/stream-direction",   "s",  stream_direction_handler, server);
     //lo_server_thread_add_method(st, "/set/schedule-delay",     "i",  settings_handler, "schedule-delay"); // not implemented
       
     /* Get info */
@@ -712,11 +722,6 @@ int settings_handler(const char *path, const char *types, lo_arg ** argv, int ar
     fa_string_t parameter = fa_string(user_data);
     fa_ptr_t value = create_fa_value(types[0], argv[0]);
     if (!value) value = fa_from_bool(false);
-    // Send value to current session...
-    if (current_audio_session) {
-        fa_audio_set_parameter(fa_copy(parameter), fa_copy(value), current_audio_session);
-    }
-    // ... but also save settings for later, to reuse if session is restarted
     session_settings = fa_map_dset(parameter, value, session_settings);
     return 0;
 }
@@ -833,7 +838,7 @@ void send_all_devices(int id, lo_message message, void *user_data)
             char *name = fa_dunstring(fa_audio_name(device));
             send_osc(message, user_data, "/audio/device", "issiif", counter++, host_name, name,
                 fa_audio_input_channels(device), fa_audio_output_channels(device),
-                fa_audio_current_sample_rate(device));
+                fa_audio_default_sample_rate(device));
             fa_free(host_name);
             fa_free(name);
         }
@@ -897,7 +902,7 @@ void send_current_devices(lo_message message, void *user_data)
         send_osc(message, user_data, "/current/audio/input", "ssiif", host_name, name,
             fa_audio_input_channels(current_audio_input_device),
             fa_audio_output_channels(current_audio_input_device),
-            fa_audio_current_sample_rate(current_audio_input_device));
+            fa_audio_default_sample_rate(current_audio_input_device));
         fa_free(host_name);
         fa_free(name);
     } else {
@@ -910,7 +915,7 @@ void send_current_devices(lo_message message, void *user_data)
         send_osc(message, user_data, "/current/audio/output", "ssiif", host_name, name,
             fa_audio_input_channels(current_audio_output_device),
             fa_audio_output_channels(current_audio_output_device),
-            fa_audio_current_sample_rate(current_audio_output_device));
+            fa_audio_default_sample_rate(current_audio_output_device));
         fa_free(host_name);
         fa_free(name);
     } else {
@@ -1876,14 +1881,6 @@ int restart_sessions_handler(const char *path, const char *types, lo_arg ** argv
     recording_state = NOT_RECORDING; // no lock needed here (?)
     stop_sessions();
     start_sessions();
-    if (current_audio_session) {
-        fa_list_t keys = fa_map_get_keys(session_settings);
-        fa_for_each (key, keys) {
-            fa_ptr_t value = fa_map_get(key, session_settings);
-            fa_audio_set_parameter(fa_copy(key), fa_copy(value), current_audio_session);
-        }
-        fa_destroy(keys);
-    }
     resolve_devices();
     start_streams();
     send_all_devices(-1, message, user_data);
@@ -1910,3 +1907,31 @@ int stop_streams_handler(const char *path, const char *types, lo_arg ** argv, in
     return 0;
 }
 
+
+int wasapi_hack_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+#if _WIN32
+    bool enabled = (types[0] == 'T');
+    avoid_wasapi_exclusive_bidirectional = enabled;
+    fa_inform(fa_dappend(fa_string("WASAPI hack is now "), fa_string(enabled ? "on" : "off")));
+#endif
+    return 0;
+}
+
+
+int stream_direction_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    stream_type_t direction;
+    if (strcmp(&argv[0]->s, "output-only") == 0) {
+        direction = OUTPUT_ONLY;
+    } else if (strcmp(&argv[0]->s, "input-only") == 0) {
+        direction = INPUT_ONLY;
+    } else if (strcmp(&argv[0]->s, "bidirectional") == 0) {
+        direction = BIDIRECTIONAL;
+    } else {
+        fa_fail(fa_dappend(fa_string("Unknown stream direction: "), fa_string(&argv[0]->s)));
+        return 0;
+    }
+    set_stream_direction(direction);
+    return 0;
+}
