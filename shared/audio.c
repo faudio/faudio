@@ -1502,7 +1502,7 @@ void before_processing(stream_t stream)
     //print_fa_signal_tree(merged);
 
     merged = fa_signal_route_processors(proc_map, merged);
-    print_fa_signal_tree(merged);
+    //print_fa_signal_tree(merged);
 
     merged = fa_signal_doptimize(merged);
     merged = fa_signal_dverify(merged);
@@ -1674,6 +1674,7 @@ int native_audio_callback(const void                       *input,
     stream_t stream = data;
 
     if (stream->state) {
+        
         // Cache "actual" latency
         stream->roundtrip_latency = time_info->outputBufferDacTime - time_info->inputBufferAdcTime;
         
