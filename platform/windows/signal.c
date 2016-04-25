@@ -169,7 +169,7 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
 fa_ptr_t destroy_(fa_ptr_t x)
 {
-    fa_inform(fa_string("Destroying FluidSynth instance"));
+    fa_inform(fa_string("        Destroying FluidSynth instance"));
     fluid_synth_t *synth = x;
     fluid_settings_t *settings = fluid_synth_get_settings(synth);
 
