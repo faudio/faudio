@@ -265,7 +265,9 @@ fa_map_t fa_file_buffer_meta(fa_file_buffer_t file_buffer)
 // }
 
 static inline bool get_ptr(fa_file_buffer_t file_buffer, size_t index, void **ptr) {
-    assert(index < file_buffer->file_size);
+    if (index >= file_buffer->file_size) {
+        return false;
+    }
     if (index >= file_buffer->offset1 && index < (file_buffer->offset1 + file_buffer->single_buffer_size)) {
         *ptr = file_buffer->buffer1 + index - file_buffer->offset1;
         return true;
@@ -274,7 +276,6 @@ static inline bool get_ptr(fa_file_buffer_t file_buffer, size_t index, void **pt
         *ptr = file_buffer->buffer2 + index - file_buffer->offset2;
         return true;
     }
-    printf("x");
     return false;
 }
 
