@@ -1256,7 +1256,8 @@ void fa_audio_close_stream(stream_t stream)
                 fa_warn(fa_string((char *) Pa_GetErrorText(error)));
             }
 
-            // after_processing will be called after this
+            // Note that Pa_StopStream blocks until the stream is stopped,
+            // so after_processing should be guaranteed to have run at this point.
 
             fa_inform(fa_string("    Native stream closed"));
             fa_inform(fa_string("    Stopping stream controller"));
@@ -1513,7 +1514,7 @@ void before_processing(stream_t stream)
 
 void after_processing(stream_t stream)
 {
-    fa_inform(fa_string("Stream finished normally, destroying external processors."));
+    fa_inform(fa_string("        Stream finished normally, destroying external processors."));
     run_custom_procs(custom_proc_after, 0, stream->state);
     run_custom_procs(custom_proc_destroy, 0, stream->state);
 
@@ -1695,11 +1696,11 @@ void native_finished_callback(void *data)
     if (stream->state) {
 
         if (stream->pa_flags & paInputOverflow) {
-            fa_warn(fa_string("Input overflow detected"));
+            fa_warn(fa_string("    Input overflow detected"));
         }
 
         if (stream->pa_flags & paOutputUnderflow) {
-            fa_warn(fa_string("Output underflow detected"));
+            fa_warn(fa_string("    Output underflow detected"));
         }
 
         // fa_inform(fa_string_format_integral("    Stream flag result (0 = ok): %d", stream->pa_flags));
