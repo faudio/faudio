@@ -445,29 +445,7 @@ fa_signal_t low_pass(fa_signal_t sig) {
     return fa_signal_loop(_low_pass, sig);
 }
 
-// fa_pair_t construct_buffer_mixer(unsigned char channels, char *name_prefix) {
-//     if (channels == 0) return NULL;
-//     if (channels > kMaxAudioBufferSignals) {
-//         fa_warn(fa_format_integral("Cannot create %d playback signals", channels));
-//         fa_inform(fa_format_integral("Setting to %d, which is the maximum", (int)kMaxAudioBufferSignals));
-//         channels = kMaxAudioBufferSignals;
-//     }
-//
-//     fa_list_t left_signals = fa_list_empty();
-//     fa_list_t right_signals = fa_list_empty();
-//     for (int ch = 0; ch < channels; ch++) {
-//         fa_pair_t play_signal = fa_signal_play_buffer(fa_format_integral("%s%d", name_prefix, 0));
-//         fa_signal_t left = fa_pair_first(play_signal);
-//         fa_signal_t right = fa_pair_second(play_signal);
-//         fa_destroy(play_signal); // only destroys the pair
-//         left = sig_mul(left, fa_signal_input(kSynthLeft)),
-//         right = sig_mul(right, fa_signal_input)
-//     }
-//
-//     return play_signal;
-// }
-
-fa_list_t construct_output_signal_tree() {
+fa_list_t construct_signal_tree() {
     
     // Synth
     #ifdef _WIN32
@@ -505,6 +483,22 @@ fa_list_t construct_output_signal_tree() {
                              fa_signal_former(fa_signal_record_external(record_right_name, fa_signal_input(kInputRight)),
                                               fa_signal_output(0, kLevelRight,
                                                                low_pass(fa_signal_input(kInputRight)))))));
+    
+    return tree;
+}
+
+fa_list_t construct_signal_tree_input_only() {
+            
+    fa_list_t tree =
+        list(sig_mul(fa_signal_input(kMonitorLeft),
+                     fa_signal_former(fa_signal_record_external(record_left_name, fa_signal_input(kInputLeft)),
+                                      fa_signal_output(0, kLevelLeft,
+                                                       low_pass(fa_signal_input(kInputLeft))))),
+                             
+             sig_mul(fa_signal_input(kMonitorRight),
+                     fa_signal_former(fa_signal_record_external(record_right_name, fa_signal_input(kInputRight)),
+                                      fa_signal_output(0, kLevelRight,
+                                                       low_pass(fa_signal_input(kInputRight))))));
     
     return tree;
 }
@@ -826,7 +820,7 @@ void start_streams() {
             }
         }
         
-        fa_list_t out_signal = construct_output_signal_tree();
+        fa_list_t out_signal = audio_output_device ? construct_signal_tree() : construct_signal_tree_input_only();
         fa_audio_stream_t audio_stream =
             fa_audio_open_stream(audio_input_device, audio_output_device, just, out_signal);
         // Check for errors
