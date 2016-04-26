@@ -257,13 +257,6 @@ fa_map_t fa_file_buffer_meta(fa_file_buffer_t file_buffer)
     return file_buffer->meta;
 }
 
-// uint8_t fa_file_buffer_get(fa_file_buffer_t file_buffer, size_t index)
-// {
-//     assert(NULL && "TODO!"); // TODO!
-//     assert((index < (file_buffer->frames * file_buffer->channels)) && "Buffer overflow");
-//     return file_buffer->buffer[index];
-// }
-
 static inline bool get_ptr(fa_file_buffer_t file_buffer, size_t index, void **ptr) {
     if (index >= file_buffer->file_size) {
         return false;
