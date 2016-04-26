@@ -1555,10 +1555,19 @@ int stats_handler(const char *path, const char *types, lo_arg ** argv, int argc,
 
 int volume_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
+    uint32_t channel = (uint32_t) user_data;
+    float value = argv[0]->f;
+    // Save value for later...
+    switch (channel) {
+        case kSynthLeft: synth_volume = value; break;
+        case kAudioLeft: audio_volume = value; break;
+        case kMonitorLeft: monitor_volume = value; break;
+        default: assert(false && "Unknown channel in volume_handler");
+    }
+    // ... but also send it now, if there is an audio stream
     if (current_audio_stream) {
-        uint32_t channel = (uint32_t) user_data;
-        fa_list_t actions = list(pair(fa_action_set(channel + 0, argv[0]->f), fa_now()),
-                                 pair(fa_action_set(channel + 1, argv[0]->f), fa_now()));
+        fa_list_t actions = list(pair(fa_action_set(channel + 0, value), fa_now()),
+                                 pair(fa_action_set(channel + 1, value), fa_now()));
         schedule_now(fa_action_many(actions), current_audio_stream);
     }
     return 0;

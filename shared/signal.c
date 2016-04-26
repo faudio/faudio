@@ -2380,7 +2380,12 @@ fa_ptr_t play_buffers_render_(fa_ptr_t x, int offset, int count, fa_signal_state
                 //slot->pos = state->count % 4410; // TEST!
                 //slot->pos =  % 4410; // TEST!
                 
-                if (slot->file_buffer) {
+                if (slot->pos >= slot->max_pos) {
+                    slot->playing = false;
+                    slot->pos = 0;
+                }
+                
+                else if (slot->file_buffer) {
                     // TODO: interpolating samples for non-integer positions would improve sound quality
                     size_t buffer_pos = ((size_t)slot->pos) * slot->channels;
                     double left, right;
@@ -2415,7 +2420,7 @@ fa_ptr_t play_buffers_render_(fa_ptr_t x, int offset, int count, fa_signal_state
                     }
                 }
     
-                else if (slot->pos < slot->max_pos) {
+                else {
                     // TODO: interpolating samples for non-integer positions would improve sound quality
                     size_t buffer_pos = ((size_t)slot->pos) * slot->channels;
                     double left, right;
@@ -2430,9 +2435,6 @@ fa_ptr_t play_buffers_render_(fa_ptr_t x, int offset, int count, fa_signal_state
                     summed_left  += left * slot->left_volume;
                     summed_right += right * slot->right_volume;
                     slot->pos += slot->speed; // TODO: is double precision good enough not to get drifting errors?
-                } else {
-                    slot->playing = false;
-                    slot->pos = 0;
                 }
             }   
         }

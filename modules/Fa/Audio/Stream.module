@@ -38,6 +38,14 @@ module "transient" Fa.Audio.Stream
         copyable, showable value. 
      */
     type MessageCallback = Binary;
+    
+    /** A callback to be invoked when an audio stream is closed.
+    
+        Receives a Ptr with the user_data value passed to
+        fa_open_stream_with_callbacks, and a bool, telling
+        if the stream was closed normally. 
+    */
+    type StreamClosedCallback = ((Ptr, Bool) -> Void)*;
 
     /** A callback to receive audio streams.
      */
@@ -53,6 +61,14 @@ module "transient" Fa.Audio.Stream
             Returns an error if the session could not be started.
      */
     openStream : (Device, Device, Proc, Ptr) -> Stream;
+    
+    /**
+        Open a stream on the given devices and attach callbacks
+    
+        Just as fa_audio_open_stream, but attaches a message callback
+        and a closed callback.
+    */
+    openStreamWithCallbacks : (Device, Device, Proc, Ptr, MessageCallback, StreamClosedCallback, Ptr) -> Stream;
     
     /**
         Close the given stream.

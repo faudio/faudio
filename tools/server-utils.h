@@ -545,6 +545,18 @@ fa_ptr_t _incoming_midi(fa_ptr_t x, fa_ptr_t time_message)
     return NULL;
 }
 
+void _stream_closed(fa_ptr_t data, bool ok)
+{
+    if (current_midi_playback_stream == current_audio_stream) {
+        current_midi_playback_stream = NULL;
+    }
+    current_audio_stream = NULL;
+    if (!ok) {
+        fa_slog_error("Audio stream closed unexpectedly");
+        send_osc_async("/error", "Ns", "audio-stream-closed");
+    }
+}
+
 static inline bool audio_device_matches(fa_audio_device_t device, fa_pair_t description) {
     if (!description) return false;
     return (fa_dequal(fa_audio_host_name(device), fa_copy(fa_pair_first(description)))
@@ -822,7 +834,8 @@ void start_streams() {
         
         fa_list_t out_signal = audio_output_device ? construct_signal_tree() : construct_signal_tree_input_only();
         fa_audio_stream_t audio_stream =
-            fa_audio_open_stream(audio_input_device, audio_output_device, just, out_signal);
+            fa_audio_open_stream_with_callbacks(audio_input_device, audio_output_device, just, out_signal,
+                                                NULL, _stream_closed, NULL);
         // Check for errors
         if (fa_check(audio_stream)) {
             current_audio_stream = NULL;

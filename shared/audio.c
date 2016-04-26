@@ -141,6 +141,8 @@ struct _fa_audio_stream_t {
             fa_ptr_t    data;
         }               elements[kMaxMessageCallbacks];
     }                   callbacks;          // Message callbacks
+    
+    fa_pair_t           closed_callback;
 };
 
 static fa_thread_mutex_t   pa_mutex;
@@ -1030,7 +1032,18 @@ stream_t fa_audio_open_stream(device_t input,
                               device_t output,
                               proc_t proc,
                               fa_ptr_t proc_data
-                             )
+                              )
+{
+    return fa_audio_open_stream_with_callbacks(input, output, proc, proc_data, NULL, NULL, NULL);
+}
+
+stream_t fa_audio_open_stream_with_callbacks(device_t input,
+                                             device_t output,
+                                             proc_t proc,
+                                             fa_ptr_t proc_data,
+                                             fa_audio_message_callback_t message_callback,
+                                             fa_audio_stream_closed_callback_t closed_callback,
+                                             fa_ptr_t user_data)
 {
     PaError         status;
 
@@ -1194,6 +1207,14 @@ stream_t fa_audio_open_stream(device_t input,
     
     }
     
+    // Add callbacks
+    if (message_callback) {
+        fa_audio_add_message_callback(message_callback, user_data, stream);
+    }
+    if (closed_callback) {
+        stream->closed_callback = pair(closed_callback, user_data);
+    }
+    
     {
         /*
             Prepare and launch DSP thread.
@@ -1219,9 +1240,9 @@ stream_t fa_audio_open_stream(device_t input,
             Launch control thread.
          */
         fa_ptr_t audio_control_thread(fa_ptr_t data);
+        stream->controller.stop   = false;
         stream->controller.thread = fa_thread_create(audio_control_thread, stream);
         // stream->controller.mutex  = fa_thread_create_mutex();
-        stream->controller.stop   = false;
     }
 
 
@@ -1464,6 +1485,15 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
             fa_thread_sleep((stream->input ? stream->input : stream->output)->session->parameters.scheduler_interval);
         }
     }
+    
+    if (stream->closed_callback) {
+        bool finished_normally = (stream->native == NULL);
+        fa_audio_stream_closed_callback_t callback = fa_pair_first(stream->closed_callback);
+        fa_ptr_t user_data = fa_pair_second(stream->closed_callback);
+        fa_slog_info("        Calling closed_callback with data ", user_data, fa_from_bool(finished_normally));
+        stream->closed_callback = NULL;
+        callback(user_data, finished_normally);
+    }
 
     fa_inform(fa_string("    Audio control thread finished"));
     return NULL;
@@ -1524,7 +1554,7 @@ void after_processing(stream_t stream)
 void after_failed_processing(stream_t stream)
 {
     // This is ugly: create a temporary state just to enumerate processors
-    fa_inform(fa_string("Streams did not start, destroying external processors."));
+    fa_inform(fa_string("        Streams did not start, destroying external processors."));
     session_t session  = stream->input ? stream->input->session : stream->output->session;
     stream->state      = new_state(session->parameters.sample_rate); // FIXME
 
@@ -1662,7 +1692,7 @@ void during_processing(stream_t stream, unsigned count, double time, float **inp
 
    With the CoreAudio backend, PortAudio sometimes violates this by calling
    during_processing after after_processing, or calling after_processing
-   more than once. We guard against this by setting the stream to NULL.
+   more than once. We guard against this by setting the stream state to NULL.
 */
 
 int native_audio_callback(const void                       *input,
@@ -1707,6 +1737,10 @@ void native_finished_callback(void *data)
         after_processing(data);
 
         stream->state = NULL;
+    }
+    
+    if (stream->native) {
+        stream->controller.stop = true;
     }
 }
 

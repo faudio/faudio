@@ -50,6 +50,14 @@ typedef struct _fa_audio_stream_t * fa_audio_stream_t;
 */
 typedef fa_binary_t fa_audio_message_callback_t;
 
+/** A callback to be invoked when an audio stream is closed.
+
+    Receives a Ptr with the user_data value passed to
+    fa_open_stream_with_callbacks, and a bool, telling
+    if the stream was closed normally.
+*/
+typedef void (* fa_audio_stream_closed_callback_t)(fa_ptr_t, bool);
+
 /** A callback to receive audio streams.
 */
 typedef fa_audio_stream_t (* fa_audio_stream_callback_t)(fa_ptr_t,
@@ -68,6 +76,20 @@ fa_audio_stream_t fa_audio_open_stream(fa_audio_device_t device,
                                        fa_audio_device_t device_,
                                        fa_audio_proc_t proc,
                                        fa_ptr_t ptr);
+                                       
+/**
+    Open a stream on the given devices and attach callbacks
+
+    Just as fa_audio_open_stream, but attaches a message callback
+    and a closed callback.
+*/
+fa_audio_stream_t fa_audio_open_stream_with_callbacks(fa_audio_device_t device,
+                                                      fa_audio_device_t device_,
+                                                      fa_audio_proc_t proc,
+                                                      fa_ptr_t ptr,
+                                                      fa_audio_message_callback_t message_callback,
+                                                      fa_audio_stream_closed_callback_t closed_callback,
+                                                      fa_ptr_t user_data);
 
 /**
     Close the given stream.
