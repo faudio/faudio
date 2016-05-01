@@ -8,6 +8,11 @@
 
 #include <fluidsynth.h>
 
+typedef struct fluid_context {
+    fluid_synth_t *synth;
+    fa_string_t name;
+} fluid_context;
+
 fa_pair_t fa_signal_dls(fa_string_t name)
 {
     assert(false && "Not available on this platform");
@@ -16,7 +21,8 @@ fa_pair_t fa_signal_dls(fa_string_t name)
 
 fa_ptr_t before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
-    fluid_synth_t *synth = x;
+    fluid_context *context = x;
+    fluid_synth_t *synth = context->synth;
     fluid_synth_set_sample_rate(synth, state->rate);
     return NULL;
 }
@@ -33,7 +39,8 @@ static float right[kMaxVectorSize];
 
 fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 {
-    fluid_synth_t *synth = x;
+    fluid_context *context = x;
+    fluid_synth_t *synth = context->synth;
 
     float *left2 = left;
     float *right2 = right;
@@ -78,12 +85,13 @@ fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 
 fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
-    fluid_synth_t *synth = x;
+    fluid_context *context = x;
+    fluid_synth_t *synth = context->synth;
 
 
     // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
 
-    if (fa_equal(n, fa_string("fluid"))) {
+    if (fa_equal(n, context->name)) {
 
         if (!fa_midi_message_is_simple(msg)) {
 			fa_warn(fa_string("SYSEX message to Fluidsynth"));
@@ -104,14 +112,22 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
             switch (status) {
             case 0x8: // off
                 if (FLUID_OK != fluid_synth_noteoff(synth, channel, data1)) {
-                    fa_warn(fa_string("Fluidsynth: Could not send noteoff message"));
+                    if (channel == 9) {
+                        // Don't warn for noteoff on the percussion channel
+                    } else {
+                        fa_slog_warning("Fluidsynth: Could not send noteoff message ", msg);
+                    }
                 }
 
                 break;
 
             case 0x9: // 9 on
                 if (FLUID_OK != fluid_synth_noteon(synth, channel, data1, data2)) {
-                    fa_warn(fa_string("Fluidsynth: Could not send noteon message"));
+                    if ((channel == 9) && (data2 == 0)) {
+                        // Don't warn for noteoff on the percussion channel
+                    } else {
+                        fa_slog_warning("Fluidsynth: Could not send noteon message ", msg);
+                    }
                 }
 
                 break;
@@ -122,7 +138,7 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
             case 0xb: // 11 control
                 if (FLUID_OK != fluid_synth_cc(synth, channel, data1, data2)) {
-                    fa_warn(fa_string_format_integral("Fluidsynth: Could not send control message %u", data1));
+                    fa_slog_warning("Fluidsynth: Could not send control message ", msg);
                 }
 
                 break;
@@ -156,8 +172,12 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
             }
 
             default: {
-                fa_warn(fa_string_dappend(fa_string("Unknown MIDI message to Fluidsynth: <status="), fa_string_format_integral("%d>", status)));
-                // assert(false && "Unknown MIDI message to Fluidsynth");
+                if ((status_channel == 0xff) && (data1 == 0x2f)) {
+                    // EndOfTrack, ignore
+                } else {
+                    fa_slog_warning("Unknown MIDI message to Fluidsynth: ", msg);
+                    // assert(false && "Unknown MIDI message to Fluidsynth");
+                }
             }
             }
 
@@ -170,11 +190,13 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 fa_ptr_t destroy_(fa_ptr_t x)
 {
     fa_inform(fa_string("        Destroying FluidSynth instance"));
-    fluid_synth_t *synth = x;
+    fluid_context *context = x;
+    fluid_synth_t *synth = context->synth;
     fluid_settings_t *settings = fluid_synth_get_settings(synth);
 
     delete_fluid_synth(synth);
     delete_fluid_settings(settings);
+    fa_free(context);
 }
 
 fa_pair_t fa_signal_synth(fa_string_t name, fa_string_t path2)
@@ -210,6 +232,10 @@ fa_pair_t fa_signal_synth(fa_string_t name, fa_string_t path2)
         printf("%p\n", synth);
     }
 
+    fluid_context *context = fa_new_struct(fluid_context);
+    context->synth = synth;
+    context->name  = fa_copy(name);
+
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = before_;
     proc->after   = after_;
@@ -217,7 +243,7 @@ fa_pair_t fa_signal_synth(fa_string_t name, fa_string_t path2)
     proc->receive = receive_;
     proc->send    = NULL;
     proc->destroy = destroy_;
-    proc->data    = synth;
+    proc->data    = context;
 
     fa_signal_t left  = fa_signal_input_with_custom(proc, 0);
     fa_signal_t right = fa_signal_input_with_custom(proc, 1);
