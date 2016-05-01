@@ -88,8 +88,20 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     fluid_context *context = x;
     fluid_synth_t *synth = context->synth;
 
+    // NOTE: this function is called in the audio thread, which means that
+    // must work fast. In particular, it should not allocate memory, use locks,
+    // or access the file system or other I/O.
 
-    // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
+    // Unfortunately, logging involves both allocating memory, interacting
+    // with the file system and/or pipes. On Mac, this doesn't seem to be
+    // a problem in practice, but on Windows, a few log messages is
+    // sufficient to cause audio glitches.
+
+    // Therefore, we should only warn for situations that are not supposed to
+    // happen at all. For instance, calling fluid_synth_noteoff for certain
+    // percussion sounds results in FLUID_FAILED being returned, as those
+    // sounds don't have the concept of noteoff. This is not an error,
+    // so we don't log it.
 
     if (fa_equal(n, context->name)) {
 
@@ -176,7 +188,6 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
                     // EndOfTrack, ignore
                 } else {
                     fa_slog_warning("Unknown MIDI message to Fluidsynth: ", msg);
-                    // assert(false && "Unknown MIDI message to Fluidsynth");
                 }
             }
             }
