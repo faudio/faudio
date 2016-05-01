@@ -8,6 +8,8 @@
 
 #include <fluidsynth.h>
 
+static uint8_t tuning[16][128];
+
 typedef struct fluid_context {
     fluid_synth_t *synth;
     fa_string_t name;
@@ -24,6 +26,10 @@ fa_ptr_t before_(fa_ptr_t x, int count, fa_signal_state_t *state)
     fluid_context *context = x;
     fluid_synth_t *synth = context->synth;
     fluid_synth_set_sample_rate(synth, state->rate);
+    for (int ch = 0; ch < 16; ch++) {
+        fluid_synth_select_tuning(synth, ch, 0, ch);
+        for (int key = 0; key < 128; key++) tuning[ch][key] = 0;
+    }
     return NULL;
 }
 
@@ -114,8 +120,8 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
         } else {
 
 
-            uint8_t status_channel, data1, data2;
-            fa_midi_message_decons(msg, &status_channel, &data1, &data2);
+            uint8_t status_channel, data1, data2, data3;
+            fa_midi_message_ex_decons(msg, &status_channel, &data1, &data2, &data3);
 
             int channel = status_channel        & 0x0f;
             int status  = (status_channel >> 4) & 0x0f;
@@ -133,7 +139,15 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
                 break;
 
-            case 0x9: // 9 on
+            case 0x9: { // 9 on
+                // Retune if needed
+                if (data2 != 0 && data3 != tuning[channel][data1]) {
+                    double pitch[1] = {data1 * 100.0 + data3};
+                    int key[1] = {data1};
+                    fluid_synth_tune_notes(synth, 0, channel, 1, key, pitch, false);
+                    tuning[channel][data1] = data3;
+                }
+                // Send noteon
                 if (FLUID_OK != fluid_synth_noteon(synth, channel, data1, data2)) {
                     if ((channel == 9) && (data2 == 0)) {
                         // Don't warn for noteoff on the percussion channel
@@ -143,6 +157,7 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
                 }
 
                 break;
+            }
 
             case 0xa: // 10 polyp after
                 fa_warn(fa_string("Fluidsynth: Polyphonic key pressure not supported"));

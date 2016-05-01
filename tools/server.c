@@ -625,7 +625,7 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
         fa_action_t a;
 
         if (cmd == 0x80 || cmd == 0x90) {
-            int pitch = round(f0);
+            int pitch = f0; // truncate
             int cents = round((double)(f0 - pitch) * (double)100.0);
             //printf("%x %x %x\n", pitch, data2, cents);
             a = fa_action_send(synth_name, fa_midi_message_create_extended(cmd + ch, pitch, data2, (uint8_t)cents));
@@ -1024,10 +1024,10 @@ int simple_note_handler(const char *path, const char *types, lo_arg ** argv, int
     //             )));
     // schedule_relative(fa_now(), action, current_midi_playback_stream);
     
-    int pitch = round(f0);
+    int pitch = f0; // truncate
     uint8_t cents = ch == 9 ? 0 : round((double)(f0 - pitch) * (double)100.0);
     
-    //printf("%d %d (%d)\n", pitch, cents, vel);
+    // printf("%f => %d %d (%d)\n", f0, pitch, cents, vel);
     
     fa_action_t noteOn  = fa_action_send(synth_name, fa_midi_message_create_extended(0x90 + ch, pitch, vel, cents));
     fa_action_t noteOff = fa_action_send(synth_name, fa_midi_message_create_extended(0x90 + ch, pitch, 0, cents));
@@ -1944,3 +1944,4 @@ int stream_direction_handler(const char *path, const char *types, lo_arg ** argv
     set_stream_direction(direction);
     return 0;
 }
+
