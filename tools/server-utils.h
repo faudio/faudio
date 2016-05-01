@@ -955,7 +955,9 @@ void set_stream_direction(stream_type_t direction) {
     // Always request bidirectional streams if we are not in avoid_wasapi_exlusive_bidirectional mode
     if (!avoid_wasapi_exclusive_bidirectional) direction = BIDIRECTIONAL;
     // Restart streams if needed
-    if (direction != selected_audio_stream_type) {
+    if (recording_state != NOT_RECORDING) {
+        fa_slog_info("Won't change stream direction now, since recording_state is ", fa_i8(recording_state));
+    } else if (direction != selected_audio_stream_type) {
         stop_streams();
         selected_audio_stream_type = direction;
         start_streams();
