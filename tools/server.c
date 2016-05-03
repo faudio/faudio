@@ -41,7 +41,8 @@ fa_option_t option_declaration[] = {
     { "p", "port",         "Port number",                     fa_option_integral, "7770" },
     { "a", "audio-slots",  "Max simultaneous audio sources",  fa_option_integral, "8"},
     { "h", "default-host", "Default audio host",              fa_option_string, kDefaultAudioHost },
-    { "l", "log-file",     "Log file path",                   fa_option_string, "" }
+    { "l", "log-file",     "Log file path",                   fa_option_string, "" },
+    { "v", "verbose",      "Verbose (0 or 1)",                fa_option_integral, "0" }
 };
 
 #define define_handler(name) \
@@ -55,6 +56,7 @@ void liblo_error(int num, const char *m, const char *path);
 int bundle_start_handler(lo_timetag time, void *user_data);
 int bundle_end_handler(void *user_data);
 
+define_handler(generic);
 define_handler(fallback);
 
 define_handler(quit);
@@ -107,6 +109,8 @@ define_handler(stop_recording);
 
 define_handler(choose_device);
 
+define_handler(sleep);
+
 fa_ptr_t _status_callback(fa_ptr_t session);
 
 int init(void *user_data);
@@ -126,6 +130,7 @@ int main(int argc, char const *argv[])
         #ifdef _WIN32
         soundfont_path = fa_map_dget(fa_string("soundfont"), options);
         #endif
+        verbose = fa_map_get_int32(fa_string("verbose"), options);
         default_audio_host = fa_map_dget(fa_string("default-host"), options);
         log_path = fa_map_dget(fa_string("log-file"), options);
         if (fa_string_length(log_path) > 0) {
@@ -145,20 +150,20 @@ int main(int argc, char const *argv[])
         printf("Invalid number of audio slots (%d), must be between 1 and %d\n", audio_buffer_signals, kMaxAudioBufferSignals);
         exit(4);
     }
-    printf("Using %d audio slots\n", audio_buffer_signals);
+    if (verbose) printf("Using %d audio slots\n", audio_buffer_signals);
     
-    printf("port = %s\n", port);
+    if (verbose) printf("port = %s\n", port);
     #ifdef _WIN32
     fa_slog_info("Soundfont path: ", soundfont_path);
     #endif
 
     // Init curl. This MUST be called before any other threads are spawned, even
     // if they are not using libcurl (according to the libcurl documentation).
-    printf("Initializing curl\n");
+    if (verbose) printf("Initializing curl\n");
     curl_global_init(CURL_GLOBAL_DEFAULT);
   
     /* start a new server  */
-    printf("Starting OSC listener thread...\n");
+    if (verbose) printf("Starting OSC listener thread...\n");
     lo_server_thread st = lo_server_thread_new_with_proto_and_node(port, LO_TCP, "127.0.0.1", liblo_error);
     if (!st) {
         printf("Could not start OSC server, exiting\n");
@@ -167,11 +172,15 @@ int main(int argc, char const *argv[])
     }
     server = lo_server_thread_get_server(st);
 
-    printf("Adding OSC handlers...\n");
+    if (verbose) printf("Adding OSC handlers...\n");
 
     /* add bundle handlers */
     lo_server_add_bundle_handlers(server, bundle_start_handler, bundle_end_handler, NULL);
     
+    if (verbose) {
+        lo_server_thread_add_method(st, NULL, NULL, generic_handler, server);
+    }
+
     lo_server_thread_add_method(st, "/test", "fd", test_handler, server);
     
     lo_server_thread_add_method(st, "/stats", "", stats_handler, server);
@@ -313,6 +322,8 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_method(st, "/choose/midi/echo/channel", "N", choose_device_handler, (void*)CHOOSE_MIDI_ECHO_CHANNEL);
     lo_server_thread_add_method(st, "/choose/midi/echo/channel", "i", choose_device_handler, (void*)CHOOSE_MIDI_ECHO_CHANNEL);
     
+    lo_server_thread_add_method(st, "/sleep", "i", sleep_handler, server);
+
     /* add method that will match any path and args */
     lo_server_thread_add_method(st, NULL, NULL, fallback_handler, server);
 
@@ -358,23 +369,25 @@ int init(void *user_data)
 
 int cleanup(void *user_data)
 {
-    fa_slog_info("Stopping streams...");
+    if (verbose) fa_slog_info("Stopping streams...");
     stop_streams();
-    fa_slog_info("Stopping sessions...");
+    if (verbose) fa_slog_info("Stopping sessions...");
     stop_sessions();
-    fa_slog_info("Destroying globals...");
+    if (verbose) fa_slog_info("Destroying globals...");
     destroy_globals();
     fa_terminate();
     
-    fa_log_region_count(fa_string("At cleanup"));
-    fa_list_log_count();
-    fa_time_log_count();
-    fa_pair_log_count();
-    fa_pair_left_log_count();
-    fa_string_log_count();
-    fa_func_ref_log_count();
-    fa_action_log_count();
-    fflush(stdout);
+    if (verbose) {
+        fa_log_region_count(fa_string("At cleanup"));
+        fa_list_log_count();
+        fa_time_log_count();
+        fa_pair_log_count();
+        fa_pair_left_log_count();
+        fa_string_log_count();
+        fa_func_ref_log_count();
+        fa_action_log_count();
+        fflush(stdout);
+    }
     return 0;
 }
 
@@ -424,15 +437,11 @@ int bundle_end_handler(void *user_data) {
 
 /* catch any incoming messages and display them. returning 1 means that the
 * message has not been fully handled and the server should try other methods */
-int fallback_handler(const char *path, const char *types, lo_arg ** argv,
+int generic_handler(const char *path, const char *types, lo_arg ** argv,
 int argc, lo_message message, void *user_data)
 {
-    //fa_log_region_count("In generic_handler");
-    int i;
-
-    fa_slog_info("Unrecognized message"); // temp
-    printf("Unrecognized message: %s   ", path);
-    for (i = 0; i < argc; i++) {
+    printf("%s   ", path);
+    for (int i = 0; i < argc; i++) {
         printf("arg %d '%c' ", i, types[i]);
         lo_arg_pp((lo_type)types[i], argv[i]);
         printf("   ");
@@ -441,6 +450,23 @@ int argc, lo_message message, void *user_data)
     fflush(stdout);
   
     return 1;
+}
+
+/* fallback handler, if no other handler matched */
+int fallback_handler(const char *path, const char *types, lo_arg ** argv,
+int argc, lo_message message, void *user_data)
+{
+    fa_slog_info("Unrecognized message"); // temp
+    printf("Unrecognized message: %s   ", path);
+    for (int i = 0; i < argc; i++) {
+        printf("arg %d '%c' ", i, types[i]);
+        lo_arg_pp((lo_type)types[i], argv[i]);
+        printf("   ");
+    }
+    printf("\n");
+    fflush(stdout);
+  
+    return 0;
 }
 
 int test_handler(const char *path, const char *types, lo_arg ** argv,
@@ -598,7 +624,7 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
 
     fa_list_t actions = fa_list_empty();
     int count = data_size / 12;
-    printf("%d MIDI entries\n", count);
+    fa_inform(fa_format_integral("%d MIDI entries\n", count));
     
     typedef union {
         int32_t i;
@@ -1945,3 +1971,11 @@ int stream_direction_handler(const char *path, const char *types, lo_arg ** argv
     return 0;
 }
 
+int sleep_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    if (verbose) fa_inform(fa_format_integral("sleep_handler  going to sleep for %d ms", argv[0]->i));
+    fa_thread_sleep(argv[0]->i);
+    if (verbose) fa_slog_info("sleep_handler  woke up");
+    send_osc(message, user_data, "/sleep", "i", argv[0]->i);
+    return 0;
+}
