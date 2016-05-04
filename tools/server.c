@@ -68,7 +68,7 @@ define_handler(host_settings);
 define_handler(wasapi_hack);
 define_handler(stream_direction);
 
-define_handler(test);
+define_handler(echo);
 define_handler(stats);
 define_handler(simple_midi);
 define_handler(simple_note);
@@ -115,6 +115,11 @@ fa_ptr_t _status_callback(fa_ptr_t session);
 
 int init(void *user_data);
 int cleanup(void *user_data);
+
+void ctrlc(int sig)
+{
+    done = 1;
+}
 
 int main(int argc, char const *argv[])
 {
@@ -181,7 +186,7 @@ int main(int argc, char const *argv[])
         lo_server_thread_add_method(st, NULL, NULL, generic_handler, server);
     }
 
-    lo_server_thread_add_method(st, "/test", "fd", test_handler, server);
+    lo_server_thread_add_method(st, "/echo", NULL, echo_handler, server);
     
     lo_server_thread_add_method(st, "/stats", "", stats_handler, server);
 
@@ -334,6 +339,8 @@ int main(int argc, char const *argv[])
     lo_server_thread_add_functions(st, init, cleanup, port);
     lo_server_thread_start(st);
 
+    signal(SIGINT, ctrlc);
+
     while (!done) {
 #ifdef WIN32
         Sleep(1);
@@ -440,7 +447,13 @@ int bundle_end_handler(void *user_data) {
 int generic_handler(const char *path, const char *types, lo_arg ** argv,
 int argc, lo_message message, void *user_data)
 {
-    printf("%s   ", path);
+    char t[50];
+    time_t rawtime;
+    time(&rawtime);
+    fa_let(tm, localtime(&rawtime)) {
+        strftime(t, 50, "%Y-%m-%d %H:%M:%S%z", tm);
+    }
+    printf("%s  %s   ", t, path);
     for (int i = 0; i < argc; i++) {
         printf("arg %d '%c' ", i, types[i]);
         lo_arg_pp((lo_type)types[i], argv[i]);
@@ -456,8 +469,13 @@ int argc, lo_message message, void *user_data)
 int fallback_handler(const char *path, const char *types, lo_arg ** argv,
 int argc, lo_message message, void *user_data)
 {
-    fa_slog_info("Unrecognized message"); // temp
-    printf("Unrecognized message: %s   ", path);
+    char t[50];
+    time_t rawtime;
+    time(&rawtime);
+    fa_let(tm, localtime(&rawtime)) {
+        strftime(t, 50, "%Y-%m-%d %H:%M:%S%z", tm);
+    }
+    printf("%s  Unrecognized message: %s   ", t, path);
     for (int i = 0; i < argc; i++) {
         printf("arg %d '%c' ", i, types[i]);
         lo_arg_pp((lo_type)types[i], argv[i]);
@@ -469,13 +487,18 @@ int argc, lo_message message, void *user_data)
     return 0;
 }
 
-int test_handler(const char *path, const char *types, lo_arg ** argv,
+int echo_handler(const char *path, const char *types, lo_arg ** argv,
 int argc, lo_message message, void *user_data)
 {
-    float f = argv[0]->f;
-    double d = argv[1]->d;
-    send_osc(message, user_data, "/test", "fd", f, d);
-    return 1;
+    fa_with_lock(osc_mutex) {
+        lo_address a = lo_message_get_source(message);
+        int r = lo_send_message_from(a, (lo_server)user_data, path, message);
+        if (r < 0) {
+            fa_string_t errstr = fa_string(lo_address_errstr(a));
+            fa_fail(fa_dappend(fa_format_integral("Could not echo message: %d ", lo_address_errno(a)), errstr));
+        }
+    }
+    return 0;
 }
 
 // Note: sends nominal (scheduled) time!
@@ -1976,6 +1999,22 @@ int sleep_handler(const char *path, const char *types, lo_arg ** argv, int argc,
     if (verbose) fa_inform(fa_format_integral("sleep_handler  going to sleep for %d ms", argv[0]->i));
     fa_thread_sleep(argv[0]->i);
     if (verbose) fa_slog_info("sleep_handler  woke up");
-    send_osc(message, user_data, "/sleep", "i", argv[0]->i);
+    send_osc(message, user_data, "/sleep", "");
     return 0;
 }
+
+// int work_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+// {
+//     if (verbose) fa_inform(fa_format_integral("work_handler  going to work for %d ms", argv[0]->i));
+//     struct timeval t0, t1;
+//     gettimeofday(&t0);
+//     while (1) {
+//         gettimeofday(&t1);
+//         if ()
+//     }
+//     fa_thread_sleep(argv[0]->i);
+    
+//     if (verbose) fa_slog_info("work_handler  back from work");
+//     send_osc(message, user_data, "/work");
+//     return 0;
+// }

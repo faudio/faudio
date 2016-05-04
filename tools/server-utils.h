@@ -38,11 +38,19 @@
 
 uint8_t min_uint8(uint8_t a, uint8_t b) { return a < b ? a : b; }
 
-#define send_osc(m, s, ...) \
-  fa_with_lock(osc_mutex) { lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__); }
+#define send_osc(m, s, ...)  fa_with_lock(osc_mutex) { \
+    int r = lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__); \
+    if (r < 0) fa_slog_error("Could not send osc message: ", fa_i16(lo_address_errno(lo_message_get_source(m)))); \
+  }
 
-#define send_osc_async(...) \
-  if (last_address) { fa_with_lock(osc_mutex) { lo_send_from(last_address, server, LO_TT_IMMEDIATE, __VA_ARGS__); } }
+#define send_osc_async(...) if (last_address) { \
+    fa_with_lock(osc_mutex) { \
+        int r = lo_send_from(last_address, server, LO_TT_IMMEDIATE, __VA_ARGS__); \
+        if (r < 0) { \
+          fa_slog_error("Could not send async osc message: ", fa_i16(lo_address_errno(last_address))); \
+      } \
+    } \
+  }
 
 #define check_id(id, message, user_data) \
 if (id > last_used_id) {    \
@@ -958,9 +966,11 @@ void set_stream_direction(stream_type_t direction) {
     if (recording_state != NOT_RECORDING) {
         fa_slog_info("Won't change stream direction now, since recording_state is ", fa_i8(recording_state));
     } else if (direction != selected_audio_stream_type) {
+        if (verbose) fa_slog_info("Stream direction changed, restarting streams");
         stop_streams();
         selected_audio_stream_type = direction;
         start_streams();
+        if (verbose) fa_slog_info("Stream direction is now changed");
     }
 #endif
 }
