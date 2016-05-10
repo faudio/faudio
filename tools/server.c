@@ -69,6 +69,7 @@ define_handler(wasapi_hack);
 define_handler(stream_direction);
 
 define_handler(echo);
+define_handler(test);
 define_handler(stats);
 define_handler(simple_midi);
 define_handler(simple_note);
@@ -183,154 +184,155 @@ int main(int argc, char const *argv[])
     lo_server_add_bundle_handlers(server, bundle_start_handler, bundle_end_handler, NULL);
     
     if (verbose) {
-        lo_server_thread_add_method(st, NULL, NULL, generic_handler, server);
+        lo_server_add_method(server, NULL, NULL, generic_handler, server);
     }
 
-    lo_server_thread_add_method(st, "/echo", NULL, echo_handler, server);
+    lo_server_add_method(server, "/echo", NULL, echo_handler, server);
+    lo_server_add_method(server, "/test", NULL, test_handler, server);
     
-    lo_server_thread_add_method(st, "/stats", "", stats_handler, server);
+    lo_server_add_method(server, "/stats", "", stats_handler, server);
 
     /* Send raw midi messages */
-    lo_server_thread_add_method(st, "/send/midi", "ii",  simple_midi_handler, server);
-    lo_server_thread_add_method(st, "/send/midi", "iii", simple_midi_handler, server);
+    lo_server_add_method(server, "/send/midi", "ii",  simple_midi_handler, server);
+    lo_server_add_method(server, "/send/midi", "iii", simple_midi_handler, server);
     /* Send note immediately */
-    lo_server_thread_add_method(st, "/send/note", "fii", simple_note_handler, server); // f0, velocity, length (ms)
-    lo_server_thread_add_method(st, "/send/note", "fiii", simple_note_handler, server); // f0, velocity, length (ms), channel
+    lo_server_add_method(server, "/send/note", "fii", simple_note_handler, server); // f0, velocity, length (ms)
+    lo_server_add_method(server, "/send/note", "fiii", simple_note_handler, server); // f0, velocity, length (ms), channel
     
     /* Emulate incoming midi */
-    lo_server_thread_add_method(st, "/receive/midi", "ii",   receive_midi_handler, NULL);
-    lo_server_thread_add_method(st, "/receive/midi", "iii",  receive_midi_handler, NULL);
-    lo_server_thread_add_method(st, "/receive/midi", "iiT",  receive_midi_handler, (void*)true);
-    lo_server_thread_add_method(st, "/receive/midi", "iiiT", receive_midi_handler, (void*)true);
+    lo_server_add_method(server, "/receive/midi", "ii",   receive_midi_handler, NULL);
+    lo_server_add_method(server, "/receive/midi", "iii",  receive_midi_handler, NULL);
+    lo_server_add_method(server, "/receive/midi", "iiT",  receive_midi_handler, (void*)true);
+    lo_server_add_method(server, "/receive/midi", "iiiT", receive_midi_handler, (void*)true);
     
     /* Quitting, restart */
-    lo_server_thread_add_method(st, "/quit", "", quit_handler, server);
-    lo_server_thread_add_method(st, "/restart/streams",  "",  restart_streams_handler, server);
-    lo_server_thread_add_method(st, "/restart/streams",  "i", restart_streams_handler, server); // id
-    lo_server_thread_add_method(st, "/restart/sessions", "",  restart_sessions_handler, server);
-    lo_server_thread_add_method(st, "/restart/sessions", "i", restart_sessions_handler, server); // id
-    lo_server_thread_add_method(st, "/stop/streams", "",      stop_streams_handler, server);
-    lo_server_thread_add_method(st, "/stop/streams", "i",     stop_streams_handler, server); // id
+    lo_server_add_method(server, "/quit", "", quit_handler, server);
+    lo_server_add_method(server, "/restart/streams",  "",  restart_streams_handler, server);
+    lo_server_add_method(server, "/restart/streams",  "i", restart_streams_handler, server); // id
+    lo_server_add_method(server, "/restart/sessions", "",  restart_sessions_handler, server);
+    lo_server_add_method(server, "/restart/sessions", "i", restart_sessions_handler, server); // id
+    lo_server_add_method(server, "/stop/streams", "",      stop_streams_handler, server);
+    lo_server_add_method(server, "/stop/streams", "i",     stop_streams_handler, server); // id
     
     /* Settings */
-    lo_server_thread_add_method(st, "/set/latency",           "i",  host_settings_handler, (void*)HOST_SETTINGS_LATENCY);
-    lo_server_thread_add_method(st, "/set/latency",           "is", host_settings_handler, (void*)HOST_SETTINGS_LATENCY);
-    lo_server_thread_add_method(st, "/set/input-latency",     "i",  host_settings_handler, (void*)HOST_SETTINGS_INPUT_LATENCY);
-    lo_server_thread_add_method(st, "/set/input-latency",     "is", host_settings_handler, (void*)HOST_SETTINGS_INPUT_LATENCY);
-    lo_server_thread_add_method(st, "/set/output-latency",    "i",  host_settings_handler, (void*)HOST_SETTINGS_OUTPUT_LATENCY);
-    lo_server_thread_add_method(st, "/set/output-latency",    "is", host_settings_handler, (void*)HOST_SETTINGS_OUTPUT_LATENCY);
-    lo_server_thread_add_method(st, "/set/vector-size",       "i",  host_settings_handler, (void*)HOST_SETTINGS_VECTOR_SIZE);
-    lo_server_thread_add_method(st, "/set/vector-size",       "is", host_settings_handler, (void*)HOST_SETTINGS_VECTOR_SIZE);
-    lo_server_thread_add_method(st, "/set/sample-rate",        "f",  settings_handler, "sample-rate");
-    lo_server_thread_add_method(st, "/set/scheduler-interval", "i",  settings_handler, "scheduler-interval");
-    lo_server_thread_add_method(st, "/set/exclusive",          "T",  settings_handler, "exclusive");
-    lo_server_thread_add_method(st, "/set/exclusive",          "F",  settings_handler, "exclusive");
-    lo_server_thread_add_method(st, "/set/exclusive",          "N",  settings_handler, "exclusive");
-    lo_server_thread_add_method(st, "/set/exclusive",          "i",  settings_handler, "exclusive");
-    lo_server_thread_add_method(st, "/set/wasapi-hack",        "T",  wasapi_hack_handler, server);
-    lo_server_thread_add_method(st, "/set/wasapi-hack",        "F",  wasapi_hack_handler, server);
-    lo_server_thread_add_method(st, "/set/wasapi-hack",        "N",  wasapi_hack_handler, server);
-    lo_server_thread_add_method(st, "/set/stream-direction",   "s",  stream_direction_handler, server);
-    //lo_server_thread_add_method(st, "/set/schedule-delay",     "i",  settings_handler, "schedule-delay"); // not implemented
+    lo_server_add_method(server, "/set/latency",           "i",  host_settings_handler, (void*)HOST_SETTINGS_LATENCY);
+    lo_server_add_method(server, "/set/latency",           "is", host_settings_handler, (void*)HOST_SETTINGS_LATENCY);
+    lo_server_add_method(server, "/set/input-latency",     "i",  host_settings_handler, (void*)HOST_SETTINGS_INPUT_LATENCY);
+    lo_server_add_method(server, "/set/input-latency",     "is", host_settings_handler, (void*)HOST_SETTINGS_INPUT_LATENCY);
+    lo_server_add_method(server, "/set/output-latency",    "i",  host_settings_handler, (void*)HOST_SETTINGS_OUTPUT_LATENCY);
+    lo_server_add_method(server, "/set/output-latency",    "is", host_settings_handler, (void*)HOST_SETTINGS_OUTPUT_LATENCY);
+    lo_server_add_method(server, "/set/vector-size",       "i",  host_settings_handler, (void*)HOST_SETTINGS_VECTOR_SIZE);
+    lo_server_add_method(server, "/set/vector-size",       "is", host_settings_handler, (void*)HOST_SETTINGS_VECTOR_SIZE);
+    lo_server_add_method(server, "/set/sample-rate",        "f",  settings_handler, "sample-rate");
+    lo_server_add_method(server, "/set/scheduler-interval", "i",  settings_handler, "scheduler-interval");
+    lo_server_add_method(server, "/set/exclusive",          "T",  settings_handler, "exclusive");
+    lo_server_add_method(server, "/set/exclusive",          "F",  settings_handler, "exclusive");
+    lo_server_add_method(server, "/set/exclusive",          "N",  settings_handler, "exclusive");
+    lo_server_add_method(server, "/set/exclusive",          "i",  settings_handler, "exclusive");
+    lo_server_add_method(server, "/set/wasapi-hack",        "T",  wasapi_hack_handler, server);
+    lo_server_add_method(server, "/set/wasapi-hack",        "F",  wasapi_hack_handler, server);
+    lo_server_add_method(server, "/set/wasapi-hack",        "N",  wasapi_hack_handler, server);
+    lo_server_add_method(server, "/set/stream-direction",   "s",  stream_direction_handler, server);
+    //lo_server_add_method(server, "/set/schedule-delay",     "i",  settings_handler, "schedule-delay"); // not implemented
       
     /* Get info */
-    lo_server_thread_add_method(st, "/time", NULL, time_handler, server);
-    lo_server_thread_add_method(st, "/ping", "", ping_handler, server);
-    lo_server_thread_add_method(st, "/next-id", NULL, next_id_handler, server);
-    lo_server_thread_add_method(st, "/all/devices", "", all_devices_handler, server);
-    lo_server_thread_add_method(st, "/all/devices", "i", all_devices_handler, server);
-    lo_server_thread_add_method(st, "/current/devices", "", current_devices_handler, server);
-    lo_server_thread_add_method(st, "/stream/info", "", stream_info_handler, server);
+    lo_server_add_method(server, "/time", NULL, time_handler, server);
+    lo_server_add_method(server, "/ping", "", ping_handler, server);
+    lo_server_add_method(server, "/next-id", NULL, next_id_handler, server);
+    lo_server_add_method(server, "/all/devices", "", all_devices_handler, server);
+    lo_server_add_method(server, "/all/devices", "i", all_devices_handler, server);
+    lo_server_add_method(server, "/current/devices", "", current_devices_handler, server);
+    lo_server_add_method(server, "/stream/info", "", stream_info_handler, server);
     
     /* Playback */
     //  /play/audio  id,  audio id,  slot,  skip (ms),  start-time (ms),  repeat-interval (ms)
     //  /play/midi   id,  data,  start-time (ms),  repeat-interval (ms)
     //  /stop        id
-    lo_server_thread_add_method(st, "/play/audio", "ii", play_audio_handler, server);
-    lo_server_thread_add_method(st, "/play/audio", "iii", play_audio_handler, server);
-    lo_server_thread_add_method(st, "/play/audio", "iiif", play_audio_handler, server);
-    lo_server_thread_add_method(st, "/play/audio", "iiiff", play_audio_handler, server);
-    lo_server_thread_add_method(st, "/play/audio", "iiifff", play_audio_handler, server);
-    lo_server_thread_add_method(st, "/play/midi", "ib", play_midi_handler, server);
-    lo_server_thread_add_method(st, "/play/midi", "ibf", play_midi_handler, server);
-    lo_server_thread_add_method(st, "/play/midi", "ibff", play_midi_handler, server);
-    lo_server_thread_add_method(st, "/play/midi", "ibffT", play_midi_handler, server); // auto-stop, same as default
-    lo_server_thread_add_method(st, "/play/midi", "ibffF", play_midi_handler, server); // no auto-stop
+    lo_server_add_method(server, "/play/audio", "ii", play_audio_handler, server);
+    lo_server_add_method(server, "/play/audio", "iii", play_audio_handler, server);
+    lo_server_add_method(server, "/play/audio", "iiif", play_audio_handler, server);
+    lo_server_add_method(server, "/play/audio", "iiiff", play_audio_handler, server);
+    lo_server_add_method(server, "/play/audio", "iiifff", play_audio_handler, server);
+    lo_server_add_method(server, "/play/midi", "ib", play_midi_handler, server);
+    lo_server_add_method(server, "/play/midi", "ibf", play_midi_handler, server);
+    lo_server_add_method(server, "/play/midi", "ibff", play_midi_handler, server);
+    lo_server_add_method(server, "/play/midi", "ibffT", play_midi_handler, server); // auto-stop, same as default
+    lo_server_add_method(server, "/play/midi", "ibffF", play_midi_handler, server); // no auto-stop
 
-    lo_server_thread_add_method(st, "/stop", "i", stop_handler, server);
+    lo_server_add_method(server, "/stop", "i", stop_handler, server);
     
     /* Audio play_buffer settings   (slot, value) */
-    lo_server_thread_add_method(st, "/audio/volume", "if", mix_audio_handler, "volume");
-    lo_server_thread_add_method(st, "/audio/pan",    "if", mix_audio_handler, "pan");
+    lo_server_add_method(server, "/audio/volume", "if", mix_audio_handler, "volume");
+    lo_server_add_method(server, "/audio/pan",    "if", mix_audio_handler, "pan");
 
     /* Audio files handling */
-    lo_server_thread_add_method(st, "/audio-file/list",     "i", list_audio_files_handler, server);  // id
-    lo_server_thread_add_method(st, "/audio-file/load",     "is", load_audio_file_handler, server);  // audio id, path
-    lo_server_thread_add_method(st, "/audio-file/load",     "isi", load_audio_file_handler, server);  // a_id, path, max_size
-    lo_server_thread_add_method(st, "/audio-file/load",     "isiT", load_audio_file_handler, server); // a_id, p, m_s, crop
-    lo_server_thread_add_method(st, "/audio-file/load",     "isiN", load_audio_file_handler, server);
-    lo_server_thread_add_method(st, "/audio-file/load",     "isiF", load_audio_file_handler, server);
-    lo_server_thread_add_method(st, "/audio-file/load/raw", "isii", load_raw_audio_file_handler, server);  // a id, path, sr, ch
-    lo_server_thread_add_method(st, "/audio-file/load/raw", "isiif", load_raw_audio_file_handler, server);  // + latency (ms)
-    lo_server_thread_add_method(st, "/audio-file/close",    "i",  close_audio_file_handler, server); // audio id
-    lo_server_thread_add_method(st, "/audio-file/save",     "i",  save_audio_file_handler, server);  // audio id
-    lo_server_thread_add_method(st, "/audio-file/save",     "is", save_audio_file_handler, server);  // audio id, path
-    lo_server_thread_add_method(st, "/audio-file/curve",    "i",  audio_file_curve_handler, server); // audio id
-    lo_server_thread_add_method(st, "/audio-file/peak",     "i",  audio_file_peak_handler, server);  // audio id
+    lo_server_add_method(server, "/audio-file/list",     "i", list_audio_files_handler, server);  // id
+    lo_server_add_method(server, "/audio-file/load",     "is", load_audio_file_handler, server);  // audio id, path
+    lo_server_add_method(server, "/audio-file/load",     "isi", load_audio_file_handler, server);  // a_id, path, max_size
+    lo_server_add_method(server, "/audio-file/load",     "isiT", load_audio_file_handler, server); // a_id, p, m_s, crop
+    lo_server_add_method(server, "/audio-file/load",     "isiN", load_audio_file_handler, server);
+    lo_server_add_method(server, "/audio-file/load",     "isiF", load_audio_file_handler, server);
+    lo_server_add_method(server, "/audio-file/load/raw", "isii", load_raw_audio_file_handler, server);  // a id, path, sr, ch
+    lo_server_add_method(server, "/audio-file/load/raw", "isiif", load_raw_audio_file_handler, server);  // + latency (ms)
+    lo_server_add_method(server, "/audio-file/close",    "i",  close_audio_file_handler, server); // audio id
+    lo_server_add_method(server, "/audio-file/save",     "i",  save_audio_file_handler, server);  // audio id
+    lo_server_add_method(server, "/audio-file/save",     "is", save_audio_file_handler, server);  // audio id, path
+    lo_server_add_method(server, "/audio-file/curve",    "i",  audio_file_curve_handler, server); // audio id
+    lo_server_add_method(server, "/audio-file/peak",     "i",  audio_file_peak_handler, server);  // audio id
     // id, audio id, url, cookies, [from_time (ms), to_time (ms), ogg_dump_filename]
-    lo_server_thread_add_method(st, "/audio-file/upload",   "iiss",  audio_file_upload_handler, server);
-    lo_server_thread_add_method(st, "/audio-file/upload",   "iissff",  audio_file_upload_handler, server);
-    lo_server_thread_add_method(st, "/audio-file/upload",   "iissffs",  audio_file_upload_handler, server);
+    lo_server_add_method(server, "/audio-file/upload",   "iiss",  audio_file_upload_handler, server);
+    lo_server_add_method(server, "/audio-file/upload",   "iissff",  audio_file_upload_handler, server);
+    lo_server_add_method(server, "/audio-file/upload",   "iissffs",  audio_file_upload_handler, server);
     
     /* Send midi control messages */
-    lo_server_thread_add_method(st, "/send/main-volume",    "ii", main_volume_handler, server);
-    lo_server_thread_add_method(st, "/send/pan",            "if", pan_handler, server);
-    lo_server_thread_add_method(st, "/send/program-change", "iii", program_change_handler, server);
-    lo_server_thread_add_method(st, "/send/pitch-wheel",    "if", pitch_wheel_handler, server);
-    lo_server_thread_add_method(st, "/send/sustain",        "ii", sustain_handler, server); // ch, sustain (0=up or 1=down)
-    lo_server_thread_add_method(st, "/send/channel-reset",  "i", channel_reset_handler, server);
-    lo_server_thread_add_method(st, "/send/channel-reset",  "iifiifi", channel_reset_handler, server);
+    lo_server_add_method(server, "/send/main-volume",    "ii", main_volume_handler, server);
+    lo_server_add_method(server, "/send/pan",            "if", pan_handler, server);
+    lo_server_add_method(server, "/send/program-change", "iii", program_change_handler, server);
+    lo_server_add_method(server, "/send/pitch-wheel",    "if", pitch_wheel_handler, server);
+    lo_server_add_method(server, "/send/sustain",        "ii", sustain_handler, server); // ch, sustain (0=up or 1=down)
+    lo_server_add_method(server, "/send/channel-reset",  "i", channel_reset_handler, server);
+    lo_server_add_method(server, "/send/channel-reset",  "iifiifi", channel_reset_handler, server);
     
     /* Volume control */
-    lo_server_thread_add_method(st, "/volume/synth",   "f", volume_handler, (void*)((uint32_t)kSynthLeft));
-    lo_server_thread_add_method(st, "/volume/audio",   "f", volume_handler, (void*)((uint32_t)kAudioLeft));
-    lo_server_thread_add_method(st, "/volume/monitor", "f", volume_handler, (void*)((uint32_t)kMonitorLeft));
+    lo_server_add_method(server, "/volume/synth",   "f", volume_handler, (void*)((uint32_t)kSynthLeft));
+    lo_server_add_method(server, "/volume/audio",   "f", volume_handler, (void*)((uint32_t)kAudioLeft));
+    lo_server_add_method(server, "/volume/monitor", "f", volume_handler, (void*)((uint32_t)kMonitorLeft));
     
-    lo_server_thread_add_method(st, "/level/start", "", level_handler, (void*)true);
-    lo_server_thread_add_method(st, "/level/stop", "", level_handler, (void*)false);
+    lo_server_add_method(server, "/level/start", "", level_handler, (void*)true);
+    lo_server_add_method(server, "/level/stop", "", level_handler, (void*)false);
     
     // id (not currently used), filename, url, cookies, rel-start-time (s), max-length (s)
-    lo_server_thread_add_method(st, "/recording/start", "isssff", start_recording_handler, server);
-    lo_server_thread_add_method(st, "/recording/stop",  "i", stop_recording_handler, server);
+    lo_server_add_method(server, "/recording/start", "isssff", start_recording_handler, server);
+    lo_server_add_method(server, "/recording/stop",  "i", stop_recording_handler, server);
     
-    lo_server_thread_add_method(st, "/choose/audio/input",  "",    choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_NONE);
-    lo_server_thread_add_method(st, "/choose/audio/input",  "N",   choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_NONE);
-    lo_server_thread_add_method(st, "/choose/audio/input",  "T",   choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_DEFAULT);
-    lo_server_thread_add_method(st, "/choose/audio/input",  "ss",  choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_DEVICE);
-    lo_server_thread_add_method(st, "/choose/audio/output", "",    choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_NONE);
-    lo_server_thread_add_method(st, "/choose/audio/output", "N",   choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_NONE);
-    lo_server_thread_add_method(st, "/choose/audio/output", "T",   choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_DEFAULT);
-    lo_server_thread_add_method(st, "/choose/audio/output", "ss",  choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_DEVICE);
-    lo_server_thread_add_method(st, "/choose/midi/input",   "",    choose_device_handler, (void*)CHOOSE_MIDI_INPUT_NONE);
-    lo_server_thread_add_method(st, "/choose/midi/input",   "T",   choose_device_handler, (void*)CHOOSE_MIDI_INPUT_ALL);
-    lo_server_thread_add_method(st, "/choose/midi/input",   "ss",  choose_device_handler, (void*)CHOOSE_MIDI_INPUT_DEVICE);
-    lo_server_thread_add_method(st, "/choose/midi/playback", "",   choose_device_handler, (void*)CHOOSE_MIDI_PLAYBACK_NONE);
-    lo_server_thread_add_method(st, "/choose/midi/playback", "N",  choose_device_handler, (void*)CHOOSE_MIDI_PLAYBACK_NONE);
-    lo_server_thread_add_method(st, "/choose/midi/playback", "T",  choose_device_handler, (void*)CHOOSE_MIDI_PLAYBACK_AUDIO);
-    lo_server_thread_add_method(st, "/choose/midi/playback", "ss", choose_device_handler, (void*)CHOOSE_MIDI_PLAYBACK_DEVICE);
-    lo_server_thread_add_method(st, "/choose/midi/echo",    "",    choose_device_handler, (void*)CHOOSE_MIDI_ECHO_NONE);
-    lo_server_thread_add_method(st, "/choose/midi/echo",    "N",   choose_device_handler, (void*)CHOOSE_MIDI_ECHO_NONE);
-    lo_server_thread_add_method(st, "/choose/midi/echo",    "T",   choose_device_handler, (void*)CHOOSE_MIDI_ECHO_PLAYBACK);
-    lo_server_thread_add_method(st, "/choose/midi/echo",    "F",   choose_device_handler, (void*)CHOOSE_MIDI_ECHO_AUDIO);
-    lo_server_thread_add_method(st, "/choose/midi/echo",    "ss",  choose_device_handler, (void*)CHOOSE_MIDI_ECHO_DEVICE);
-    lo_server_thread_add_method(st, "/choose/midi/echo/channel", "", choose_device_handler, (void*)CHOOSE_MIDI_ECHO_CHANNEL);
-    lo_server_thread_add_method(st, "/choose/midi/echo/channel", "N", choose_device_handler, (void*)CHOOSE_MIDI_ECHO_CHANNEL);
-    lo_server_thread_add_method(st, "/choose/midi/echo/channel", "i", choose_device_handler, (void*)CHOOSE_MIDI_ECHO_CHANNEL);
+    lo_server_add_method(server, "/choose/audio/input",  "",    choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_NONE);
+    lo_server_add_method(server, "/choose/audio/input",  "N",   choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_NONE);
+    lo_server_add_method(server, "/choose/audio/input",  "T",   choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_DEFAULT);
+    lo_server_add_method(server, "/choose/audio/input",  "ss",  choose_device_handler, (void*)CHOOSE_AUDIO_INPUT_DEVICE);
+    lo_server_add_method(server, "/choose/audio/output", "",    choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_NONE);
+    lo_server_add_method(server, "/choose/audio/output", "N",   choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_NONE);
+    lo_server_add_method(server, "/choose/audio/output", "T",   choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_DEFAULT);
+    lo_server_add_method(server, "/choose/audio/output", "ss",  choose_device_handler, (void*)CHOOSE_AUDIO_OUTPUT_DEVICE);
+    lo_server_add_method(server, "/choose/midi/input",   "",    choose_device_handler, (void*)CHOOSE_MIDI_INPUT_NONE);
+    lo_server_add_method(server, "/choose/midi/input",   "T",   choose_device_handler, (void*)CHOOSE_MIDI_INPUT_ALL);
+    lo_server_add_method(server, "/choose/midi/input",   "ss",  choose_device_handler, (void*)CHOOSE_MIDI_INPUT_DEVICE);
+    lo_server_add_method(server, "/choose/midi/playback", "",   choose_device_handler, (void*)CHOOSE_MIDI_PLAYBACK_NONE);
+    lo_server_add_method(server, "/choose/midi/playback", "N",  choose_device_handler, (void*)CHOOSE_MIDI_PLAYBACK_NONE);
+    lo_server_add_method(server, "/choose/midi/playback", "T",  choose_device_handler, (void*)CHOOSE_MIDI_PLAYBACK_AUDIO);
+    lo_server_add_method(server, "/choose/midi/playback", "ss", choose_device_handler, (void*)CHOOSE_MIDI_PLAYBACK_DEVICE);
+    lo_server_add_method(server, "/choose/midi/echo",    "",    choose_device_handler, (void*)CHOOSE_MIDI_ECHO_NONE);
+    lo_server_add_method(server, "/choose/midi/echo",    "N",   choose_device_handler, (void*)CHOOSE_MIDI_ECHO_NONE);
+    lo_server_add_method(server, "/choose/midi/echo",    "T",   choose_device_handler, (void*)CHOOSE_MIDI_ECHO_PLAYBACK);
+    lo_server_add_method(server, "/choose/midi/echo",    "F",   choose_device_handler, (void*)CHOOSE_MIDI_ECHO_AUDIO);
+    lo_server_add_method(server, "/choose/midi/echo",    "ss",  choose_device_handler, (void*)CHOOSE_MIDI_ECHO_DEVICE);
+    lo_server_add_method(server, "/choose/midi/echo/channel", "", choose_device_handler, (void*)CHOOSE_MIDI_ECHO_CHANNEL);
+    lo_server_add_method(server, "/choose/midi/echo/channel", "N", choose_device_handler, (void*)CHOOSE_MIDI_ECHO_CHANNEL);
+    lo_server_add_method(server, "/choose/midi/echo/channel", "i", choose_device_handler, (void*)CHOOSE_MIDI_ECHO_CHANNEL);
     
-    lo_server_thread_add_method(st, "/sleep", "i", sleep_handler, server);
+    lo_server_add_method(server, "/sleep", "i", sleep_handler, server);
 
     /* add method that will match any path and args */
-    lo_server_thread_add_method(st, NULL, NULL, fallback_handler, server);
+    lo_server_add_method(server, NULL, NULL, fallback_handler, server);
 
     printf("Starting FAudio...\n");
 
@@ -498,6 +500,13 @@ int argc, lo_message message, void *user_data)
             fa_fail(fa_dappend(fa_format_integral("Could not echo message: %d ", lo_address_errno(a)), errstr));
         }
     }
+    return 0;
+}
+
+int test_handler(const char *path, const char *types, lo_arg ** argv,
+int argc, lo_message message, void *user_data)
+{
+    send_osc(message, user_data, "/test", "");
     return 0;
 }
 
