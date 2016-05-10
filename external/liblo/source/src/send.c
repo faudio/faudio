@@ -517,6 +517,10 @@ static int send_data(lo_address a, lo_server from, char *data,
 
             do {
                 ret = send(sock, data, len, MSG_NOSIGNAL);
+                if (ret >= 0 && ret != len) {
+                    printf("WARNING: send_data() tried to send %d bytes, but only %d was sent!", len, ret);
+                    fflush(stdout);
+                }
                 if (a->protocol == LO_TCP)
                     ai = ai->ai_next;
                 else

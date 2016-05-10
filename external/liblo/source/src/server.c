@@ -796,6 +796,7 @@ int lo_server_enable_queue(lo_server s, int enable,
     return prev;
 }
 
+// This function is not called for TCP connections!
 void *lo_server_recv_raw(lo_server s, size_t * size)
 {
     char buffer[LO_MAX_MSG_SIZE];
@@ -1044,8 +1045,12 @@ int lo_server_recv_raw_stream_socket(lo_server s, int isock,
 
     if (bytes_recv <= 0)
     {
-        if (errno == EAGAIN)
-            return 0;
+#ifdef WIN32
+        if (geterror() == WSAEWOULDBLOCK) return 0;
+#else
+        if (geterror() == EAGAIN) return 0;
+#endif
+
 
         // Error, or socket was closed.
         // Either way, we remove it from the server.
