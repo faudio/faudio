@@ -611,6 +611,7 @@ void resolve_devices() {
             // Use default input if there was no match
             if (!current_audio_input_device) current_audio_input_device = fa_audio_default_input(current_audio_session);
         }
+        if (fa_check(current_audio_input_device)) current_audio_input_device = NULL;
     }
     fa_slog_info("In resolve_devices, selected_audio_output_device: ", selected_audio_output_device);
     if (selected_audio_output_device) {
@@ -621,8 +622,10 @@ void resolve_devices() {
             fa_for_each(device, audio_devices) {
                 if (audio_device_matches(device, selected_audio_output_device)) current_audio_output_device = device;
             }
+            // Use default output if there was no match
             if (!current_audio_output_device) current_audio_output_device = fa_audio_default_output(current_audio_session);
         }
+        if (fa_check(current_audio_output_device)) current_audio_output_device = NULL;
     }
     
     // MIDI input devices
@@ -735,7 +738,7 @@ void start_streams() {
     if (selected_audio_stream_type == BIDIRECTIONAL) dir = fa_string("bidirectional");
     else if (selected_audio_stream_type == INPUT_ONLY) dir = fa_string("input only");
     else if (selected_audio_stream_type == OUTPUT_ONLY) dir = fa_string("output only");
-    else fa_string("");
+    else dir = fa_string("");
     fa_inform(fa_dappend(fa_string("Starting streams, audio "), dir));
 #else
     fa_slog_info("Starting streams");
