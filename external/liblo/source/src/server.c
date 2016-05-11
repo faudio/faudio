@@ -1015,9 +1015,13 @@ int lo_server_recv_raw_stream_socket(lo_server s, int isock,
 //        printf("  expanding buffer...\n");
         sc->buffer_size = size;
         sc->buffer = realloc(sc->buffer, sc->buffer_size);
-        if (!sc->buffer)
+        if (!sc->buffer) {
             // Out of memory
+            printf("OUT OF MEMORY!\n");
+            fflush(stdout);
+            assert(0 && "Could not allocate memory for buffer");
             return 0;
+        }
     }
 
     // Read as much as we can into the remaining buffer memory.
