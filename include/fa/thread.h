@@ -42,9 +42,10 @@ typedef struct _fa_thread_mutex_t * fa_thread_mutex_t;
 
     @param func Function to execute.
     @param data Value to be passed to the function.
+    @param name A name for the thread, printed to the log (optional, destroyed).
     @return     A new thread executing concurrently with the current thread.
 */
-fa_thread_t fa_thread_create(fa_nullary_t nullary, fa_ptr_t ptr);
+fa_thread_t fa_thread_create(fa_nullary_t nullary, fa_ptr_t ptr, fa_string_t name);
 
 /** Destroy a thread, and return after its associated function has returned.
     @param thread Thread to join (destroyed).

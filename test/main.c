@@ -533,7 +533,7 @@ void test_atomic_queue_(int iter, long sleepTime)
         struct test_atomic_queue_reader_args args = { q, fa_atomic() };
         fa_atomic_set(args.active, fa_fb(true));
 
-        fa_thread_t t = fa_thread_create(test_atomic_queue_reader, &args);
+        fa_thread_t t = fa_thread_create(test_atomic_queue_reader, &args, NULL);
 
         fa_print("q                            ==> %s\n", q);
 
@@ -666,7 +666,7 @@ void test_atomic_ring_buffer_(int iter, long sleepTime)
         struct test_atomic_ring_buffer_reader_args args = { q, fa_atomic() };
         fa_atomic_set(args.active, fa_fb(true));
 
-        fa_thread_t t = fa_thread_create(ring_buffer_reader, &args);
+        fa_thread_t t = fa_thread_create(ring_buffer_reader, &args, NULL);
 
         fa_print("q                            ==> %s\n", q);
 
@@ -711,8 +711,8 @@ void test_thread()
     test_section("Threads");
 
     fa_thread_t t, t2;
-    t  = fa_thread_create(test_thread_printer, (fa_ptr_t) 10);
-    t2 = fa_thread_create(test_thread_printer, (fa_ptr_t) 11);
+    t  = fa_thread_create(test_thread_printer, (fa_ptr_t) 10, NULL);
+    t2 = fa_thread_create(test_thread_printer, (fa_ptr_t) 11, NULL);
 
     fa_thread_sleep(1000);
     fa_thread_join(t);
@@ -748,7 +748,7 @@ void test_mutex()
 
     for (int j = 0; j < 10; ++j) {
         test_mutex_lock_index i = { m, j };
-        fa_thread_t t = fa_thread_create(test_mutex_locker, (fa_ptr_t) &i);
+        fa_thread_t t = fa_thread_create(test_mutex_locker, (fa_ptr_t) &i, NULL);
         fa_thread_sleep(100);
         fa_thread_detach(t);
     }

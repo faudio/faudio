@@ -1488,7 +1488,7 @@ fa_thread_t upload_buffer_async(oid_t id, fa_buffer_t buffer, char* url, char* c
     args->url = strdup(url);
     args->cookies = strdup_or_null(cookies);
     
-    fa_thread_t thread = fa_thread_create(upload_buffer, args);
+    fa_thread_t thread = fa_thread_create(upload_buffer, args, fa_string("Upload buffer"));
     return thread;
 }
 
@@ -1504,7 +1504,9 @@ fa_thread_t upload_ring_buffer_async(oid_t id, fa_atomic_ring_buffer_t ring_buff
     
     fa_atomic_ring_buffer_take_reference(ring_buffer);
     
-    fa_thread_t thread = fa_thread_create(upload_buffer, args);
+    fa_inform(fa_format_integral("upload_ring_buffer_async, args: %p", args));
+
+    fa_thread_t thread = fa_thread_create(upload_buffer, args, fa_string("Upload ring buffer"));
     return thread;
 }
 
@@ -1659,7 +1661,7 @@ fa_thread_t create_recording_thread(oid_t id, fa_atomic_ring_buffer_t ring_buffe
     args->sample_rate = sample_rate;
     args->channels    = channels;
     
-    fa_thread_t thread = fa_thread_create(_recording_thread, args);
+    fa_thread_t thread = fa_thread_create(_recording_thread, args, fa_string("Recording thread"));
     return thread;
 }
 

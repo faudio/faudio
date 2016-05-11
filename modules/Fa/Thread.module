@@ -34,9 +34,10 @@ module Fa.Thread
 
         @param func Function to execute.
         @param data Value to be passed to the function.
+        @param name A name for the thread, printed to the log (optional, destroyed).
         @return     A new thread executing concurrently with the current thread.
      */
-    create : (Nullary, Ptr) -> Thread;
+    create : (Nullary, Ptr, name : String) -> Thread;
 
     /** Destroy a thread, and return after its associated function has returned.
         @param thread Thread to join (destroyed).

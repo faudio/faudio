@@ -56,7 +56,7 @@ inline static void delete_thread(fa_thread_t thread)
 // --------------------------------------------------------------------------------
 
 
-fa_thread_t fa_thread_create(fa_nullary_t func, fa_ptr_t data)
+fa_thread_t fa_thread_create(fa_nullary_t func, fa_ptr_t data, fa_string_t name)
 {
     fa_thread_t thread = new_thread();
 
@@ -64,6 +64,10 @@ fa_thread_t fa_thread_create(fa_nullary_t func, fa_ptr_t data)
 
     if (result != 0) {
         fa_thread_fatal("create", result);
+    }
+
+    if (name) {
+        fa_inform(fa_dappend(fa_format_integral("New thread %p ", (long int)thread->native), name)); // this destroys name!
     }
 
     return thread;

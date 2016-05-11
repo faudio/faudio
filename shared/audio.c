@@ -1241,7 +1241,7 @@ stream_t fa_audio_open_stream_with_callbacks(device_t input,
          */
         fa_ptr_t audio_control_thread(fa_ptr_t data);
         stream->controller.stop   = false;
-        stream->controller.thread = fa_thread_create(audio_control_thread, stream);
+        stream->controller.thread = fa_thread_create(audio_control_thread, stream, fa_string("Audio controller thread"));
         // stream->controller.mutex  = fa_thread_create_mutex();
     }
 

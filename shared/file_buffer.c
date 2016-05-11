@@ -107,7 +107,7 @@ static fa_file_buffer_t new_file_buffer(size_t size)
     file_buffer->seek_function = NULL;
     
     file_buffer->done   = false;
-    file_buffer->thread = fa_thread_create(file_buffer_thread_function, file_buffer);
+    file_buffer->thread = fa_thread_create(file_buffer_thread_function, file_buffer, fa_string("File buffer"));
     file_buffer->queue  = fa_atomic_ring_buffer_create(kQueueSize * sizeof(long));
 
     //file_buffer_warn(fa_string("FileBuffer created"));

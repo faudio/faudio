@@ -22,6 +22,8 @@ struct _fa_thread_t {
     DWORD     tId;                //  Id
     fa_nullary_t function;
     fa_ptr_t     value;
+    fa_string_t  name;
+    bool         started;
 };
 
 struct _fa_thread_mutex_t {
@@ -76,16 +78,20 @@ inline static void delete_thread(fa_thread_t thread)
 
 static DWORD WINAPI thread_proc(LPVOID x)
 {
+#ifdef __MINGW32__
     fa_thread_t thread = x;
     thread->tId = GetCurrentThreadId();
-#ifdef __MINGW32__
-    return (DWORD) thread->function(thread->value);
+    assert(thread->tId);
+    fa_nullary_t function = thread->function;
+    fa_ptr_t value = thread->value;
+    thread->started = true;
+    return (DWORD)function(value);
 #else
 #error "only 32 bit"
 #endif
 }
 
-fa_thread_t fa_thread_create(fa_nullary_t function, fa_ptr_t value)
+fa_thread_t fa_thread_create(fa_nullary_t function, fa_ptr_t value, fa_string_t name)
 {
     fa_thread_t thread  = new_thread();
 
@@ -94,6 +100,9 @@ fa_thread_t fa_thread_create(fa_nullary_t function, fa_ptr_t value)
     thread->tId         = 0;
     thread->function    = function;
     thread->value       = value;
+    //thread->name        = name; // for now, only print the name
+    thread->name        = NULL;
+    thread->started     = false;
 
     HANDLE result = CreateThread(NULL, 0, thread_proc, thread, 0, NULL);
 
@@ -101,7 +110,18 @@ fa_thread_t fa_thread_create(fa_nullary_t function, fa_ptr_t value)
         fa_thread_fatal("create", GetLastError());
     }
 
+    if (name) {
+        fa_inform(fa_dappend(fa_format_integral("New thread %p ", (long int)result), name)); // this destroys name!
+    }
+
     thread->native = result;
+
+    // Give thread time to start, otherwise there is a race condition if
+    // the calling code detaches the thread immediately after creating it
+    while (!thread->started) {
+        Sleep(join_interval_k);
+    }
+ 
     return thread;
 }
 
@@ -128,8 +148,8 @@ void fa_thread_join(fa_thread_t thread)
     // TODO waitForSingleObject
 
     // TODO prevent double free (or tolerate somehow?)
-    // TODO CloseHandle
-    // fa_free(thread);
+    CloseHandle(thread->native);
+    fa_free(thread);
 }
 
 void fa_thread_detach(fa_thread_t thread)

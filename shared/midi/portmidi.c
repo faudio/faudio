@@ -472,7 +472,7 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
         }
     }
 
-    stream->thread = fa_thread_create(stream_thread_callback, stream);
+    stream->thread = fa_thread_create(stream_thread_callback, stream, fa_string("MIDI control thread"));
 
     fa_push_list(stream, device->session->streams);
     return stream;
