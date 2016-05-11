@@ -457,13 +457,23 @@ fa_list_t construct_signal_tree() {
     
     // Synth
     #ifdef _WIN32
-    fa_pair_t synth = fa_signal_synth(synth_name, soundfont_path);
+    //fa_pair_t synth = fa_signal_synth(synth_name, soundfont_path);
+    fa_pair_t fa_signal_fluid(fa_string_t name, fluid_synth_t *synth);
+    fa_pair_t synth = fluid_synth ? fa_signal_fluid(synth_name, fluid_synth) : NULL;
     #else
     fa_pair_t synth = fa_signal_dls(synth_name);
     #endif
     
     if (!synth) {
+        #ifdef _WIN32
+        if (fluid_synth) {
+            fa_slog_error("Could not create synth signal!");
+        } else {
+            fa_slog_warning("Synth not loaded");
+        }
+        #else
         fa_slog_error("Could not create synth!");
+        #endif
         synth = pair(fa_signal_constant(0), fa_signal_constant(0));
     }
 
@@ -998,6 +1008,24 @@ void start_sessions() {
     current_midi_session = fa_midi_begin_session();
     fa_audio_add_status_callback(_audio_status_callback, current_audio_session, current_audio_session);
     fa_midi_add_status_callback(_midi_status_callback, current_midi_session, current_midi_session);
+
+    {
+        fluid_settings_t *settings = new_fluid_settings();
+        fluid_settings_setnum(settings, "synth.gain", 0.6);
+        fluid_settings_setint(settings, "synth.threadsafe-api", 0);
+        fluid_settings_setint(settings, "synth.verbose", 0);
+        fa_inform(fa_string("Creating FluidSynth instance"));
+        fluid_synth = new_fluid_synth(settings);
+        fa_inform(fa_string_dappend(fa_string("    Loading sound font "), fa_copy(soundfont_path)));
+        char *path = fa_unstring(soundfont_path);
+        if (FLUID_FAILED == fluid_synth_sfload(fluid_synth, path, true)) {
+            fa_fail(fa_string("    Fluidsynth: Could not load sound font"));
+            fluid_settings_t *settings = fluid_synth_get_settings(fluid_synth);
+            delete_fluid_synth(fluid_synth);
+            delete_fluid_settings(settings);
+            fluid_synth = NULL;
+        }
+    }
 }
 
 void stop_sessions() {
@@ -1005,6 +1033,13 @@ void stop_sessions() {
     current_audio_session = NULL;
     fa_midi_end_session(current_midi_session);
     current_midi_session = NULL;
+    if (fluid_synth) {
+        fa_inform(fa_string("Destroying FluidSynth instance"));
+        fluid_settings_t *settings = fluid_synth_get_settings(fluid_synth);
+        delete_fluid_synth(fluid_synth);
+        delete_fluid_settings(settings);
+        fluid_synth = NULL;
+    }
 }
 
 void add_playback_semaphore(oid_t id, fa_string_t signal_name, int slot) {
@@ -1505,8 +1540,6 @@ fa_thread_t upload_ring_buffer_async(oid_t id, fa_atomic_ring_buffer_t ring_buff
     
     fa_atomic_ring_buffer_take_reference(ring_buffer);
     
-    fa_inform(fa_format_integral("upload_ring_buffer_async, args: %p", args));
-
     fa_thread_t thread = fa_thread_create(upload_buffer, args, fa_string("Upload ring buffer"));
     return thread;
 }

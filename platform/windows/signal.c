@@ -13,6 +13,7 @@ static uint8_t tuning[16][128];
 typedef struct fluid_context {
     fluid_synth_t *synth;
     fa_string_t name;
+    bool owned;
 } fluid_context;
 
 fa_pair_t fa_signal_dls(fa_string_t name)
@@ -215,14 +216,46 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
 fa_ptr_t destroy_(fa_ptr_t x)
 {
-    fa_inform(fa_string("        Destroying FluidSynth instance"));
     fluid_context *context = x;
-    fluid_synth_t *synth = context->synth;
-    fluid_settings_t *settings = fluid_synth_get_settings(synth);
-
-    delete_fluid_synth(synth);
-    delete_fluid_settings(settings);
+    if (context->owned) {
+        fa_inform(fa_string("        Destroying FluidSynth instance"));
+        fluid_synth_t *synth = context->synth;
+        fluid_settings_t *settings = fluid_synth_get_settings(synth);
+        delete_fluid_synth(synth);
+        delete_fluid_settings(settings);
+    }
+    if (context->name) fa_destroy(context->name);
     fa_free(context);
+}
+
+
+
+static fa_pair_t signal_synth(fa_string_t name, fluid_synth_t *synth, bool owned)
+{
+    fluid_context *context = fa_new_struct(fluid_context);
+    context->synth = synth;
+    context->name  = fa_copy(name);
+    context->owned = owned;
+
+    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
+    proc->before  = before_;
+    proc->after   = after_;
+    proc->render  = render_;
+    proc->receive = receive_;
+    proc->send    = NULL;
+    proc->destroy = destroy_;
+    proc->data    = context;
+
+    fa_signal_t left  = fa_signal_input_with_custom(proc, 0);
+    fa_signal_t right = fa_signal_input_with_custom(proc, 1);
+
+    // Return stereo output, embedding the custom proc (so it is actually run)
+    return fa_pair_create(fa_signal_custom(proc, left), right);
+}
+
+fa_pair_t fa_signal_fluid(fa_string_t name, fluid_synth_t *synth)
+{
+    return signal_synth(name, synth, false);
 }
 
 fa_pair_t fa_signal_synth(fa_string_t name, fa_string_t path2)
@@ -253,23 +286,5 @@ fa_pair_t fa_signal_synth(fa_string_t name, fa_string_t path2)
 
         // Sample rate is set later
     }
-
-    fluid_context *context = fa_new_struct(fluid_context);
-    context->synth = synth;
-    context->name  = fa_copy(name);
-
-    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
-    proc->before  = before_;
-    proc->after   = after_;
-    proc->render  = render_;
-    proc->receive = receive_;
-    proc->send    = NULL;
-    proc->destroy = destroy_;
-    proc->data    = context;
-
-    fa_signal_t left  = fa_signal_input_with_custom(proc, 0);
-    fa_signal_t right = fa_signal_input_with_custom(proc, 1);
-
-    // Return stereo output, embedding the custom proc (so it is actually run)
-    return fa_pair_create(fa_signal_custom(proc, left), right);
+    return signal_synth(name, synth, true);
 }
