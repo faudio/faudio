@@ -1204,7 +1204,7 @@ fa_buffer_t audio_curve(fa_ptr_t buffer)
             double rel_rate = sample_rate / curve_rate;
             size = fa_buffer_size(buffer) / (rel_rate * channels * sizeof(double));
             if (!size) {
-                printf("audio_curve: curve size is 0, returning NULL\n");
+                fa_slog_info("audio_curve: curve size is 0, returning NULL");
                 return NULL;
             }
             curve = fa_malloc(size);
@@ -1315,7 +1315,7 @@ static size_t _upload_read_ring_buffer(void *ptr, size_t size, size_t nmemb, voi
 	// curl wants size*nmemb bytes from us.
     // If there is enough data available, read as much as possible
     if (fa_atomic_ring_buffer_can_read(ring_buffer, size*nmemb)) {
-        printf("_upload_read_ring_buffer: Reading block of %zu bytes\n", size*nmemb);
+        if (verbose) fa_inform(fa_format_integral("_upload_read_ring_buffer: Reading block of %zu bytes", size*nmemb));
         void *dest = ptr;
         for (size_t i = 0; i < size*nmemb; ++i) {
             bool success = fa_atomic_ring_buffer_read(ring_buffer, dest);
@@ -1375,6 +1375,7 @@ struct upload_buffer_args {
 
 fa_ptr_t upload_buffer(fa_ptr_t context)
 {
+    if (verbose) fa_slog_info("upload_buffer");
     struct upload_buffer_args *args = context;
     char* osc_path = args->osc_path;
     oid_t id = args->id;
@@ -1528,7 +1529,7 @@ struct recording_thread_args {
 void _recording_receive(fa_ptr_t context, fa_buffer_t buffer) {
     fa_atomic_ring_buffer_t ring_buffer = context;
     if (!buffer) {
-        printf("_recording_receive: Received NULL, closing ring buffer\n");
+        if (verbose) fa_slog_info("_recording_receive: Received NULL, closing ring buffer");
         fa_atomic_ring_buffer_close(ring_buffer);
     // } else if (recording_state == RECORDING_STOPPING && !fa_atomic_ring_buffer_is_closed(ring_buffer)) {
     //     printf("_recording_receive: recording_state == RECORDING_STOPPING, closing ring buffer\n");
@@ -1536,7 +1537,7 @@ void _recording_receive(fa_ptr_t context, fa_buffer_t buffer) {
     } else {
         uint8_t *ptr = fa_buffer_unsafe_address(buffer);
         size_t size = fa_buffer_size(buffer);
-        printf("_recording_receive: Received %zu bytes of ogg\n", size);
+        if (verbose) fa_inform(fa_format_integral("_recording_receive: Received %zu bytes of ogg", size));
         if (fa_atomic_ring_buffer_can_write(ring_buffer, size)) {
             for (size_t i = 0; i < fa_buffer_size(buffer); i++) {
                  fa_atomic_ring_buffer_write(ring_buffer, *ptr);
@@ -1551,6 +1552,7 @@ void _recording_receive(fa_ptr_t context, fa_buffer_t buffer) {
 
 fa_ptr_t _recording_thread(fa_ptr_t context)
 {
+    if (verbose) fa_slog_info("_recording_thread start (before init)");
     struct recording_thread_args *args = context;
     oid_t id = args->id;
     fa_atomic_ring_buffer_t ring_buffer = args->ring_buffer;
@@ -1561,6 +1563,8 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
     long ch = args->channels;
     fa_free(args);
     
+    fa_slog_info("_recording_thread start");
+
     //printf("url: %s  cookies: %s\n", url, cookies);
     
     fa_io_source_t source = fa_io_from_ring_buffer(ring_buffer);
@@ -1574,11 +1578,11 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
     } else if (url) {
         source = fa_io_apply(source, fa_io_create_ogg_encoder(sr, ch));
     } else {
-        printf("Creating file sink\n");
+        if (verbose) fa_slog_info("Creating file sink");
         sink = fa_io_write_file(fa_string(filename));
     }
     
-    printf("_recording_thread 3\n");
+    // if (verbose) fa_slog_info("_recording_thread 3");
     
     // If sink is unspecified, it should be the upload sink
     // Start a new thread for the upload and send data to it though a second ring buffer
@@ -1591,7 +1595,7 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
         fa_thread_detach(thread);
     }
     
-    printf("_recording_thread 4, recording_state: %d\n", recording_state);
+    if (verbose) fa_inform(fa_format_integral("_recording_thread 4, recording_state: %d", recording_state));
     
     if (check_recording_semaphore(wrap_oid(id), NULL)) {
         if (recording_state == RECORDING_RUNNING || recording_state == RECORDING_INITIALIZING) {
@@ -1616,13 +1620,13 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
         fa_slog_info("Recording thread: sempahore is not set, skipping io_run");
     }
     
-	printf("_recording_thread 4.5, before detaching sink\n");
+	if (verbose) fa_slog_info("_recording_thread 4.5, before detaching sink");
 	
     // Make sure sink is detached (especially important if io_run is never called,
     // otherwise the upload callback will never return!)
     fa_io_push(sink, NULL);
     
-    printf("_recording_thread 5\n");
+    if (verbose) fa_slog_info("_recording_thread 5");
         
     // Cleanup
     if (filename) free(filename);

@@ -226,9 +226,7 @@ fa_ptr_t destroy_(fa_ptr_t x)
 }
 
 fa_pair_t fa_signal_synth(fa_string_t name, fa_string_t path2)
-{
-    // FIXME: name is currently ignored and hardcoded to "fluid" in receive_
-    
+{   
     // create synth
     fluid_synth_t *synth = NULL;
     {
@@ -254,8 +252,6 @@ fa_pair_t fa_signal_synth(fa_string_t name, fa_string_t path2)
         }
 
         // Sample rate is set later
-
-        printf("%p\n", synth);
     }
 
     fluid_context *context = fa_new_struct(fluid_context);
