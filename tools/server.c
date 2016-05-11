@@ -1486,9 +1486,9 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
         fa_buffer_write_raw(fa_string(dump_file), ogg_buffer);
     }
 
+    send_osc(message, user_data, "/audio-file/upload/started", "ii", id, ogg_size);
     fa_thread_t thread = upload_buffer_async(id, ogg_buffer, url, cookie);
     fa_thread_detach(thread);
-    send_osc(message, user_data, "/audio-file/upload/started", "ii", id, ogg_size);
     return 0;
 }
 
