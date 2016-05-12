@@ -50,7 +50,7 @@ struct _fa_file_buffer_t {
     fa_file_buffer_seek_function_t seek_function;
     fa_file_buffer_cleanup_function_t cleanup_function;
     
-    fa_thread_t       thread;
+    //fa_thread_t       thread;
     bool              done;
     fa_atomic_ring_buffer_t queue;
 
@@ -107,8 +107,10 @@ static fa_file_buffer_t new_file_buffer(size_t size)
     file_buffer->seek_function = NULL;
     
     file_buffer->done   = false;
-    file_buffer->thread = fa_thread_create(file_buffer_thread_function, file_buffer, fa_string("File buffer"));
     file_buffer->queue  = fa_atomic_ring_buffer_create(kQueueSize * sizeof(long));
+
+    fa_thread_t thread = fa_thread_create(file_buffer_thread_function, file_buffer, fa_string("File buffer"));
+    fa_thread_detach(thread);
 
     //file_buffer_warn(fa_string("FileBuffer created"));
     return file_buffer;
@@ -117,7 +119,7 @@ static fa_file_buffer_t new_file_buffer(size_t size)
 static inline void do_destroy_file_buffer(fa_file_buffer_t file_buffer)
 {
     fa_slog_info("do_destroy_file_buffer");
-    assert(fa_thread_current() == file_buffer->thread);
+    // assert(fa_thread_current() == file_buffer->thread); Doesn't work! thread_current returns a new thread wrapper
     
     if (file_buffer->cleanup_function) {
         file_buffer->cleanup_function(file_buffer);
@@ -223,7 +225,7 @@ void fa_file_buffer_release_reference(fa_file_buffer_t file_buffer)
     fa_atomic_add(file_buffer->ref_count, -1);
     // TODO: is a lock needed?
     if ((size_t)fa_atomic_get(file_buffer->ref_count) == 0 && (bool)fa_atomic_get(file_buffer->marked_for_destruction)) {
-        do_destroy_file_buffer(file_buffer);
+        file_buffer->done = true;
     }
 }
 
