@@ -1703,6 +1703,13 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
         fa_slog_info("Recording without upload");
         url = NULL; // Empty URL is same as no URL
     }
+  
+  	// No audio stream
+  	if (!current_audio_stream || current_sample_rate == 0) {
+        fa_slog_warning("Cannot record: no audio stream running!");
+        send_osc(message, user_data, "/recording/start", "iFs", id, "no-audio-stream");
+        return 0;
+  	}
     
     // No input device
     if (!current_audio_input_device) {
