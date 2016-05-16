@@ -1,6 +1,8 @@
 #include <fa/fa.h>
 
+#ifdef _WIN32
 #include <fluidsynth.h>
+#endif
 
 #ifndef __SERVER_GLOBALS
 #define __SERVER_GLOBALS
@@ -76,7 +78,9 @@ fa_map_t host_input_latency  = NULL;
 fa_map_t host_output_latency = NULL;
 fa_map_t host_vector_size    = NULL;
 
+#ifdef _WIN32
 fluid_synth_t *fluid_synth   = NULL;
+#endif
 
 fa_thread_mutex_t osc_mutex  = NULL;
 

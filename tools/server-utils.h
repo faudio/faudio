@@ -1009,6 +1009,7 @@ void start_sessions() {
     fa_audio_add_status_callback(_audio_status_callback, current_audio_session, current_audio_session);
     fa_midi_add_status_callback(_midi_status_callback, current_midi_session, current_midi_session);
 
+#ifdef _WIN32
     {
         fluid_settings_t *settings = new_fluid_settings();
         fluid_settings_setnum(settings, "synth.gain", 0.6);
@@ -1026,6 +1027,7 @@ void start_sessions() {
             fluid_synth = NULL;
         }
     }
+#endif
 }
 
 void stop_sessions() {
@@ -1033,6 +1035,7 @@ void stop_sessions() {
     current_audio_session = NULL;
     fa_midi_end_session(current_midi_session);
     current_midi_session = NULL;
+#ifdef _WIN32
     if (fluid_synth) {
         fa_inform(fa_string("Destroying FluidSynth instance"));
         fluid_settings_t *settings = fluid_synth_get_settings(fluid_synth);
@@ -1040,6 +1043,7 @@ void stop_sessions() {
         delete_fluid_settings(settings);
         fluid_synth = NULL;
     }
+#endif
 }
 
 void add_playback_semaphore(oid_t id, fa_string_t signal_name, int slot) {
