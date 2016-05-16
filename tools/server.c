@@ -644,7 +644,7 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
         //return 0;
     }
     if ((data_size % 12) != 0) {
-        printf("data_size (%d) not a multiple of 12 in /play/midi\n", data_size);
+        fa_fail(fa_format_integral("data_size (%d) not a multiple of 12 in /play/midi\n", data_size));
         send_osc(message, user_data, "/error", "is", id, "bad-midi-data");
         return 0;
     }
@@ -1256,9 +1256,9 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
     fa_with_lock(audio_files_mutex) {
         audio_files = fa_map_dset(wrap_oid(id), buffer, audio_files);
     }
-	
-	fa_slog_info("Raw file info: ", fa_get_meta(buffer, fa_string("sample-rate")), fa_get_meta(buffer, fa_string("channels")));
-	fa_slog_info("(continued)  : ", fa_get_meta(buffer, fa_string("frames")), fa_get_meta(buffer, fa_string("sample-size")));
+    
+    fa_slog_info("Raw file info: ", fa_get_meta(buffer, fa_string("sample-rate")), fa_get_meta(buffer, fa_string("channels")));
+    fa_slog_info("(continued)  : ", fa_get_meta(buffer, fa_string("frames")), fa_get_meta(buffer, fa_string("sample-size")));
 
     send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, frames, sr, ch);
     
@@ -1414,7 +1414,7 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
                     else to_byte = sizeof(double) * (int)round((double)sample_rate * (to_ms / 1000.0) * (double)channels);
                     if (to_byte > fa_buffer_size(buffer)) to_byte = fa_buffer_size(buffer);
                     size_t size = to_byte - from_byte;
-                    printf("size: %zu\n", size);
+                    if (verbose) fa_inform(fa_format_integral("size: %zu", size));
                     if (size > 0) {
                         uint8_t *src = fa_buffer_unsafe_address(buffer);
                         uint8_t *dst = fa_malloc(size);
@@ -1795,7 +1795,7 @@ int stop_recording_handler(const char *path, const char *types, lo_arg ** argv, 
 {
     oid_t id = argv[0]->i;
 	
-	printf("stop_recording_handler called with id %hu\n", id);
+	if (verbose) fa_inform(fa_format_integral("stop_recording_handler called with id %hu", id));
 
     fa_with_lock(recording_state_mutex) {
         if (recording_state == RECORDING_INITIALIZING) {
@@ -1817,7 +1817,7 @@ int stop_recording_handler(const char *path, const char *types, lo_arg ** argv, 
         if (recording_state == NOT_RECORDING || !check_recording_semaphore(wrap_oid(id), NULL)) {
             fa_slog_warning("Cannot stop recording: not currently recording at id ", wrap_oid(id));
             fa_slog_info("recording_semaphores: ", recording_semaphores);
-            printf("recording_state: %d\n", recording_state);
+            fa_inform(fa_format_integral("recording_state: %d", recording_state));
             send_osc(message, user_data, "/recording/stop", "iFs", id, "not-recording");
             remove_recording_semaphore(id); // just in case
             continue; // cannot use return, that wouldn't release the lock

@@ -1473,8 +1473,13 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, result);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, _upload_write);
         curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+
+        char errbuf[CURL_ERROR_SIZE];
+        curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errbuf);
+        errbuf[0] = 0;
+    
         CURLcode res = curl_easy_perform(curl);
-        
+
         if (res == CURLE_OK) {
             fa_inform(fa_string("  Upload ok!"));
             long response_code;
@@ -1482,7 +1487,7 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
             curl_easy_getinfo(curl, CURLINFO_REQUEST_SIZE, &request_size);
             //printf("Request was %ld bytes\n", request_size);
-            
+
             lo_blob blob = lo_blob_from_buffer(result); //lo_blob_new(fa_buffer_size(result), fa_buffer_unsafe_address(result));
             if (blob) {
                 send_osc_async(osc_path, "iib", id, response_code, blob);
@@ -1491,9 +1496,16 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
                 send_osc_async(osc_path, "iiN", id, response_code);
             }
         } else {
-            fa_fail(fa_string("CURL error"));
-            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-            send_osc_async(osc_path, "iFs", id, curl_easy_strerror(res));
+             // Print and generic error message, and send it back via OSC
+             const char *errstr = curl_easy_strerror(res); // points to a string literal that should not be freed
+             fa_fail(fa_dappend(fa_format_integral("CURL error %d: ", res), fa_string(errstr)));
+             send_osc_async(osc_path, "iFs", id, errstr);
+             // Also print specific error message if available
+             size_t len = strlen(errbuf);
+             if (len) {
+                 if (errbuf[len - 1] == '\n') errbuf[len - 1] = 0;      // remove trailing newline
+                 fa_fail(fa_dappend(fa_string("    "), fa_string(errbuf)));
+             }
         }
         
         // Cleanup
