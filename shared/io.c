@@ -348,8 +348,8 @@ void read_audio_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_
             sf_seek(sndfile, start_frames, SEEK_SET);
         }
         
-        size_t buffer_frames = 1024;
-        byte_t raw[1024 * sizeof(double)]; // worst case, we don't want to allocate memory here since it's SLOW on Windows
+        size_t buffer_frames = 256;
+        byte_t raw[256 * sizeof(double)]; // 16kb stack memory, we don't want to allocate memory here since it's SLOW on Windows
         size_t frames_left = end_frames - start_frames;
         
         while (!sf_error(sndfile) && frames_left > 0) {
