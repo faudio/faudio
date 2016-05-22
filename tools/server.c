@@ -1437,17 +1437,30 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
             
             fa_file_buffer_t file_buffer = buffer;
             fa_string_t path = fa_copy(fa_file_buffer_path(file_buffer));
+            fa_ptr_t audio_format = fa_get_meta(file_buffer, fa_string("audio-format"));
             
             if (argc >= 5) {
                 double from_ms = argv[4]->f;
                 double to_ms   = argv[5]->f;
                 if (from_ms < 0) from_ms = 0;
-                uint8_t frame_size = channels * fa_sample_type_size(double_sample_type); // Assume doubles
-                size_t from_byte = (int)round((double)sample_rate * (double)frame_size * (from_ms / 1000.0));
-                size_t to_byte = (int)round((double)sample_rate * (double)frame_size * (to_ms / 1000.0));
-                raw_source = fa_io_read_file_between(path, fa_i32(from_byte), (to_ms >= 0) ? fa_i32(to_byte) : NULL);
+                if (audio_format) {
+                    // File is an audio file
+                    size_t from_frame = (int)round((double)sample_rate * (from_ms / 1000.0));
+                    size_t to_frame = (int)round((double)sample_rate * (to_ms / 1000.0));
+                    raw_source = fa_io_read_audio_file_between(path, fa_i32(from_frame), (to_ms >= 0) ? fa_i32(to_frame) : NULL);
+                } else {
+                    // File is a raw file
+                    uint8_t frame_size = channels * fa_sample_type_size(double_sample_type); // Assume doubles
+                    size_t from_byte = (int)round((double)sample_rate * (double)frame_size * (from_ms / 1000.0));
+                    size_t to_byte = (int)round((double)sample_rate * (double)frame_size * (to_ms / 1000.0));
+                    raw_source = fa_io_read_file_between(path, fa_i32(from_byte), (to_ms >= 0) ? fa_i32(to_byte) : NULL);
+                }
             } else {
-                raw_source = fa_io_read_file(path);
+                if (audio_format) {
+                    raw_source = fa_io_read_audio_file(path); // Audio file
+                } else {
+                    raw_source = fa_io_read_file(path); // Raw file
+                }
             }
             
             break;

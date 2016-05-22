@@ -442,6 +442,8 @@ fa_file_buffer_t fa_file_buffer_read_audio(fa_string_t path, size_t buffer_size,
 
         fa_let(str, (char *) sf_get_string(file, SF_STR_COPYRIGHT))
         fa_file_buffer_set_meta(file_buffer, fa_string("copyright"), fa_string(str ? str : ""));
+        
+        fa_file_buffer_set_meta(file_buffer, fa_string("audio-format"), fa_string("audio")); // TODO: set a more precise format
     }
 
     return file_buffer;
