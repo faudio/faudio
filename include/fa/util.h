@@ -120,6 +120,7 @@
 #define fa_string_dappend      fa_string_dappend
 #define fa_format_integral     fa_string_format_integral
 #define fa_format_floating     fa_string_format_floating
+#define fa_format              fa_string_format
 
 void fa_log_info(fa_string_t);
 void fa_log_warning(fa_string_t);

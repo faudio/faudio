@@ -227,6 +227,16 @@ module Fa.String
      */
     formatFloating : (Char*, Double) -> String;
     
+    /** printf-style formatting.
+        @param format
+            A printf-style format string.
+        @param ...
+            Values matching the format string.
+        @return
+            A new formatted string.
+    */
+    format : (Char*, ...) -> String
+    
     logCount : () -> Void;
 }
 

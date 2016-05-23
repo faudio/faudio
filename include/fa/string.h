@@ -242,6 +242,16 @@ fa_string_t fa_string_format_integral(const char *, long long_);
 */
 fa_string_t fa_string_format_floating(const char *, double double_);
 
+/** printf-style formatting.
+    @param format
+        A printf-style format string.
+    @param ...
+        Values matching the format string.
+    @return
+        A new formatted string.
+*/
+fa_string_t fa_string_format(const char *, ...) __attribute__((format(printf,1,2)));
+
 
 void fa_string_log_count();
 

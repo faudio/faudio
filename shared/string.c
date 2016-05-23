@@ -214,6 +214,46 @@ fa_string_t fa_string_format_floating(const char *format, double value)
     return fa_string_from_utf8(buffer);
 }
 
+fa_string_t fa_string_format(const char *format, ...)
+{
+    int n;
+    int size = 100;     /* Guess we need no more than 100 bytes */
+    char *p, *np;
+    va_list ap;
+
+   if ((p = malloc(size)) == NULL)
+        return NULL;
+
+    while (1) {
+
+        /* Try to print in the allocated space */
+        va_start(ap, format);
+        n = vsnprintf(p, size, format, ap);
+        va_end(ap);
+
+        /* Check error code */
+        if (n < 0) return NULL;
+
+        /* If that worked, return the string */
+        if (n < size) {
+            fa_string_t result = fa_string(p);
+            free(p);
+            return result;
+        }
+
+        /* Else try again with more space */
+        size = n + 1;       /* Precisely what is needed */
+
+        if ((np = realloc (p, size)) == NULL) {
+            free(p);
+            return NULL;
+        } else {
+            p = np;
+        }
+    }
+}
+
+
 
 /** Fail with error message, interpreting errno as an iconv error.
 
