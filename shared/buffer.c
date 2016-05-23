@@ -14,6 +14,7 @@
 #include <fa/atomic.h>
 
 #include <sndfile.h>
+#include <mpg123.h>
 
 /*
     ## Notes
@@ -506,6 +507,136 @@ bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer)
     } else {
         return false;
     }
+}
+
+fa_buffer_t fa_buffer_read_mp3(fa_string_t path)
+{
+    return fa_buffer_read_mp3_max_size(path, 0, false);
+}
+
+static fa_buffer_t mpg123_error_from_code(int code) {
+    fa_string_t error_string = fa_format("mpg123 error: %s", mpg123_plain_strerror(code));
+	fa_fail(fa_copy(error_string));
+	return (fa_buffer_t) fa_error_create_simple(error, error_string, fa_string("Doremir.Buffer"));
+}
+
+static fa_buffer_t mpg123_error(mpg123_handle *handle) {
+    fa_string_t error_string = fa_format("mpg123 error: %s", mpg123_strerror(handle));
+    if (handle) mpg123_delete(handle);
+	fa_fail(fa_copy(error_string));
+	return (fa_buffer_t) fa_error_create_simple(error, error_string, fa_string("Doremir.Buffer"));
+}
+
+fa_buffer_t fa_buffer_read_mp3_max_size(fa_string_t path, size_t max_size, bool crop)
+{
+    if (crop) {
+        return (fa_buffer_t) fa_error_create_simple(error,
+            fa_string("crop not yet supported for mp3"), fa_string("Doremir.Buffer"));
+    }
+    fa_buffer_t buffer;
+    int error;
+    mpg123_handle *mp3 = mpg123_new(NULL, &error);
+	if (mp3 == NULL) return mpg123_error_from_code(error);
+    mpg123_param(mp3, MPG123_ADD_FLAGS, MPG123_FORCE_FLOAT, 0);
+    
+    {
+        const long *rates;
+        size_t rate_count;
+        mpg123_format_none(mp3);
+        mpg123_rates(&rates, &rate_count);
+        for (int i = 0; i < rate_count; i++) {
+            mpg123_format(mp3, rates[i], MPG123_MONO|MPG123_STEREO, MPG123_ENC_FLOAT_32);
+            mpg123_format(mp3, rates[i], MPG123_MONO|MPG123_STEREO, MPG123_ENC_FLOAT_64);
+        }
+    }
+
+    bool cropped = false;
+	int channels = 0;
+	int encoding = 0;
+	long sample_rate = 0;
+    char *cpath = fa_string_to_utf8(path);
+    if (mpg123_open(mp3, cpath) || mpg123_getformat(mp3, &sample_rate, &channels, &encoding)) {
+        fa_free(cpath);
+        return mpg123_error(mp3);
+    }
+    fa_free(cpath);
+    int sample_size = MPG123_SAMPLESIZE(encoding);
+    //int frame_size = sample_size * channels;
+    
+    fa_inform(fa_string_dappend(fa_string("Reading mp3 from "), fa_copy(path)));
+    fa_inform(fa_format("sample_rate: %ld  channels: %d  encoding: %d", sample_rate, channels, encoding));
+    //fa_inform(fa_format("sample_size: %d  frame_size: %d  samples (expected): %lld", sample_size, frame_size, mpg123_length(mp3)));
+
+    mpg123_scan(mp3);
+    size_t bufSize = mpg123_length(mp3) * channels * sizeof(double);
+    
+    //fa_inform(fa_format("bufSize: %zu bytes (max: %zu)", bufSize, max_size));
+        
+    // Required size is too big
+    if (max_size && bufSize > max_size) {
+        if (crop) {
+            bufSize = max_size;
+            cropped = true;
+        } else {
+            fa_slog_warning("Mp3 file too big");
+            mpg123_close(mp3);
+            mpg123_delete(mp3);
+            return NULL;
+        }
+    }
+    
+    buffer = fa_buffer_create(bufSize); // round(bufSize * 1.1));
+    double *raw = fa_buffer_unsafe_address(buffer);
+    size_t pos = 0;
+    bool done = false;
+    
+    int read_buffer_size = mpg123_outblock(mp3);
+	unsigned char *read_buffer = fa_malloc(read_buffer_size);
+    
+    do {
+        size_t bytes_read;
+        error = mpg123_read(mp3, read_buffer, read_buffer_size, &bytes_read);
+        size_t samples_read = bytes_read / sample_size;
+        
+        //fa_inform(fa_format("pos: %zu  samples_read: %zu", pos, samples_read));
+        if (encoding == MPG123_ENC_FLOAT_32) {
+            for (int i = 0; i < samples_read; i++) {
+                raw[pos+i] = ((float*)read_buffer)[i];
+            }
+        } else if (encoding == MPG123_ENC_FLOAT_64) {
+            //memcpy(raw+pos, read_buffer, bytes_read); // Wrong: pos is not bytes!
+            fa_slog_error("MPG123_ENC_FLOAT_64 not implemented");
+            assert(false && "MPG123_ENC_FLOAT_64 not supported");
+        } else {
+            assert(false && "Bad sample format (this should never happen)");
+        }
+        pos += samples_read;
+        
+        switch (error) {
+            case MPG123_NEW_FORMAT: fa_warn(fa_format("new format, bytes_read: %zu", bytes_read)); break;
+            case MPG123_DONE:       done=1;break;//fa_inform(fa_format("done, bytes_read: %zu", bytes_read)); done = 1; break;
+            case MPG123_OK:         break;//fa_inform(fa_format("ok, bytes_read: %zu", bytes_read)); break;
+            default: {
+                mpg123_close(mp3);
+                mpg123_delete(mp3);
+                fa_buffer_destroy(buffer);
+                fa_free(read_buffer);
+                return mpg123_error(mp3);
+            }
+        }
+    } while (!done);
+    
+    fa_free(read_buffer);
+    mpg123_close(mp3);
+    mpg123_delete(mp3);
+
+    // Meta-data
+    fa_buffer_set_meta(buffer, fa_string("sample-rate"), fa_i32(sample_rate));
+    fa_buffer_set_meta(buffer, fa_string("channels"), fa_i32(channels));
+    fa_buffer_set_meta(buffer, fa_string("cropped"), fa_from_bool(cropped));
+    fa_buffer_set_meta(buffer, fa_string("frames"), fa_i64(bufSize / (sizeof(double) * channels)));
+
+    return buffer;
 }
 
 fa_list_t fa_buffer_split(fa_buffer_t buffer, size_t size, bool copy)

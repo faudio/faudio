@@ -154,6 +154,8 @@ bool fa_file_buffer_write_raw(fa_string_t path, fa_file_buffer_t buffer);
 */
 fa_file_buffer_t fa_file_buffer_read_audio(fa_string_t path, size_t buffer_size, fa_sample_type_t sample_type);
 
+fa_file_buffer_t fa_file_buffer_read_mp3(fa_string_t path, size_t buffer_size, fa_sample_type_t sample_type);
+
 
 size_t fa_file_buffer_seek(fa_file_buffer_t file_buffer, size_t pos);
 

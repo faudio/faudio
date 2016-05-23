@@ -16,6 +16,7 @@
 #include <fa/thread.h>
 
 #include <sndfile.h>
+#include <mpg123.h>
 
 /*
     ## Notes
@@ -205,6 +206,15 @@ static void audio_buffer_close_(fa_file_buffer_t file_buffer)
     }
 }
 
+static void mp3_buffer_close_(fa_file_buffer_t file_buffer) {
+    if (file_buffer->file) {
+        mpg123_handle *mp3 = (mpg123_handle*)(file_buffer->file);
+        file_buffer->file = NULL;
+        mpg123_close(mp3);
+        mpg123_delete(mp3);
+    }
+}
+
 void fa_file_buffer_destroy(fa_file_buffer_t file_buffer)
 {
     fa_slog_info("fa_file_buffer_destroy");
@@ -350,6 +360,83 @@ static sf_count_t audio_seek_(fa_file_buffer_t file_buffer, size_t offset) {
     return file_buffer->file_pos;
 }
 
+static sf_count_t mp3_seek_(fa_file_buffer_t file_buffer, size_t offset) {
+    mpg123_handle *mp3 = (mpg123_handle*)file_buffer->file;
+    
+    //printf("=== audio_seek  file_pos: %zu   offset: %zu\n", file_buffer->file_pos, offset);
+    
+    fa_sample_type_t sample_type = fa_peek_integer(fa_get_meta(file_buffer, fa_string("sample-type")));
+    int channels = fa_peek_integer(fa_get_meta(file_buffer, fa_string("channels")));
+    int encoding = fa_peek_int32(fa_get_meta(file_buffer, fa_string("native-encoding")));
+    uint8_t sample_size = fa_sample_type_size(sample_type);
+    uint8_t frame_size = sample_size * channels;
+    
+    size_t *nextOffset = file_buffer->nextBuffer == file_buffer->buffer1 ? &file_buffer->offset1 : &file_buffer->offset2;
+    
+    if (file_buffer->file_pos != offset) {
+        off_t pos = mpg123_seek(mp3, offset / frame_size, SEEK_SET);
+        //printf("mpg123_seek(%zu) returned %lld\n", offset / frame_size, pos);
+        if (pos < 0) {
+            return pos;
+        }
+        *nextOffset = pos * channels * sample_size;
+    } else {
+        //printf("no need to seek, already at %zu\n", offset);
+        *nextOffset = offset;
+    }
+    
+    int read_buffer_size = mpg123_outblock(mp3);
+	unsigned char *read_buffer = fa_malloc(read_buffer_size);
+    size_t pos = 0;
+    bool done = false;
+    
+    do {
+        size_t bytes_read;
+        int error = mpg123_read(mp3, read_buffer, read_buffer_size, &bytes_read);
+       
+        if ((pos * sample_size + bytes_read) >= file_buffer->single_buffer_size) {
+            bytes_read = file_buffer->single_buffer_size - (pos * sample_size);
+            done = 1;
+            if (bytes_read == 0) break;
+        }
+        
+        size_t samples_read = bytes_read / sample_size;
+        
+        if (encoding == MPG123_ENC_FLOAT_32) {
+            if (sample_type == float_sample_type) {
+                memcpy(file_buffer->nextBuffer + (sample_size * pos), read_buffer, bytes_read);
+            } else {
+                for (int i = 0; i < samples_read; i++) {
+                    file_buffer->nextBuffer[pos+i] = ((float*)read_buffer)[i];
+                }
+            }
+        } else if (encoding == MPG123_ENC_FLOAT_64) {
+            fa_slog_error("MPG123_ENC_FLOAT_64 not implemented");
+            assert(false && "MPG123_ENC_FLOAT_64 not implemented");
+            //memcpy(raw+pos, read_buffer, bytes_read);
+        } else {
+            assert(false && "Bad sample format (this should never happen)");
+        }
+        pos += samples_read;
+        
+        switch (error) {
+            case MPG123_NEW_FORMAT: fa_warn(fa_format("new format, bytes_read: %zu", bytes_read)); break;
+            case MPG123_DONE:       done = 1; break;
+            case MPG123_OK:         break;
+            default: {
+                fa_free(read_buffer);
+                return -1;
+            }
+        }
+    } while (!done);
+    fa_free(read_buffer);
+    
+    // We may have "overread", so check the file position with the library
+    file_buffer->file_pos = mpg123_tell(mp3) * sample_size;
+
+    return file_buffer->file_pos;
+}
+
 // --------------------------------------------------------------------------------
 
 fa_file_buffer_t fa_file_buffer_create(fa_string_t path, size_t buffer_size)
@@ -444,6 +531,88 @@ fa_file_buffer_t fa_file_buffer_read_audio(fa_string_t path, size_t buffer_size,
         fa_file_buffer_set_meta(file_buffer, fa_string("copyright"), fa_string(str ? str : ""));
         
         fa_file_buffer_set_meta(file_buffer, fa_string("audio-format"), fa_string("audio")); // TODO: set a more precise format
+    }
+
+    return file_buffer;
+}
+
+static fa_file_buffer_t mpg123_error_from_code(int code) {
+    fa_string_t error_string = fa_format("mpg123 error: %s", mpg123_plain_strerror(code));
+	fa_fail(fa_copy(error_string));
+	return (fa_file_buffer_t) fa_error_create_simple(error, error_string, fa_string("Doremir.FileBuffer"));
+}
+
+static fa_file_buffer_t mpg123_error(mpg123_handle *handle) {
+    fa_string_t error_string = fa_format("mpg123 error: %s", mpg123_strerror(handle));
+    if (handle) mpg123_delete(handle);
+	fa_fail(fa_copy(error_string));
+	return (fa_file_buffer_t) fa_error_create_simple(error, error_string, fa_string("Doremir.FileBuffer"));
+}
+
+fa_file_buffer_t fa_file_buffer_read_mp3(fa_string_t path, size_t buffer_size, fa_sample_type_t sample_type)
+{
+    fa_file_buffer_t file_buffer = NULL;
+
+    int error;
+    mpg123_handle *mp3 = mpg123_new(NULL, &error);
+	if (mp3 == NULL) return mpg123_error_from_code(error);
+    mpg123_param(mp3, MPG123_ADD_FLAGS, MPG123_FORCE_FLOAT|MPG123_GAPLESS, 0);
+
+    {
+        const long *rates;
+        size_t rate_count;
+        mpg123_format_none(mp3);
+        mpg123_rates(&rates, &rate_count);
+        for (int i = 0; i < rate_count; i++) {
+            mpg123_format(mp3, rates[i], MPG123_MONO|MPG123_STEREO, MPG123_ENC_FLOAT_32);
+            mpg123_format(mp3, rates[i], MPG123_MONO|MPG123_STEREO, MPG123_ENC_FLOAT_64);
+        }
+    }
+	int channels = 0;
+	int encoding = 0;
+	long sample_rate = 0;
+    char *cpath = fa_string_to_utf8(path);
+    if (mpg123_open(mp3, cpath) || mpg123_getformat(mp3, &sample_rate, &channels, &encoding)) {
+        fa_free(cpath);
+        return mpg123_error(mp3);
+    }
+    fa_free(cpath);
+    
+    {
+        mpg123_scan(mp3);
+        size_t frames = mpg123_length(mp3);
+        uint8_t sample_size = fa_sample_type_size(sample_type);
+        uint8_t frame_size = sample_size * channels;
+        size_t data_size  = frames * frame_size;
+        
+        //printf("Requested buffer size: %zu\n", buffer_size);
+        if (data_size < buffer_size) {
+            // No need to create a bigger buffer than the actual file data
+            buffer_size = data_size;
+        } else {
+            // Make sure buffer can contain an even number of frames
+            size_t buffer_frames = buffer_size / frame_size;
+            buffer_size = buffer_frames * frame_size;
+        }
+        //printf("Actual buffer size: %zu\n", buffer_size);
+        file_buffer = new_file_buffer(buffer_size);
+        file_buffer->path = fa_copy(path);
+        file_buffer->cleanup_function = mp3_buffer_close_;
+        file_buffer->seek_function = mp3_seek_;
+        file_buffer->file_size = data_size;
+        file_buffer->file = (FILE*)mp3;
+
+        // Meta-data
+
+        fa_file_buffer_set_meta(file_buffer, fa_string("frames"), fa_i64(frames));
+        fa_file_buffer_set_meta(file_buffer, fa_string("sample-rate"), fa_i32(sample_rate));
+        fa_file_buffer_set_meta(file_buffer, fa_string("channels"), fa_i32(channels));
+        fa_file_buffer_set_meta(file_buffer, fa_string("format"), fa_string("mp3"));
+        fa_file_buffer_set_meta(file_buffer, fa_string("sample-size"), fa_i8(sample_size));
+        fa_file_buffer_set_meta(file_buffer, fa_string("sample-type"), fa_i8(sample_type));
+        fa_file_buffer_set_meta(file_buffer, fa_string("native-encoding"), fa_i32(encoding));
+        
+        fa_file_buffer_set_meta(file_buffer, fa_string("audio-format"), fa_string("mp3"));
     }
 
     return file_buffer;
