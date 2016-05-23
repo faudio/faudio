@@ -12,6 +12,7 @@
 #include <fa/util.h>
 
 #include <sndfile.h>
+#include <mpg123.h>
 
 struct filter_base {
     fa_impl_t impl;
@@ -317,7 +318,7 @@ fa_string_t read_audio_filter_show(fa_ptr_t x)
 
 void read_audio_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
 {
-    // inform(fa_string("In read_filter push"));
+    // inform(fa_string("In read_audio_filter_pull"));
 
     struct filter_base *filter = ((struct filter_base *) x);
     fa_string_t path    = fa_copy(filter->data1);
@@ -375,6 +376,123 @@ void read_audio_filter_push(fa_ptr_t _, fa_io_sink_t downstream, fa_buffer_t buf
 {
 }
 FILTER_IMPLEMENTATION(read_audio_filter);
+
+
+// ------------------------------------------------------------------------------------------
+
+void read_mp3_filter_destroy(fa_ptr_t x)
+{
+    //fa_inform(fa_string("In read_mp3_filter_destroy"));
+    struct filter_base *filter = ((struct filter_base *) x);
+    if (filter->data1) fa_destroy(filter->data1);
+    if (filter->data2) fa_destroy(filter->data2);
+    if (filter->data3) fa_destroy(filter->data3);
+    fa_free(filter);
+}
+
+fa_string_t read_mp3_filter_show(fa_ptr_t x)
+{
+    return fa_string("<ReadMp3Source>");
+}
+
+void read_mp3_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
+{
+    struct filter_base *filter = ((struct filter_base *) x);
+    fa_string_t path    = fa_copy(filter->data1);
+    fa_ptr_t start      = filter->data2;
+    fa_ptr_t end        = filter->data3;
+    size_t start_frames = start ? fa_peek_integer(start) : 0;
+    
+    int error;
+    mpg123_handle *mp3 = mpg123_new(NULL, &error);
+	if (mp3 == NULL) {
+    	fa_fail(fa_format("mpg123 error: %s", mpg123_plain_strerror(error)));
+        callback(data, NULL);
+        fa_destroy(path);
+        return;
+    }
+    mpg123_param(mp3, MPG123_ADD_FLAGS, MPG123_FORCE_FLOAT, 0);
+    {
+        const long *rates;
+        size_t rate_count;
+        mpg123_format_none(mp3);
+        mpg123_rates(&rates, &rate_count);
+        for (int i = 0; i < rate_count; i++) {
+            mpg123_format(mp3, rates[i], MPG123_MONO|MPG123_STEREO, MPG123_ENC_FLOAT_32);
+            mpg123_format(mp3, rates[i], MPG123_MONO|MPG123_STEREO, MPG123_ENC_FLOAT_64);
+        }
+    }
+    
+    char *cpath = fa_unstring(path);
+	int channels = 0;
+	int encoding = 0;
+	long sample_rate = 0;
+    if (mpg123_open(mp3, cpath) || mpg123_getformat(mp3, &sample_rate, &channels, &encoding)) {
+        fa_fail(fa_format("mpg123 error: %s", mpg123_strerror(mp3)));
+        fa_free(cpath);
+        callback(data, NULL);
+        fa_destroy(path);
+        return;
+    }
+    fa_free(cpath);
+    int source_sample_size = MPG123_SAMPLESIZE(encoding);
+    
+    // TODO: since we are streaming, we shouldn't depend on finding the file limits first...
+    mpg123_scan(mp3);
+    size_t frames = mpg123_length(mp3);
+    
+    if (start_frames && start_frames > frames) {
+        fa_fail(fa_string_dappend(fa_string("Start is beyond end of file: "), fa_copy(path)));
+    } else {
+        size_t end_frames = end ? fa_peek_integer(end) : frames;
+        if (end_frames > frames) end_frames = frames;
+        
+        fa_sample_type_t target_sample_type = double_sample_type; // TODO: don't hardcode sample_type
+        uint8_t target_sample_size = fa_sample_type_size(target_sample_type);
+        if (start_frames) {
+            mpg123_seek(mp3, start_frames, SEEK_SET); // NB: samples in the mpg123 documentation, but it is really frames
+        }
+        
+        size_t buffer_frames = 1024;
+        byte_t *raw_source = fa_malloc(buffer_frames * source_sample_size * channels);
+        byte_t *raw_target = fa_malloc(buffer_frames * target_sample_size * channels);
+        size_t frames_left = end_frames - start_frames;
+        
+        while (frames_left) {
+            size_t bytes_read;
+            size_t frames_to_read = (frames_left < buffer_frames) ? frames_left : buffer_frames;
+            error = mpg123_read(mp3, raw_source, frames_to_read * channels * source_sample_size, &bytes_read);
+            size_t frames_read = bytes_read / (source_sample_size * channels);
+            
+            if (source_sample_size == target_sample_size) {
+                memcpy(raw_target, raw_source, buffer_frames * source_sample_size);
+            } else if (target_sample_type == double_sample_type && encoding == MPG123_ENC_FLOAT_32) {
+                for (int i = 0; i < frames_read * channels; i++) {
+                    ((double*)raw_target)[i] = ((float*)raw_source)[i];
+                }
+            }
+            
+            fa_buffer_t buffer = fa_buffer_wrap(&raw_target, frames_read * channels * target_sample_size, NULL, NULL);
+            callback(data, buffer);
+            fa_destroy(buffer);
+            frames_left -= frames_read;
+        }
+        
+        fa_free(raw_source);
+        fa_free(raw_target);
+    }
+
+    callback(data, NULL);
+    
+    fa_destroy(path);
+    mpg123_close(mp3);
+    mpg123_delete(mp3);
+}
+
+void read_mp3_filter_push(fa_ptr_t _, fa_io_sink_t downstream, fa_buffer_t buffer)
+{
+}
+FILTER_IMPLEMENTATION(read_mp3_filter);
 
 
 // ------------------------------------------------------------------------------------------
@@ -662,6 +780,20 @@ fa_io_source_t fa_io_read_audio_file(fa_string_t path)
     return fa_io_read_audio_file_between(path, NULL, NULL);
 }
 
+fa_io_source_t fa_io_read_mp3_file_between(fa_string_t path, fa_ptr_t startFrames, fa_ptr_t endFrames)
+{
+    struct filter_base *x = fa_new_struct(filter_base);
+    x->impl = &read_mp3_filter_impl;
+    x->data1 = path;
+    x->data2 = startFrames;
+    x->data3 = endFrames;
+    return (fa_io_source_t) x;
+}
+
+fa_io_source_t fa_io_read_mp3_file(fa_string_t path)
+{
+    return fa_io_read_mp3_file_between(path, NULL, NULL);
+}
 
 fa_io_filter_t fa_io_create_simple_filter(fa_io_callback_t callback,
                                           fa_io_read_callback_t readCallback,

@@ -1149,6 +1149,12 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
     fa_string_t file_path = fa_string_from_utf8(&argv[1]->s);
     size_t max_size = argc > 2 ? argv[2]->i : kMaxInMemoryFile;
     fa_ptr_t buffer = fa_buffer_read_audio_max_size(file_path, max_size, false);
+    bool mp3 = false;
+    if (buffer && fa_check(buffer)) {
+        fa_destroy(buffer);
+        buffer = fa_buffer_read_mp3_max_size(file_path, max_size, false);
+        mp3 = true;
+    }
     
     // The audio file fit into max_size bytes of memory, so we now have the
     // audio file in a memory buffer (or possibly an error value)
@@ -1167,7 +1173,11 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
     else {
         fa_slog_info("File was too big to load into memory, so we use a file_buffer instead");
     
-        buffer = fa_file_buffer_read_audio(file_path, kFileBufferSize, float_sample_type); // 2 MB buffer
+        if (mp3) {
+            buffer = fa_file_buffer_read_mp3(file_path, kFileBufferSize, float_sample_type); // 2 MB buffer
+        } else {
+            buffer = fa_file_buffer_read_audio(file_path, kFileBufferSize, float_sample_type); // 2 MB buffer
+        }
         if (fa_check(buffer)) {
             fa_error_log(NULL, (fa_error_t) buffer); // this destroys buffer (the error)
             fa_destroy(file_path);
@@ -1447,7 +1457,11 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
                     // File is an audio file
                     size_t from_frame = (int)round((double)sample_rate * (from_ms / 1000.0));
                     size_t to_frame = (int)round((double)sample_rate * (to_ms / 1000.0));
-                    raw_source = fa_io_read_audio_file_between(path, fa_i32(from_frame), (to_ms >= 0) ? fa_i32(to_frame) : NULL);
+                    if (fa_dequal(fa_copy(audio_format), fa_string("mp3"))) {
+                        raw_source = fa_io_read_mp3_file_between(path, fa_i32(from_frame), (to_ms >= 0) ? fa_i32(to_frame) : NULL);
+                    } else {
+                        raw_source = fa_io_read_audio_file_between(path, fa_i32(from_frame), (to_ms >= 0) ? fa_i32(to_frame) : NULL);
+                    }
                 } else {
                     // File is a raw file
                     uint8_t frame_size = channels * fa_sample_type_size(double_sample_type); // Assume doubles
@@ -1456,7 +1470,9 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
                     raw_source = fa_io_read_file_between(path, fa_i32(from_byte), (to_ms >= 0) ? fa_i32(to_byte) : NULL);
                 }
             } else {
-                if (audio_format) {
+                if (audio_format && fa_dequal(fa_copy(audio_format), fa_string("mp3"))) {
+                    raw_source = fa_io_read_mp3_file(path); // Audio file
+                } else if (audio_format) {
                     raw_source = fa_io_read_audio_file(path); // Audio file
                 } else {
                     raw_source = fa_io_read_file(path); // Raw file
