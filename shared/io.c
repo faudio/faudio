@@ -332,11 +332,11 @@ void read_audio_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_
     fa_free(cpath);
 
     if (sf_error(sndfile)) {
-        fa_fail(fa_string_dappend(fa_string("Could not read audio file: "), path));
+        fa_fail(fa_string_dappend(fa_string("Could not read audio file: "), fa_copy(path)));
     } else if (start_frames && !info.seekable) {
-        fa_fail(fa_string_dappend(fa_string("Audio file not seekable: "), path));
+        fa_fail(fa_string_dappend(fa_string("Audio file not seekable: "), fa_copy(path)));
     } else if (start_frames > info.frames) {
-        fa_fail(fa_string_dappend(fa_string("Start is beyond end of file: "), path));
+        fa_fail(fa_string_dappend(fa_string("Start is beyond end of file: "), fa_copy(path)));
     } else {
         size_t end_frames = end ? fa_peek_integer(end) : info.frames;
         if (end_frames > info.frames) end_frames = info.frames;

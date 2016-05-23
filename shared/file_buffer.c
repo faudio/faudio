@@ -479,7 +479,7 @@ fa_file_buffer_t fa_file_buffer_read_audio(fa_string_t path, size_t buffer_size,
         fa_free(cpath);
 
         if (sf_error(file)) {
-            fa_string_t err = fa_string_dappend(fa_string("Could not read audio file "), path);
+            fa_string_t err = fa_string_dappend(fa_string("Could not read audio file "), fa_copy(path));
             return (fa_file_buffer_t) fa_error_create_simple(error, err, fa_string("Doremir.FileBuffer"));
         }
         
