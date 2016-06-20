@@ -110,9 +110,6 @@ static fa_file_buffer_t new_file_buffer(size_t size)
     file_buffer->done   = false;
     file_buffer->queue  = fa_atomic_ring_buffer_create(kQueueSize * sizeof(long));
 
-    fa_thread_t thread = fa_thread_create(file_buffer_thread_function, file_buffer, fa_string("File buffer"));
-    fa_thread_detach(thread);
-
     //file_buffer_warn(fa_string("FileBuffer created"));
     return file_buffer;
 }
@@ -461,6 +458,9 @@ fa_file_buffer_t fa_file_buffer_create(fa_string_t path, size_t buffer_size)
     file_buffer->seek_function = default_seek_;
     file_buffer->file_size = filelen;
     file_buffer->file = (FILE*)file;
+	
+    fa_thread_t thread = fa_thread_create(file_buffer_thread_function, file_buffer, fa_string("File buffer (raw)"));
+    fa_thread_detach(thread);
     
     return file_buffer;
 }
@@ -532,6 +532,9 @@ fa_file_buffer_t fa_file_buffer_read_audio(fa_string_t path, size_t buffer_size,
         
         fa_file_buffer_set_meta(file_buffer, fa_string("audio-format"), fa_string("audio")); // TODO: set a more precise format
     }
+	
+    fa_thread_t thread = fa_thread_create(file_buffer_thread_function, file_buffer, fa_string("File buffer (audio)"));
+    fa_thread_detach(thread);
 
     return file_buffer;
 }
@@ -614,6 +617,9 @@ fa_file_buffer_t fa_file_buffer_read_mp3(fa_string_t path, size_t buffer_size, f
         
         fa_file_buffer_set_meta(file_buffer, fa_string("audio-format"), fa_string("mp3"));
     }
+	
+    fa_thread_t thread = fa_thread_create(file_buffer_thread_function, file_buffer, fa_string("File buffer (mp3)"));
+    fa_thread_detach(thread);
 
     return file_buffer;
 }
