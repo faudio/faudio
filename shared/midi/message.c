@@ -59,6 +59,10 @@ fa_midi_message_t fa_midi_message_create_simple(status_t status,
     char simp[4] = { status, data1, data2, 0 };
     memcpy(&m->data.simple, simp, 4);
 
+//    if (((status >> 4) & 0x0f) == 0x0f) {
+//        fa_slog_warning("fa_midi_message_create_simple called with status F: ", m);
+//    }
+
     return m;
 }
 
@@ -75,6 +79,10 @@ fa_midi_message_t fa_midi_message_create_extended(status_t status,
     m->is_sysex = false;
     char simp[4] = { status, data1, data2, data3 };
     memcpy(&m->data.simple, simp, 4);
+
+//    if (((status >> 4) & 0x0f) == 0x0f) {
+//        fa_slog_warning("fa_midi_message_create_extended called with status F: ", m);
+//    }
 
     return m;
 }

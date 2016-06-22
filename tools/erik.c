@@ -8,8 +8,8 @@
 
 #include <stdio.h>
 #include <sys/types.h> 
-#include <sys/socket.h>
-#include <netinet/in.h>
+// #include <sys/socket.h>
+// #include <netinet/in.h>
 #include <unistd.h>
 
 /*
@@ -323,8 +323,8 @@ int main(int argc, char const *argv[])
   fa_deep_destroy_always(hej);
 
   fa_log_region_count(fa_string("After strings:"));
-  
-  fa_list_t list = list();
+
+  fa_list_t list = fa_list_empty();
   printf("Has a list\n");
   fa_print("list  ==> %s\n", list);
   fa_log_region_count(NULL);

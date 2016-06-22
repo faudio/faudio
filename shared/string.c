@@ -264,21 +264,22 @@ void iconv_fail()
 {
     switch (errno) {
     case E2BIG:
-        string_fatal("iconv: Output buffer too small",
+        printf("iconv: Output buffer too small %d",
                      errno);
 
     case EILSEQ:
-        string_fatal("iconv: Input byte does not belong to the input codeset",
+        printf("iconv: Input byte does not belong to the input codeset  %d",
                      errno);
 
     case EINVAL:
-        string_fatal("iconv: Incomplete character or shift sequence at the end of the input buffer",
+        printf("iconv: Incomplete character or shift sequence at the end of the input buffer  %d",
                      errno);
 
     default:
-        string_fatal("iconv: Unknown error",
+        printf("iconv: Unknown error  %d",
                      errno);
     }
+    assert(false && "iconv_fail");
 }
 
 inline static
