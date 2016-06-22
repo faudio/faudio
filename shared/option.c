@@ -131,6 +131,14 @@ fa_ptr_t fa_option_string(char *x)
 {
     return fa_string(x);
 }
+fa_ptr_t fa_option_native_string(char *x)
+{
+    #ifdef _WIN32
+    return fa_string_from_cp1252(x);
+    #else
+    return fa_string_from_utf8(x);
+    #endif
+}
 fa_ptr_t fa_option_failure(char *x)
 {
     return NULL;

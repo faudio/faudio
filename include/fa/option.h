@@ -62,9 +62,13 @@ fa_ptr_t fa_option_integral(char * input);
 */
 fa_ptr_t fa_option_floating(char * input);
 
-/** Parses strings. 
+/** Parses strings.
 */
 fa_ptr_t fa_option_string(char * input);
+
+/** Parses strings.
+*/
+fa_ptr_t fa_option_native_string(char * input);
 
 /** Always fails. 
 */

@@ -45,13 +45,16 @@ module Fa.Option
     };
 
     /** Parses integers. */
-    integral : (input : Char *)            -> Ptr;
+    integral : (input : Char *)           -> Ptr;
 
     /** Parses floating-point numbers. */
-    floating : (input : Char *)            -> Ptr;
+    floating : (input : Char *)           -> Ptr;
 
     /** Parses strings. */
-    string : (input : Char *)            -> Ptr;
+    string : (input : Char *)             -> Ptr;
+
+    /** Parses strings. */
+    nativeString : (input : Char *)       -> Ptr;
 
     /** Always fails. */
     failure : (input : Char *)            -> Ptr;    
