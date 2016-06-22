@@ -80,12 +80,28 @@ static DWORD WINAPI thread_proc(LPVOID x)
 {
 #ifdef __MINGW32__
     fa_thread_t thread = x;
-    thread->tId = GetCurrentThreadId();
+    fa_string_t name = thread->name;
+    DWORD tId = GetCurrentThreadId();
+    thread->tId = tId;
+    if (name) {
+        fa_inform(fa_dappend(fa_format_integral("New thread 0x%x ", tId), fa_copy(name)));
+    }
     assert(thread->tId);
     fa_nullary_t function = thread->function;
     fa_ptr_t value = thread->value;
+    
+    // Mark thread as started.
+    // From now on, we can no longer assume that the thread structure is valid
     thread->started = true;
-    return (DWORD)function(value);
+    
+    // Run the actual thread function
+    fa_ptr_t result = function(value);
+
+    // Log that we've stopped
+    if (name) {
+        fa_inform(fa_dappend(fa_format_integral("Finished thread 0x%x ", tId), name)); // destroys name
+    }
+    return (DWORD)result;
 #else
 #error "only 32 bit"
 #endif
@@ -101,17 +117,13 @@ fa_thread_t fa_thread_create(fa_nullary_t function, fa_ptr_t value, fa_string_t 
     thread->function    = function;
     thread->value       = value;
     //thread->name        = name; // for now, only print the name
-    thread->name        = NULL;
+    thread->name        = name;
     thread->started     = false;
 
     HANDLE result = CreateThread(NULL, 0, thread_proc, thread, 0, NULL);
 
     if (!result) {
         fa_thread_fatal("create", GetLastError());
-    }
-
-    if (name) {
-        fa_inform(fa_dappend(fa_format_integral("New thread %p ", (long int)result), name)); // this destroys name!
     }
 
     thread->native = result;
