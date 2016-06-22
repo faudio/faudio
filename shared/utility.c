@@ -7,7 +7,7 @@
 
  */
 
-#include <mpg123.h>
+// #include <mpg123.h>
 #include <fa/fa.h>
 #include <fa/util.h>
 #include <portaudio.h>
@@ -128,7 +128,7 @@ void fa_initialize()
     fa_audio_initialize();
     fa_midi_initialize();
     
-    mpg123_init();
+    // mpg123_init();
 	
     fa_log_info(fa_string("Done initializing faudio"));
 
@@ -144,7 +144,7 @@ void fa_terminate()
         fa_clock_terminate();
         fa_device_terminate();
         
-        mpg123_exit();
+        // mpg123_exit();
 
         fa_log_info(fa_string_dappend(fa_string("Total bytes allocated: "),
                                       fa_string_dshow(fa_i32(gBytesAlloc))));

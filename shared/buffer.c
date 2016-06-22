@@ -14,7 +14,7 @@
 #include <fa/atomic.h>
 
 #include <sndfile.h>
-#include <mpg123.h>
+// #include <mpg123.h>
 
 /*
     ## Notes
@@ -509,6 +509,7 @@ bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer)
     }
 }
 
+/*
 fa_buffer_t fa_buffer_read_mp3(fa_string_t path)
 {
     return fa_buffer_read_mp3_max_size(path, 0, false);
@@ -638,6 +639,7 @@ fa_buffer_t fa_buffer_read_mp3_max_size(fa_string_t path, size_t max_size, bool 
 
     return buffer;
 }
+*/
 
 fa_list_t fa_buffer_split(fa_buffer_t buffer, size_t size, bool copy)
 {

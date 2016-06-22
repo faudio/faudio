@@ -16,7 +16,7 @@
 #include <fa/thread.h>
 
 #include <sndfile.h>
-#include <mpg123.h>
+// #include <mpg123.h>
 
 /*
     ## Notes
@@ -203,6 +203,7 @@ static void audio_buffer_close_(fa_file_buffer_t file_buffer)
     }
 }
 
+/*
 static void mp3_buffer_close_(fa_file_buffer_t file_buffer) {
     if (file_buffer->file) {
         mpg123_handle *mp3 = (mpg123_handle*)(file_buffer->file);
@@ -211,6 +212,7 @@ static void mp3_buffer_close_(fa_file_buffer_t file_buffer) {
         mpg123_delete(mp3);
     }
 }
+*/
 
 void fa_file_buffer_destroy(fa_file_buffer_t file_buffer)
 {
@@ -357,6 +359,7 @@ static sf_count_t audio_seek_(fa_file_buffer_t file_buffer, size_t offset) {
     return file_buffer->file_pos;
 }
 
+/*
 static sf_count_t mp3_seek_(fa_file_buffer_t file_buffer, size_t offset) {
     mpg123_handle *mp3 = (mpg123_handle*)file_buffer->file;
     
@@ -433,6 +436,7 @@ static sf_count_t mp3_seek_(fa_file_buffer_t file_buffer, size_t offset) {
 
     return file_buffer->file_pos;
 }
+*/
 
 // --------------------------------------------------------------------------------
 
@@ -539,6 +543,7 @@ fa_file_buffer_t fa_file_buffer_read_audio(fa_string_t path, size_t buffer_size,
     return file_buffer;
 }
 
+/*
 static fa_file_buffer_t mpg123_error_from_code(int code) {
     fa_string_t error_string = fa_format("mpg123 error: %s", mpg123_plain_strerror(code));
 	fa_fail(fa_copy(error_string));
@@ -623,6 +628,7 @@ fa_file_buffer_t fa_file_buffer_read_mp3(fa_string_t path, size_t buffer_size, f
 
     return file_buffer;
 }
+*/
 
 size_t fa_file_buffer_seek(fa_file_buffer_t file_buffer, size_t pos)
 {

@@ -1150,11 +1150,13 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
     size_t max_size = argc > 2 ? argv[2]->i : kMaxInMemoryFile;
     fa_ptr_t buffer = fa_buffer_read_audio_max_size(file_path, max_size, false);
     bool mp3 = false;
+    /*
     if (buffer && fa_check(buffer)) {
         fa_destroy(buffer);
         buffer = fa_buffer_read_mp3_max_size(file_path, max_size, false);
         mp3 = true;
     }
+    */
     
     // The audio file fit into max_size bytes of memory, so we now have the
     // audio file in a memory buffer (or possibly an error value)
@@ -1174,7 +1176,7 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
         fa_slog_info("File was too big to load into memory, so we use a file_buffer instead");
     
         if (mp3) {
-            buffer = fa_file_buffer_read_mp3(file_path, kFileBufferSize, float_sample_type); // 2 MB buffer
+            // buffer = fa_file_buffer_read_mp3(file_path, kFileBufferSize, float_sample_type); // 2 MB buffer
         } else {
             buffer = fa_file_buffer_read_audio(file_path, kFileBufferSize, float_sample_type); // 2 MB buffer
         }
@@ -1458,7 +1460,7 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
                     size_t from_frame = (int)round((double)sample_rate * (from_ms / 1000.0));
                     size_t to_frame = (int)round((double)sample_rate * (to_ms / 1000.0));
                     if (fa_dequal(fa_copy(audio_format), fa_string("mp3"))) {
-                        raw_source = fa_io_read_mp3_file_between(path, fa_i32(from_frame), (to_ms >= 0) ? fa_i32(to_frame) : NULL);
+                        //raw_source = fa_io_read_mp3_file_between(path, fa_i32(from_frame), (to_ms >= 0) ? fa_i32(to_frame) : NULL);
                     } else {
                         raw_source = fa_io_read_audio_file_between(path, fa_i32(from_frame), (to_ms >= 0) ? fa_i32(to_frame) : NULL);
                     }
@@ -1471,7 +1473,7 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
                 }
             } else {
                 if (audio_format && fa_dequal(fa_copy(audio_format), fa_string("mp3"))) {
-                    raw_source = fa_io_read_mp3_file(path); // Audio file
+                    //raw_source = fa_io_read_mp3_file(path); // Audio file
                 } else if (audio_format) {
                     raw_source = fa_io_read_audio_file(path); // Audio file
                 } else {
