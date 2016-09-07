@@ -443,7 +443,7 @@ static sf_count_t mp3_seek_(fa_file_buffer_t file_buffer, size_t offset) {
 fa_file_buffer_t fa_file_buffer_create(fa_string_t path, size_t buffer_size)
 {
     char *cpath = fa_string_to_utf8(path);
-    FILE *file  = fopen(cpath, "rb");
+    FILE *file  = fa_fopen(cpath, "rb");
     fa_free(cpath);
     
     if (!file) {

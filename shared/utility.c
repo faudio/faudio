@@ -13,6 +13,9 @@
 #include <portaudio.h>
 
 #include <unistd.h> // Needs isatty()
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 #include "config.h"
 
 #define kIso8601 "%Y-%m-%d %H:%M:%S%z"
@@ -201,6 +204,40 @@ void fa_free(void *ptr)
     free(ptr);
 }
 
+// --------------------------------------------------------------------------------
+
+FILE *fa_fopen(const char *filename, const char *mode)
+{
+#if _WIN32
+    // Convert filename
+    int wchars_num = MultiByteToWideChar(CP_UTF8, 0, filename, -1, NULL, 0);
+    if (!wchars_num || wchars_num == 0xFFFD) {
+        fa_slog_error("fopen_utf8: Could not convert filename - bad UTF-8 encoding");
+        return NULL;
+    }
+    wchar_t *wfilename = malloc(wchars_num * sizeof(wchar_t));
+    MultiByteToWideChar(CP_UTF8, 0, filename, -1, wfilename, wchars_num);
+    
+    // Convert mode
+    wchars_num =  MultiByteToWideChar(CP_UTF8, 0, mode, -1, NULL, 0);
+    if (!wchars_num || wchars_num == 0xFFFD) {
+        fa_slog_error("fopen_utf8: Could not convert mode - bad UTF-8 encoding");
+        return NULL;
+    }
+    wchar_t *wmode = malloc(wchars_num * sizeof(wchar_t));
+    MultiByteToWideChar(CP_UTF8, 0, mode, -1, wmode, wchars_num);
+
+    // Open file
+    FILE *file = _wfopen(wfilename, wmode);
+
+    // Free strings
+    free(wfilename);
+    free(wmode);
+    return file;
+#else
+    return fopen(filename, mode);
+#endif
+}
 
 // --------------------------------------------------------------------------------
 
@@ -237,7 +274,7 @@ static inline void stdlog(fa_ptr_t data, fa_time_system_t t, fa_error_t e)
 void fa_set_log_file(fa_string_t path)
 {
     char *cpath = fa_string_to_utf8(path);
-    gLogData  = fopen(cpath, "a");
+    gLogData  = fa_fopen(cpath, "a");
     gLogFunc  = stdlog;
     fa_free(cpath);
 }
@@ -245,7 +282,7 @@ void fa_set_log_file(fa_string_t path)
 void fa_set_log_file_and_stdout(fa_string_t path)
 {
     char *cpath = fa_string_to_utf8(path);
-    gLogData      = fopen(cpath, "a");
+    gLogData      = fa_fopen(cpath, "a");
     gLogFunc      = stdlog;
     gLogDupStdout = true;
     fa_free(cpath);

@@ -1758,7 +1758,7 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
     
     // If filename is provided, test that the path is writeable
     if (*filename) {
-        FILE *fp = fopen(filename, "ab");
+        FILE *fp = fa_fopen(filename, "ab");
         if (fp) {
             fclose(fp);
         } else {

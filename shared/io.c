@@ -264,7 +264,7 @@ void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t call
     size_t startBytes = start ? fa_peek_integer(start) : 0;
     size_t endBytes   = end   ? fa_peek_integer(end)   : 0;
     char *cpath = fa_unstring(path);
-    FILE *fp = fopen(cpath, "rb");
+    FILE *fp = fa_fopen(cpath, "rb");
     fa_free(cpath);
 
     if (!fp) {
@@ -728,7 +728,7 @@ static fa_io_sink_t io_write_file(fa_string_t path, const char* mode) {
     x->data3 = 0; // number of bytes written
         
     char* cpath = fa_unstring(path);
-    FILE *fp = fopen(cpath, mode);
+    FILE *fp = fa_fopen(cpath, mode);
     fa_free(cpath);
 
     if (fp) {

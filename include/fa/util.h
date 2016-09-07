@@ -184,5 +184,7 @@ void fa_log_error(fa_string_t);
 #define fa_mark_used(X) X = *(&X)
 
 
+FILE *fa_fopen(const char *filename, const char *mode);
+
 #endif // _FA_UTIL
 
