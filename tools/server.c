@@ -1206,7 +1206,7 @@ int load_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
     fa_ptr_t channels    = fa_get_meta(buffer, fa_string("channels"));
     fa_ptr_t cropped     = fa_get_meta(buffer, fa_string("cropped"));
     if (frames && sample_rate && channels) {
-        int64_t fr = fa_peek_integer(frames);
+        uint32_t fr = fa_peek_integer(frames); // in 96kHz, this is still over 12h, so we should be safe with 32 bits
         uint32_t sr = safe_peek_i32(sample_rate);
         uint32_t ch = safe_peek_i32(channels);
         if (cropped && fa_peek_bool(cropped)) {
@@ -1281,7 +1281,7 @@ int load_raw_audio_file_handler(const char *path, const char *types, lo_arg ** a
     fa_slog_info("Raw file info: ", fa_get_meta(buffer, fa_string("sample-rate")), fa_get_meta(buffer, fa_string("channels")));
     fa_slog_info("(continued)  : ", fa_get_meta(buffer, fa_string("frames")), fa_get_meta(buffer, fa_string("sample-size")));
 
-    send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, frames, sr, ch);
+    send_osc(message, user_data, "/audio-file/load", "iTiiiF", id, (uint32_t)frames, sr, ch);
     
     return 0;
 }
