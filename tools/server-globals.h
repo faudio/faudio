@@ -125,6 +125,10 @@ int level_echo_id = 0;
 
 double last_level[2] = { 0, 0 };
 
+char *http_proxy = NULL;
+char *http_proxy_userpwd = NULL;
+char *https_proxy = NULL;
+char *https_proxy_userpwd = NULL;
     
 // Hack warning!
 lo_server server = NULL;
@@ -220,6 +224,11 @@ static inline void destroy_globals() {
     fa_destroy(host_vector_size);
     
     fa_destroy(osc_mutex);
+
+    if (http_proxy) free(http_proxy);
+    if (http_proxy_userpwd) free (http_proxy_userpwd);
+    if (https_proxy) free(https_proxy);
+    if (https_proxy_userpwd) free (https_proxy_userpwd);
 }
 
 #endif

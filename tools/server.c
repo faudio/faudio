@@ -110,6 +110,8 @@ define_handler(stop_recording);
 
 define_handler(choose_device);
 
+define_handler(proxy);
+
 define_handler(sleep);
 
 fa_ptr_t _status_callback(fa_ptr_t session);
@@ -233,7 +235,14 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/set/wasapi-hack",        "F",  wasapi_hack_handler, server);
     lo_server_add_method(server, "/set/wasapi-hack",        "N",  wasapi_hack_handler, server);
     lo_server_add_method(server, "/set/stream-direction",   "s",  stream_direction_handler, server);
+    lo_server_add_method(server, "/set/proxy/http",         "sss",  proxy_handler, (void*)0);
+    lo_server_add_method(server, "/set/proxy/http",         "s",  proxy_handler, (void*)0);
+    lo_server_add_method(server, "/set/proxy/http",         "N",  proxy_handler, (void*)0);
+    lo_server_add_method(server, "/set/proxy/https",        "sss",  proxy_handler, (void*)1);
+    lo_server_add_method(server, "/set/proxy/https",        "s",  proxy_handler, (void*)1);
+    lo_server_add_method(server, "/set/proxy/https",        "N",  proxy_handler, (void*)1);
     //lo_server_add_method(server, "/set/schedule-delay",     "i",  settings_handler, "schedule-delay"); // not implemented
+
       
     /* Get info */
     lo_server_add_method(server, "/time", NULL, time_handler, server);
@@ -2038,6 +2047,34 @@ int stream_direction_handler(const char *path, const char *types, lo_arg ** argv
         return 0;
     }
     set_stream_direction(direction);
+    return 0;
+}
+
+int proxy_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    bool https = (bool)user_data;
+    char *proxy_var = https ? https_proxy : http_proxy;
+    char *login_var = https ? https_proxy_userpwd : http_proxy_userpwd;
+    if (proxy_var) free(proxy_var);
+    if (types[0] == 's') {
+        proxy_var = strdup(&argv[0]->s);
+    } else {
+        proxy_var = NULL;
+    }
+    if (login_var) free(login_var);
+    if (argc > 1) {
+        char *username = curl_easy_escape(NULL, &argv[1]->s, 0);
+        char *password = curl_easy_escape(NULL, &argv[2]->s, 0);
+        size_t usersize = strlen(username);
+        size_t passsize = strlen(password);
+        login_var = malloc(usersize + passsize + 2);
+        memcpy(login_var, username, usersize);
+        login_var[usersize] = ':';
+        memcpy(login_var + usersize + 1, password, passsize);
+        login_var[usersize + passsize + 1] = 0;
+    } else {
+        login_var = NULL;
+    }
     return 0;
 }
 

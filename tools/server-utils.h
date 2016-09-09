@@ -96,6 +96,11 @@ static inline char* fa_dunstring(fa_string_t str) {
     return result;
 }
 
+bool string_begins_with(const char *str, const char *prefix) {
+    size_t lenpre = strlen(prefix), lenstr = strlen(str);
+    return lenstr < lenpre ? false : strncmp(prefix, str, lenpre) == 0;
+}
+
 void do_schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
     if (stream) {
         switch (fa_dynamic_get_type(stream)) {
@@ -1448,9 +1453,21 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
 	
     CURL *curl = curl_easy_init();
     if (curl) {
-        printf("Uploading to %s\n", url);
+        printf("Uploading to %s ", url);
         curl_easy_setopt(curl, CURLOPT_URL, url); // url is copied by curl
         if (cookies) curl_easy_setopt(curl, CURLOPT_COOKIE, cookies); // as is cookies
+        // Set proxy
+        if (string_begins_with(url, "http:") && http_proxy) {
+            printf("via http proxy %s\n", http_proxy);
+            curl_easy_setopt(curl, CURLOPT_PROXY, http_proxy);
+            if (http_proxy_userpwd) curl_easy_setopt(curl, CURLOPT_PROXYUSERPWD, http_proxy_userpwd);
+        } else if (string_begins_with(url, "https:") && https_proxy) {
+            printf("via https proxy %s\n", https_proxy);
+            curl_easy_setopt(curl, CURLOPT_PROXY, https_proxy);
+            if (https_proxy_userpwd) curl_easy_setopt(curl, CURLOPT_PROXYUSERPWD, https_proxy_userpwd);
+        } else {
+            printf("(no proxy)\n");
+        }
         curl_easy_setopt(curl, CURLOPT_POST, 1L);
         if (ring_buffer) {
             // Ring buffer: enable chunked upload
