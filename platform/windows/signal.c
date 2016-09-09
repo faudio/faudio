@@ -202,11 +202,15 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
             default: {
                 if ((status_channel == 0xff) && (data1 == 0x2f)) {
                     // EndOfTrack, ignore
+                } else if (status_channel == 0xF8 || status_channel == 0xFB || status_channel == 0xFC) {
+                    // MIDI clock message, ignore
+                } else if (status_channel == 0xFE) {
+                    // "Active sensing" message (i.e a sort of idle message), ignore
                 } else {
                     fa_slog_warning("Unknown MIDI message to Fluidsynth: ", msg);
                 }
             }
-            }
+        }
 
         }
     }
