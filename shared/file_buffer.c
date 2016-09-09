@@ -16,6 +16,10 @@
 #include <fa/thread.h>
 
 #include <sndfile.h>
+#if _WIN32
+SNDFILE* sf_wchar_open (const wchar_t *wpath, int mode, SF_INFO *sfinfo); // See note in io.c
+#endif
+
 // #include <mpg123.h>
 
 /*
@@ -478,8 +482,13 @@ fa_file_buffer_t fa_file_buffer_read_audio(fa_string_t path, size_t buffer_size,
     info.format     = 0;
 
     {
-        char *cpath = fa_string_to_utf8(path);
-        file        = sf_open(cpath, SFM_READ, &info);
+        #if _WIN32
+        wchar_t *cpath  = fa_string_to_utf16(path);
+        file            = sf_wchar_open(cpath, SFM_READ, &info);
+        #else
+        char *cpath     = fa_string_to_utf8(path);
+        file            = sf_open(cpath, SFM_READ, &info);
+        #endif
         fa_free(cpath);
 
         if (sf_error(file)) {

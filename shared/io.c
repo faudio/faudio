@@ -12,6 +12,17 @@
 #include <fa/util.h>
 
 #include <sndfile.h>
+
+// We need sf_wchar_open on Windows, and the official way is to
+//   #include <windows.h>
+//   #define ENABLE_SNDFILE_WINDOWS_PROTOTYPES 1
+// before including sndfile.h. However, including windows.h here
+// leads to strange compilation syntax errors, so we declare the
+// sf_wchar_open function ourselves here instead.
+#if _WIN32
+SNDFILE* sf_wchar_open (const wchar_t *wpath, int mode, SF_INFO *sfinfo);
+#endif
+
 // #include <mpg123.h>
 
 struct filter_base {
@@ -326,10 +337,15 @@ void read_audio_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_
     fa_ptr_t end        = filter->data3;
     size_t start_frames = start ? fa_peek_integer(start) : 0;
     
-    char *cpath = fa_unstring(path);
     SF_INFO info;
     info.format = 0;
+    #if _WIN32
+    wchar_t *cpath   = fa_string_to_utf16(path);
+    SNDFILE *sndfile = sf_wchar_open(cpath, SFM_READ, &info);
+    #else
+    char *cpath      = fa_string_to_utf8(path);
     SNDFILE *sndfile = sf_open(cpath, SFM_READ, &info);
+    #endif
     fa_free(cpath);
 
     if (sf_error(sndfile)) {

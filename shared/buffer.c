@@ -14,7 +14,12 @@
 #include <fa/atomic.h>
 
 #include <sndfile.h>
+#if _WIN32
+SNDFILE* sf_wchar_open (const wchar_t *wpath, int mode, SF_INFO *sfinfo); // See note in io.c
+#endif
+
 // #include <mpg123.h>
+
 
 /*
     ## Notes
@@ -371,8 +376,13 @@ fa_buffer_t fa_buffer_read_audio_max_size(fa_string_t path, size_t max_size, boo
     bool cropped    = false;
 
     {
+        #if _WIN32
+        wchar_t *cpath  = fa_string_to_utf16(path);
+        file            = sf_wchar_open(cpath, SFM_READ, &info);
+        #else
         char *cpath     = fa_string_to_utf8(path);
         file            = sf_open(cpath, SFM_READ, &info);
+        #endif
 
         if (sf_error(file)) {
             char err[200];
@@ -431,17 +441,22 @@ fa_buffer_t fa_buffer_read_audio_max_size(fa_string_t path, size_t max_size, boo
 fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
                                fa_buffer_t  buffer)
 {
-    const char     *cpath = fa_string_to_utf8(path);
     double         *ptr   = fa_buffer_unsafe_address(buffer);
     size_t         size   = fa_buffer_size(buffer) / sizeof(double);
 
-    SF_INFO         info;
+    SF_INFO        info;
 
     info.samplerate = fa_peek_int32(fa_buffer_get_meta(buffer, fa_string("sample-rate")));
     info.channels   = fa_peek_int32(fa_buffer_get_meta(buffer, fa_string("channels")));
     info.format     = fa_peek_int32(fa_buffer_get_meta(buffer, fa_string("format")));
 
-    SNDFILE        *file = sf_open(cpath, SFM_WRITE, &info);
+    #if _WIN32
+    wchar_t *cpath  = fa_string_to_utf16(path);
+    SNDFILE *file   = sf_wchar_open(cpath, SFM_WRITE, &info);
+    #else
+    char *cpath     = fa_string_to_utf8(path);
+    SNDFILE *file   = sf_open(cpath, SFM_WRITE, &info);
+    #endif
 
     if (sf_error(file)) {
         char err[100];
