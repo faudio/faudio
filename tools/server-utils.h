@@ -1026,11 +1026,18 @@ void start_sessions() {
         wchar_t *wpath = fa_string_to_utf16(soundfont_path);
         // Because fluidsynth uses fopen instead of _wfopen, we convert the filename to 8.3
         int wlength = GetShortPathNameW(wpath, 0, 0);
+        if (!wlength) {
+            fa_fail(fa_string("    Could not load sound font: could not get short path"));
+            free(wpath);
+            return;
+        }
         LPWSTR shortp = (LPWSTR)calloc(wlength, sizeof(WCHAR));
         GetShortPathNameW(wpath, shortp, wlength); // shortp is now the 8.3 path, but in utf-16
+        free(wpath);
         int clength = WideCharToMultiByte(CP_OEMCP, 0, shortp, wlength, 0, 0, 0, 0);
         LPSTR cpath = (LPSTR)calloc(clength, sizeof(CHAR));
         WideCharToMultiByte(CP_OEMCP, 0, shortp, wlength, cpath, clength, 0, 0);
+        free(shortp);
         fa_inform(fa_string_dappend(fa_string("    using short path:  "), fa_string(cpath)));
         ////
         if (FLUID_FAILED == fluid_synth_sfload(fluid_synth, cpath, true)) {
@@ -1040,6 +1047,7 @@ void start_sessions() {
             delete_fluid_settings(settings);
             fluid_synth = NULL;
         }
+        free(cpath);
     }
 #endif
 }
