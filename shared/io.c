@@ -318,7 +318,7 @@ fa_string_t read_audio_filter_show(fa_ptr_t x)
 
 void read_audio_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
 {
-    // inform(fa_string("In read_audio_filter_pull"));
+    // fa_inform(fa_string("In read_audio_filter_pull"));
 
     struct filter_base *filter = ((struct filter_base *) x);
     fa_string_t path    = fa_copy(filter->data1);
@@ -349,7 +349,7 @@ void read_audio_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_
             sf_seek(sndfile, start_frames, SEEK_SET);
         }
         
-        size_t buffer_frames = 256;
+        size_t buffer_frames = 256 / info.channels;
         byte_t raw[256 * sizeof(double)]; // 16kb stack memory, we don't want to allocate memory here since it's SLOW on Windows
         size_t frames_left = end_frames - start_frames;
         
