@@ -4,10 +4,13 @@ git submodule update external/curl/source;
 
 pushd external/curl/source;
 
+./buildconf
+
 CFLAGS="-arch x86_64" \
 CXXFLAGS="-arch x86_64" \
 LDFLAGS="-arch x86_64" \
 ./configure \
+    --with-darwinssl \
     --prefix=`pwd`/../result \
     && make \
     && make install

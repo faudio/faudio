@@ -4,12 +4,12 @@ git submodule update external/portaudio/source;
 
 pushd external/portaudio/source;
 
-CFLAGS="-arch x86_64" \
+CFLAGS="-arch x86_64 -Wall" \
 CXXFLAGS="-arch x86_64" \
 LDFLAGS="-arch x86_64" \
 ./configure \
     --prefix=`pwd`/../result \
-    --disble-mac-universal \
+    --disable-mac-universal \
 	  && make \
 	  && make install \
 	  && cp -R include/ ../result/include/

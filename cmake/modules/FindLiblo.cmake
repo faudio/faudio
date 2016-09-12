@@ -16,7 +16,7 @@ find_path (LIBLO_INCLUDE_DIR
   PATHS ${CMAKE_SOURCE_DIR}/external/liblo/result
   )
 find_library (LIBLO_LIBRARY
-  NAMES liblo liblo.7
+  NAMES liblo liblo.7 lo.7
   PATH_SUFFIXES lib
   PATHS ${CMAKE_SOURCE_DIR}/external/liblo/result
   )

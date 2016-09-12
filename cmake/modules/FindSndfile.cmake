@@ -16,7 +16,7 @@ find_path (SNDFILE_INCLUDE_DIR
   PATHS ${CMAKE_SOURCE_DIR}/external/sndfile/result
   )
 find_library (SNDFILE_LIBRARY
-  NAMES libsndfile libsndfile-1 sndfile-1 libFLAC.la
+  NAMES libsndfile libsndfile-1 sndfile sndfile-1 libFLAC.la
   PATH_SUFFIXES lib
   PATHS ${CMAKE_SOURCE_DIR}/external/sndfile/result
   )
