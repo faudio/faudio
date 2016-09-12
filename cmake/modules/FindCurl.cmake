@@ -9,14 +9,14 @@
 include (DynamicLet)
 include (FindPackageHandleStandardArgs)
 
-letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib") 
+letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib;.dll") 
 find_path (CURL_INCLUDE_DIR 
   NAMES curl/curl.h
   PATH_SUFFIXES include
   PATHS ${CMAKE_SOURCE_DIR}/external/curl/result
   )
 find_library (CURL_LIBRARY
-  NAMES curl
+  NAMES curl libcurl-4
   PATH_SUFFIXES lib
   PATHS ${CMAKE_SOURCE_DIR}/external/curl/result
   NO_DEFAULT_PATH NO_SYSTEM_ENVIRONMENT_PATH
