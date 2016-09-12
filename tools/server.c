@@ -30,9 +30,9 @@
 #include "server-globals.h"
 #include "server-utils.h"
 
-#ifndef _WIN32
-#include "server-sleep-mac.h"
-#endif
+// #ifndef _WIN32
+// #include "server-sleep-mac.h"
+// #endif
 
 fa_option_t option_declaration[] = {
     #ifdef _WIN32

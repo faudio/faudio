@@ -20,7 +20,9 @@
 #include <fa/time.h>
 #include <pthread.h>
 #include <portaudio.h>
+#if _WIN32
 #include <pa_win_wasapi.h>
+#endif
 #include "signal.h"
 #include "signal_internal.h"
 #include "action_internal.h"
@@ -1008,11 +1010,11 @@ void print_audio_info(device_t input, device_t output)
     }
 }
 
-inline static
-void print_fa_signal_tree(fa_ptr_t x)
-{
-    fa_inform(fa_string_dappend(fa_string("    Signal Tree: \n"), fa_string_show(x)));
-}
+// inline static
+// void print_fa_signal_tree(fa_ptr_t x)
+// {
+//     fa_inform(fa_string_dappend(fa_string("    Signal Tree: \n"), fa_string_show(x)));
+// }
 
 inline static
 fa_list_t apply_processor(proc_t proc, fa_ptr_t proc_data, fa_list_t inputs)
@@ -1088,6 +1090,7 @@ stream_t fa_audio_open_stream_with_callbacks(device_t input,
         bool exclusive = wasapi && session->parameters.exclusive;
         double inputLatency  = exclusive ? session->parameters.latency_ex[0] : session->parameters.latency_sh[0];
         double outputLatency = exclusive ? session->parameters.latency_ex[1] : session->parameters.latency_sh[1];
+#if _WIN32
         PaWasapiFlags wasapiFlags = 0;
         wasapiFlags |= (exclusive ? paWinWasapiExclusive : 0);
         
@@ -1101,6 +1104,9 @@ stream_t fa_audio_open_stream_with_callbacks(device_t input,
             .hostProcessorInput         = NULL,
             .threadPriority             = eThreadPriorityProAudio
         };
+#else
+        void *wasapiInfo = 0;
+#endif
 
         /*
             Open and set native stream.
@@ -1162,7 +1168,9 @@ stream_t fa_audio_open_stream_with_callbacks(device_t input,
             inputLatency = session->parameters.latency_sh[0];
             outputLatency = session->parameters.latency_sh[1];
             
+#if _WIN32
             wasapiInfo.flags = 0;
+#endif
             input_stream_parameters.hostApiSpecificStreamInfo = &wasapiInfo;
             output_stream_parameters.hostApiSpecificStreamInfo = &wasapiInfo;
             input_stream_parameters.suggestedLatency = inputLatency;
