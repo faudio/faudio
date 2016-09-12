@@ -528,7 +528,7 @@ session_t fa_midi_begin_session()
 
     session_t session;
 
-    fa_with_lock(gMidiMutex);
+    fa_with_lock(gMidiMutex)
     {
         // Assure no overlaps.
         if (gMidiActive) {
@@ -563,7 +563,7 @@ void fa_midi_end_session(session_t session)
     }
     fa_inform(fa_string("    Stopping driver"));
 
-    fa_with_lock(gMidiMutex);
+    fa_with_lock(gMidiMutex)
     {
         if (gMidiActive) {
             fa_inform(fa_string("    Actually terminating"));
