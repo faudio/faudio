@@ -14,16 +14,19 @@ find_path (LIBVORBIS_INCLUDE_DIR
   NAMES vorbis
   PATH_SUFFIXES include
   PATHS ${CMAKE_SOURCE_DIR}/external/libvorbis/result
+  NO_DEFAULT_PATH NO_SYSTEM_ENVIRONMENT_PATH
   )
 find_library (LIBVORBIS_LIBRARY
   NAMES libvorbis.a
   PATH_SUFFIXES lib
   PATHS ${CMAKE_SOURCE_DIR}/external/libvorbis/result
+  NO_DEFAULT_PATH NO_SYSTEM_ENVIRONMENT_PATH
   )
 find_library (LIBVORBISENC_LIBRARY
   NAMES libvorbisenc.a
   PATH_SUFFIXES lib
   PATHS ${CMAKE_SOURCE_DIR}/external/libvorbis/result
+  NO_DEFAULT_PATH NO_SYSTEM_ENVIRONMENT_PATH
   )
 endletmany (CMAKE_FIND_LIBRARY_SUFFIXES) 
 
