@@ -174,7 +174,7 @@ int main(int argc, char const *argv[])
     if (verbose) printf("Starting OSC listener thread...\n");
     lo_server_thread st = lo_server_thread_new_with_proto_and_node(port, LO_TCP, "127.0.0.1", liblo_error);
     if (!st) {
-        printf("Could not start OSC server, exiting\n");
+        fa_slog_info("Could not start OSC server, exiting\n");
         curl_global_cleanup();
         exit(3);
     }
