@@ -19,3 +19,6 @@
 [submodule "external/curl/source"]
 	path = external/curl/source
 	url = https://github.com/faudio/curl
+[submodule "external/mpg123/source"]
+	path = external/mpg123/source
+	url = git://github.com/faudio/mpg123.git
