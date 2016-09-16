@@ -4,9 +4,10 @@ git submodule update external/sndfile/source;
 
 pushd external/sndfile/source;
 
-CFLAGS="-arch x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/Carbon.framework/Headers/" \
+CFLAGS="-arch x86_64" \
 CXXFLAGS="-arch x86_64" \
 LDFLAGS="-arch x86_64" \
+MACOSX_DEPLOYMENT_TARGET="10.7" \
 ./configure \
     --prefix=`pwd`/../result \
     --build=x86_64-apple-darwin \
