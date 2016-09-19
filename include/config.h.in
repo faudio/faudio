@@ -9,6 +9,7 @@
 #cmakedefine FA_HAS_FLUIDSYNTH 1
 #cmakedefine FA_HAS_AUDIO_UNIT 1
 #cmakedefine FA_HAS_VST 1
+#cmakedefine FA_MP3_IMPORT 1
 
 #endif // _CONFIG_H
 

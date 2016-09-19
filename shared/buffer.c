@@ -18,7 +18,9 @@
 SNDFILE* sf_wchar_open (const wchar_t *wpath, int mode, SF_INFO *sfinfo); // See note in io.c
 #endif
 
-// #include <mpg123.h>
+#ifdef FA_MP3_IMPORT
+#include <mpg123.h>
+#endif
 
 
 /*
@@ -524,7 +526,7 @@ bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer)
     }
 }
 
-/*
+#ifdef FA_MP3_IMPORT
 fa_buffer_t fa_buffer_read_mp3(fa_string_t path)
 {
     return fa_buffer_read_mp3_max_size(path, 0, false);
@@ -654,7 +656,7 @@ fa_buffer_t fa_buffer_read_mp3_max_size(fa_string_t path, size_t max_size, bool 
 
     return buffer;
 }
-*/
+#endif
 
 fa_list_t fa_buffer_split(fa_buffer_t buffer, size_t size, bool copy)
 {

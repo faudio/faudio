@@ -7,7 +7,11 @@
 
  */
 
-// #include <mpg123.h>
+#include "config.h"
+
+#ifdef FA_MP3_IMPORT
+#include <mpg123.h>
+#endif
 #include <fa/fa.h>
 #include <fa/util.h>
 #include <portaudio.h>
@@ -16,7 +20,6 @@
 #ifdef _WIN32
 #include <Windows.h>
 #endif
-#include "config.h"
 
 #define kIso8601 "%Y-%m-%d %H:%M:%S%z"
 
@@ -131,8 +134,10 @@ void fa_initialize()
     fa_audio_initialize();
     fa_midi_initialize();
     
-    // mpg123_init();
-	
+    #ifdef FA_MP3_IMPORT
+    mpg123_init();
+    #endif
+
     fa_log_info(fa_string("Done initializing faudio"));
 
     gInitCount++;
@@ -147,7 +152,9 @@ void fa_terminate()
         fa_clock_terminate();
         fa_device_terminate();
         
-        // mpg123_exit();
+        #ifdef FA_MP3_IMPORT
+        mpg123_exit();
+        #endif
 
         fa_log_info(fa_string_dappend(fa_string("Total bytes allocated: "),
                                       fa_string_dshow(fa_i32(gBytesAlloc))));

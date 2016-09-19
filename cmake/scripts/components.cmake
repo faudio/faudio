@@ -68,6 +68,14 @@ add_standard_component(COMPONENTS Libvorbis
   libvorbis_exists
   ${AUDIO_ENGINE_SYSTEM_NAME}
   )
+  
+predicate_file_exists(mpg123_exists
+  "external/mpg123/result/include/mpg123.h"
+  )
+add_standard_component(COMPONENTS Mpg123
+  mpg123_exists
+  ${AUDIO_ENGINE_SYSTEM_NAME}
+  )
 
 # predicate_file_exists(gtest_exists
 #   "external/gtest/result/include/gtest/gtest.h"

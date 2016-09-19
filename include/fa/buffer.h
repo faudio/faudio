@@ -330,9 +330,11 @@ fa_buffer_t fa_buffer_read_audio_max_size(fa_string_t path, size_t max_size, boo
 */
 fa_ptr_t fa_buffer_write_audio(fa_string_t path,
                                fa_buffer_t buffer);
-
-//fa_buffer_t fa_buffer_read_mp3(fa_string_t path);
-//fa_buffer_t fa_buffer_read_mp3_max_size(fa_string_t path, size_t max_size, bool crop);
+                               
+#ifdef FA_MP3_IMPORT
+fa_buffer_t fa_buffer_read_mp3(fa_string_t path);
+fa_buffer_t fa_buffer_read_mp3_max_size(fa_string_t path, size_t max_size, bool crop);
+#endif
 
 /** Resample the given buffer to the given rate (nullable).
     

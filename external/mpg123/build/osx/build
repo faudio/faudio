@@ -1,0 +1,14 @@
+#!/bin/bash
+git submodule init   external/mpg123/source;
+git submodule update external/mpg123/source;
+
+pushd external/mpg123/source;
+
+CFLAGS="-arch x86_64" \
+CXXFLAGS="-arch x86_64" \
+LDFLAGS="-arch x86_64" \
+./configure \
+    --prefix=`pwd`/../result \
+    --build=x86_64-apple-darwin \
+		&& MACOSX_DEPLOYMENT_TARGET="10.7" make install;
+popd;
