@@ -1,0 +1,17 @@
+#!/bin/bash
+git submodule init   external/mpg123/source;
+git submodule update external/mpg123/source;
+
+pushd external/mpg123/source;
+
+rm -rf ../result
+
+./windows-builds.sh \
+	&& mkdir ../result \
+	&& mkdir ../result/lib \
+	&& mkdir ../result/include \
+	&& cp releases/mpg123-1.23.6-x86/libmpg123-0.dll ../result/lib/ \
+	&& cp releases/mpg123-1.23.6-x86/mpg123.h ../result/lib/ \
+	&& cp releases/mpg123-1.23.6-x86/fmt123.h ../result/lib/
+
+popd;
