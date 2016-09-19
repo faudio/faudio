@@ -50,8 +50,11 @@ CMakeCache.txt
 external/liblo/source/src/.libs
 external/liblo/source/src/.deps
 external/liblo/source/examples/.libs
+external/liblo/source/examples/*.exe
+external/liblo/source/src/*.exe
 external/liblo/source/src/tools/.deps
 external/liblo/source/src/tools/.libs
+external/liblo/source/src/tools/*.exe
 external/liblo/source/config.log
 external/liblo/source/config.status
 external/liblo/source/libtool
