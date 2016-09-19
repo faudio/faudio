@@ -26,7 +26,7 @@ project(FA C CXX)
 set(VERSION_PRE "")
 set(VERSION_X 2)
 set(VERSION_Y 20)
-set(VERSION_Z 1)
+set(VERSION_Z 2)
 set(VERSION_SUFF "")
 set(VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}")
 
@@ -68,7 +68,7 @@ option(ENABLE_OGG_VORBIS        "Enable OGG/Vorbis support"                 True
 option(ENABLE_AUDIO_UNIT        "Enable AudioUnit processors"               ${APPLE})
 option(ENABLE_VST               "Enable VST processors"                     True)
 option(ENABLE_HTTP              "Enable HTTP-client functionality"          True)
-option(ENABLE_MP3_IMPORT        "Enable MP3 import"                         False)
+option(ENABLE_MP3_IMPORT        "Enable MP3 import"                         True)
 
 option(BUILD_FRAMEWORK          "Build an OS X framework"                   ${APPLE})
 option(BUILD_SHARED             "Build a shared library"                    ${NOT_APPLE})
