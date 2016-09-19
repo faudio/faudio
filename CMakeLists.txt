@@ -3,7 +3,7 @@
 ##  CMake build for FA
 ##
 ##  This script is slighly unusual, in that it requires components_resolve to be called once before
-##  building anything. Follow the instructions in README and all we be well.
+##  building anything. Follow the instructions in README and all will be well.
 ##
 
 cmake_minimum_required(VERSION 2.8.8)
@@ -102,7 +102,7 @@ if(APPLE)
   if(NO_DEP_TARGET)
     message(FATAL_ERROR
       "\nNo OS X deployment target set."
-      "\nTry -DCMAKE_OSX_DEPLOYMENT_TARGET=10.5.")
+      "\nTry -DCMAKE_OSX_DEPLOYMENT_TARGET=10.7.")
   endif()
 endif()
 
@@ -341,12 +341,12 @@ if (COMPONENTS_RESOLVED)
   ## Config file
 
   set(FA_VERSION "{ \"${VERSION_PRE}\", ${VERSION_X}, ${VERSION_Y}, ${VERSION_Z}, \"${VERSION_SUFF}\" }")
-  set(FA_REALTIME_MIDI      ENABLE_REALTIME_MIDI)
-  set(FA_REALTIME_AUDIO     ENABLE_REALTIME_AUDIO)
-  set(FA_NONREALTIME_AUDIO  ENABLE_NONREALTIME_AUDIO)
-  set(FA_HAS_FLUIDSYNTH     ENABLE_FLUIDSYNTH)
-  set(FA_HAS_AUDIO_UNIT     ENABLE_AUDIO_UNIT)
-  set(FA_HAS_VST            ENABLE_VST)
+  set(FA_REALTIME_MIDI      ${ENABLE_REALTIME_MIDI})
+  set(FA_REALTIME_AUDIO     ${ENABLE_REALTIME_AUDIO})
+  set(FA_NONREALTIME_AUDIO  ${ENABLE_NONREALTIME_AUDIO})
+  set(FA_HAS_FLUIDSYNTH     ${ENABLE_FLUIDSYNTH})
+  set(FA_HAS_AUDIO_UNIT     ${ENABLE_AUDIO_UNIT})
+  set(FA_HAS_VST            ${ENABLE_VST})
 
   configure_file(
     ${CMAKE_SOURCE_DIR}/include/config.h.in
