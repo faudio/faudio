@@ -9,7 +9,7 @@ CXXFLAGS="-arch x86_64" \
 LDFLAGS="-arch x86_64" \
 ./configure \
     --prefix=`pwd`/../result \
-	  && make \
+	  && MACOSX_DEPLOYMENT_TARGET="10.7" make \
 	  && make install
 
 # 	  && cp -R include/ ../result/include/

@@ -7,10 +7,9 @@ pushd external/sndfile/source;
 CFLAGS="-arch x86_64" \
 CXXFLAGS="-arch x86_64" \
 LDFLAGS="-arch x86_64" \
-MACOSX_DEPLOYMENT_TARGET="10.7" \
 ./configure \
     --prefix=`pwd`/../result \
     --build=x86_64-apple-darwin \
     --disable-external-libs \
-		&& make install;
+		&& MACOSX_DEPLOYMENT_TARGET="10.7" make install;
 popd;
