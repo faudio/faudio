@@ -174,7 +174,7 @@ int main(int argc, char const *argv[])
     if (verbose) printf("Starting OSC listener thread...\n");
     lo_server_thread st = lo_server_thread_new_with_proto_and_node(port, LO_TCP, "127.0.0.1", liblo_error);
     if (!st) {
-        fa_slog_info("Could not start OSC server, exiting\n");
+        fa_fail(fa_string_format("Could not start OSC server on port %s, exiting", port));
         curl_global_cleanup();
         exit(3);
     }
@@ -411,7 +411,12 @@ int cleanup(void *user_data)
 
 void liblo_error(int num, const char *msg, const char *path)
 {
-    printf("liblo error %d in path %s: %s\n", num, path, msg);
+    // printf("liblo error %d in path %s: %s\n", num, path, msg);
+    if (path) {
+        fa_warn(fa_string_format("liblo error %d in path %s: %s", num, path, msg));
+    } else {
+        fa_warn(fa_string_format("liblo error %d: %s", num, msg));
+    }
     fflush(stdout);
 }
 
