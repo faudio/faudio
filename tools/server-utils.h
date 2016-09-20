@@ -1005,6 +1005,30 @@ fa_ptr_t _midi_status_callback(fa_ptr_t session)
     return NULL;
 }
 
+#ifdef _WIN32
+// Get a short (8.3) path on Windows. Does not consume the argument.
+char* get_short_cpath(fa_string_t path) {
+    wchar_t *wpath = fa_string_to_wstr(path);
+    int wlength = GetShortPathNameW(wpath, 0, 0);
+    if (!wlength) {
+        free(wpath);
+        return NULL;
+    }
+    LPWSTR shortp = (LPWSTR)calloc(wlength, sizeof(WCHAR));
+    GetShortPathNameW(wpath, shortp, wlength); // shortp is now the 8.3 path, but as a wide string
+    free(wpath);
+    int clength = WideCharToMultiByte(CP_OEMCP, 0, shortp, wlength, 0, 0, 0, 0);
+    if (!clength) {
+        free(shortp);
+        return NULL;
+    }
+    LPSTR cpath = (LPSTR)calloc(clength, sizeof(CHAR));
+    WideCharToMultiByte(CP_OEMCP, 0, shortp, wlength, cpath, clength, 0, 0);
+    free(shortp);
+    return cpath;
+}
+#endif
+
 void start_sessions() {
     assert(!current_audio_session && "An audio session is already running!");
     assert(!current_midi_session && "A MIDI session is already running!");
@@ -1023,21 +1047,15 @@ void start_sessions() {
         fa_inform(fa_string("Creating FluidSynth instance"));
         fluid_synth = new_fluid_synth(settings);
         fa_inform(fa_string_dappend(fa_string("    Loading sound font "), fa_copy(soundfont_path)));
-        wchar_t *wpath = fa_string_to_utf16(soundfont_path);
         // Because fluidsynth uses fopen instead of _wfopen, we convert the filename to 8.3
-        int wlength = GetShortPathNameW(wpath, 0, 0);
-        if (!wlength) {
-            fa_fail(fa_string("    Could not load sound font: could not get short path"));
-            free(wpath);
+        char *cpath = get_short_cpath(soundfont_path);
+        if (!cpath) {
+            fa_fail(fa_string("    Could not load sound font: could not get short path. Does the file exist?"));
+            delete_fluid_synth(fluid_synth);
+            delete_fluid_settings(settings);
+            fluid_synth = NULL;
             return;
         }
-        LPWSTR shortp = (LPWSTR)calloc(wlength, sizeof(WCHAR));
-        GetShortPathNameW(wpath, shortp, wlength); // shortp is now the 8.3 path, but in utf-16
-        free(wpath);
-        int clength = WideCharToMultiByte(CP_OEMCP, 0, shortp, wlength, 0, 0, 0, 0);
-        LPSTR cpath = (LPSTR)calloc(clength, sizeof(CHAR));
-        WideCharToMultiByte(CP_OEMCP, 0, shortp, wlength, cpath, clength, 0, 0);
-        free(shortp);
         fa_inform(fa_string_dappend(fa_string("    using short path:  "), fa_string(cpath)));
         ////
         if (FLUID_FAILED == fluid_synth_sfload(fluid_synth, cpath, true)) {
