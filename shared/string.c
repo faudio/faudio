@@ -354,16 +354,6 @@ fa_char16_t* fa_string_to_utf16(fa_string_t str)
     return (fa_char16_t*) cstr;
 }
 
-#ifdef _WIN32
-wchar_t* fa_string_to_wstr(fa_string_t str)
-{
-    int wlength = MultiByteToWideChar(CP_UTF8, 0, str->data, str->size, 0, 0, 0, 0);
-    LPSTR wstr = (LPSTR)calloc(wlength, sizeof(wchar_t));
-    WideCharToMultiByte(CP_UTF8, 0, str->data, str->size, wstr, wlength, 0, 0);
-    return wstr;
-}
-#endif
-
 fa_string_t fa_string_from_utf8(const fa_char8_t* cstr)
 {
     size_t inSize, outSize, strSize;

@@ -57,6 +57,7 @@ list(APPEND SRCS_MSYS
   ../platform/windows/device.c
   ../platform/windows/system/directory.c
   ../platform/windows/signal.c
+  ../platform/windows/string.c
   ../platform/windows/clock.c
   )
 
