@@ -29,8 +29,8 @@ void printhex16(const fa_char16_t *s)
 }
 
 void printwhex(const wchar_t *s) {
-    while(*s)
-      printf("%08x ", *s++);
+    const char* fmt = sizeof(wchar_t) == 4 ? "%08x " : "%04x ";
+    while(*s) printf(fmt, *s++);
     printf("\n");
 }
 
@@ -267,6 +267,14 @@ void test_string()
         
         fa_dprint("Chinese text from utf16: %s\n", fa_string_from_utf16(kChineseSampleTextUTF16));
         printf("Length of chinese text from utf16: %d\n", fa_string_length(fa_string_from_utf16(kChineseSampleTextUTF16)));
+
+        #ifdef _WIN32
+        wchar_t *wide1 = L"a wide string";
+        wchar_t *wide2 = fa_string_to_wstr(fa_string("a wide string"));
+        printf("Testing wide string: %s\n", wcscmp(wide1, wide2) ? "not ok" : "ok");
+        printf("wide1: "); printwhex(wide1);
+        printf("wide2: "); printwhex(wide2);
+        #endif
     }
     
     // $examples = array(
