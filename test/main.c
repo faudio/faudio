@@ -2,12 +2,37 @@
 #include <fa/fa.h>
 #include <fa/util.h>
 
+#include <stdio.h>
+
+#include <wchar.h>
+
 void test_section(char *str)
 {
     printf("\n\n--------------------\n");
     fa_log_info(fa_string_dappend(fa_string("Running test: "), fa_string(str)));
 }
 
+void printhex(const char *s)
+{
+  while(*s) {
+    printf("%02x ", (unsigned char) *s++);
+    fflush(stdout);
+  }
+  printf("\n");
+}
+
+void printhex16(const fa_char16_t *s)
+{
+    while(*s)
+      printf("%04x ", (unsigned int) *s++);
+    printf("\n");
+}
+
+void printwhex(const wchar_t *s) {
+    while(*s)
+      printf("%08x ", *s++);
+    printf("\n");
+}
 
 // --------------------------------------------------------------------------------
 
@@ -143,9 +168,9 @@ void test_string()
         printf("len: %i\n", fa_string_length(s));
         fa_print("str: %s\n", s);
 
-        printf("charAt 0: %x\n", fa_char_at(0, s));
-        printf("charAt 1: %x\n", fa_char_at(1, s));
-        printf("charAt 2: %x\n", fa_char_at(2, s));
+        // printf("charAt 0: %x\n", fa_char_at(0, s));
+        // printf("charAt 1: %x\n", fa_char_at(1, s));
+        // printf("charAt 2: %x\n", fa_char_at(2, s));
         fa_destroy(s);
     }
 
@@ -188,6 +213,77 @@ void test_string()
         fa_string_t s = fa_string("A double quote: \", A backslash: \\");
         fa_dprint("str: %s\n", s);
     }
+    
+    {
+        
+        printf("sizeof(wchar_t): %zu  sizeof(fa_char16_t): %zu\n", sizeof(wchar_t), sizeof(fa_char16_t));
+        
+        // Chinese characters for "zhongwen" ("Chinese language").
+        const char kChineseSampleTextUTF8[] = "\xe4\xb8\xad\xe6\x96\x87"; //{-28, -72, -83, -26, -106, -121, 0};
+        fa_char16_t kChineseSampleTextUTF16[] = {0x4E2D, 0x6587, 0};
+        fa_string_t chineseText = fa_string(kChineseSampleTextUTF8);
+        
+        // Arabic "al-arabiyya" ("Arabic").
+        const char kArabicSampleTextUTF8[] = {-40, -89, -39, -124, -40, -71, -40, -79, -40, -88, -39, -118, -40, -87, 0};
+        fa_string_t arabicText = fa_string(kArabicSampleTextUTF8);
+ 
+        // Spanish word "canon" with an "n" with "~" on top and an "o" with an acute accent.
+        const char kSpanishSampleTextUTF8[] = {99, 97, -61, -79, -61, -77, 110, 0};
+        fa_string_t spanishText = fa_string(kSpanishSampleTextUTF8);
+        
+        fa_print("Chinese text: %s\n", chineseText);
+        printf("  (length: %d)\n", fa_string_length(chineseText));
+        fa_print("Arabic text: %s\n", arabicText);
+        fa_print("Spanish text: %s\n", spanishText);
+        
+        printf("utf-8 <-> utf-8: %s\n", (strcmp(kChineseSampleTextUTF8, fa_string_to_utf8(chineseText)) ? "not ok" : "ok"));
+        printf("utf-8 <-> utf-8: %s\n", (strcmp(kArabicSampleTextUTF8, fa_string_to_utf8(arabicText)) ? "not ok" : "ok"));
+        printf("utf-8 <-> utf-8: %s\n", (strcmp(kSpanishSampleTextUTF8, fa_string_to_utf8(spanishText)) ? "not ok" : "ok"));
+        
+        printf("Invalid utf-8 return NULL: %s\n", fa_string("Test\xc3\x28test") == 0 ? "ok" : "not ok");
+        
+        printf("fa_dequal %s\n", fa_dequal(fa_string_from_utf8(kChineseSampleTextUTF8),
+         fa_string_from_utf16(kChineseSampleTextUTF16)) ? "ok" : "not ok");
+        
+        fa_char16_t* chinese16 = fa_string_to_utf16(chineseText);
+        printf("chinese text in utf16 (codepoints): ");
+        printhex16(chinese16);
+        
+        printf("utf-8 <-> utf-16: %s\n", strcmp((char*)kChineseSampleTextUTF8, fa_string_to_utf8(fa_string_from_utf16(kChineseSampleTextUTF16))) ? "not ok" : "ok");
+          
+        // NB: wchar_t is 32 bit on Mac but 16 bit on Windows!
+        
+        //fa_dprint("Wide string: %s\n", fa_string_from_utf16((fa_char16_t*) L"nisse")); // L"\u4E2D\u6587"));
+        
+        printf("in (codepoints):  "); printhex16(kChineseSampleTextUTF16);
+        printf("in (bytes):       "); printhex((char*) kChineseSampleTextUTF16);
+        printf("out (codepoints): "); printhex16(fa_string_to_utf16(chineseText));
+        printf("out (bytes):      "); printhex((char*) fa_string_to_utf16(chineseText));
+        
+
+        fa_destroy(chineseText);
+        fa_destroy(arabicText);
+        fa_destroy(spanishText);
+        
+        fa_dprint("Chinese text from utf16: %s\n", fa_string_from_utf16(kChineseSampleTextUTF16));
+        printf("Length of chinese text from utf16: %d\n", fa_string_length(fa_string_from_utf16(kChineseSampleTextUTF16)));
+    }
+    
+    // $examples = array(
+    //     'Valid ASCII' => "a",
+    //     'Valid 2 Octet Sequence' => "\xc3\xb1",
+    //     'Invalid 2 Octet Sequence' => "\xc3\x28",
+    //     'Invalid Sequence Identifier' => "\xa0\xa1",
+    //     'Valid 3 Octet Sequence' => "\xe2\x82\xa1",
+    //     'Invalid 3 Octet Sequence (in 2nd Octet)' => "\xe2\x28\xa1",
+    //     'Invalid 3 Octet Sequence (in 3rd Octet)' => "\xe2\x82\x28",
+    //     'Valid 4 Octet Sequence' => "\xf0\x90\x8c\xbc",
+    //     'Invalid 4 Octet Sequence (in 2nd Octet)' => "\xf0\x28\x8c\xbc",
+    //     'Invalid 4 Octet Sequence (in 3rd Octet)' => "\xf0\x90\x28\xbc",
+    //     'Invalid 4 Octet Sequence (in 4th Octet)' => "\xf0\x28\x8c\x28",
+    //     'Valid 5 Octet Sequence (but not Unicode!)' => "\xf8\xa1\xa1\xa1\xa1",
+    //     'Valid 6 Octet Sequence (but not Unicode!)' => "\xfc\xa1\xa1\xa1\xa1\xa1",
+    // );
 }
 
 
@@ -785,14 +881,14 @@ void test_for_each()
 
     printf("\n");
 
-    fa_with(map, map(
-                fa_string("foo"), fa_i16(1),
-                fa_string("bar"), list(fa_i16(1), fa_i16(2), fa_i16(3))),
-            fa_destroy(map)) {
-        fa_for_each(x, fa_map_to_list(map)) {
-            fa_print(">    %s\n", x);
-        }
-    }
+    // fa_with(map, map(
+    //             fa_string("foo"), fa_i16(1),
+    //             fa_string("bar"), list(fa_i16(1), fa_i16(2), fa_i16(3))),
+    //         fa_destroy(map)) {
+    //     fa_for_each(x, fa_map_to_list(map)) {
+    //         fa_print(">    %s\n", x);
+    //     }
+    // }
 }
 
 
@@ -1148,6 +1244,11 @@ void test_list()
         fa_print("xs                           ==> %s\n", xs);
         fa_ptr_t sum = fa_list_dfold_left(apply2, fa_add, fa_i8(0), xs);
         fa_print("sum(xs)                      ==> %s\n", sum);
+    }
+    {
+        fa_list_t xs = fa_empty();
+        xs = fa_list_dreverse(xs);
+        fa_dprint("Reversed empty list:         ==> %s\n ", xs);
     }
 }
 
@@ -1998,42 +2099,42 @@ int main(int argc, char const *argv[])
 
         fa_initialize();
 
-        add_test(alloc);
-        add_test(types);
-        add_test(value_references);
-        add_test(generic_functions);
+        // add_test(alloc);
+        // add_test(types);
+        // add_test(value_references);
+        // add_test(generic_functions);
         add_test(string);
-        add_test(show);
-        add_test(compare);
-        add_test(rational);
-        add_test(buffer);
-        add_test(buffer_zip_unzip);
-        add_test(buffer_meta);
-        add_test(time);
-        // test_system_time();
-        // test_type();
-        add_test(midi_message);
-
-        add_test(thread);
-        add_test(mutex);
-
-        add_test(atomic);
-        add_test(atomic_queue);
-        // add_test(atomic_stack);
-        add_test(atomic_ring_buffer);
-
-        add_test(for_each);
-        add_test(list);
-        add_test(set);
-        add_test(map);
-        // test_graph(fa_string_dappend(fa_system_directory_current(), fa_string("/test/gen.dot")));
-        // test_priority_queue(10);
-        // test_json(fa_string_dappend(fa_system_directory_current(), fa_string("/test/example.json")));
-
-        add_test(log);
-        add_test(error);
-        add_test(system_directory);
-        add_test(regex);
+        // add_test(show);
+        // add_test(compare);
+        // add_test(rational);
+        // add_test(buffer);
+        // add_test(buffer_zip_unzip);
+        // add_test(buffer_meta);
+        // add_test(time);
+        // // test_system_time();
+        // // test_type();
+        // add_test(midi_message);
+        //
+        // add_test(thread);
+        // add_test(mutex);
+        //
+        // add_test(atomic);
+        // add_test(atomic_queue);
+        // // add_test(atomic_stack);
+        // add_test(atomic_ring_buffer);
+        //
+        // add_test(for_each);
+        // add_test(list);
+        // add_test(set);
+        // add_test(map);
+        // // test_graph(fa_string_dappend(fa_system_directory_current(), fa_string("/test/gen.dot")));
+        // // test_priority_queue(10);
+        // // test_json(fa_string_dappend(fa_system_directory_current(), fa_string("/test/example.json")));
+        //
+        // add_test(log);
+        // add_test(error);
+        // add_test(system_directory);
+        // add_test(regex);
 
         for (int i = 0; i < test_function_count; ++i) {
             test_function[i]();

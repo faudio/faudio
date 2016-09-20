@@ -23,7 +23,7 @@
 
     * Straightforward implementation using bounded buffer
 
-        - Only 16-bit, extended range not supported
+        - Internally stored as UTF-8
 
         - fa_copy uses reference counting, so "copying" is O(1) (Note that copy-on-write is not needed, as fa_strings are immutable)
 
@@ -33,13 +33,10 @@
           NB: realloc can be really slow on old OS X versions and several Windows platforms!
  */
 
-#define kStandardCode       "UTF-16LE"          // Internal string code
-#define kStandardCodeSize   sizeof(uint16_t)    // Internal char size
-
 struct _fa_string_t {
     fa_impl_t       impl;           // Dispatcher
-    size_t          size;           // Character count
-    uint16_t        *data;          // Payload
+    size_t          size;           // Byte (NOT character) count
+    uint8_t         *data;          // Payload
     fa_atomic_t     count;          // Reference count
 };
 
@@ -51,7 +48,7 @@ fa_error_t string_error(fa_string_t msg);
 static void string_fatal(char *msg, int error);
 static fa_ptr_t string_impl(fa_id_t interface);
 
-fa_string_t new_string(size_t size, uint16_t *data)
+fa_string_t new_string(size_t size, uint8_t *data)
 {
 
     fa_string_t str = fa_new(string);
@@ -81,17 +78,20 @@ fa_string_t fa_string_empty()
     return new_string(0, NULL);
 }
 
-fa_string_t fa_string_single(fa_char16_t chr)
+fa_string_t fa_string_single(fa_char8_t chr)
 {
+    if (chr > 127) return NULL; // Only ASCII supported
     fa_string_t str = new_string(1, NULL);
-    str->data = fa_malloc(kStandardCodeSize);
+    str->data = fa_malloc(1);
     str->data[0] = chr;
 
     return str;
 }
 
-fa_string_t fa_string_repeat(int times, fa_char16_t chr)
+fa_string_t fa_string_repeat(int times, fa_char8_t chr)
 {
+    if (chr > 127) return NULL; // Only ASCII supported
+    
     /*
     // Canonic but inefficient implementation
     fa_string_t s = fa_string("");
@@ -101,7 +101,7 @@ fa_string_t fa_string_repeat(int times, fa_char16_t chr)
     }*/
 
     // Less elegant, but much faster
-    fa_string_t s = new_string(times, fa_malloc(times * kStandardCodeSize));
+    fa_string_t s = new_string(times, fa_malloc(times));
     for (int i = 0; i < times; ++i) {
         s->data[i] = chr;
     }
@@ -118,9 +118,9 @@ fa_string_t fa_string_copy(fa_string_t str)
 fa_string_t fa_string_deep_copy(fa_string_t str)
 {
     fa_string_t pst = new_string(str->size, NULL);
-    pst->data = fa_malloc(str->size * kStandardCodeSize);
+    pst->data = fa_malloc(str->size);
 
-    memcpy(pst->data, str->data, str->size * kStandardCodeSize);
+    memcpy(pst->data, str->data, str->size);
 
     return pst;
 }
@@ -129,10 +129,10 @@ fa_string_t fa_string_append(fa_string_t str1,
                              fa_string_t str2)
 {
     fa_string_t cs = new_string(str1->size + str2->size, NULL);
-    cs->data = fa_malloc(cs->size * kStandardCodeSize);
+    cs->data = fa_malloc(cs->size);
 
-    memcpy(cs->data, str1->data, str1->size * kStandardCodeSize);
-    memcpy(cs->data + str1->size, str2->data, str2->size * kStandardCodeSize);
+    memcpy(cs->data, str1->data, str1->size);
+    memcpy(cs->data + str1->size, str2->data, str2->size);
 
     return cs;
 }
@@ -152,9 +152,9 @@ fa_string_t fa_string_dappend(fa_string_t str1,
     size_t oldSize = str1->size;
 
     str1->size = str1->size + str2->size;
-    str1->data = fa_realloc(str1->data, str1->size * kStandardCodeSize);
+    str1->data = fa_realloc(str1->data, str1->size);
 
-    memcpy(str1->data + oldSize, str2->data, str2->size * kStandardCodeSize);
+    memcpy(str1->data + oldSize, str2->data, str2->size);
 
     fa_string_destroy(str2);
     return str1;
@@ -177,6 +177,7 @@ int fa_string_length(fa_string_t str)
 
 uint16_t fa_string_char_at(int pos, fa_string_t str)
 {
+    assert(false && "not implemented");
     if (pos < 0 || pos >= str->size) {
         assert(false && "Character out of range");
     }
@@ -264,74 +265,30 @@ void iconv_fail()
 {
     switch (errno) {
     case E2BIG:
-        printf("iconv: Output buffer too small %d",
-                     errno);
+        printf("iconv: Output buffer too small %d", errno);
+        break;
 
     case EILSEQ:
-        printf("iconv: Input byte does not belong to the input codeset  %d",
-                     errno);
+        printf("iconv: Input byte does not belong to the input codeset  %d", errno);
+        break;
 
     case EINVAL:
-        printf("iconv: Incomplete character or shift sequence at the end of the input buffer  %d",
-                     errno);
+        printf("iconv: Incomplete character or shift sequence at the end of the input buffer  %d", errno);
+        break;
 
     default:
-        printf("iconv: Unknown error  %d",
-                     errno);
+        printf("iconv: Unknown error  %d", errno);
+        break;
     }
-    assert(false && "iconv_fail");
 }
 
-inline static
-size_t raw_size(const char *s)
-{
-    size_t i = 0;
-
-    while (s[i]) {
-        i++;
-    }
-
-    return i;
-}
-
-inline static
-size_t raw_size_16(const uint16_t *s)
-{
-    size_t i = 0;
-
-    while (s[i]) {
-        i++;
-    }
-
-    return i;
-}
 
 fa_char8_t* fa_string_to_utf8(fa_string_t str)
 {
-    size_t inSize, outSize, cstrSize;
-    char *in, *out, *cstr;
-
-    inSize  = str->size * kStandardCodeSize;   // exact char count
-    outSize = str->size * 4;            // worst case, we shrink after iconv
-    in      = (char *) str->data;
-    out     = fa_malloc(outSize);
-    cstr    = out;
-
-    {
-        iconv_t conv   = iconv_open("UTF-8", kStandardCode);
-        size_t  status = iconv(conv, &in, &inSize, &out, &outSize);
-        iconv_close(conv);
-
-        if (status == ((size_t) - 1)) {
-            iconv_fail();
-        }
-    }
-
-    cstrSize = out - cstr;
-    cstr     = fa_realloc(cstr, cstrSize + 1);
-
-    cstr[cstrSize] = 0;                 // add null-terminator
-
+    size_t size = str->size;
+    fa_char8_t *cstr = fa_malloc(size + 1);
+    memcpy(cstr, str->data, str->size);
+    cstr[size] = 0;
     return cstr;
 }
 
@@ -340,19 +297,21 @@ fa_char8_t* fa_string_to_cp1252(fa_string_t str)
     size_t inSize, outSize, cstrSize;
     char *in, *out, *cstr;
 
-    inSize  = str->size * kStandardCodeSize;   // exact char count
-    outSize = str->size * 4;            // worst case, we shrink after iconv
+    inSize  = str->size;
+    outSize = str->size + 1;       // worst case, we shrink after iconv (CP1252 can never take more space than UTF-8)
     in      = (char *) str->data;
     out     = fa_malloc(outSize);
     cstr    = out;
 
     {
-        iconv_t conv   = iconv_open("CP1252", kStandardCode);
+        iconv_t conv   = iconv_open("CP1252", "UTF-8");
         size_t  status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 
         if (status == ((size_t) - 1)) {
             iconv_fail();
+            fa_free(cstr);
+            return NULL;
         }
     }
 
@@ -360,45 +319,82 @@ fa_char8_t* fa_string_to_cp1252(fa_string_t str)
     cstr     = fa_realloc(cstr, cstrSize + 1);
 
     cstr[cstrSize] = 0;                 // add null-terminator
-
     return cstr;
 }
 
 
-fa_char16_t* fa_string_to_utf16(fa_string_t as)
+fa_char16_t* fa_string_to_utf16(fa_string_t str)
 {
-    size_t size = as->size;
-    uint16_t *cstr = fa_malloc((size + 1) * kStandardCodeSize);
-    memcpy(cstr, as->data, as->size * kStandardCodeSize);
-    cstr[size] = 0;
-    return cstr;
+    size_t inSize, outSize, cstrSize;
+    char *in, *out, *cstr;
+
+    inSize  = str->size;
+    outSize = str->size * 2 + 2;       // worst case, we shrink after iconv (UTF-16 can take max twice as much space as UTF-8)
+    in      = (char *) str->data;
+    out     = fa_malloc(outSize);
+    cstr    = out;
+    
+    {
+        iconv_t conv   = iconv_open("UTF-16LE", "UTF-8");
+        size_t  status = iconv(conv, &in, &inSize, &out, &outSize);
+        iconv_close(conv);
+
+        if (status == ((size_t) - 1)) {
+            iconv_fail();
+            fa_free(cstr);
+            return NULL;
+        }
+    }
+
+    cstrSize = out - cstr;
+    cstr     = fa_realloc(cstr, cstrSize + 2);
+
+    cstr[cstrSize] = 0;                // add null-terminator, first byte
+    cstr[cstrSize+1] = 0;              // second byte
+    return (fa_char16_t*) cstr;
 }
+
+#ifdef _WIN32
+wchar_t* fa_string_to_wstr(fa_string_t str)
+{
+    int wlength = MultiByteToWideChar(CP_UTF8, 0, str->data, str->size, 0, 0, 0, 0);
+    LPSTR wstr = (LPSTR)calloc(wlength, sizeof(wchar_t));
+    WideCharToMultiByte(CP_UTF8, 0, str->data, str->size, wstr, wlength, 0, 0);
+    return wstr;
+}
+#endif
 
 fa_string_t fa_string_from_utf8(const fa_char8_t* cstr)
 {
     size_t inSize, outSize, strSize;
     char *in, *out, *str;
 
-    inSize  = raw_size(cstr);    // char count is in [inSize/4,inSize]
-    outSize = inSize * 2;        // worst case, we shrink after iconv
+    inSize  = strlen(cstr);
+    outSize = inSize;
+    strSize = inSize;
     in      = (char*) cstr;
     out     = fa_malloc(outSize);
     str     = out;
 
     {
-        iconv_t conv = iconv_open(kStandardCode, "UTF-8");
+        iconv_t conv = iconv_open("UTF-8", "UTF-8");
         size_t status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 
         if (status == ((size_t) - 1)) {
             iconv_fail();
+            fa_free(str);
+            return NULL;
         }
     }
+    
+    return new_string(strSize, (uint8_t *) str);
 
-    strSize = out - str;
-    str     = fa_realloc(str, strSize);
-
-    return new_string(strSize / kStandardCodeSize, (uint16_t *) str);
+    // Simpler implementation, but it doesn't check validity of the input
+    // size_t size = strlen(cstr);
+    // fa_string_t as = new_string(size, fa_malloc(size));
+    // memcpy(as->data, cstr, as->size);
+    // return as;
 }
 
 fa_string_t fa_string_from_cp1252(const fa_char8_t* cstr)
@@ -406,26 +402,28 @@ fa_string_t fa_string_from_cp1252(const fa_char8_t* cstr)
     size_t inSize, outSize, strSize;
     char *in, *out, *str;
 
-    inSize  = raw_size(cstr);    // char count is in [inSize/4,inSize]
-    outSize = inSize * 2;        // worst case, we shrink after iconv
+    inSize  = strlen(cstr);
+    outSize = inSize * 2;          // worst case, we shrink after iconv (TODO: check that worst case can never be > twice)
     in      = (char*) cstr;
     out     = fa_malloc(outSize);
     str     = out;
 
     {
-        iconv_t conv = iconv_open(kStandardCode, "CP1252");
+        iconv_t conv = iconv_open("UTF-8", "CP1252");
         size_t status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 
         if (status == ((size_t) - 1)) {
             iconv_fail();
+            fa_free(str);
+            return NULL;
         }
     }
 
     strSize = out - str;
     str     = fa_realloc(str, strSize);
 
-    return new_string(strSize / kStandardCodeSize, (uint16_t *) str);
+    return new_string(strSize, (uint8_t *) str);
 }
 
 fa_string_t fa_string_from_mac_roman(const fa_char8_t* cstr)
@@ -433,34 +431,63 @@ fa_string_t fa_string_from_mac_roman(const fa_char8_t* cstr)
     size_t inSize, outSize, strSize;
     char *in, *out, *str;
 
-    inSize  = raw_size(cstr);    // char count is in [inSize/4,inSize]
-    outSize = inSize * 2;        // worst case, we shrink after iconv
+    inSize  = strlen(cstr);
+    outSize = inSize * 2;          // worst case, we shrink after iconv (TODO: check that worst case can never be > twice)
     in      = (char*) cstr;
     out     = fa_malloc(outSize);
     str     = out;
 
     {
-        iconv_t conv = iconv_open(kStandardCode, "macintosh");
+        iconv_t conv = iconv_open("UTF-8", "macintosh");
         size_t status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 
         if (status == ((size_t) - 1)) {
             iconv_fail();
+            fa_free(str);
+            return NULL;
         }
     }
 
     strSize = out - str;
     str     = fa_realloc(str, strSize);
 
-    return new_string(strSize / kStandardCodeSize, (uint16_t *) str);
+    return new_string(strSize, (uint8_t *) str);
+}
+
+inline static size_t raw_size_16(const fa_char16_t *s) {
+    size_t i = 0;
+    while (s[i]) i++;
+    return i;
 }
 
 fa_string_t fa_string_from_utf16(const fa_char16_t* cstr)
 {
-    size_t size = raw_size_16(cstr);
-    fa_string_t as = new_string(size, fa_malloc(size * kStandardCodeSize));
-    memcpy(as->data, cstr, as->size * kStandardCodeSize);
-    return as;
+    size_t inSize, outSize, strSize;
+    char *in, *out, *str;
+
+    inSize  = raw_size_16(cstr) * 2;
+    outSize = inSize * 2;          // worst case, we shrink after iconv (UTF-8 can never take more than twice as much space as UTF-16)
+    in      = (char*) cstr;
+    out     = fa_malloc(outSize);
+    str     = out;
+
+    {
+        iconv_t conv = iconv_open("UTF-8", "UTF-16LE");
+        size_t status = iconv(conv, &in, &inSize, &out, &outSize);
+        iconv_close(conv);
+        
+        if (status == ((size_t) - 1)) {
+            iconv_fail();
+            fa_free(str);
+            return NULL;
+        }
+    }
+
+    strSize = out - str;
+    str     = fa_realloc(str, strSize);
+    
+    return new_string(strSize, (uint8_t *) str);
 }
 
 

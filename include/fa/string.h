@@ -62,13 +62,13 @@ fa_string_t fa_string_empty();
 
     The returned string should be destroyed by the caller.
 */
-fa_string_t fa_string_single(fa_char16_t char16);
+fa_string_t fa_string_single(fa_char8_t char8);
 
 /** Create a string by repeating the given character.
 
     The returned string should be destroyed by the caller.
 */
-fa_string_t fa_string_repeat(int int_, fa_char16_t char16);
+fa_string_t fa_string_repeat(int int_, fa_char8_t char8);
 
 /** Copy the given string.
 
@@ -177,6 +177,12 @@ fa_char16_t* fa_string_to_utf16(fa_string_t string);
     * On Mac OS X and iOS, `CFStringRef` is used.
 */
 fa_ptr_t fa_string_to_native(fa_string_t string);
+
+/** Convert a string to a "wide string", i.e. a wchar_t*
+    Native conversion functions are used.
+    (Currently only available on Windows)
+*/
+wchar_t* fa_string_to_wstr(fa_string_t string);
 
 /** Deencode a string from UTF-8.
 

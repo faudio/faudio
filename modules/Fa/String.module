@@ -54,13 +54,13 @@ module Fa.String
 
         The returned string should be destroyed by the caller.
      */
-    single : Char16 -> String;
+    single : Char8 -> String;
 
     /** Create a string by repeating the given character.
 
         The returned string should be destroyed by the caller.
      */
-    repeat : (Int, Char16) -> String;
+    repeat : (Int, Char8) -> String;
 
     /** Copy the given string.
 
