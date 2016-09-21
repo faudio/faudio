@@ -232,7 +232,7 @@ inline static void session_init_devices(session_t session)
         bool found_host = false;
         for (PaHostApiIndex i = 0; i < count; i++) {
             const PaHostApiInfo *info = Pa_GetHostApiInfo(i);
-            if (fa_dequal(fa_string(info->name), fa_copy(session->default_host_name))) {
+            if (fa_dequal(fa_string_from_utf8(info->name), fa_copy(session->default_host_name))) {
                 session->def_input = new_device(session, info->defaultInputDevice);
                 session->def_output = new_device(session, info->defaultOutputDevice);
                 is_set = true;
@@ -431,7 +431,7 @@ session_t fa_audio_begin_session_with_preferred_host(fa_string_t preferred_host_
             session->host_names = fa_empty();
             for (PaHostApiIndex i = 0; i < count; i++) {
                 const PaHostApiInfo *info = Pa_GetHostApiInfo(i);
-                fa_string_t host_name = fa_string(info->name);
+                fa_string_t host_name = fa_string_from_utf8(info->name);
                 fa_push_list(host_name, session->host_names);
             }
             fa_slog_info("    Available hosts: ", session->host_names);
@@ -742,7 +742,7 @@ static inline void set_parameter(const char *name, fa_ptr_t value, session_t ses
 
         return;
     }
-    fa_warn(fa_dappend(fa_string("Unknown setting: "), fa_string(name)));
+    fa_warn(fa_dappend(fa_string("Unknown setting: "), fa_string_from_utf8(name)));
 }
 
 void fa_audio_set_parameter(fa_string_t name,
@@ -788,7 +788,7 @@ fa_list_t fa_audio_all(session_t session)
 //         fa_map_t map = fa_map_empty();
 //         fa_map_set_value_destructor(map, fa_destroy);
 //         map = fa_map_dset(fa_string("type"), fa_i16(info->type), map);
-//         map = fa_map_dset(fa_string("name"), fa_string(info->name), map);
+//         map = fa_map_dset(fa_string("name"), fa_string_from_utf8(info->name), map);
 //         map = fa_map_dset(fa_string("deviceCount"), fa_i16(info->deviceCount), map);
 //         if (i == default_api) {
 //             map = fa_map_dset(fa_string("default"), fa_from_bool(true), map);
@@ -1161,7 +1161,7 @@ stream_t fa_audio_open_stream_with_callbacks(device_t input,
         // Retry in shared mode
         if ((status != paNoError) && exclusive && session->parameters.exclusive == em_try) {
             fa_slog_info("Could not open WASAPI stream in exclusive mode, trying shared mode...");
-            fa_inform(fa_string((char *) Pa_GetErrorText(status)));
+            fa_inform(fa_string_from_utf8((char *) Pa_GetErrorText(status)));
 
             exclusive = false;
             buffer_size = session->parameters.vector_size_sh;
@@ -1202,7 +1202,7 @@ stream_t fa_audio_open_stream_with_callbacks(device_t input,
     
         fa_inform(fa_string("Started stream using these values:"));
         if (wasapi) {
-            fa_inform(fa_dappend(fa_string("    Exclusive Mode:           "), fa_string(exclusive ? "Yes" : "No")));
+            fa_inform(fa_dappend(fa_string("    Exclusive Mode:           "), fa_string_from_utf8(exclusive ? "Yes" : "No")));
         } else {
             fa_inform(fa_string("    Exclusive Mode:           n/a"));
         }
@@ -1277,12 +1277,12 @@ void fa_audio_close_stream(stream_t stream)
 
             if ((error = Pa_StopStream(native)) != paNoError) {
                 fa_warn(fa_string("Could not stop stream: "));
-                fa_warn(fa_string((char *) Pa_GetErrorText(error)));
+                fa_warn(fa_string_from_utf8((char *) Pa_GetErrorText(error)));
             }
 
             if ((error = Pa_CloseStream(native)) != paNoError) {
                 fa_warn(fa_string("Could not close stream"));
-                fa_warn(fa_string((char *) Pa_GetErrorText(error)));
+                fa_warn(fa_string_from_utf8((char *) Pa_GetErrorText(error)));
             }
 
             // Note that Pa_StopStream blocks until the stream is stopped,
@@ -1979,12 +1979,12 @@ fa_error_t audio_device_error_with(fa_string_t msg, int code)
         if (herr) {
             pa_error_str = fa_dappend(
                 fa_format_integral("Unanticipated Host Error, number: %ld, text: ", herr->errorCode),
-                fa_string((char*)herr->errorText));
+                fa_string_from_utf8((char*)herr->errorText));
         } else {
             pa_error_str = fa_string("Unanticipated Host Error, Pa_GetLastHostErrorInfo() failed!");
         }
     } else {
-        pa_error_str = fa_string((char *) Pa_GetErrorText(code));
+        pa_error_str = fa_string_from_utf8((char *) Pa_GetErrorText(code));
     }
 
     fa_error_t err = fa_error_create_simple(error,

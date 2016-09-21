@@ -237,6 +237,8 @@ module Fa.String
     */
     format : (Char*, ...) -> String
     
-    logCount : () -> Void;
+    /** Write the number of allocated regions to STDOUT, with an optional string prepended.
+    */
+    regionCount : (Char*) -> Void;
 }
 

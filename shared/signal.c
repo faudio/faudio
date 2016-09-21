@@ -2005,7 +2005,7 @@ fa_ptr_t vst_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state
 
 
 // TODO move
-#define fa_dynamic_is_fa_string(x) (fa_dynamic_get_type(x) == string_type_repr)
+#define fa_dynamic_is_fa_string_from_utf8(x) (fa_dynamic_get_type(x) == string_type_repr)
 #define fa_dynamic_is_bool(x)   (fa_dynamic_get_type(x) == bool_type_repr)
 #define fa_dynamic_is_pair(x)   (fa_dynamic_get_type(x) == pair_type_repr)
 #define fa_dynamic_is_list(x)   (fa_dynamic_get_type(x) == list_type_repr)
@@ -2013,7 +2013,7 @@ fa_ptr_t vst_render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state
 // Used by vst.cc
 void vst_log(const char *msg)
 {
-    // fa_warn(fa_string_dappend(fa_string("Error in VST: "), fa_string((char*) msg)));
+    // fa_warn(fa_string_dappend(fa_string("Error in VST: "), fa_string_from_utf8((char*) msg)));
 }
 
 void vst_log_i(const char *fmt, long n)
@@ -2035,7 +2035,7 @@ fa_ptr_t vst_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
     if (fa_equal(n, context->name)) {
 
-        if (fa_dynamic_is_pair(msg) && fa_dynamic_is_fa_string(fa_pair_first(msg)) && fa_equal(fa_pair_first(msg), fa_string("open"))) {
+        if (fa_dynamic_is_pair(msg) && fa_dynamic_is_fa_string_from_utf8(fa_pair_first(msg)) && fa_equal(fa_pair_first(msg), fa_string("open"))) {
             fa_warn(fa_string("Opening VST window..."));
 
             if (fa_pair_second(msg)) {

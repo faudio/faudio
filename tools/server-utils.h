@@ -244,12 +244,12 @@ fa_ptr_t create_fa_value(lo_type type, void *data) {
     switch (type) {
     case LO_INT32:      return fa_from_int32(val32.i);
     case LO_FLOAT:      return fa_from_float(val32.f);
-    case LO_STRING:     return fa_string((char *) data);
+    case LO_STRING:     return fa_string_from_utf8((char *) data);
     //case LO_BLOB:     return fa_buffer_wrap(data + 4, val32.i, NULL, NULL); // TODO: copy memory
     case LO_BLOB:       assert(false && "creating buffers from blobs not yet supported");
     case LO_INT64:      return fa_from_int64(val64.i);
     case LO_DOUBLE:     return fa_from_double(val64.f);
-    case LO_SYMBOL:     return fa_string((char *) data);
+    case LO_SYMBOL:     return fa_string_from_utf8((char *) data);
     case LO_CHAR:       return fa_string_single(val32.c); // Encoding beyond ascii?
     //case LO_MIDI: 
     case LO_TRUE:       return fa_from_bool(true);
@@ -1056,7 +1056,7 @@ void start_sessions() {
             fluid_synth = NULL;
             return;
         }
-        fa_inform(fa_string_dappend(fa_string("    using short path:  "), fa_string(cpath)));
+        fa_inform(fa_string_dappend(fa_string("    using short path:  "), fa_string_from_utf8(cpath)));
         ////
         if (FLUID_FAILED == fluid_synth_sfload(fluid_synth, cpath, true)) {
             fa_fail(fa_string("    Fluidsynth: Could not load sound font"));
@@ -1550,13 +1550,13 @@ fa_ptr_t upload_buffer(fa_ptr_t context)
         } else {
              // Print and generic error message, and send it back via OSC
              const char *errstr = curl_easy_strerror(res); // points to a string literal that should not be freed
-             fa_fail(fa_dappend(fa_format_integral("CURL error %d: ", res), fa_string(errstr)));
+             fa_fail(fa_dappend(fa_format_integral("CURL error %d: ", res), fa_string_from_utf8(errstr)));
              send_osc_async(osc_path, "iFs", id, errstr);
              // Also print specific error message if available
              size_t len = strlen(errbuf);
              if (len) {
                  if (errbuf[len - 1] == '\n') errbuf[len - 1] = 0;      // remove trailing newline
-                 fa_fail(fa_dappend(fa_string("    "), fa_string(errbuf)));
+                 fa_fail(fa_dappend(fa_string("    "), fa_string_from_utf8(errbuf)));
              }
         }
         
@@ -1674,13 +1674,13 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
     
     if (url && filename) {
         // If url is specified, create the file sink as a split filter
-        fa_io_sink_t file_sink = fa_io_write_file(fa_string(filename));
+        fa_io_sink_t file_sink = fa_io_write_file(fa_string_from_utf8(filename));
         source = fa_io_apply(fa_io_apply(source, fa_io_split(file_sink)), fa_io_create_ogg_encoder(sr, ch));
     } else if (url) {
         source = fa_io_apply(source, fa_io_create_ogg_encoder(sr, ch));
     } else {
         if (verbose) fa_slog_info("Creating file sink");
-        sink = fa_io_write_file(fa_string(filename));
+        sink = fa_io_write_file(fa_string_from_utf8(filename));
     }
     
     // if (verbose) fa_slog_info("_recording_thread 3");

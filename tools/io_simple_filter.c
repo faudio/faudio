@@ -101,8 +101,8 @@ int main(int argc, char const *argv[])
         printf("Usage: faudio-io_simple_filter <infile> [<outfile>]\n");
         exit(1);
     }
-    fa_string_t infile  = fa_string(argv[1]);
-    fa_string_t outfile = argc >= 3 ? fa_string(argv[2]) : NULL;
+    fa_string_t infile  = fa_string_from_utf8(argv[1]);
+    fa_string_t outfile = argc >= 3 ? fa_string_from_utf8(argv[2]) : NULL;
     
     fa_slog_info("infile: ", infile);
     //fa_slog_info("outfile", outfile);

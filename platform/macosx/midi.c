@@ -1224,7 +1224,7 @@ fa_error_t midi_device_error_with(fa_string_t msg, native_fa_error_t code)
 // TODO consolidate
 fa_string_t from_os_status2(OSStatus err)
 {
-    return fa_string((char *) GetMacOSStatusErrorString(err));
+    return fa_string_from_utf8((char *) GetMacOSStatusErrorString(err));
 }
 
 fa_error_t midi_error(fa_string_t msg, native_fa_error_t code)

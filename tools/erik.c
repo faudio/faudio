@@ -65,7 +65,7 @@ void run_dls()
     
     fa_thread_sleep(1000);
     
-    fa_log_region_count(fa_string("BEGIN"));
+    fa_log_region_count("BEGIN");
     fa_list_log_count();
     fa_time_log_count();
     fa_pair_log_count();
@@ -105,7 +105,7 @@ void run_dls()
         
     //print_all_actions();
     
-    fa_log_region_count(fa_string("Before scheduling"));
+    fa_log_region_count("Before scheduling");
     fa_list_log_count();
     fa_time_log_count();
     fa_pair_log_count();
@@ -152,10 +152,10 @@ void run_dls()
     //     }
     //     fa_log_region_count();
     // }
-    fa_log_region_count(fa_string("Before sleeping"));
+    fa_log_region_count("Before sleeping");
     fa_slog_info("Now sleeping...");
     fa_thread_sleep(6000);
-    fa_log_region_count(fa_string("After sleeping"));
+    fa_log_region_count("After sleeping");
     fa_list_log_count();
     fa_time_log_count();
     fa_pair_log_count();
@@ -292,7 +292,7 @@ int main(int argc, char const *argv[])
 
   return 0;
   
-  fa_log_region_count(fa_string("begin 1"));
+  fa_log_region_count("begin 1");
   fa_string_t aname = fa_string("ape");
   fa_action_t a1 = fa_action_send(aname, fa_midi_message_create_simple(1, 2, 3));
   fa_action_t a2 = fa_action_send(aname, fa_midi_message_create_simple(5, 7, 8));
@@ -304,15 +304,15 @@ int main(int argc, char const *argv[])
        );
   fa_action_t many = fa_action_many(alist);
   
-  fa_log_region_count(fa_string("middle"));
+  fa_log_region_count("middle");
   
   
   fa_deep_destroy_always(many);
   
-  fa_log_region_count(fa_string("after destroying many"));
+  fa_log_region_count("after destroying many");
   
 	
-  fa_log_region_count(fa_string("Begin:"));
+  fa_log_region_count("Begin:");
   
   fa_string_t hej = fa_string("hej");
   fa_log_region_count(NULL);
@@ -322,7 +322,7 @@ int main(int argc, char const *argv[])
   fa_log_region_count(NULL);
   fa_deep_destroy_always(hej);
 
-  fa_log_region_count(fa_string("After strings:"));
+  fa_log_region_count("After strings:");
 
   fa_list_t list = fa_list_empty();
   printf("Has a list\n");

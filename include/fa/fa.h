@@ -129,10 +129,9 @@ void fa_log_warning_from(fa_string_t string, fa_string_t string_);
 */
 void fa_log_error_from(fa_string_t string, fa_string_t string_);
 
-/** Write the number of allocated regions to the log, with an optional string prepended. The argument is destroyed.
-	 
+/** Write the number of allocated regions to STDOUT, with an optional string prepended.
 */
-void fa_log_region_count(fa_string_t string);
+void fa_log_region_count(const char *prefix);
 
 /** @}
     @}

@@ -537,13 +537,13 @@ fa_file_buffer_t fa_file_buffer_read_audio(fa_string_t path, size_t buffer_size,
         fa_file_buffer_set_meta(file_buffer, fa_string("sample-type"), fa_i8(sample_type));
 
         fa_let(str, (char *) sf_get_string(file, SF_STR_TITLE))
-        fa_file_buffer_set_meta(file_buffer, fa_string("title"), fa_string(str ? str : ""));
+        fa_file_buffer_set_meta(file_buffer, fa_string("title"), fa_string_from_utf8(str ? str : ""));
 
         fa_let(str, (char *) sf_get_string(file, SF_STR_SOFTWARE))
-        fa_file_buffer_set_meta(file_buffer, fa_string("software"), fa_string(str ? str : ""));
+        fa_file_buffer_set_meta(file_buffer, fa_string("software"), fa_string_from_utf8(str ? str : ""));
 
         fa_let(str, (char *) sf_get_string(file, SF_STR_COPYRIGHT))
-        fa_file_buffer_set_meta(file_buffer, fa_string("copyright"), fa_string(str ? str : ""));
+        fa_file_buffer_set_meta(file_buffer, fa_string("copyright"), fa_string_from_utf8(str ? str : ""));
         
         fa_file_buffer_set_meta(file_buffer, fa_string("audio-format"), fa_string("audio")); // TODO: set a more precise format
     }
@@ -747,7 +747,7 @@ void file_buffer_fatal(char *msg, int error)
 {
     void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
-    fa_log_error_from(fa_string_dappend(fa_string(msg), fa_format_integral(" (error code %d)", error)), fa_string("Doremir.FileBuffer"));
+    fa_log_error_from(fa_string_dappend(fa_string_from_utf8(msg), fa_format_integral(" (error code %d)", error)), fa_string("Doremir.FileBuffer"));
     fa_log_error(fa_string("Terminating Audio Engine"));
     exit(error);
 }

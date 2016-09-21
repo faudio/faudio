@@ -115,7 +115,7 @@ int main(int argc, char const *argv[])
 			printf("Here is the message: %s\n",buffer);
 				
 			{
-				fa_string_t str = fa_string(buffer);
+				fa_string_t str = fa_string_from_utf8(buffer);
 				fa_ptr_t msg = fa_string_from_json(str);
 					
 				fa_log_info(fa_string_show(msg));

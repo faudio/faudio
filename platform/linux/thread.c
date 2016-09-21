@@ -279,7 +279,7 @@ void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
 void fa_thread_fatal(char *msg, int error)
 {
-    fa_log_error_from(fa_string(msg), fa_string("Doremir.Thread"));
+    fa_log_error_from(fa_string_from_utf8(msg), fa_string("Doremir.Thread"));
     exit(error);
 }
 

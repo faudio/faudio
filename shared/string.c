@@ -36,8 +36,9 @@
 struct _fa_string_t {
     fa_impl_t       impl;           // Dispatcher
     size_t          size;           // Byte (NOT character) count
-    uint8_t         *data;          // Payload
-    fa_atomic_t     count;          // Reference count
+    char            *data;          // Payload
+    int32_t         count;          // Reference count
+    fa_string_allocation_t alloc;   // Type of memory used
 };
 
 static int gStringCount = 0;
@@ -48,18 +49,40 @@ fa_error_t string_error(fa_string_t msg);
 static void string_fatal(char *msg, int error);
 static fa_ptr_t string_impl(fa_id_t interface);
 
-fa_string_t new_string(size_t size, uint8_t *data)
+
+#define stack_string(cstr) &(struct _fa_string_t) { &string_impl, sizeof(cstr)-1, cstr, kSaStack, true };
+
+
+// void static_string_test() {
+//     char *cs = "apansson hej";
+//     struct _fa_string_t s = { &string_impl, strlen(cs), cs, 1, true };
+//     fa_string_t ps = &s;
+//
+//     printf("String constructed!\n");
+//
+//     fa_inform(fa_copy(ps));
+//
+//     printf("length: %d\n", fa_string_length(ps));
+//
+//     fa_inform(ps);
+//
+//     fa_string_t s2 = stack_string("teststräng");
+//     fa_inform(s2);
+// }
+
+
+
+fa_string_t new_string(size_t size, char *data)
 {
 
     fa_string_t str = fa_new(string);
 
     str->impl = &string_impl;
     str->size = size;
-    str->data = data;
-    str->count = fa_atomic_create();
+    str->data = (char*)data;
+    str->count = 1;
+    str->alloc = kSaHeap;
     
-    fa_atomic_set(str->count, (fa_ptr_t) 1);
-
     gStringCount++;
     return str;
 }
@@ -67,7 +90,6 @@ fa_string_t new_string(size_t size, uint8_t *data)
 void delete_string(fa_string_t str)
 {
     gStringCount--;
-    fa_destroy(str->count);
     fa_delete(str);
 }
 
@@ -111,7 +133,7 @@ fa_string_t fa_string_repeat(int times, fa_char8_t chr)
 
 fa_string_t fa_string_copy(fa_string_t str)
 {
-    fa_atomic_add(str->count, 1);
+    fa_atomic_native_increment_int32(&str->count);
     return str;
 }
 
@@ -140,8 +162,8 @@ fa_string_t fa_string_append(fa_string_t str1,
 fa_string_t fa_string_dappend(fa_string_t str1,
                               fa_string_t str2)
 {
-    // If str1 is referenced from > 1 places, we can't change it in place
-    if ((int)fa_atomic_get(str1->count) > 1) {
+    // If str1 is referenced from > 1 places, or if it is stack allocated, we can't change it in place
+    if (str1->alloc || fa_atomic_native_get_int32(&str1->count) > 1) {
         fa_string_t str = fa_string_append(str1, str2);
         fa_string_destroy(str1);
         fa_string_destroy(str2);
@@ -162,11 +184,12 @@ fa_string_t fa_string_dappend(fa_string_t str1,
 
 void fa_string_destroy(fa_string_t str)
 {
-    // TODO: atomic add and get in same operation
-    fa_atomic_add(str->count, -1);
-    if (fa_atomic_get(str->count) == 0) {
-        fa_free(str->data);
-        delete_string(str);
+    if (fa_atomic_native_decrement_int32(&str->count) == 0) {
+        switch (str->alloc) {
+            case kSaHeap: fa_free(str->data);
+            case kSaLiteral: delete_string(str);
+            case kSaStack: {} // nothing
+        }
     }
 }
 
@@ -222,7 +245,7 @@ fa_string_t fa_string_format(const char *format, ...)
     char *p, *np;
     va_list ap;
 
-   if ((p = malloc(size)) == NULL)
+   if ((p = fa_malloc(size)) == NULL)
         return NULL;
 
     while (1) {
@@ -237,8 +260,8 @@ fa_string_t fa_string_format(const char *format, ...)
 
         /* If that worked, return the string */
         if (n < size) {
-            fa_string_t result = fa_string(p);
-            free(p);
+            fa_string_t result = fa_string_from_utf8(p);
+            fa_free(p);
             return result;
         }
 
@@ -246,7 +269,7 @@ fa_string_t fa_string_format(const char *format, ...)
         size = n + 1;       /* Precisely what is needed */
 
         if ((np = realloc (p, size)) == NULL) {
-            free(p);
+            fa_free(p);
             return NULL;
         } else {
             p = np;
@@ -378,13 +401,20 @@ fa_string_t fa_string_from_utf8(const fa_char8_t* cstr)
         }
     }
     
-    return new_string(strSize, (uint8_t *) str);
+    return new_string(strSize, str);
 
     // Simpler implementation, but it doesn't check validity of the input
     // size_t size = strlen(cstr);
     // fa_string_t as = new_string(size, fa_malloc(size));
     // memcpy(as->data, cstr, as->size);
     // return as;
+}
+
+fa_string_t fa_string_from_literal(const char* cstr, size_t size)
+{
+    fa_string_t s = new_string(size, (char*) cstr);
+    s->alloc = kSaLiteral;
+    return s;
 }
 
 fa_string_t fa_string_from_cp1252(const fa_char8_t* cstr)
@@ -413,7 +443,7 @@ fa_string_t fa_string_from_cp1252(const fa_char8_t* cstr)
     strSize = out - str;
     str     = fa_realloc(str, strSize);
 
-    return new_string(strSize, (uint8_t *) str);
+    return new_string(strSize, str);
 }
 
 fa_string_t fa_string_from_mac_roman(const fa_char8_t* cstr)
@@ -442,7 +472,7 @@ fa_string_t fa_string_from_mac_roman(const fa_char8_t* cstr)
     strSize = out - str;
     str     = fa_realloc(str, strSize);
 
-    return new_string(strSize, (uint8_t *) str);
+    return new_string(strSize, str);
 }
 
 inline static size_t raw_size_16(const fa_char16_t *s) {
@@ -477,7 +507,7 @@ fa_string_t fa_string_from_utf16(const fa_char16_t* cstr)
     strSize = out - str;
     str     = fa_realloc(str, strSize);
     
-    return new_string(strSize, (uint8_t *) str);
+    return new_string(strSize, str);
 }
 
 
@@ -536,7 +566,7 @@ fa_ptr_t jsonify(fa_ptr_t a)
 //inline static
 fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
 {
-  void fa_log_region_count(fa_string_t);
+  void fa_log_region_count(const char*);
   printf("beginning of unjsonify\n");
   fflush(stdout);
   fa_log_region_count(NULL);
@@ -557,7 +587,7 @@ fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
         return fa_list_empty();
 
     case JSONString:
-        return fa_string((char *) json_value_get_string(a));
+        return fa_string_from_utf8((char *) json_value_get_string(a));
 
     case JSONNumber:
         return fa_i32(json_value_get_number(a));
@@ -604,7 +634,7 @@ fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
                 return NULL;
             }
 
-            map = fa_map_dset(fa_string(name), value, map);
+            map = fa_map_dset(fa_string_from_utf8(name), value, map);
         }
 
         return map;
@@ -626,7 +656,7 @@ fa_string_t fa_string_to_json(fa_ptr_t a)
 
 fa_ptr_t fa_string_from_json(fa_string_t string)
 {
-  void fa_log_region_count(fa_string_t);
+  void fa_log_region_count(const char *);
   printf("fa_string_from_json 1\n");
   fflush(stdout);
   fa_log_region_count(NULL);
@@ -886,11 +916,12 @@ void string_fatal(char *msg, int error)
 {
     void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
-    fa_log_error_from(fa_string(msg), fa_string("Doremir.String"));
+    fa_log_error_from(fa_string_from_utf8(msg), fa_string("Doremir.String"));
     exit(error);
 }
 
 void fa_string_log_count() {
-    fa_log_info(fa_string_dappend(fa_string("Strings allocated: "), fa_string_dshow(fa_i32(gStringCount))));
+    printf("Strings allocated: %d\n", gStringCount);
+    //fa_log_info(fa_string_dappend(fa_string("Strings allocated: "), fa_string_dshow(fa_i32(gStringCount))));
 }
 

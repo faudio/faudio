@@ -226,7 +226,7 @@ size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
                     fa_atomic_ring_buffer_remaining(src),
                     fa_atomic_ring_buffer_size(src)
                    );
-            fa_warn(fa_string(msg));
+            fa_warn(fa_string_from_utf8(msg));
         }
 
         return 0;
@@ -252,7 +252,7 @@ size_t fa_atomic_ring_buffer_write_many(ring_fa_buffer_t dst,
                     fa_atomic_ring_buffer_remaining(dst),
                     fa_atomic_ring_buffer_size(dst)
                    );
-            fa_warn(fa_string(msg));
+            fa_warn(fa_string_from_utf8(msg));
         }
 
         return 0;

@@ -102,7 +102,7 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
     fa_audio_schedule(fa_milliseconds(kRecOffset + 0),      fa_action_do(_print, fa_string("Started recording")) , s);
 
     for (int i = 0; i < 5; ++i) {
-        fa_audio_schedule(fa_milliseconds(kRecOffset + 1000 + (i * 1000)),  fa_action_send(fa_string(kSynthName),
+        fa_audio_schedule(fa_milliseconds(kRecOffset + 1000 + (i * 1000)),  fa_action_send(fa_string_from_utf8(kSynthName),
                           fa_midi_message_create_simple(0x90, 60 + i, 127)) , s);
     }
 

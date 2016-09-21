@@ -29,6 +29,11 @@
     */
 
 
+int32_t fa_atomic_native_get_int32(volatile int32_t *theValue);
+int32_t fa_atomic_native_add_int32(volatile int32_t *theValue, int32_t amount);
+int32_t fa_atomic_native_increment_int32(volatile int32_t *theValue);
+int32_t fa_atomic_native_decrement_int32(volatile int32_t *theValue);
+
 typedef struct _fa_atomic_t * fa_atomic_t;
 
 /** Create a new atomic reference.

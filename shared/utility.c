@@ -55,11 +55,11 @@ void fa_device_terminate();
 fa_list_t fa_version()
 {
     return list(
-               fa_string(version_g.pre),
+               fa_string_from_utf8(version_g.pre),
                fa_i16(version_g.x),
                fa_i16(version_g.y),
                fa_i16(version_g.z),
-               fa_string(version_g.suff));
+               fa_string_from_utf8(version_g.suff));
 }
 
 fa_string_t fa_version_string()
@@ -72,7 +72,7 @@ fa_string_t fa_version_string()
             version_g.y,
             version_g.z,
             version_g.suff);
-    return fa_string(version);
+    return fa_string_from_utf8(version);
 }
 
 /*
@@ -121,7 +121,7 @@ void fa_initialize()
                 ));
 
     //PaVersionInfo paInfo = Pa_GetVersionInfo();
-    fa_log_info(fa_dappend(fa_string("Using "), fa_string(Pa_GetVersionText())));
+    fa_log_info(fa_dappend(fa_string("Using "), fa_string_from_utf8(Pa_GetVersionText())));
 
     // fix_stack_size();
 
@@ -373,15 +373,17 @@ void fa_log_error_from(fa_string_t msg, fa_string_t origin)
     fa_log(NULL, err);
 }
 
-void fa_log_region_count(fa_string_t s)
+void fa_log_region_count(const char* s)
 {
-  long count = gRegionCount;
-  if (s) {
-    fa_log_info(fa_string_dappend(s, fa_string_dappend(fa_string("  Regions allocated: "),
-                                  fa_string_dshow(fa_i32(count)))));
-  } else {
-    fa_log_info(fa_string_dappend(fa_string("  Regions allocated: "), fa_string_dshow(fa_i32(count))));
-  }
+    if (s) printf("%s %ld\n", s, gRegionCount);
+    else printf("Allocated regions: %ld\n", gRegionCount);
+  // long count = gRegionCount;
+  // if (s) {
+  //   fa_log_info(fa_string_dappend(s, fa_string_dappend(fa_string("  Regions allocated: "),
+  //                                 fa_string_dshow(fa_i32(count)))));
+  // } else {
+  //   fa_log_info(fa_string_dappend(fa_string("  Regions allocated: "), fa_string_dshow(fa_i32(count))));
+  // }
   //printf("Actually: %ld\n", gRegionCount);
 }
 

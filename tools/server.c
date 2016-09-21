@@ -381,7 +381,7 @@ int init(void *user_data)
 
     start_sessions();
     
-    fa_inform(fa_dappend(fa_string("Listening on TCP port "), fa_string(port)));
+    fa_inform(fa_dappend(fa_string("Listening on TCP port "), fa_string_from_utf8(port)));
     return 0;
 }
 
@@ -396,7 +396,7 @@ int cleanup(void *user_data)
     fa_terminate();
     
     if (verbose) {
-        fa_log_region_count(fa_string("At cleanup"));
+        fa_log_region_count("At cleanup");
         fa_list_log_count();
         fa_time_log_count();
         fa_pair_log_count();
@@ -510,7 +510,7 @@ int argc, lo_message message, void *user_data)
         lo_address a = lo_message_get_source(message);
         int r = lo_send_message_from(a, (lo_server)user_data, path, message);
         if (r < 0) {
-            fa_string_t errstr = fa_string(lo_address_errstr(a));
+            fa_string_t errstr = fa_string_from_utf8(lo_address_errstr(a));
             fa_fail(fa_dappend(fa_format_integral("Could not echo message: %d ", lo_address_errno(a)), errstr));
         }
     }
@@ -625,7 +625,7 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
 }
 
 int mix_audio_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
-    fa_string_t parameter = fa_string(user_data);
+    fa_string_t parameter = fa_string_from_utf8(user_data);
     fa_ptr_t slot = create_fa_value(types[0], argv[0]);
     fa_ptr_t value = create_fa_value(types[1], argv[1]);
     fa_action_t action = fa_action_send(audio_name, pair(slot, pair(parameter, value)));
@@ -791,7 +791,7 @@ int quit_handler(const char *path, const char *types, lo_arg ** argv, int argc, 
 
 int settings_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
 {
-    fa_string_t parameter = fa_string(user_data);
+    fa_string_t parameter = fa_string_from_utf8(user_data);
     fa_ptr_t value = create_fa_value(types[0], argv[0]);
     if (!value) value = fa_from_bool(false);
     session_settings = fa_map_dset(parameter, value, session_settings);
@@ -803,7 +803,7 @@ int host_settings_handler(const char *path, const char *types, lo_arg ** argv, i
 {
     host_setting_t parameter = (int)user_data;
     fa_ptr_t value = create_fa_value(types[0], argv[0]);
-    fa_ptr_t host = (argc > 1) ? fa_string(&argv[1]->s) : fa_string("");
+    fa_ptr_t host = (argc > 1) ? fa_string_from_utf8(&argv[1]->s) : fa_string("");
     // fa_slog_info("host_settings handler: ", fa_from_int16(parameter), host, value);
     switch (parameter) {
     case HOST_SETTINGS_LATENCY:
@@ -1323,7 +1323,7 @@ int save_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
     }
     fa_string_t file_path = fa_get_meta(buffer, fa_string("file_path"));
     if (argc >= 2) {
-        file_path = fa_string(&argv[1]->s);
+        file_path = fa_string_from_utf8(&argv[1]->s);
     } else if (file_path) {
         file_path = fa_copy(file_path);
     } else {
@@ -1533,8 +1533,8 @@ int audio_file_upload_handler(const char *path, const char *types, lo_arg ** arg
     if (dump_file && dump_file[0]) {
         fa_slog_info("ogg buffer: ", ogg_buffer);
         fa_inform(fa_format_integral("ogg buffer size: %zu", fa_buffer_size(ogg_buffer)));
-        fa_inform(fa_dappend(fa_string("Dumping ogg to "), fa_string(dump_file)));
-        fa_buffer_write_raw(fa_string(dump_file), ogg_buffer);
+        fa_inform(fa_dappend(fa_string("Dumping ogg to "), fa_string_from_utf8(dump_file)));
+        fa_buffer_write_raw(fa_string_from_utf8(dump_file), ogg_buffer);
     }
 
     send_osc(message, user_data, "/audio-file/upload/started", "ii", id, ogg_size);
@@ -1647,7 +1647,7 @@ int channel_reset_handler(const char *path, const char *types, lo_arg ** argv, i
 
 int stats_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
-    fa_log_region_count(fa_string("Stats:"));
+    fa_log_region_count("Stats:");
     fa_list_log_count();
     fa_time_log_count();
     fa_pair_log_count();
@@ -1782,7 +1782,7 @@ int start_recording_handler(const char *path, const char *types, lo_arg ** argv,
         if (fp) {
             fclose(fp);
         } else {
-            fa_fail(fa_dappend(fa_string("Cannot record: path is not writeable: "), fa_string(filename)));
+            fa_fail(fa_dappend(fa_string("Cannot record: path is not writeable: "), fa_string_from_utf8(filename)));
             fa_inform(fa_string_format_integral("  Error code: %d", errno));
             send_osc(message, user_data, "/recording/start", "iFs", id, "path-not-writeable");
             return 0;
@@ -1905,7 +1905,7 @@ int choose_device_handler(const char *path, const char *types, lo_arg ** argv, i
         break;
     case CHOOSE_AUDIO_INPUT_DEVICE:
         if (selected_audio_input_device) fa_deep_destroy_always(selected_audio_input_device);
-        selected_audio_input_device = pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s));
+        selected_audio_input_device = pair(fa_string_from_utf8(&argv[0]->s), fa_string_from_utf8(&argv[1]->s));
         break;
     // Audio output
     case CHOOSE_AUDIO_OUTPUT_NONE:
@@ -1918,7 +1918,7 @@ int choose_device_handler(const char *path, const char *types, lo_arg ** argv, i
         break;
     case CHOOSE_AUDIO_OUTPUT_DEVICE:
         if (selected_audio_output_device) fa_deep_destroy_always(selected_audio_output_device);
-        selected_audio_output_device = pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s));
+        selected_audio_output_device = pair(fa_string_from_utf8(&argv[0]->s), fa_string_from_utf8(&argv[1]->s));
         break;
     // MIDI input
     case CHOOSE_MIDI_INPUT_NONE:
@@ -1931,7 +1931,7 @@ int choose_device_handler(const char *path, const char *types, lo_arg ** argv, i
         break;
     case CHOOSE_MIDI_INPUT_DEVICE:
         if (selected_midi_input_devices) fa_deep_destroy_always(selected_midi_input_devices);
-        selected_midi_input_devices = list(pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s)));
+        selected_midi_input_devices = list(pair(fa_string_from_utf8(&argv[0]->s), fa_string_from_utf8(&argv[1]->s)));
         break;
     // MIDI playback
     case CHOOSE_MIDI_PLAYBACK_NONE:
@@ -1943,7 +1943,7 @@ int choose_device_handler(const char *path, const char *types, lo_arg ** argv, i
     case CHOOSE_MIDI_PLAYBACK_DEVICE:
         selected_midi_playback = FA_MIDI_TO_DEVICE;
         if (selected_midi_playback_device) fa_deep_destroy_always(selected_midi_playback_device);
-        selected_midi_playback_device = pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s));
+        selected_midi_playback_device = pair(fa_string_from_utf8(&argv[0]->s), fa_string_from_utf8(&argv[1]->s));
         break;
     // MIDI echo type
     case CHOOSE_MIDI_ECHO_NONE:
@@ -1957,7 +1957,7 @@ int choose_device_handler(const char *path, const char *types, lo_arg ** argv, i
     case CHOOSE_MIDI_ECHO_DEVICE:
         selected_midi_echo = FA_ECHO_TO_DEVICE;
         if (selected_midi_echo_device) fa_deep_destroy_always(selected_midi_echo_device);
-        selected_midi_echo_device = pair(fa_string(&argv[0]->s), fa_string(&argv[1]->s));
+        selected_midi_echo_device = pair(fa_string_from_utf8(&argv[0]->s), fa_string_from_utf8(&argv[1]->s));
         break;
     // MIDI echo channel
     case CHOOSE_MIDI_ECHO_CHANNEL:
@@ -2038,7 +2038,7 @@ int wasapi_hack_handler(const char *path, const char *types, lo_arg ** argv, int
 #if _WIN32
     bool enabled = (types[0] == 'T');
     avoid_wasapi_exclusive_bidirectional = enabled;
-    fa_inform(fa_dappend(fa_string("WASAPI hack is now "), fa_string(enabled ? "on" : "off")));
+    fa_inform(fa_dappend(fa_string("WASAPI hack is now "), fa_string_from_utf8(enabled ? "on" : "off")));
 #endif
     return 0;
 }
@@ -2054,7 +2054,7 @@ int stream_direction_handler(const char *path, const char *types, lo_arg ** argv
     } else if (strcmp(&argv[0]->s, "bidirectional") == 0) {
         direction = BIDIRECTIONAL;
     } else {
-        fa_fail(fa_dappend(fa_string("Unknown stream direction: "), fa_string(&argv[0]->s)));
+        fa_fail(fa_dappend(fa_string("Unknown stream direction: "), fa_string_from_utf8(&argv[0]->s)));
         return 0;
     }
     set_stream_direction(direction);

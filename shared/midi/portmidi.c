@@ -174,8 +174,8 @@ inline static device_t new_device(native_index_t index, session_t session)
     device->input       = info->input;
     device->output      = info->output;
 #ifndef _WIN32
-    device->name        = fa_string((char *) info->name);                      // const cast
-    device->host_name   = fa_string((char *) info->interf);
+    device->name        = fa_string_from_utf8((char *) info->name);                      // const cast
+    device->host_name   = fa_string_from_utf8((char *) info->interf);
 #else
     device->name        = fa_string_from_cp1252((char *) info->name);      // const cast
     device->host_name   = fa_string_from_cp1252((char *) info->interf);
@@ -857,7 +857,7 @@ fa_error_t midi_device_error_with(fa_string_t msg, int code)
 fa_error_t native_error(fa_string_t msg, int code)
 {
     return fa_error_create_simple(error,
-                                  fa_string_dappend(msg, fa_string((char *) Pm_GetErrorText(code))),
+                                  fa_string_dappend(msg, fa_string_from_utf8((char *) Pm_GetErrorText(code))),
                                   fa_string("Doremir.Device.Midi"));
 }
 

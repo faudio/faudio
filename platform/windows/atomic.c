@@ -51,6 +51,31 @@ bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t pold, fa_ptr_t pnew)
     return (pold == InterlockedCompareExchangePointer((fa_ptr_t)&a->value, pnew, pold));
 }
 
+// --------------------------------------------------------------------------------
+
+int32_t fa_atomic_native_get_int32(volatile int32_t *theValue)
+{
+    return InterlockedCompareExchange(theValue, 0L, 0L);
+}
+
+int32_t fa_atomic_native_add_int32(volatile int32_t *theValue, int32_t amount)
+{
+    return InterlockedExchangeAdd(theValue, amount) + amount;
+}
+
+int32_t fa_atomic_native_increment_int32(volatile int32_t *theValue)
+{
+    return InterlockedExchangeAdd(theValue) + 1;
+}
+
+int32_t fa_atomic_native_decrement_int32(volatile int32_t *theValue)
+{
+    return InterlockedExchangeAdd(theValue) - 1;
+}
+
+// --------------------------------------------------------------------------------
+
+
 void fa_atomic_add(fa_atomic_t a, int32_t v)
 {
 #ifdef __MINGW32__

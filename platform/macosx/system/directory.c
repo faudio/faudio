@@ -18,14 +18,14 @@
 fa_string_t fa_system_directory_home()
 {
     struct passwd *pw = getpwuid(getuid());
-    return fa_string(pw->pw_dir);
+    return fa_string_from_utf8(pw->pw_dir);
 }
 
 fa_string_t fa_system_directory_current()
 {
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
-    return fa_string(cwd);
+    return fa_string_from_utf8(cwd);
 }
 
 void fa_system_directory_create(fa_string_t path)
@@ -54,7 +54,7 @@ fa_string_t fa_system_directory_read_file(fa_string_t path)
         buf[read_size + 1] = '\0';
     }
 
-    return fa_string(buf);
+    return fa_string_from_utf8(buf);
 }
 
 

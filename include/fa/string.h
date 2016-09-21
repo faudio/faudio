@@ -52,6 +52,13 @@
 */
 typedef struct _fa_string_t * fa_string_t;
 
+typedef enum fa_string_allocation_t 
+{
+    kSaHeap    = 0,
+    kSaLiteral = 1,
+    kSaStack   = 2
+}  fa_string_allocation_t;
+
 /** Create an empty string.
 
     The returned string should be destroyed by the caller.
@@ -191,6 +198,16 @@ wchar_t* fa_string_to_wstr(fa_string_t string);
         A new string.
 */
 fa_string_t fa_string_from_utf8(const fa_char8_t* utf8);
+
+/** Create a string from a c literal. Memory and CPU efficient, but no error checking is made.
+    Please use the fa_string macro instead!
+
+    @param  cstr A c literal string.
+    @param  size The size of the string (not including NUL-termination)
+    @return
+        A new string.
+*/
+fa_string_t fa_string_from_literal(const char* cstr, size_t size);
 
 /** Deencode a string from CP1252, also known as the standard Windows charset.
 

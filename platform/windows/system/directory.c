@@ -30,7 +30,7 @@ fa_string_t fa_system_directory_home()
         assert(FALSE && "Error get home directory");
     }
 
-    return fa_string(path);
+    return fa_string_from_utf8(path);
 }
 
 fa_string_t fa_system_directory_current()
@@ -41,7 +41,7 @@ fa_string_t fa_system_directory_current()
         assert(FALSE && "Error get current directory");
     }
 
-    return fa_string(path);
+    return fa_string_from_utf8(path);
 }
 
 void fa_system_directory_create(fa_string_t path)
@@ -84,7 +84,7 @@ fa_string_t fa_system_directory_read_file(fa_string_t path)
 
     CloseHandle(file);
 
-    return fa_string(buf);
+    return fa_string_from_utf8(buf);
 }
 
 

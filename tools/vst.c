@@ -56,13 +56,13 @@ void run_vst()
 #define kSynthName "dls"
 
 
-        // fa_audio_schedule_relative(fa_hms(0, 0, 0), fa_action_send(fa_string(kSynthName), fa_pair_create(fa_string("open"), NULL)), st);
+        // fa_audio_schedule_relative(fa_hms(0, 0, 0), fa_action_send(fa_string_from_utf8(kSynthName), fa_pair_create(fa_string("open"), NULL)), st);
 
-        fa_audio_schedule_relative(fa_hms(0, 0, 0), fa_action_send(fa_string(kSynthName),
+        fa_audio_schedule_relative(fa_hms(0, 0, 0), fa_action_send(fa_string_from_utf8(kSynthName),
                                                                    fa_midi_message_create_simple(0xc0, 60, 0)), st);
 
         for (int i = 0; i < 24; ++i) {
-            fa_action_t chord = fa_action_send(fa_string(kSynthName),
+            fa_action_t chord = fa_action_send(fa_string_from_utf8(kSynthName),
                                                fa_midi_message_create_simple(0x90, 52 + ((i % 12) * 2), 90));
             fa_audio_schedule_relative(fa_hms(0, 0, 0), chord, st);
             fa_thread_sleep(150);

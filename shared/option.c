@@ -19,7 +19,7 @@ fa_pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char
             fa_ptr_t result  = option.parser((char *) value);
 
             if (result) {
-                return fa_pair_create(fa_string(option.long_name), result);
+                return fa_pair_create(fa_string_from_utf8(option.long_name), result);
             } else {
                 return NULL;
             }
@@ -39,7 +39,7 @@ fa_map_t add_defaults(int optc, opt_t optv[], fa_map_t args)
         fa_ptr_t result = option.parser(option.default_value);
 
         if (result) {
-            args = fa_map_dadd(fa_string(option.long_name), result, args);
+            args = fa_map_dadd(fa_string_from_utf8(option.long_name), result, args);
         }
     }
 
@@ -69,10 +69,10 @@ fa_pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
 
         if (i == argc || elem_type != value) {
             if (prev_elem_type == short_name) {
-                fa_string_t name = fa_string((char *) argv[i - 1] + 1);
+                fa_string_t name = fa_string_from_utf8((char *) argv[i - 1] + 1);
                 args = fa_map_dset(name, fa_from_bool(true), args);
             } else if (prev_elem_type == long_name) {
-                fa_string_t name = fa_string((char *) argv[i - 1] + 2);
+                fa_string_t name = fa_string_from_utf8((char *) argv[i - 1] + 2);
                 args = fa_map_dset(name, fa_from_bool(true), args);
             }
         } else {
@@ -89,7 +89,7 @@ fa_pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
                     args = fa_map_dadd(fa_pair_first(result), fa_pair_second(result), args);
                 }
             } else {
-                fa_push_back_list(anon_args, fa_string((char *) argv[i]));
+                fa_push_back_list(anon_args, fa_string_from_utf8((char *) argv[i]));
             }
         }
     }
@@ -129,7 +129,7 @@ fa_ptr_t fa_option_floating(char *x)
 }
 fa_ptr_t fa_option_string(char *x)
 {
-    return fa_string(x);
+    return fa_string_from_utf8(x);
 }
 fa_ptr_t fa_option_native_string(char *x)
 {

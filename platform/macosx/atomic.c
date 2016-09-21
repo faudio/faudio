@@ -46,6 +46,28 @@ void fa_atomic_destroy(fa_atomic_t a)
 
 // --------------------------------------------------------------------------------
 
+int32_t fa_atomic_native_get_int32(volatile int32_t *theValue)
+{
+    return OSAtomicAdd32Barrier(0, theValue);
+}
+
+int32_t fa_atomic_native_add_int32(volatile int32_t *theValue, int32_t amount)
+{
+    return OSAtomicAdd32Barrier(amount, theValue);
+}
+
+int32_t fa_atomic_native_increment_int32(volatile int32_t *theValue)
+{
+    return OSAtomicIncrement32Barrier(theValue);
+}
+
+int32_t fa_atomic_native_decrement_int32(volatile int32_t *theValue)
+{
+    return OSAtomicDecrement32Barrier(theValue);
+}
+
+// --------------------------------------------------------------------------------
+
 bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t old, fa_ptr_t new)
 {
     return OSAtomicCompareAndSwapPtrBarrier(old, new, (fa_ptr_t) &a->value);
