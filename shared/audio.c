@@ -309,19 +309,24 @@ inline static device_t new_device(session_t session, native_index_t index)
     device->session     = session;
 
     /*
-        PortAudio aspire to return UTF-8 on all platforms but this is not always the case
-        Assume native encodings for now.
-
-        See also #96
+        PortAudio aspire to return UTF-8 on all platforms but this is not always the case on Windows.
      */
-#ifdef _WIN32
-    device->name        = fa_string_from_cp1252((char *) info->name);       // const cast
-    device->host_name   = fa_string_from_cp1252((char *) host_info->name);
-#else
     device->name        = fa_string_from_utf8((char *) info->name);         // const cast
-    device->host_name   = fa_string_from_utf8((char *) host_info->name);
-#endif
+    device->host_name   = fa_string_from_utf8((char *) host_info->name);    // the host name will be only ASCII anyway
 
+    // If UTF-8 didn't work, try native encoding (Windows only)
+    #ifdef _WIN32
+    if (!device->name) {
+        fa_slog_warning("Non-UTF8 device name, trying Windows native encoding");
+        device->name = fa_string_from_cp1252((char *) info->name);
+    }
+    #endif
+
+    if (!device->name) {
+        fa_slog_error("Bad device name!");
+        printf("Raw name: %s\n", info->name);
+        device->name = fa_string("Bad device name");
+    }
     return device;
 }
 
