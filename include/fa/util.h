@@ -94,7 +94,7 @@
 #define fa_action_accum        fa_action_accum
 #define fa_action_send         fa_action_send
 
-#define fa_now()               fa_time_create(0,0,0,fa_ratio(0,1))
+#define fa_now()               fa_time_from_double(0)
 #define fa_hms(h,m,s)          fa_time_create(0,h,m,fa_ratio(s,1))
 #define fa_days(d)             fa_time_create(d,0,0,fa_ratio(0,1))
 #define fa_hours(h)            fa_time_create(0,h,0,fa_ratio(0,1))

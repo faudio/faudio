@@ -73,6 +73,14 @@ typedef enum {
 } recording_state_t;
 
 typedef enum {
+    PLAYBACK_STOPPED = 0,
+    PLAYBACK_STARTING,
+    PLAYBACK_RUNNING,
+    PLAYBACK_STOPPING,
+    PLAYBACK_FINISHED
+} playback_status_t;
+
+typedef enum {
     NO_STREAM,
     OUTPUT_ONLY,
     INPUT_ONLY,

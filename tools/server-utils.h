@@ -1,4 +1,8 @@
 #include "fa/fa.h"
+
+#ifndef __SERVER_UTILS
+#define __SERVER_UTILS
+
 #include "server-types.h"
 #include "server-globals.h"
 #include "fa/signal.h"
@@ -53,9 +57,9 @@ uint8_t min_uint8(uint8_t a, uint8_t b) { return a < b ? a : b; }
   }
 
 #define check_id(id, message, user_data) \
-if (id > last_used_id) {    \
-    last_used_id = id;      \
-} else {                    \
+    if (id > last_used_id) {    \
+        last_used_id = id;      \
+    } else {                    \
     fa_fail(fa_string_dappend(fa_string_format_integral("ID %zu is lower than", id), \
                               fa_string_format_integral(" last used ID (%zu)", last_used_id))); \
     if (message && user_data) {   \
@@ -405,6 +409,8 @@ bool _action_sort(fa_ptr_t a, fa_ptr_t b)
 // The passed in list is destroyed.
 fa_list_t times_to_delta_times(fa_list_t timeActions)
 {
+    if (fa_list_is_empty(timeActions)) return timeActions;
+    
     timeActions = fa_list_dsort(timeActions, _action_sort);
     timeActions = fa_list_dreverse(timeActions);
 
@@ -1779,3 +1785,6 @@ void buffer_hint(fa_ptr_t buffer, size_t frames)
         fa_file_buffer_hint(fb, frames * channels * sample_size);
     }
 }
+
+#endif
+

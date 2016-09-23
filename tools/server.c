@@ -29,6 +29,7 @@
 #include "server-types.h"
 #include "server-globals.h"
 #include "server-utils.h"
+#include "server-playback.h"
 
 // #ifndef _WIN32
 // #include "server-sleep-mac.h"
@@ -78,6 +79,15 @@ define_handler(play_midi);
 define_handler(play_audio);
 define_handler(mix_audio);
 define_handler(stop);
+
+define_handler(playback_new);
+define_handler(playback_add_midi);
+define_handler(playback_add_audio);
+define_handler(playback_add_note);
+define_handler(playback_start);
+define_handler(playback_stop);
+define_handler(playback_autostop);
+define_handler(playback_status);
 
 define_handler(time);
 define_handler(ping);
@@ -254,6 +264,30 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/stream/info", "", stream_info_handler, server);
     
     /* Playback */
+    lo_server_add_method(server, "/playback/new", "i", playback_new_handler, server); // playback id (plid)
+    lo_server_add_method(server, "/playback/add/midi", "ifiif", playback_add_midi_handler, server); // plid, time, cmd, ch, data1
+    lo_server_add_method(server, "/playback/add/midi", "ifiifi", playback_add_midi_handler, server); // plid, time, cmd, ch, d1, d2
+    lo_server_add_method(server, "/playback/add/note", "ififif", playback_add_note_handler, server); // plid, time, ch, pitch, vel, dur
+    lo_server_add_method(server, "/playback/add/audio", "iif", playback_add_audio_handler, server); // plid, audio id, time
+    lo_server_add_method(server, "/playback/add/audio", "iiff", playback_add_audio_handler, server); // plid, auid, time, skip
+    lo_server_add_method(server, "/playback/add/audio", "iifff", playback_add_audio_handler, server); // plid, auid, time, skip, dur
+    lo_server_add_method(server, "/playback/status", "i", playback_status_handler, server); // plid
+    
+    lo_server_add_method(server, "/playback/start", "i", playback_start_handler, server);  // plid (start immediately)
+    lo_server_add_method(server, "/playback/start", "if", playback_start_handler, server); // plid, time
+    lo_server_add_method(server, "/playback/start/from", "if", playback_start_handler, server); // plid, skip (s)
+    lo_server_add_method(server, "/playback/start/from", "iff", playback_start_handler, server); // plid, skip (s), time
+    lo_server_add_method(server, "/playback/repeat", "i", playback_start_handler, server); // plid (immediately, auto length)
+    lo_server_add_method(server, "/playback/repeat", "if", playback_start_handler, server); // plid (auto length), interval (0 = auto)
+    lo_server_add_method(server, "/playback/repeat", "iff", playback_start_handler, server); // plid (auto length), interval, time
+    lo_server_add_method(server, "/playback/repeat/from", "iff", playback_start_handler, server); // plid, skip (s), interval, 
+    lo_server_add_method(server, "/playback/repeat/from", "ifff", playback_start_handler, server); // plid, skip (s) interval, time
+    lo_server_add_method(server, "/playback/stop", "i", playback_stop_handler, server); // plid (stop immediately)
+    lo_server_add_method(server, "/playback/stop", "if", playback_stop_handler, server); // plid, time
+    lo_server_add_method(server, "/playback/auto-stop", "iT", playback_autostop_handler, server); // plid
+    lo_server_add_method(server, "/playback/auto-stop", "iF", playback_autostop_handler, server); // plid
+    
+    /* Deprecated */
     //  /play/audio  id,  audio id,  slot,  skip (ms),  start-time (ms),  repeat-interval (ms)
     //  /play/midi   id,  data,  start-time (ms),  repeat-interval (ms)
     //  /stop        id
@@ -524,27 +558,6 @@ int argc, lo_message message, void *user_data)
     return 0;
 }
 
-// Note: sends nominal (scheduled) time!
-fa_ptr_t _playback_started(fa_ptr_t context, fa_time_t time, fa_time_t now)
-{
-    send_osc_async("/playback/started", "it", peek_oid(context), timetag_from_time(time));
-    return NULL;
-}
-
-fa_ptr_t _playback_stopped(fa_ptr_t context, fa_time_t time, fa_time_t now)
-{
-    oid_t id = peek_oid(context);
-    //printf("_playback_stopped (%hu)\n", id);
-    if (remove_playback_semaphore(id)) {
-        send_osc_async("/playback/stopped", "itT", id, timetag_from_time(now));
-        //printf("calling stop_time_echo from _playback_stopped (%hu)\n", id);
-        stop_time_echo();
-        //if (current_midi_playback_stream) {
-        //    do_schedule_relative(sched_delay, all_notes_off_action(), current_midi_playback_stream);
-        //}
-    }
-    return NULL;
-}
 
 int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
     oid_t id               = argv[0]->i;

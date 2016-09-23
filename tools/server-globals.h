@@ -17,6 +17,7 @@
 #endif
 
 oid_t last_used_id = 0;
+oid_t last_used_playback_id = 0;
 uint32_t ping_counter = 0;
 int audio_buffer_signals = 8;
 bool verbose = false;
@@ -101,6 +102,7 @@ with_mutex(fa_map_t, audio_files);
 with_mutex(volatile int, time_echo);
 with_mutex(volatile int, level_echo);
 with_mutex(fa_map_t, uploads);
+with_mutex(fa_map_t, playback_data);
 
 int time_echo_id  = 0;
 int level_echo_id = 0;
@@ -158,6 +160,8 @@ static inline void init_globals() {
     audio_files_mutex = fa_thread_create_mutex();
     uploads = fa_map_empty();
     uploads_mutex = fa_thread_create_mutex();
+    playback_data = fa_map_empty();
+    playback_data_mutex = fa_thread_create_mutex();
     
     selected_midi_input_devices   = fa_list_empty();
     selected_midi_playback_device = NULL;
@@ -202,6 +206,8 @@ static inline void destroy_globals() {
     fa_destroy(audio_files_mutex);
     fa_destroy(uploads);
     fa_destroy(uploads_mutex);
+    fa_destroy(playback_data);
+    fa_destroy(playback_data_mutex);
     
     fa_slog_info("Destroying strings...");
     fa_destroy(synth_name);
