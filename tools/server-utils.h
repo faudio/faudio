@@ -620,7 +620,7 @@ void resolve_devices() {
     fa_list_t audio_devices = fa_audio_all(current_audio_session);
 
     // Audio devices
-    fa_slog_info("In resolve_devices, selected_audio_input_device: ", selected_audio_input_device);
+    // fa_slog_info("In resolve_devices, selected_audio_input_device: ", selected_audio_input_device);
     if (selected_audio_input_device) {
         // a pair of empty strings means default device
         if (pair_is_two_empty_strings(selected_audio_input_device)) {
@@ -634,7 +634,7 @@ void resolve_devices() {
         }
         if (fa_check(current_audio_input_device)) current_audio_input_device = NULL;
     }
-    fa_slog_info("In resolve_devices, selected_audio_output_device: ", selected_audio_output_device);
+    // fa_slog_info("In resolve_devices, selected_audio_output_device: ", selected_audio_output_device);
     if (selected_audio_output_device) {
         // a pair of empty strings means default device
         if (pair_is_two_empty_strings(selected_audio_output_device)) {
@@ -670,7 +670,7 @@ void resolve_devices() {
     if (selected_midi_playback == FA_MIDI_TO_DEVICE) {
         assert(selected_midi_playback_device && "selected_midi_playback_device is NULL!");
         fa_for_each(device, midi_devices) {
-            if (fa_midi_has_input(device) && midi_device_matches(device, selected_midi_playback_device)) {
+            if (fa_midi_has_output(device) && midi_device_matches(device, selected_midi_playback_device)) {
                 current_midi_playback_device = device;
                 current_midi_playback = FA_MIDI_TO_DEVICE;
             }

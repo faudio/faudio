@@ -1018,8 +1018,8 @@ void send_current_devices(lo_message message, void *user_data)
         break;
     case FA_MIDI_TO_DEVICE:
         assert(current_midi_playback_device && "current_midi_playback_device is NULL in current_devices_handler");
-        char *host_name = fa_dunstring(fa_audio_host_name(current_midi_playback_device));
-        char *name = fa_dunstring(fa_audio_name(current_midi_playback_device));
+        char *host_name = fa_dunstring(fa_midi_host_name(current_midi_playback_device));
+        char *name = fa_dunstring(fa_midi_name(current_midi_playback_device));
         send_osc(message, user_data, "/current/midi/playback", "ssii", host_name, name,
             fa_midi_has_input(current_midi_playback_device) ? 1 : 0,
             fa_midi_has_output(current_midi_playback_device) ? 1 : 0);
@@ -1037,8 +1037,8 @@ void send_current_devices(lo_message message, void *user_data)
         break;
     case FA_MIDI_TO_DEVICE:
         assert(current_midi_echo_device && "current_midi_echo_device is NULL in current_devices_handler");
-        char *host_name = fa_dunstring(fa_audio_host_name(current_midi_echo_device));
-        char *name = fa_dunstring(fa_audio_name(current_midi_echo_device));
+        char *host_name = fa_dunstring(fa_midi_host_name(current_midi_echo_device));
+        char *name = fa_dunstring(fa_midi_name(current_midi_echo_device));
         send_osc(message, user_data, "/current/midi/echo", "ssii", host_name, name,
             fa_midi_has_input(current_midi_echo_device) ? 1 : 0,
             fa_midi_has_output(current_midi_echo_device) ? 1 : 0);
