@@ -785,6 +785,9 @@ static fa_ptr_t _many(fa_ptr_t data, fa_ptr_t c)
 
     if (!timeActions || fa_list_is_empty(timeActions)) {
         // fa_slog_info("  IN _many  (list is empty)", compound);
+        if (timeActions) {
+            fa_destroy(timeActions);
+        }
         return NULL;
     } else {
         fa_pair_t first_interval = fa_list_head(timeActions);
@@ -879,6 +882,7 @@ static fa_ptr_t _if(fa_ptr_t data, fa_ptr_t c)
     unpair(pred_closure, action, pred_action);
     pred_function = fa_func_ref_func(pred_closure);
     pred_data = fa_func_ref_data(pred_closure);
+    fa_destroy(pred_action);
     fa_destroy(pred_closure);
 
     if (fa_action_is_simple(action)) {
@@ -932,6 +936,7 @@ static inline fa_ptr_t _while(fa_ptr_t data, fa_ptr_t c)
     unpair(pred_closure, action, pred_action);
     pred_function = fa_func_ref_func(pred_closure);
     pred_data = fa_func_ref_data(pred_closure);
+    fa_destroy(pred_action);
     fa_destroy(pred_closure);
     
     if (fa_action_is_simple(action)) {
@@ -980,6 +985,7 @@ static inline fa_ptr_t _until(fa_ptr_t data, fa_ptr_t c)
     unpair(pred_closure, action, pred_action);
     pred_function = fa_func_ref_func(pred_closure);
     pred_data = fa_func_ref_data(pred_closure);
+    fa_destroy(pred_action);
     fa_destroy(pred_closure);
     
     if (fa_action_is_simple(action)) {
@@ -1105,6 +1111,8 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
             if (do_function_with_time) {
                 do_function_with_time(do_data, time, now);
             }
+            
+            fa_action_destroy(action);
         } else {
             //fa_slog_info("Running action ", action);
             //fa_slog_info("Running action  ", fa_string_format_integral("%p", (long) fa_thread_current()));

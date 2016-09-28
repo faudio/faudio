@@ -1100,7 +1100,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
         custom_procs_send(state, name, value);
         
         //printf("ref_count: %d\n", fa_action_ref_count(action));
-        fa_action_destroy(action);
+        fa_deep_destroy_always(action);
         
         return NULL;
     }
