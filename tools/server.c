@@ -82,8 +82,8 @@ define_handler(stop);
 
 define_handler(playback_new);
 define_handler(playback_add_midi);
-define_handler(playback_add_audio);
 define_handler(playback_add_note);
+define_handler(playback_add_audio);
 define_handler(playback_start);
 define_handler(playback_stop);
 define_handler(playback_autostop);
@@ -268,9 +268,9 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/playback/add/midi", "ifiif", playback_add_midi_handler, server); // plid, time, cmd, ch, data1
     lo_server_add_method(server, "/playback/add/midi", "ifiifi", playback_add_midi_handler, server); // plid, time, cmd, ch, d1, d2
     lo_server_add_method(server, "/playback/add/note", "ififif", playback_add_note_handler, server); // plid, time, ch, pitch, vel, dur
-    lo_server_add_method(server, "/playback/add/audio", "iif", playback_add_audio_handler, server); // plid, audio id, time
-    lo_server_add_method(server, "/playback/add/audio", "iiff", playback_add_audio_handler, server); // plid, auid, time, skip
-    lo_server_add_method(server, "/playback/add/audio", "iifff", playback_add_audio_handler, server); // plid, auid, time, skip, dur
+    lo_server_add_method(server, "/playback/add/audio", "ifii", playback_add_audio_handler, server); // plid, time, auid, sl
+    lo_server_add_method(server, "/playback/add/audio", "ifiif", playback_add_audio_handler, server); // plid, time, auid, sl, skip
+    lo_server_add_method(server, "/playback/add/audio", "ifiiff", playback_add_audio_handler, server); // plid, time, auid, sl, sk, dur
     lo_server_add_method(server, "/playback/status", "i", playback_status_handler, server); // plid
     
     lo_server_add_method(server, "/playback/start", "i", playback_start_handler, server);  // plid (start immediately)
@@ -773,8 +773,21 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
 
 int stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
     //fa_slog_info("stop_handler");
+    
+    // Delegate to the playback_stop_handler if there is a matching playback id
+    // Not very elegant perhaps, but it lets the uses call /stop with any id
+    bool done = false;
+    fa_with_lock(playback_data_mutex) {
+        playback_data_t playback = fa_map_dget(wrap_oid(argv[0]->i), playback_data);
+        if (playback) {
+            playback_stop(argv[0]->i, message, user_data);
+            done = true; // Can't return here, lock wouldn't be released
+        }
+    }
+    if (done) return 0;
+    
     if (remove_playback_semaphore(argv[0]->i)) {
-        //printf("Stopping playback %d\n", argv[0]->i);
+        // printf("Stopping play id %d\n", argv[0]->i);
         fa_time_t now = fa_clock_time(current_clock);
         send_osc(message, user_data, "/playback/stopped", "itF", argv[0]->i, timetag_from_time(now));
         fa_destroy(now);
