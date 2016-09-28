@@ -449,11 +449,7 @@ static inline void destroy_compound(fa_action_t action)
     //fa_slog_info("destroy_compound: ", action);
     //fa_slog_info("destroy_compound  in thread:   ", fa_string_format_integral("%p", (long) pthread_self()));
     
-    //fa_slog_info("destroy_compound ", action);
-    fa_ptr_t data = compound_get(action, data);
-    if (data) {
-        fa_destroy(data); // TODO: is this the right depth? cannot use deep_destroy here!
-    }
+    // Do nothing: compound actions are responsible for destroying their own data after rendering
 }
 
 void fa_action_destroy(fa_action_t action)
@@ -678,7 +674,6 @@ static void compound_render(fa_action_t compound, fa_action_t* first, fa_time_t*
         }
         fa_destroy(maybeFirstRest);
     }
-    compound_get(compound, data) = NULL;
 }
 
 
