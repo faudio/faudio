@@ -278,8 +278,8 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/playback/start/from", "if", playback_start_handler, server); // plid, skip (s)
     lo_server_add_method(server, "/playback/start/from", "iff", playback_start_handler, server); // plid, skip (s), time
     lo_server_add_method(server, "/playback/repeat", "i", playback_start_handler, server); // plid (immediately, auto length)
-    lo_server_add_method(server, "/playback/repeat", "if", playback_start_handler, server); // plid (auto length), interval (0 = auto)
-    lo_server_add_method(server, "/playback/repeat", "iff", playback_start_handler, server); // plid (auto length), interval, time
+    lo_server_add_method(server, "/playback/repeat", "if", playback_start_handler, server); // plid, interval (0 = auto) (immediately)
+    lo_server_add_method(server, "/playback/repeat", "iff", playback_start_handler, server); // plid, interval (0 = auto), time
     lo_server_add_method(server, "/playback/repeat/from", "iff", playback_start_handler, server); // plid, skip (s), interval, 
     lo_server_add_method(server, "/playback/repeat/from", "ifff", playback_start_handler, server); // plid, skip (s) interval, time
     lo_server_add_method(server, "/playback/stop", "i", playback_stop_handler, server); // plid (stop immediately)
