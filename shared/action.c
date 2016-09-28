@@ -29,6 +29,8 @@
 // Actions 
 #define kScheduleMaxAge    5000
 
+#define kActionVerboseShow 0
+
 
 typedef fa_action_t                 action_t;               // 
 typedef fa_action_channel_t         channel_t;              // int
@@ -1224,31 +1226,56 @@ fa_string_t action_show(fa_ptr_t a)
     case get_action:      str = fa_string_dappend(str, fa_string("get")); break;
     case set_action:      str = fa_string_dappend(str, fa_string("set")); break;
     case accum_action:    str = fa_string_dappend(str, fa_string("accum")); break;
-    case send_action:     str = fa_string_dappend(str, fa_string("send")); break;
+    case send_action: {
+        str = fa_string_dappend(str, fa_string("send "));
+        #if kActionVerboseShow
+        str = fa_string_dappend(str, fa_string_show(compound_get(x, data)));
+        #endif
+        break;
+    }
     case do_action:       str = fa_string_dappend(str, fa_string("do")); break;
     case compound_action:
         if (compound_get(x, function) == _null) {
             str = fa_string_dappend(str, fa_string("null"));
         } else if (compound_get(x, function) == _many) {
-            str = fa_string_dappend(str, fa_string("many"));
+            str = fa_string_dappend(str, fa_string("many "));
+            #if kActionVerboseShow
+            str = fa_string_dappend(str, fa_string_show(compound_get(x, data)));
+            #endif
         } else if (compound_get(x, function) == _repeat) {
-            str = fa_string_dappend(str, fa_string("repeat"));
+            str = fa_string_dappend(str, fa_string("repeat "));
+            #if kActionVerboseShow
+            str = fa_string_dappend(str, fa_string_show(compound_get(x, data)));
+            #endif
         } else if (compound_get(x, function) == _if) {
-            str = fa_string_dappend(str, fa_string("if"));
+            str = fa_string_dappend(str, fa_string("if "));
+            #if kActionVerboseShow
+            str = fa_string_dappend(str, fa_string_show(compound_get(x, data)));
+            #endif
         } else if (compound_get(x, function) == _while) {
-            str = fa_string_dappend(str, fa_string("while"));
+            str = fa_string_dappend(str, fa_string("while "));
+            #if kActionVerboseShow
+            str = fa_string_dappend(str, fa_string_show(compound_get(x, data)));
+            #endif
         } else if (compound_get(x, function) == _until) {
-            str = fa_string_dappend(str, fa_string("until"));
+            str = fa_string_dappend(str, fa_string("until "));
+            #if kActionVerboseShow
+            str = fa_string_dappend(str, fa_string_show(compound_get(x, data)));
+            #endif
         } else {
+            #if kActionVerboseShow
             str = fa_string_dappend(str, fa_dappend(fa_string("other compound "), fa_string_show(compound_get(x, data))));
+            #else
+            str = fa_string_dappend(str, fa_string("other compound "));
+            #endif
         }
         break;
     default:
-        str = fa_string_dappend(str, fa_string_format_integral("unknown (%u)", x->tag));
+        str = fa_string_dappend(str, fa_string_format_integral("unknown (%u) ", x->tag));
         break;
     }
     //str = fa_string_dappend(str, fa_string(" "));
-    str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) x));
+    str = fa_string_dappend(str, fa_string_format_integral("%p", (long) x));
     //str = fa_string_dappend(str, fa_string_format_integral(" %d", x->ref_count));
     str = fa_string_dappend(str, fa_string(">"));
     return str;
