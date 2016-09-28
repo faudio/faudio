@@ -783,6 +783,9 @@ static fa_ptr_t _repeat(fa_ptr_t data, fa_ptr_t c)
 fa_action_t fa_action_repeat(fa_time_t interval, size_t times, fa_action_t action)
 {
     assert(times == 0 && "Not implemented");
+#ifdef FAUDIO_DEBUG
+    mark_scheduled(action);
+#endif
     return fa_action_compound(_repeat, pair(pair(interval, fa_from_int16(times)), action));
 }
 
@@ -823,14 +826,14 @@ static fa_ptr_t _many(fa_ptr_t data, fa_ptr_t c)
 // [(Action, Time)] -> Action
 fa_action_t fa_action_many(fa_list_t timeActions)
 {
-    // // DEBUG
-    // assert(fa_dynamic_get_type(timeActions) == list_type_repr);
-    // fa_for_each(x, timeActions) {
-    //     assert(fa_dynamic_get_type(x) == pair_type_repr);
-    //     assert(fa_dynamic_get_type(fa_pair_first(x)) == action_type_repr);
-    //     //assert(fa_dynamic_get_type(fa_pair_second(x)) == time_type_repr);
-    // }
-    // // END DEBUG
+#ifdef FAUDIO_DEBUG
+    assert(fa_dynamic_get_type(timeActions) == list_type_repr);
+    fa_for_each(x, timeActions) {
+        assert(fa_dynamic_get_type(x) == pair_type_repr);
+        assert(fa_dynamic_get_type(fa_pair_first(x)) == action_type_repr);
+        //assert(fa_dynamic_get_type(fa_pair_second(x)) == time_type_repr);
+    }
+#endif
     
     return fa_action_compound(_many, timeActions);
 }
@@ -1033,16 +1036,25 @@ static inline fa_ptr_t _until(fa_ptr_t data, fa_ptr_t c)
 // [(Action, Time)] -> Action
 fa_action_t fa_action_if(fa_pred_t pred, fa_ptr_t data, fa_action_t action)
 {
+#ifdef FAUDIO_DEBUG
+    mark_scheduled(action);
+#endif
     return fa_action_compound(_if, fa_pair_create(fa_func_ref_create(pred, data), action));
 }
 
 fa_action_t fa_action_while(fa_pred_t pred, fa_ptr_t data, fa_action_t action)
 {
+#ifdef FAUDIO_DEBUG
+    mark_scheduled(action);
+#endif
     return fa_action_compound(_while, fa_pair_create(fa_func_ref_create(pred, data), action));
 }
 
 fa_action_t fa_action_until(fa_pred_t pred, fa_ptr_t data, fa_action_t action)
 {
+#ifdef FAUDIO_DEBUG
+    mark_scheduled(action);
+#endif
     return fa_action_compound(_until, fa_pair_create(fa_func_ref_create(pred, data), action));
 }
 
