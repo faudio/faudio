@@ -89,8 +89,11 @@ struct _fa_action_t {
         
     }                               fields;
     
-    //uint64_t timestamp; // Eriks test
-    double timestamp; // Eriks test
+    double timestamp;
+#ifdef FAUDIO_DEBUG
+    bool has_been_run;
+    bool has_been_scheduled;
+#endif
 };
 
 //static fa_map_t all_actions = NULL;
@@ -103,8 +106,12 @@ inline static action_t new_action(int tag)
 
     action_t s = fa_new(action);
     s->impl = &action_impl;
-    //s->ref_count = 1;
     s->tag  = tag;
+    
+#ifdef FAUDIO_DEBUG
+    s->has_been_run = false;
+    s->has_been_scheduled = false;
+#endif
     
     // if (!all_actions) {
 //         all_actions = fa_list_empty();
@@ -115,6 +122,14 @@ inline static action_t new_action(int tag)
     
     return s;
 }
+
+#ifdef FAUDIO_DEBUG
+void mark_scheduled(fa_action_t action)
+{
+    assert(!action->has_been_scheduled && "Action rescheduled!");
+    action->has_been_scheduled = true;
+}
+#endif
 
 inline static void delete_action(action_t action)
 {

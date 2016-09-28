@@ -1364,10 +1364,17 @@ void fa_audio_add_message_callback(fa_audio_message_callback_t function,
     stream->callbacks.elements[n].data     = data;
 }
 
+#ifdef FAUDIO_DEBUG
+void mark_scheduled(fa_action_t action);
+#endif
+
 void fa_audio_schedule(fa_time_t time,
                        fa_action_t action,
                        fa_audio_stream_t stream)
 {
+#ifdef FAUDIO_DEBUG
+    mark_scheduled(action);
+#endif
     fa_pair_left_t pair = fa_pair_left_create(time, action);
 
     fa_atomic_queue_write(stream->before_controls, pair);
@@ -1383,6 +1390,9 @@ void fa_audio_schedule_relative(fa_time_t         time,
 
 void fa_audio_schedule_now(fa_action_t action, fa_audio_stream_t stream)
 {
+#ifdef FAUDIO_DEBUG
+    mark_scheduled(action);
+#endif
     if (fa_action_is_flat(action)) {
         fa_list_t actions = fa_action_flat_to_list(action);
         fa_for_each(a, actions) {
