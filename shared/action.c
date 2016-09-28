@@ -783,7 +783,6 @@ fa_action_t fa_action_repeat(fa_time_t interval, size_t times, fa_action_t actio
 static fa_ptr_t _many(fa_ptr_t data, fa_ptr_t c)
 {
     fa_list_t timeActions = data;
-    fa_action_t compound = c;
 
     if (!timeActions || fa_list_is_empty(timeActions)) {
         // fa_slog_info("  IN _many  (list is empty)", compound);
@@ -875,7 +874,6 @@ bool fa_action_is_flat(fa_action_t action) {
 
 static fa_ptr_t _if(fa_ptr_t data, fa_ptr_t c)
 {
-    fa_action_t   compound = c;
     fa_pair_t     pred_action = data;
     fa_func_ref_t pred_closure;
     fa_pred_t     pred_function;
@@ -929,7 +927,6 @@ static fa_ptr_t _if(fa_ptr_t data, fa_ptr_t c)
 
 static inline fa_ptr_t _while(fa_ptr_t data, fa_ptr_t c)
 {
-    fa_action_t   compound = c;
     fa_pair_t     pred_action = data;
     fa_func_ref_t pred_closure;
     fa_pred_t     pred_function;
@@ -978,7 +975,6 @@ static inline fa_ptr_t _while(fa_ptr_t data, fa_ptr_t c)
 
 static inline fa_ptr_t _until(fa_ptr_t data, fa_ptr_t c)
 {
-    fa_action_t   compound = c;
     fa_pair_t     pred_action = data;
     fa_func_ref_t pred_closure;
     fa_pred_t     pred_function;
