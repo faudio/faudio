@@ -184,7 +184,7 @@ static void add_midi(playback_data_t playback, float time, uint8_t cmd, uint8_t 
                 fa_action_t stop = fa_action_do_with_time(_playback_stopped2, playback);
                 stop = fa_action_if(check_playback_semaphore, wrap_oid(id), stop);
                 double stop_time = playback->start_time + playback->max_time + auto_stop_margin;
-                schedule(fa_time_from_double(stop_time), a, current_midi_playback_stream);
+                schedule(fa_time_from_double(stop_time), stop, current_midi_playback_stream);
             }
             break; // only from switch
         }
@@ -348,7 +348,7 @@ int playback_add_audio_handler(const char *path, const char *types, lo_arg ** ar
                     fa_action_t stop = fa_action_do_with_time(_playback_stopped2, playback);
                     stop = fa_action_if(check_playback_semaphore, wrap_oid(id), stop);
                     double stop_time = playback->start_time + playback->max_time + auto_stop_margin;
-                    schedule(fa_time_from_double(stop_time), a, current_audio_stream);
+                    schedule(fa_time_from_double(stop_time), stop, current_audio_stream);
                 }
                 break; // only from switch
             }
