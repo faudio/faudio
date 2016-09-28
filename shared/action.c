@@ -661,6 +661,7 @@ static void compound_render(fa_action_t compound, fa_action_t* first, fa_time_t*
         }
         fa_destroy(maybeFirstRest);
     }
+    compound_get(compound, data) = NULL;
 }
 
 
@@ -751,7 +752,6 @@ static fa_ptr_t _repeat(fa_ptr_t data, fa_ptr_t c)
         fa_action_t copy = fa_deep_copy(compound);
         fa_destroy(data); // only the pair
         fa_destroy(interval_times);
-        compound_get(compound, data) = NULL; // reset reference, to avoid double free
         return fa_pair_create(action, pair(interval, copy));
     } else {
         times = fa_dsubtract(times, fa_from_int16(1));
@@ -759,14 +759,12 @@ static fa_ptr_t _repeat(fa_ptr_t data, fa_ptr_t c)
             fa_destroy(data); // only the pair
             fa_destroy(interval_times);
             fa_destroy(interval);
-            compound_get(compound, data) = NULL; // reset reference, to avoid double free
             return fa_pair_create(action, NULL);
         } else {
             // TODO: decrement times in the copy
             fa_action_t copy = fa_deep_copy(compound);
             fa_destroy(data); // only the pair
             fa_destroy(interval_times);
-            compound_get(compound, data) = NULL; // reset reference, to avoid double free
             return fa_pair_create(action, pair(interval, copy));
         }
     }
@@ -796,7 +794,6 @@ static fa_ptr_t _many(fa_ptr_t data, fa_ptr_t c)
         // Pop first element in list
         fa_destroy(first_interval);
         timeActions = fa_list_dtail(timeActions);
-        compound_get(compound, data) = NULL; // reset reference, to avoid double free
         
         // If there is only one action, return it
         if (fa_list_is_empty(timeActions)) {
@@ -883,7 +880,6 @@ static fa_ptr_t _if(fa_ptr_t data, fa_ptr_t c)
     pred_function = fa_func_ref_func(pred_closure);
     pred_data = fa_func_ref_data(pred_closure);
     fa_destroy(pred_closure);
-    compound_get(compound, data) = NULL; // reset reference, to avoid double free
 
     if (fa_action_is_simple(action)) {
         if (pred_function(pred_data, NULL)) {
@@ -937,7 +933,6 @@ static inline fa_ptr_t _while(fa_ptr_t data, fa_ptr_t c)
     pred_function = fa_func_ref_func(pred_closure);
     pred_data = fa_func_ref_data(pred_closure);
     fa_destroy(pred_closure);
-    compound_get(compound, data) = NULL; // reset reference, to avoid double free
     
     if (fa_action_is_simple(action)) {
         if (pred_function(pred_data, NULL)) {
@@ -986,7 +981,6 @@ static inline fa_ptr_t _until(fa_ptr_t data, fa_ptr_t c)
     pred_function = fa_func_ref_func(pred_closure);
     pred_data = fa_func_ref_data(pred_closure);
     fa_destroy(pred_closure);
-    compound_get(compound, data) = NULL; // reset reference, to avoid double free
     
     if (fa_action_is_simple(action)) {
         if (!pred_function(pred_data, NULL)) {
