@@ -485,7 +485,6 @@ void fa_action_destroy(fa_action_t action)
         assert(false && "unknown action type in fa_action_destroy");
     }
 
-    //action->ref_count -= 100;
     delete_action(action);
 }
 
@@ -536,7 +535,6 @@ void fa_action_deep_destroy(fa_action_t action, fa_deep_destroy_pred_t pred)
         assert(false && "unknown action type in fa_action_deep_destroy");
     }
 
-    //action->ref_count -= 1000;
     delete_action(action);
 }
 
@@ -1058,7 +1056,7 @@ static inline bool is_too_old (fa_time_t time, fa_time_t now) {
 }
 
 /**
-    Run a single or compound action, pushing to the given rescheduling list of needed.
+    Run a single or compound action, pushing to the given rescheduling list if needed.
     @param
         action  Action to run.
         time    Current time (for rescheduling).
@@ -1282,7 +1280,6 @@ fa_string_t action_show(fa_ptr_t a)
     }
     //str = fa_string_dappend(str, fa_string(" "));
     str = fa_string_dappend(str, fa_string_format_integral("%p", (long) x));
-    //str = fa_string_dappend(str, fa_string_format_integral(" %d", x->ref_count));
     str = fa_string_dappend(str, fa_string(">"));
     return str;
 }
