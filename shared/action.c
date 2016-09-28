@@ -248,7 +248,7 @@ static inline fa_action_t copy_send(fa_action_t action2)
     if (send_get(action2, retain)) {
         send_get(action, value) = send_get(action2, value);
     } else {
-        send_get(action, value) = fa_copy(send_get(action2, value));
+        send_get(action, value) = fa_deep_copy(send_get(action2, value));
     }
     send_get(action, retain) = send_get(action2, retain);
     return action;
