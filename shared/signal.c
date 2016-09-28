@@ -2317,6 +2317,7 @@ struct _play_buffer_slot {
     uint8_t channels;
     fa_sample_type_t sample_type;
     uint8_t sample_size;
+    double sample_rate;   // The sample rate of the loaded buffer
     bool playing;
     double volume;        // Set volume
     double pan;           // 
@@ -2333,7 +2334,7 @@ struct _play_buffers_context {
     fa_string_t msg_free;
     fa_string_t msg_volume;
     fa_string_t msg_pan;
-    double stream_sample_rate; // cached value
+    double stream_sample_rate; // cached value, the sample rate of the current stream
     int slot_count;
     play_buffer_slot *slots;
 };
@@ -2502,6 +2503,7 @@ fa_ptr_t play_buffers_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message
                         slot->max_pos = (size / ((sizeof(double)) * slot->channels)) - 1;
                         double buffer_rate = fa_peek_number(fa_get_meta(buffer, fa_string("sample-rate")));
                         slot->speed = buffer_rate / context->stream_sample_rate;
+                        slot->sample_rate = buffer_rate;
                     }
                     break;
                 }
@@ -2527,17 +2529,16 @@ fa_ptr_t play_buffers_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message
                         slot->speed = buffer_rate / context->stream_sample_rate;
                         slot->sample_type = fa_peek_integer(fa_get_meta(buffer, fa_string("sample-type")));
                         slot->sample_size = fa_sample_type_size(slot->sample_type);
+                        slot->sample_rate = buffer_rate;
                     }
                     break;
                 }
                 
-                // A number: a new position in frames
+                // An integer: a new position in frames
                 case i8_type_repr:
                 case i16_type_repr:
                 case i32_type_repr:
                 case i64_type_repr:
-                case f32_type_repr:
-                case f64_type_repr:
                 {
                     double new_pos = fa_peek_number(cmd);
                     if (new_pos > slot->max_pos) new_pos = slot->max_pos;
@@ -2550,6 +2551,18 @@ fa_ptr_t play_buffers_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message
                     //     uint8_t frame_size = slot->channels * slot->sample_size;
                     //     fa_file_buffer_seek_if_needed(slot->file_buffer, slot->pos * frame_size);
                     // }
+                    break;
+                }
+                // A floating point number: a new position in seconds
+                case f32_type_repr:
+                case f64_type_repr:
+                {
+                    double new_pos = fa_peek_number(cmd) * slot->sample_rate;
+                    if (new_pos > slot->max_pos) new_pos = slot->max_pos;
+                    slot->pos = new_pos;
+                    if (slot->file_buffer) {
+                        fa_file_buffer_hint(slot->file_buffer, slot->pos * slot->channels * slot->sample_size);
+                    }
                     break;
                 }
                 
@@ -2652,6 +2665,7 @@ fa_pair_t fa_signal_play_buffers(fa_string_t name, int count)
         slot->speed = 1.0;
         slot->sample_type = double_sample_type;
         slot->sample_size = fa_sample_type_size(double_sample_type);
+        slot->sample_rate = 44100; // just some default
         slot->volume = 1.0;
         slot->pan = 0.0;
         slot->left_volume = 1.0;

@@ -599,7 +599,7 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
         
         // Schedule
         fa_push_list(pair(fa_action_send_retain(audio_name, pair(fa_i16(slot), buffer)), fa_milliseconds(0)), actions);
-        fa_push_list(pair(fa_action_send(audio_name, pair(fa_i16(slot), fa_from_double(skip))), fa_milliseconds(0)), actions);
+        fa_push_list(pair(fa_action_send(audio_name, pair(fa_i16(slot), fa_from_int64(skip))), fa_milliseconds(0)), actions);
         fa_push_list(pair(fa_action_send(audio_name, pair(fa_i16(slot), fa_string("play"))), fa_milliseconds(0)), actions);
         if (repeat_interval == 0) {
             fa_push_list(pair(fa_action_do_with_time(_playback_started, wrap_oid(id)), fa_milliseconds(0)), actions);
