@@ -489,7 +489,7 @@ int playback_start_handler(const char *path, const char *types, lo_arg ** argv, 
         
         playback->status = PLAYBACK_STARTING;
     }
-    //start_time_echo();
+    start_time_echo();
     return 0;
 }
 
