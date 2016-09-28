@@ -118,6 +118,8 @@ void do_schedule(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
             fa_slog_info("Strange stream sent to schedule: ", stream);
             assert(false && "Unknown object sent to schedule");
         }
+    } else {
+        fa_deep_destroy_always(action);
     }
 }
 
@@ -134,6 +136,8 @@ void do_schedule_relative(fa_time_t time, fa_action_t action, fa_ptr_t stream) {
             fa_slog_info("Strange stream sent to schedule_relative: ", stream);
             assert(false && "Unknown object sent to schedule_relative");
         }
+    } else {
+        fa_deep_destroy_always(action);
     }
 }
 
@@ -150,6 +154,8 @@ void do_schedule_now(fa_action_t action, fa_ptr_t stream) {
             fa_slog_info("Strange stream sent to schedule_now: ", stream);
             assert(false && "Unknown object sent to schedule_now");
         }
+    } else {
+        fa_deep_destroy_always(action);
     }
 }
 
