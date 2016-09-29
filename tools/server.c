@@ -584,7 +584,7 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
     }
     if (buffer) {
         add_playback_semaphore(id, audio_name, slot);
-        fa_inform(fa_format_integral("Starting audio playback on slot %d", slot));
+        if (verbose) fa_inform(fa_format_integral("Starting audio playback on slot %d", slot));
         fa_list_t actions = fa_list_empty();
         double sample_rate = fa_peek_number(fa_get_meta(buffer, fa_string("sample-rate")));
         size_t frames = fa_peek_integer(fa_get_meta(buffer, fa_string("frames")));

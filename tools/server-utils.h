@@ -1419,7 +1419,7 @@ static size_t _upload_read_ring_buffer(void *ptr, size_t size, size_t nmemb, voi
     // Otherwise, read one byte at a time until there is more data available,
 	// or until the ring buffer is closed.
     void *dest = ptr;
-    printf("_upload_read_ring_buffer: Trying to read %zu bytes one at a time\n", size*nmemb);
+    if (verbose) printf("_upload_read_ring_buffer: Trying to read %zu bytes one at a time\n", size*nmemb);
     size_t i = 0;
     while (i < size*nmemb) {
         if (fa_atomic_ring_buffer_can_read(ring_buffer, 1)) {

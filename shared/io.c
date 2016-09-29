@@ -87,7 +87,7 @@ void fa_io_push_through(fa_io_filter_t filter, fa_io_sink_t downstream, fa_buffe
 
 void split_filter_destroy(fa_ptr_t x)
 {
-    fa_slog_info("split_filter_destroy");
+    // fa_slog_info("split_filter_destroy");
     struct filter_base *filter = (struct filter_base *) x;
     if (filter->data1) {
         fa_destroy(filter->data1);
@@ -206,7 +206,7 @@ FILTER_IMPLEMENTATION(standardout_filter);
 void write_filter_destroy(fa_ptr_t x)
 {
     struct filter_base *filter = (struct filter_base *) x;
-    fa_slog_info("write_filter_destroy");
+    // fa_slog_info("write_filter_destroy");
     // Close file handle if still open
     if (filter->data1) {
         fa_slog_warning("File still open when destroying write filter, closing it now");

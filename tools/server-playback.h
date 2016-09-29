@@ -24,7 +24,7 @@ fa_ptr_t _playback_started(fa_ptr_t context, fa_time_t time, fa_time_t now)
 fa_ptr_t _playback_stopped(fa_ptr_t context, fa_time_t time, fa_time_t now)
 {
     oid_t id = peek_oid(context);
-    printf("_playback_stopped (%hu)\n", id);
+    if (verbose) printf("_playback_stopped (%hu)\n", id);
     if (remove_playback_semaphore(id)) {
         send_osc_async("/playback/stopped", "itT", id, timetag_from_time(now));
         // printf("calling stop_time_echo from _playback_stopped (%hu)\n", id);
@@ -89,7 +89,7 @@ fa_ptr_t _playback_started2(fa_ptr_t context, fa_time_t time, fa_time_t now)
     fa_with_lock(playback_data_mutex) {
         playback->status = PLAYBACK_RUNNING;
         playback->start_time = fa_time_to_double(time);
-        printf("_playback_started2  %f\n", playback->start_time);
+        if (verbose) printf("_playback_started2  %f\n", playback->start_time);
         id = playback->id;
         flush_playback_actions(playback, playback->start_time);
     }
@@ -109,7 +109,9 @@ fa_ptr_t _playback_stopped2(fa_ptr_t context, fa_time_t time, fa_time_t now)
         id = playback->id;
         ok = (playback->status == PLAYBACK_STOPPING) ||
             (playback->auto_stop && fa_time_to_double(time) > (playback->start_time + playback->max_time));
-        printf("_playback_stopped2 ok = %d  %f %f\n", ok, fa_time_to_double(time), (playback->start_time + playback->max_time));
+        if (verbose) {
+            printf("_playback_stopped2 ok = %d  %f %f\n", ok, fa_time_to_double(time),(playback->start_time + playback->max_time));
+        }
         if (!ok) continue;
         _playback_stopped(wrap_oid(id), time, now);
         //playback->status = PLAYBACK_FINISHED;
@@ -433,7 +435,6 @@ static void flush_playback_actions(playback_data_t playback, double time) {
     }
     playback->midi_actions = fa_list_empty();
     playback->audio_actions = fa_list_empty();
-    
 }
 
 //    /playback/start         id  [start-time]
@@ -483,6 +484,8 @@ int playback_start_handler(const char *path, const char *types, lo_arg ** argv, 
         add_playback_semaphore(id, NULL, 0);
         
         playback->repeat = repeat_interval;
+        
+        printf("Starting playback %d%s\n", id, repeat ? " (repeat)" : "");
         
         // Schedule!
         flush_playback_actions(playback, time);
