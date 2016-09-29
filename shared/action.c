@@ -860,7 +860,8 @@ static void _flatten(fa_action_t action, fa_list_t *alist) {
                 fa_destroy(fa_pair_second(x)); // the time
                 fa_destroy(x);  // the pair
             }
-            fa_destroy(action); // including the list
+            fa_destroy(compound_get(action, data)); // the list
+            fa_destroy(action); // the action
         } else {
             fa_deep_destroy_always(action);
         }
@@ -953,7 +954,7 @@ static inline fa_ptr_t _while(fa_ptr_t data, fa_ptr_t c)
         if (pred_function(pred_data, NULL)) {
             return fa_pair_create(action, NULL);
         } else {
-            fa_action_destroy(action);
+            fa_deep_destroy_always(action);
             return NULL;
         }
     } else {
