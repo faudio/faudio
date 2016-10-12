@@ -221,7 +221,7 @@ int playback_add_midi_handler(const char *path, const char *types, lo_arg ** arg
             send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
             continue; // don't return or break, that wouldn't release the lock
         }
-        add_midi(playback, time, cmd, ch, data1, data2, data1);
+        add_midi(playback, time, cmd, ch, data1, data2, argv[4]->f);
     }
     return 0;
 }
