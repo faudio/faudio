@@ -154,11 +154,15 @@ fa_io_source_t fa_io_read_audio_file_between(fa_string_t path, fa_ptr_t startFra
 /** Create source that reads audio data from a mp3 file. 
     The path is consumed.
 */
-// fa_io_source_t fa_io_read_mp3_file(fa_string_t path);
+#ifdef FA_MP3_IMPORT
+fa_io_source_t fa_io_read_mp3_file(fa_string_t path);
+#endif
 
 /** Create source that reads audio data from a mp3 file. 
 */
-// fa_io_source_t fa_io_read_mp3_file_between(fa_string_t path, fa_ptr_t startFrames, fa_ptr_t endFrames);
+#ifdef FA_MP3_IMPORT
+fa_io_source_t fa_io_read_mp3_file_between(fa_string_t path, fa_ptr_t startFrames, fa_ptr_t endFrames);
+#endif
 
 /** Create sink that writes to a file. 
 */

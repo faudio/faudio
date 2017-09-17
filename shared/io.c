@@ -396,7 +396,7 @@ FILTER_IMPLEMENTATION(read_audio_filter);
 
 // ------------------------------------------------------------------------------------------
 
-/*
+#ifdef FA_MP3_IMPORT
 void read_mp3_filter_destroy(fa_ptr_t x)
 {
     //fa_inform(fa_string("In read_mp3_filter_destroy"));
@@ -510,7 +510,7 @@ void read_mp3_filter_push(fa_ptr_t _, fa_io_sink_t downstream, fa_buffer_t buffe
 {
 }
 FILTER_IMPLEMENTATION(read_mp3_filter);
-*/
+#endif
 
 // ------------------------------------------------------------------------------------------
 
@@ -797,7 +797,7 @@ fa_io_source_t fa_io_read_audio_file(fa_string_t path)
     return fa_io_read_audio_file_between(path, NULL, NULL);
 }
 
-/*
+#ifdef FA_MP3_IMPORT
 fa_io_source_t fa_io_read_mp3_file_between(fa_string_t path, fa_ptr_t startFrames, fa_ptr_t endFrames)
 {
     struct filter_base *x = fa_new_struct(filter_base);
@@ -812,7 +812,7 @@ fa_io_source_t fa_io_read_mp3_file(fa_string_t path)
 {
     return fa_io_read_mp3_file_between(path, NULL, NULL);
 }
-*/
+#endif
 
 fa_io_filter_t fa_io_create_simple_filter(fa_io_callback_t callback,
                                           fa_io_read_callback_t readCallback,
