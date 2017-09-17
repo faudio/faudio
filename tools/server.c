@@ -101,6 +101,7 @@ define_handler(load_audio_file);
 define_handler(load_raw_audio_file);
 define_handler(close_audio_file);
 define_handler(save_audio_file);
+define_handler(save_raw_audio_file);
 define_handler(audio_file_curve);
 define_handler(audio_file_peak);
 define_handler(audio_file_upload);
@@ -320,6 +321,7 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/audio-file/close",    "i",  close_audio_file_handler, server); // audio id
     lo_server_add_method(server, "/audio-file/save",     "i",  save_audio_file_handler, server);  // audio id
     lo_server_add_method(server, "/audio-file/save",     "is", save_audio_file_handler, server);  // audio id, path
+    lo_server_add_method(server, "/audio-file/save/raw", "iis", save_raw_audio_file_handler, server);  // id, audio id, path
     lo_server_add_method(server, "/audio-file/curve",    "i",  audio_file_curve_handler, server); // audio id
     lo_server_add_method(server, "/audio-file/peak",     "i",  audio_file_peak_handler, server);  // audio id
     // id, audio id, url, cookies, [from_time (ms), to_time (ms), ogg_dump_filename]
@@ -1367,6 +1369,93 @@ int save_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
     fa_slog_info("Saved audio file at ", file_path);
     fa_set_meta(buffer, fa_string("file_path"), file_path);
     send_osc(message, user_data, "/audio-file/save", "iT", id);
+    return 0;
+}
+
+int save_raw_audio_file_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    oid_t id                = argv[0]->i;
+    oid_t audio_id          =  argv[1]->i;
+    // fa_string_t target_path = fa_string_from_utf8(&argv[1]->s);
+    // char *path     = &argv[2]->s;
+
+    fa_slog_info("save_raw_audio_file_handler");
+
+    fa_ptr_t buffer = NULL;
+    // bool new_buffer = false;
+    fa_io_source_t source = NULL;
+    bool done = 0;
+    
+    fa_with_lock(audio_files_mutex) {
+        buffer = fa_map_dget(wrap_oid(audio_id), audio_files);
+        switch (fa_dynamic_get_type(buffer)) {
+        case buffer_type_repr: {
+            if (verbose) fa_slog_info("Saving raw contents of memory buffer ", buffer);
+            fa_take_reference(buffer);
+            fa_string_t target_path = fa_string_from_utf8(&argv[2]->s);
+            fa_slog_info("Target path: ", target_path);
+            if (fa_buffer_write_raw(target_path, buffer)) {
+                fa_slog_info("fa_buffer_write_raw returned true");
+            } else {
+                fa_fail(fa_string("fa_buffer_write_raw returned false!"));
+            }
+            fa_release_reference(buffer);
+            fa_destroy(target_path);
+            // source = fa_io_from_buffer(buffer);
+            done = 1;
+            break;
+        }
+        case file_buffer_type_repr: {
+            if (verbose) fa_slog_info("Saving raw contents of file buffer ", buffer);
+            fa_take_reference(buffer);
+            fa_ptr_t audio_format = fa_get_meta(buffer, fa_string("audio-format"));
+            fa_string_t file_path = fa_get_meta(buffer, fa_string("file_path"));
+            if (file_path) {
+                file_path = fa_copy(file_path);
+                fa_slog_info(" file path is ", file_path);
+            } else {
+                fa_fail(fa_format_integral("Audio file %zu has no path", id));
+                send_osc(message, user_data, "/audio-file/save/raw", "iF", id);
+                break;
+            }
+            
+            if (audio_format && fa_dequal(fa_copy(audio_format), fa_string("mp3"))) {
+#ifdef FA_MP3_IMPORT
+                source = fa_io_read_mp3_file(file_path); // Audio file
+#endif
+            } else if (audio_format) {
+                source = fa_io_read_audio_file(file_path); // Audio file
+            } else {
+                source = fa_io_read_file(file_path); // Raw file
+            }
+            break;
+        }
+        default: {
+            fa_fail(fa_format_integral("There is no audio file with ID %zu", audio_id));
+            send_osc(message, user_data, "/audio-file/save/raw", "iF", id);
+            buffer = NULL;
+            break;
+        }
+        } // switch
+    }
+    if (done) {
+        send_osc(message, user_data, "/audio-file/save/raw", "iT", id);
+        return 0;
+    }
+    if (!source) {
+        fa_fail(fa_string("No source! Unknown file format?"));
+        send_osc(message, user_data, "/audio-file/save/raw", "iF", id);
+        if (buffer) fa_release_reference(buffer);
+        return 0;
+    }
+    
+    fa_string_t target_path = fa_string_from_utf8(&argv[2]->s);
+    fa_io_sink_t sink = fa_io_write_file(target_path);
+    fa_io_run(source, sink);
+
+    fa_release_reference(buffer);
+
+    send_osc(message, user_data, "/audio-file/save/raw", "iT", id);
     return 0;
 }
 
