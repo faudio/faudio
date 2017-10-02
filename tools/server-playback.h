@@ -215,6 +215,10 @@ int playback_add_midi_handler(const char *path, const char *types, lo_arg ** arg
     uint8_t data1 = argv[4]->f; // truncate
     uint8_t data2 = argc > 5 ? argv[5]->i : 0;
 
+    if (noaudio) {
+        return 0;
+    }
+
     fa_with_lock(playback_data_mutex) {
         playback_data_t playback = fa_map_dget(wrap_oid(id), playback_data);
         if (!playback) {
@@ -235,6 +239,10 @@ int playback_add_note_handler(const char *path, const char *types, lo_arg ** arg
     float pitch = argv[3]->f;
     uint8_t vel = argv[4]->i;
     float dur   = argv[5]->f;
+
+    if (noaudio) {
+        return 0;
+    }
     
     if (!vel || !dur) return 0;
     
@@ -259,6 +267,11 @@ int playback_add_audio_handler(const char *path, const char *types, lo_arg ** ar
     uint8_t slot   = argv[3]->i;
     float skip     = argc > 4 ? argv[4]->f : 0;
     float duration = argc > 5 ? argv[5]->f : -1;
+
+    if (noaudio) {
+        if (verbose) fa_slog_info("Audio disabled, ignoring playback_add_audio");
+        return 0;
+    }
     
     // Check slot
     if (slot < 0 || slot >= kMaxAudioBufferSignals) {
@@ -447,7 +460,13 @@ int playback_start_handler(const char *path, const char *types, lo_arg ** argv, 
     float time = 0;
     bool repeat;
     float repeat_interval = 0;
-    float skip = 0; // not implemented yet
+    // float skip = 0; // not implemented yet
+
+    if (noaudio) {
+        if (verbose) fa_slog_info("Audio disabled, ignoring playback_start");
+        send_osc(message, user_data, "/error", "is", id, "audio-disabled");
+        return 0;
+    }
     
     if (strcmp(path, "/playback/start") == 0) {
         if (argc > 1) time = argv[1]->f;
@@ -506,7 +525,7 @@ void playback_stop(oid_t id, lo_message message, void *user_data)
     }
     
     if (remove_playback_semaphore(id)) {
-        printf("Stopping playback id %d\n", id);
+        printf("Stopping playback %d\n", id);
         fa_time_t now = fa_clock_time(current_clock);
         send_osc(message, user_data, "/playback/stopped", "itF", id, timetag_from_time(now));
         fa_destroy(now);

@@ -21,6 +21,7 @@ oid_t last_used_playback_id = 0;
 uint32_t ping_counter = 0;
 int audio_buffer_signals = 8;
 bool verbose = false;
+bool noaudio = false;
 
 int in_bundle = 0;
 fa_list_t bundle_actions = NULL;

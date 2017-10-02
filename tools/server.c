@@ -39,11 +39,12 @@ fa_option_t option_declaration[] = {
     #ifdef _WIN32
     { "s", "soundfont",    "Soundfont path",                  fa_option_native_string,   "FluidR3_GM.sf2" },
     #endif
-    { "p", "port",         "Port number",                     fa_option_integral, "7770" },
-    { "a", "audio-slots",  "Max simultaneous audio sources",  fa_option_integral, "8"},
-    { "h", "default-host", "Default audio host",              fa_option_string, kDefaultAudioHost },
-    { "l", "log-file",     "Log file path",                   fa_option_native_string, "" },
-    { "v", "verbose",      "Verbose (0 or 1)",                fa_option_integral, "0" }
+    { "p", "port",         "Port number",                      fa_option_integral, "7770" },
+    { "a", "audio-slots",  "Max simultaneous audio sources",   fa_option_integral, "8"},
+    { "h", "default-host", "Default audio host",               fa_option_string, kDefaultAudioHost },
+    { "l", "log-file",     "Log file path",                    fa_option_native_string, "" },
+    { "v", "verbose",      "Verbose (0 or 1)",                 fa_option_integral, "0" },
+    { "n", "noaudio",      "No audio (mainly for debugging)",  fa_option_integral, "0"}
 };
 
 #define define_handler(name) \
@@ -150,6 +151,7 @@ int main(int argc, char const *argv[])
         soundfont_path = fa_map_dget(fa_string("soundfont"), options);
         #endif
         verbose = fa_map_get_int32(fa_string("verbose"), options);
+        noaudio = fa_map_get_int32(fa_string("noaudio"), options);
         default_audio_host = fa_map_dget(fa_string("default-host"), options);
         log_path = fa_map_dget(fa_string("log-file"), options);
         if (fa_string_length(log_path) > 0) {
@@ -408,14 +410,25 @@ int main(int argc, char const *argv[])
 int init(void *user_data)
 {
     char *port = (char*)user_data;
-    fa_initialize();
-    
-    void fa_clock_initialize();
-    fa_clock_initialize();
-    
+
     init_globals();
 
-    start_sessions();
+    if (noaudio) {
+        fa_slog_info("Running audio server with audio disabled");
+        #ifdef FA_MP3_IMPORT
+        // This is usually done by fa_initialize, so do it here instead.
+        // TODO: less ugly solution
+        mpg123_init();
+        #endif
+        void fa_clock_initialize();
+        fa_clock_initialize();
+        current_clock = fa_clock_standard();
+    } else {
+        fa_initialize();
+        void fa_clock_initialize();
+        fa_clock_initialize();
+        start_sessions();
+    }
     
     fa_inform(fa_dappend(fa_string("Listening on TCP port "), fa_string_from_utf8(port)));
     return 0;
@@ -423,13 +436,16 @@ int init(void *user_data)
 
 int cleanup(void *user_data)
 {
-    if (verbose) fa_slog_info("Stopping streams...");
-    stop_streams();
-    if (verbose) fa_slog_info("Stopping sessions...");
-    stop_sessions();
+    if (!noaudio) {
+        if (verbose) fa_slog_info("Stopping streams...");
+        stop_streams();
+        if (verbose) fa_slog_info("Stopping sessions...");
+        stop_sessions();
+    }
     if (verbose) fa_slog_info("Destroying globals...");
     destroy_globals();
-    fa_terminate();
+    
+    if (!noaudio) fa_terminate();
     
     if (verbose) {
         fa_log_region_count("At cleanup");
@@ -569,6 +585,12 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
     double time            = argc >= 5 ? (argv[4]->f / 1000.0) : 0.0;
     double repeat_interval = argc >= 6 ? (argv[5]->f / 1000.0) : 0.0;
     check_id(id, message, user_data);
+
+    if (noaudio) {
+        fa_slog_info("Audio disabled, ignoring play_audio");
+        return 0;
+    }
+
     if (!current_audio_stream) {
         send_osc(message, user_data, "/error", "is", id, "no-audio-stream");
         return 0;
@@ -927,45 +949,47 @@ int next_id_handler(const char *path, const char *types, lo_arg ** argv, int arg
 void send_all_devices(int id, lo_message message, void *user_data)
 {
     bool errors = false;
-    
-    if (current_audio_session) {
-        fa_list_t audio_devices = fa_audio_all(current_audio_session);
-        send_osc(message, user_data, "/audio/devices", "i", fa_list_length(audio_devices));
-        int counter = 0;
-        fa_for_each (device, audio_devices) {
-            //printf("device: %d %s / %s\n", counter, fa_dunstring(fa_audio_host_name(device)), fa_unstring(fa_audio_name(device)));
-            char *host_name = fa_dunstring(fa_audio_host_name(device));
-            char *name = fa_dunstring(fa_audio_name(device));
-            send_osc(message, user_data, "/audio/device", "issiif", counter++, host_name, name,
-                fa_audio_input_channels(device), fa_audio_output_channels(device),
-                fa_audio_default_sample_rate(device));
-            fa_free(host_name);
-            fa_free(name);
+
+    if (!noaudio) {
+        if (current_audio_session) {
+            fa_list_t audio_devices = fa_audio_all(current_audio_session);
+            send_osc(message, user_data, "/audio/devices", "i", fa_list_length(audio_devices));
+            int counter = 0;
+            fa_for_each (device, audio_devices) {
+                //printf("device: %d %s / %s\n", counter, fa_dunstring(fa_audio_host_name(device)), fa_unstring(fa_audio_name(device)));
+                char *host_name = fa_dunstring(fa_audio_host_name(device));
+                char *name = fa_dunstring(fa_audio_name(device));
+                send_osc(message, user_data, "/audio/device", "issiif", counter++, host_name, name,
+                    fa_audio_input_channels(device), fa_audio_output_channels(device),
+                    fa_audio_default_sample_rate(device));
+                fa_free(host_name);
+                fa_free(name);
+            }
+            fa_destroy(audio_devices);
+        } else {
+            fa_slog_warning("No audio session!");
+            send_osc(message, user_data, "/audio-devices", "i", 0);
+            errors = true;
         }
-        fa_destroy(audio_devices);
-    } else {
-        fa_slog_warning("No audio session!");
-        send_osc(message, user_data, "/audio-devices", "i", 0);
-        errors = true;
-    }
-  
-    if (current_midi_session) {
-        fa_list_t midi_devices = fa_midi_all(current_midi_session);
-        send_osc(message, user_data, "/midi/devices", "i", fa_list_length(midi_devices));
-        int counter = 0;
-        fa_for_each (device, midi_devices) {
-            char *host_name = fa_unstring(fa_midi_host_name(device));
-            char *name = fa_unstring(fa_midi_name(device));
-            send_osc(message, user_data, "/midi/device", "issii", counter++, host_name, name,
-                fa_midi_has_input(device) ? 1 : 0, fa_midi_has_output(device) ? 1 : 0);
-            fa_free(host_name);
-            fa_free(name);
+      
+        if (current_midi_session) {
+            fa_list_t midi_devices = fa_midi_all(current_midi_session);
+            send_osc(message, user_data, "/midi/devices", "i", fa_list_length(midi_devices));
+            int counter = 0;
+            fa_for_each (device, midi_devices) {
+                char *host_name = fa_unstring(fa_midi_host_name(device));
+                char *name = fa_unstring(fa_midi_name(device));
+                send_osc(message, user_data, "/midi/device", "issii", counter++, host_name, name,
+                    fa_midi_has_input(device) ? 1 : 0, fa_midi_has_output(device) ? 1 : 0);
+                fa_free(host_name);
+                fa_free(name);
+            }
+            fa_destroy(midi_devices);
+        } else {
+            fa_slog_warning("No MIDI session!");
+            send_osc(message, user_data, "/midi/devices", "i", 0);
+            errors = true;
         }
-        fa_destroy(midi_devices);
-    } else {
-        fa_slog_warning("No MIDI session!");
-        send_osc(message, user_data, "/midi/devices", "i", 0);
-        errors = true;
     }
     
     if (id >= 0) {
@@ -985,6 +1009,7 @@ void send_all_devices(int id, lo_message message, void *user_data)
 
 int all_devices_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
+    if (noaudio) return 0;
     int id = argc > 0 ? argv[0]->i : -1;
     send_all_devices(id, message, user_data);
     return 0;
@@ -1142,6 +1167,7 @@ int simple_note_handler(const char *path, const char *types, lo_arg ** argv, int
 
 int receive_midi_handler(const char *path, const char *types, lo_arg ** argv, int argc, void *data, void *user_data)
 {
+    if (!current_clock) return 0;
     fa_midi_message_t midi_message = fa_midi_message_create_simple(argv[0]->i, argv[1]->i, (argc > 2) ? argv[2]->i : 0);
     bool echo_to_playback = (bool)user_data;
     handle_incoming_midi(fa_clock_time(current_clock), midi_message, echo_to_playback);
@@ -2008,6 +2034,11 @@ int stop_recording_handler(const char *path, const char *types, lo_arg ** argv, 
 
 int choose_device_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
+    if (noaudio) {
+        if (verbose) fa_slog_info("Audio disabled, ignoring choose_device");
+        return 0;
+    }
+
     switch ((int)user_data) {
     // Audio input
     case CHOOSE_AUDIO_INPUT_NONE:
@@ -2097,6 +2128,10 @@ int choose_device_handler(const char *path, const char *types, lo_arg ** argv, i
 
 int restart_streams_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
+    if (noaudio) {
+        if (verbose) fa_slog_info("Audio disabled, ignoring restart_streams");
+        return 0;
+    }
     stop_streams();
     remove_all_playback_semaphores();
     remove_all_recording_semaphores();
@@ -2115,6 +2150,10 @@ int restart_streams_handler(const char *path, const char *types, lo_arg ** argv,
 
 int restart_sessions_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
+    if (noaudio) {
+        if (verbose) fa_slog_info("Audio disabled, ignoring restart_sessions");
+        return 0;
+    }
     stop_streams();
     remove_all_playback_semaphores();
     remove_all_recording_semaphores();
@@ -2135,6 +2174,10 @@ int restart_sessions_handler(const char *path, const char *types, lo_arg ** argv
 
 int stop_streams_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
+    if (noaudio) {
+        if (verbose) fa_slog_info("Audio disabled, ignoring stop_streams");
+        return 0;
+    }
     fa_slog_info("Stopping streams");
     if (recording_state != NOT_RECORDING) {
         fa_slog_warning("Recording in progress, callbacks will probably not be called correctly");
@@ -2161,6 +2204,10 @@ int wasapi_hack_handler(const char *path, const char *types, lo_arg ** argv, int
 
 int stream_direction_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
+    if (noaudio) {
+        if (verbose) fa_slog_info("Audio disabled, ignoring stream_direction");
+        return 0;
+    }
     stream_type_t direction;
     if (strcmp(&argv[0]->s, "output-only") == 0) {
         direction = OUTPUT_ONLY;
