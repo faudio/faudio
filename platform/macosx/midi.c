@@ -776,7 +776,7 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
     fa_time_t time = fa_clock_time(stream->clock);
 
     for (int i = 0; i < packetList->numPackets; ++i) {
-        const MIDIPacket *packet = &(packetList->packet[i]);
+        const MIDIPacket *packet = &(packetList->packet[i]); // THIS IS FLAWED!!! Check documentation on MIDIPacketList!
 
         char status = 0, data1 = 0, data2 = 0;
         enum {
