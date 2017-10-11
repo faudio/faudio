@@ -1737,6 +1737,12 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
 	
     // Make sure sink is detached (especially important if io_run is never called,
     // otherwise the upload callback will never return!)
+    //
+    // NB: because of a bug(?) in fa_io_run, a NULL value was never pushed onto
+    // the sink after the finished run. That was probably the underlying cause
+    // of the problems that made us ALWAYS run this push. Now that bug is fixed,
+    // however there is no problem calling _recording_receive twice with NULL,
+    // so we leave it here. / ER 2017-10-11
     fa_io_push(sink, NULL);
     
     if (verbose) fa_slog_info("_recording_thread 5");

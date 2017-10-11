@@ -1007,7 +1007,7 @@ fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t rbuffer)
 
 void pull_buffer(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
 {
-    size_t chunk_size = 256;
+    size_t chunk_size = 4096;
     fa_buffer_t buffer = x;
     size_t size = fa_buffer_size(buffer);
     size_t chunks = size / chunk_size;
@@ -1020,8 +1020,9 @@ void pull_buffer(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
         cb(data, buf);
         fa_destroy(buf);
     }
-    
+
     size_t remaining_bytes = size - (chunk_size * chunks);
+
     if (remaining_bytes > kMaxDrainSpill) {
         remaining_bytes = kMaxDrainSpill * (remaining_bytes / kMaxDrainSpill);
         fa_buffer_t buf = fa_buffer_create(remaining_bytes);
@@ -1059,6 +1060,7 @@ void fa_io_run(fa_io_source_t source, fa_io_sink_t sink)
             fa_io_pull(source, _run, pair);
         }
     }
+    fa_io_push(sink, NULL);
 }
 
 struct _pull_to_buffer_info {
