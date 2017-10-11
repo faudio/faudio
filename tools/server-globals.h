@@ -40,6 +40,7 @@ fa_string_t record_right_name = NULL;
 fa_string_t soundfont_path = NULL;
 #endif
 fa_string_t default_audio_host = NULL;
+float default_ogg_quality = 1.0f;
 
 #ifdef _WIN32
 bool avoid_wasapi_exclusive_bidirectional = true;

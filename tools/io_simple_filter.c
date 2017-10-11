@@ -47,7 +47,7 @@ fa_buffer_t test_file_to_ogg(fa_string_t path) {
     fa_inform(fa_string("=== FILE TO OGG ==="));
     fa_inform(fa_string("    Reading file directly"));
     fa_io_source_t raw_source = fa_io_read_file(path);
-    fa_io_source_t source = fa_io_apply(raw_source, fa_io_create_ogg_encoder(44100, 1));
+    fa_io_source_t source = fa_io_apply(raw_source, fa_io_create_ogg_encoder(44100, 1, 0.8));
     double time1 = get_time();
     fa_buffer_t ogg_buffer = fa_io_pull_to_buffer(source);
     double time2 = get_time();
@@ -68,7 +68,7 @@ fa_buffer_t test_buffer_to_ogg(fa_string_t path) {
     }
     fa_inform(fa_format_integral("    -> %zu bytes of audio data in buffer", fa_buffer_size(source_buffer)));
     fa_io_source_t raw_source = fa_io_from_buffer(source_buffer);
-    fa_io_source_t source = fa_io_apply(raw_source, fa_io_create_ogg_encoder(44100, 1));
+    fa_io_source_t source = fa_io_apply(raw_source, fa_io_create_ogg_encoder(44100, 1, 0.8));
     double time1 = get_time();
     fa_buffer_t ogg_buffer = fa_io_pull_to_buffer(source);
     double time2 = get_time();

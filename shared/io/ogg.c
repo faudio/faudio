@@ -38,7 +38,7 @@ struct ogg_encoder {
 
 void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb, fa_ptr_t data);
 
-void prepare(fa_ptr_t x, long sample_rate, long channels)
+void prepare(fa_ptr_t x, long sample_rate, long channels, float quality)
 {
     struct ogg_encoder *encoder = (struct ogg_encoder *) x;
     
@@ -49,7 +49,7 @@ void prepare(fa_ptr_t x, long sample_rate, long channels)
 
     int ret;
     // TODO
-    ret = vorbis_encode_init_vbr(&encoder->vorbis.info, encoder->channels, encoder->sample_rate, 1.0f);
+    ret = vorbis_encode_init_vbr(&encoder->vorbis.info, encoder->channels, encoder->sample_rate, quality);
     if (ret) {
         fa_fail(fa_string_dappend(fa_string("Vorbis error: "), fa_string_dshow(fa_i32(ret))));
         printf("sample_rate: %ld, channels: %ld\n", sample_rate, channels);
@@ -77,7 +77,7 @@ fa_buffer_t double2float(fa_buffer_t x)
     double *rx = fa_buffer_unsafe_address(x);
     float *ry = fa_buffer_unsafe_address(y);
 
-    for (size_t i = 0; i < fa_buffer_size(x) / 8; ++i) {
+    for (size_t i = 0; i < fa_buffer_size(x) / sizeof(double); ++i) {
         ry[i] = rx[i];
     }
 
@@ -254,7 +254,7 @@ fa_ptr_t _destroy_ogg_encoder(fa_ptr_t x) {
     return NULL;
 }
 
-fa_io_filter_t fa_io_create_ogg_encoder(long sample_rate, long channels)
+fa_io_filter_t fa_io_create_ogg_encoder(long sample_rate, long channels, float quality)
 {
     if (channels < 1 || channels > 2) {
         fa_fail(fa_string_format_integral("Bad number of channels in fa_io_create_ogg_encoder: %ld", channels));
@@ -265,6 +265,6 @@ fa_io_filter_t fa_io_create_ogg_encoder(long sample_rate, long channels)
         assert(false);
     }
     struct encoder *encoder = fa_new_struct(ogg_encoder);
-    prepare(encoder, sample_rate, channels);
+    prepare(encoder, sample_rate, channels, quality);
     return fa_io_create_simple_filter_with_destructor(push_uncompressed, pull_compressed, encoder, _destroy_ogg_encoder);
 }

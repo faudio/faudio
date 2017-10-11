@@ -1687,9 +1687,9 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
     if (url && filename) {
         // If url is specified, create the file sink as a split filter
         fa_io_sink_t file_sink = fa_io_write_file(fa_string_from_utf8(filename));
-        source = fa_io_apply(fa_io_apply(source, fa_io_split(file_sink)), fa_io_create_ogg_encoder(sr, ch));
+        source = fa_io_apply(fa_io_apply(source, fa_io_split(file_sink)), fa_io_create_ogg_encoder(sr, ch, default_ogg_quality));
     } else if (url) {
-        source = fa_io_apply(source, fa_io_create_ogg_encoder(sr, ch));
+        source = fa_io_apply(source, fa_io_create_ogg_encoder(sr, ch, default_ogg_quality));
     } else {
         if (verbose) fa_slog_info("Creating file sink");
         sink = fa_io_write_file(fa_string_from_utf8(filename));

@@ -168,6 +168,10 @@ fa_io_source_t fa_io_read_mp3_file_between(fa_string_t path, fa_ptr_t startFrame
 */
 fa_io_sink_t fa_io_write_file(fa_string_t string);
 
+/** Create sink that writes to an audio file. 
+*/
+fa_io_sink_t fa_io_write_audio_file(fa_string_t path, size_t channels, size_t sample_rate, int format);
+
 /** Create sink that appends to a file. 
 */
 fa_io_sink_t fa_io_append_file(fa_string_t string);
@@ -190,10 +194,10 @@ fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t ringBuffer);
 
 /** Create an encoder to the `ogg/vorbis` format.
     @warning
-        For now requires input to be mono, 44100, 64-bit floating.
+        For now requires input to be mono, 64-bit floating.
       
 */
-fa_io_filter_t fa_io_create_ogg_encoder(long sampleRate, long channels);
+fa_io_filter_t fa_io_create_ogg_encoder(long sampleRate, long channels, float quality);
 
 /** Continously data from the given source and push it into the sink.
 

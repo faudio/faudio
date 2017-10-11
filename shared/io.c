@@ -250,6 +250,59 @@ FILTER_IMPLEMENTATION(write_filter);
 
 // ------------------------------------------------------------------------------------------
 
+void write_audio_filter_destroy(fa_ptr_t x)
+{
+    struct filter_base *filter = (struct filter_base *) x;
+    // fa_slog_info("write_filter_destroy");
+    // Close file handle if still open
+    if (filter->data1) {
+        fa_slog_warning("File still open when destroying write filter, closing it now");
+        fa_slog_info("    file: ", filter->data2);
+        fa_inform(fa_format_integral("    bytes written: %d", (int)filter->data3));
+        sf_close(filter->data1);
+        filter->data1 = NULL;
+    }
+    if (filter->data2) fa_destroy(filter->data2);
+    fa_free(filter);
+}
+
+fa_string_t write_audio_filter_show(fa_ptr_t x)
+{
+    return fa_string("<WriteAudioSink>");
+}
+
+void write_audio_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
+{
+}
+void write_audio_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
+{
+    // inform(fa_string("In write_filter push"));
+    
+    struct filter_base *filter = (struct filter_base *) x;
+    SNDFILE *file = filter->data1;
+    if (!file) return; // No file handle
+
+    size_t channels = (size_t)filter->data4;
+
+    if (buffer) {
+        size_t bytes = fa_buffer_size(buffer);
+        size_t frames = bytes / (channels * sizeof(double));
+        if (bytes % (channels * sizeof(double))) {
+            fa_slog_warning("write_audio_filter_push was sent an uneven number of bytes!");
+        }
+        sf_writef_double(file, fa_buffer_unsafe_address(buffer), frames);
+        filter->data3 = (fa_ptr_t)(((int)filter->data3) + frames);
+    } else {
+        fa_inform(fa_format_integral("Closing audio file after writing %d frames", (int)filter->data3));
+        sf_close(file);
+        filter->data1 = NULL;
+    }
+}
+FILTER_IMPLEMENTATION(write_audio_filter);
+
+
+// ------------------------------------------------------------------------------------------
+
 void read_filter_destroy(fa_ptr_t x)
 {
     //fa_inform(fa_string("In read_filter_destroy"));
@@ -765,6 +818,40 @@ fa_io_sink_t fa_io_write_file(fa_string_t path)
 fa_io_sink_t fa_io_append_file(fa_string_t path)
 {
     return io_write_file(path, "ab");
+}
+
+fa_io_sink_t fa_io_write_audio_file(fa_string_t path, size_t channels, size_t sample_rate, int format)
+{
+    struct filter_base *x = fa_new_struct(filter_base);
+    x->impl = &write_audio_filter_impl;
+    x->data1 = NULL;
+    x->data2 = NULL;
+    x->data3 = 0; // number of frames written
+    x->data4 = (fa_ptr_t) channels;
+    
+    SF_INFO        info;
+    info.samplerate = sample_rate;
+    info.channels   = channels;
+    info.format     = format;
+
+    #if _WIN32
+    wchar_t *cpath  = fa_string_to_utf16(path);
+    SNDFILE *file   = sf_wchar_open(cpath, SFM_WRITE, &info);
+    #else
+    char *cpath     = fa_string_to_utf8(path);
+    SNDFILE *file   = sf_open(cpath, SFM_WRITE, &info);
+    #endif
+
+    if (sf_error(file)) {
+        char err[100];
+        snprintf(err, 100, "Could not write audio file '%s' (%s)", cpath, sf_strerror(file));
+        fa_fail(fa_string_from_utf8(err));
+    } else {
+        x->data1 = file;
+        x->data2 = fa_copy(path);
+    }
+    fa_free(cpath);
+    return (fa_io_sink_t) x;
 }
 
 fa_io_source_t fa_io_read_file_between(fa_string_t path, fa_ptr_t start, fa_ptr_t end)
