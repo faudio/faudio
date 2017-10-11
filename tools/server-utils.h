@@ -79,7 +79,9 @@ if (fa_check(_obj)) {                       \
     //if (_obj) fa_destroy(_obj);     
 
 
-#define safe_peek_i32(ptr) (ptr ? (int32_t) fa_peek_number(ptr) : 0)
+static inline int32_t safe_peek_i32(fa_ptr_t ptr) {
+    return ptr ? (int32_t) fa_peek_number(ptr) : 0;
+}
 
 // Windows doesn't have strdup
 #ifdef _WIN32
@@ -1752,6 +1754,7 @@ fa_ptr_t _recording_thread(fa_ptr_t context)
     if (url) free(url);
     if (cookies) free(cookies);
     fa_destroy(source);
+    fa_destroy(sink);
     if (upload_ring_buffer) fa_atomic_ring_buffer_release_reference(upload_ring_buffer);
     //fa_destroy(ring_buffer); // currently, we are using a global ring buffer, so don't free it
     //fa_destroy(result);
