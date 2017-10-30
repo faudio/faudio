@@ -22,3 +22,6 @@
 [submodule "external/mpg123/source"]
 	path = external/mpg123/source
 	url = git://github.com/faudio/mpg123.git
+[submodule "external/lame/source"]
+	path = external/lame/source
+	url = git://github.com/faudio/lame.git
