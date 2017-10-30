@@ -77,6 +77,15 @@ add_standard_component(COMPONENTS Mpg123
   ${AUDIO_ENGINE_SYSTEM_NAME}
   )
 
+predicate_file_exists(lame_exists
+  "external/lame/result/include/lame/lame.h"
+  )
+add_standard_component(COMPONENTS Lame
+  lame_exists
+  ${AUDIO_ENGINE_SYSTEM_NAME}
+  )
+
+
 # predicate_file_exists(gtest_exists
 #   "external/gtest/result/include/gtest/gtest.h"
 #   )

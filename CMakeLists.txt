@@ -69,6 +69,7 @@ option(ENABLE_AUDIO_UNIT        "Enable AudioUnit processors"               ${AP
 option(ENABLE_VST               "Enable VST processors"                     True)
 option(ENABLE_HTTP              "Enable HTTP-client functionality"          True)
 option(ENABLE_MP3_IMPORT        "Enable MP3 import"                         True)
+option(ENABLE_MP3_EXPORT        "Enable MP3 export"                         True)
 
 option(BUILD_FRAMEWORK          "Build an OS X framework"                   ${APPLE})
 option(BUILD_SHARED             "Build a shared library"                    ${NOT_APPLE})
@@ -201,6 +202,9 @@ if (COMPONENTS_RESOLVED)
   if(ENABLE_MP3_IMPORT)
     find_package(Mpg123)
   endif()
+  if(ENABLE_MP3_EXPORT)
+    find_package(Lame)
+  endif()
 
   ## ----------------------------------------------------------------------
   ## Add compiler defs
@@ -262,6 +266,7 @@ if (COMPONENTS_RESOLVED)
   include_directories(${LIBOGG_INCLUDE_DIRS})
   include_directories(${LIBVORBIS_INCLUDE_DIRS})
   include_directories(${MPG123_INCLUDE_DIRS})
+  include_directories(${LAME_INCLUDE_DIRS})
   include_directories("external/vst")
 
   ## ----------------------------------------------------------------------
@@ -282,6 +287,7 @@ if (COMPONENTS_RESOLVED)
     ${LIBOGG_LIBRARIES}
     ${LIBVORBIS_LIBRARIES}
     ${MPG123_LIBRARIES}
+    ${LAME_LIBRARIES}
     "/c/mingw/lib"
     "/c/mingw"
     )
@@ -299,6 +305,7 @@ if (COMPONENTS_RESOLVED)
   list(APPEND EXTS ${LIBOGG_LIBRARIES})
   list(APPEND EXTS ${CURL_LIBRARIES})
   list(APPEND EXTS ${MPG123_LIBRARIES})
+  list(APPEND EXTS ${LAME_LIBRARIES})
 
   if (MSYS)
     find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
@@ -355,6 +362,7 @@ if (COMPONENTS_RESOLVED)
   set(FA_HAS_AUDIO_UNIT     ${ENABLE_AUDIO_UNIT})
   set(FA_HAS_VST            ${ENABLE_VST})
   set(FA_MP3_IMPORT         ${ENABLE_MP3_IMPORT})
+  set(FA_MP3_EXPORT         ${ENABLE_MP3_EXPORT})
 
   configure_file(
     ${CMAKE_SOURCE_DIR}/include/config.h.in
