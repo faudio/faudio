@@ -450,12 +450,15 @@ void fa_take_reference(fa_ptr_t ptr);
 void fa_release_reference(fa_ptr_t ptr);
 
 
+typedef struct _fa_map_t * fa_map_t;
+
 /** Generic meta-data interface.
     
 */
 typedef struct {
             fa_ptr_t (* get_meta)(fa_ptr_t, fa_ptr_t);
             void (* set_meta)(fa_ptr_t, fa_ptr_t, fa_ptr_t);
+            fa_map_t (* meta_map)(fa_ptr_t);
 } fa_meta_data_t;
 
 /** Get a meta data entry for an object.
@@ -470,6 +473,11 @@ fa_ptr_t fa_get_meta(fa_ptr_t object, fa_ptr_t key);
 */
 void fa_set_meta(fa_ptr_t object, fa_ptr_t key, fa_ptr_t value);
 
+/** Set a meta data map an object.
+    @see [Meta data](@ref fa_meta_data_t)
+      
+*/
+fa_map_t fa_meta_map(fa_ptr_t object);
 
 /** Generic append operation interface. 
 */

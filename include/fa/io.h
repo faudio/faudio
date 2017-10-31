@@ -5,6 +5,7 @@
 #include <fa.h>
 #include <fa/buffer.h>
 #include <fa/atomic/ring_buffer.h>
+#include <config.h>
 
 /** @addtogroup FaIo
 
@@ -172,6 +173,12 @@ fa_io_sink_t fa_io_write_file(fa_string_t string);
 */
 fa_io_sink_t fa_io_write_audio_file(fa_string_t path, size_t channels, size_t sample_rate, int format);
 
+/** Create sink that writes to an mp3 file. 
+*/
+#ifdef FA_MP3_EXPORT
+fa_io_sink_t fa_io_write_mp3_file(fa_string_t path, size_t channels, size_t sample_rate, int bitrate, fa_map_t id3);
+#endif
+
 /** Create sink that appends to a file. 
 */
 fa_io_sink_t fa_io_append_file(fa_string_t string);
@@ -194,7 +201,7 @@ fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t ringBuffer);
 
 /** Create an encoder to the `ogg/vorbis` format.
     @warning
-        For now requires input to be mono, 64-bit floating.
+        For now requires input to be in 64-bit float format.
       
 */
 fa_io_filter_t fa_io_create_ogg_encoder(long sampleRate, long channels, float quality);

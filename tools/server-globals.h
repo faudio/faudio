@@ -41,6 +41,7 @@ fa_string_t soundfont_path = NULL;
 #endif
 fa_string_t default_audio_host = NULL;
 float default_ogg_quality = 1.0f;
+int default_mp3_bitrate = 128;
 
 #ifdef _WIN32
 bool avoid_wasapi_exclusive_bidirectional = true;

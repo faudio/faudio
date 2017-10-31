@@ -434,7 +434,7 @@ GENERIC1(reference_count, take_reference, fa_ptr_t, void);
 GENERIC1(reference_count, release_reference, fa_ptr_t, void);
 GENERIC2(meta_data,  get_meta,       fa_ptr_t, fa_ptr_t, fa_ptr_t);
 GENERIC3(meta_data,  set_meta,       fa_ptr_t, fa_ptr_t, fa_ptr_t, void);
-
+GENERIC1(meta_data,  meta_map,       fa_ptr_t, fa_map_t);
 
 fa_ptr_t fa_dappend(fa_ptr_t a, fa_ptr_t b)
 {

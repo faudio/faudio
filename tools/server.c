@@ -20,6 +20,10 @@
 
 #include <sndfile.h>
 
+#ifdef FA_MP3_IMPORT
+#include <mpg123.h>
+#endif
+
 #if defined(_WIN32)
 #define WIN32 1
 #endif
@@ -106,6 +110,7 @@ define_handler(load_raw_audio_file);
 define_handler(close_audio_file);
 define_handler(save_audio_file);
 define_handler(save_raw_audio_file);
+define_handler(audio_file_meta);
 define_handler(audio_file_curve);
 define_handler(audio_file_peak);
 define_handler(audio_file_upload);
@@ -331,10 +336,15 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/audio-file/load/raw",  "isii", load_raw_audio_file_handler, server);  // a id, path, sr, ch
     lo_server_add_method(server, "/audio-file/load/raw",  "isiif", load_raw_audio_file_handler, server);  // + latency (ms)
     lo_server_add_method(server, "/audio-file/close",     "i",  close_audio_file_handler, server); // audio id
+    lo_server_add_method(server, "/audio-file/meta",      "iis", audio_file_meta_handler, server); // id, audio id, key
+    lo_server_add_method(server, "/audio-file/meta",      "iisN", audio_file_meta_handler, server); // id, audio id, key
+    lo_server_add_method(server, "/audio-file/meta",      "iiss", audio_file_meta_handler, server); // id, audio id, key, value
     lo_server_add_method(server, "/audio-file/save/wav",  "iis", save_audio_file_handler, server);  // id, audio id, path
     lo_server_add_method(server, "/audio-file/save/aiff", "iis", save_audio_file_handler, server);  // id, audio id, path
     lo_server_add_method(server, "/audio-file/save/ogg",  "iis", save_audio_file_handler, server);  // id, audio id, path
     lo_server_add_method(server, "/audio-file/save/ogg",  "iisf", save_audio_file_handler, server);  // id, audio id, path, quality
+    lo_server_add_method(server, "/audio-file/save/mp3",  "iis", save_audio_file_handler, server);  // id, audio id, path
+    lo_server_add_method(server, "/audio-file/save/mp3",  "iisi", save_audio_file_handler, server);  // id, audio id, path, bitrate
     lo_server_add_method(server, "/audio-file/save/raw",  "iis", save_audio_file_handler, server);  // id, audio id, path
     lo_server_add_method(server, "/audio-file/curve",     "i",  audio_file_curve_handler, server); // audio id
     lo_server_add_method(server, "/audio-file/peak",      "i",  audio_file_peak_handler, server);  // audio id
@@ -1375,6 +1385,31 @@ int close_audio_file_handler(const char *path, const char *types, lo_arg ** argv
     return 0;
 }
 
+int audio_file_meta_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    oid_t id         = argv[0]->i;
+    oid_t audio_id   = argv[1]->i;
+    char *key        = &argv[2]->s;
+    char *value      = (argc >= 4 && types[3] == 's') ? &argv[3]->s : NULL;
+
+    bool ok = 0;
+    fa_with_lock(audio_files_mutex) {
+        fa_ptr_t buffer = fa_map_dget(wrap_oid(audio_id), audio_files);
+        if (buffer) {
+            fa_string_t the_key = fa_dappend(fa_string("id3:"), fa_string_from_utf8(key));
+            fa_string_t the_value = value ? fa_string_from_utf8(value) : NULL;
+            fa_set_meta(buffer, the_key, the_value);
+            ok = 1;
+        }
+    }
+    if (ok) {
+        send_osc(message, user_data, path, "iT", id);
+    } else {
+        send_osc(message, user_data, path, "iF", id);
+    }
+    return 0;
+}
+
 int save_audio_file_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id                = argv[0]->i;
@@ -1382,7 +1417,7 @@ int save_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
     // fa_string_t target_path = fa_string_from_utf8(&argv[1]->s);
     // char *path     = &argv[2]->s;
 
-    fa_inform(fa_dappend(fa_string("save_audio_file_handler "), fa_string_from_utf8(path)));
+    if (verbose) fa_inform(fa_dappend(fa_string("save_audio_file_handler "), fa_string_from_utf8(path)));
 
     fa_ptr_t buffer = NULL;
     // bool new_buffer = false;
@@ -1457,12 +1492,24 @@ int save_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
         if (verbose) fa_inform(fa_format("Exporting with ogg quality %f\n", ogg_quality));
         source = fa_io_apply(source, fa_io_create_ogg_encoder(sample_rate, channels, ogg_quality));
         sink = fa_io_write_file(target_path);
+    } else if (strcmp(path, "/audio-file/save/mp3") == 0) {
+        int mp3_bitrate = (argc >= 4) ? argv[3]->i : default_mp3_bitrate;
+        if (verbose) fa_inform(fa_format("Exporting with mp3 bitrate %d\n", mp3_bitrate));
+        fa_map_t id3 = fa_meta_map(buffer); // TODO: check that map is not changed in other process!
+        // id3 = fa_map_dset(fa_string("TIT2"), fa_string("En titel med åäö i"), id3);
+        // id3 = fa_map_dset(fa_string("artist"), fa_string("En artiståäöaerr"), id3);
+        sink = fa_io_write_mp3_file(target_path, channels, sample_rate, mp3_bitrate, id3);
     } else if (strcmp(path, "/audio-file/save/raw") == 0) {
         sink = fa_io_write_file(target_path);
     } else {
         assert(false && "Unknown target format");
     }
-    fa_io_run(source, sink);
+    if (fa_check(sink)) {
+        send_osc(message, user_data, path, "iFs", id, fa_string_to_utf8(fa_error_message((fa_error_t)sink)));
+    } else {
+        fa_io_run(source, sink);
+        send_osc(message, user_data, path, "iT", id);
+    }
 
     // Cleanup
     fa_destroy(source);
@@ -1470,7 +1517,6 @@ int save_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
     fa_destroy(target_path);
     fa_release_reference(buffer);
 
-    send_osc(message, user_data, path, "iT", id);
     return 0;
 }
 

@@ -10,8 +10,13 @@
 #include <fa/fa.h>
 #include <fa/io.h>
 #include <fa/util.h>
+#include <config.h>
 
 #include <sndfile.h>
+
+#if FA_MP3_EXPORT
+#include <lame/lame.h>
+#endif
 
 // We need sf_wchar_open on Windows, and the official way is to
 //   #include <windows.h>
@@ -23,7 +28,9 @@
 SNDFILE* sf_wchar_open (const wchar_t *wpath, int mode, SF_INFO *sfinfo);
 #endif
 
-// #include <mpg123.h>
+#if FA_MP3_IMPORT
+#include <mpg123.h>
+#endif
 
 struct filter_base {
     fa_impl_t impl;
@@ -259,7 +266,7 @@ void write_audio_filter_destroy(fa_ptr_t x)
         fa_slog_warning("File still open when destroying write filter, closing it now");
         fa_slog_info("    file: ", filter->data2);
         fa_inform(fa_format_integral("    bytes written: %d", (int)filter->data3));
-        sf_close(filter->data1);
+        fclose(filter->data1);
         filter->data1 = NULL;
     }
     if (filter->data2) fa_destroy(filter->data2);
@@ -300,6 +307,80 @@ void write_audio_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t bu
 }
 FILTER_IMPLEMENTATION(write_audio_filter);
 
+
+// ------------------------------------------------------------------------------------------
+
+#if FA_MP3_EXPORT
+void write_mp3_filter_destroy(fa_ptr_t x)
+{
+    struct filter_base *filter = (struct filter_base *) x;
+    // fa_slog_info("write_filter_destroy");
+    // Close file handle if still open
+    if (filter->data1) {
+        fa_slog_warning("File still open when destroying write filter, closing it now");
+        fa_inform(fa_format_integral("    bytes written: %d", (int)filter->data3));
+        sf_close(filter->data1);
+        filter->data1 = NULL;
+    }
+    if (filter->data2) {
+        lame_global_flags *gfp = (lame_global_flags*)(filter->data2);
+        lame_close(gfp);
+        filter->data2 = NULL;
+    }
+    fa_free(filter);
+}
+
+fa_string_t write_mp3_filter_show(fa_ptr_t x)
+{
+    return fa_string("<WriteMp3Sink>");
+}
+
+void write_mp3_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
+{
+}
+void write_mp3_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
+{
+    // inform(fa_string("In write_mp3_filter push"));
+    
+    struct filter_base *filter = (struct filter_base *) x;
+    FILE *file = filter->data1;
+    if (!file) return; // No file handle
+
+    lame_global_flags *gfp = (lame_global_flags*)(filter->data2);
+    size_t channels = (size_t)filter->data4;
+
+    if (buffer) {
+        size_t frames = fa_buffer_size(buffer) / (channels * sizeof(double));
+        size_t mp3_buf_size = 1.5 * frames + 7200;
+        unsigned char *mp3_buf = fa_malloc(mp3_buf_size);
+        int bytes;
+        if (channels == 1) {
+            bytes = lame_encode_buffer_ieee_double(gfp, fa_buffer_unsafe_address(buffer), NULL, frames, mp3_buf, mp3_buf_size);
+        } else {
+            bytes = lame_encode_buffer_interleaved_ieee_double(gfp, fa_buffer_unsafe_address(buffer), frames, mp3_buf, mp3_buf_size);
+        }
+        if (bytes < 0) {
+            fa_fail(fa_format("lame encoder returned %d", bytes));
+        } else {
+            fwrite(mp3_buf, bytes, 1, file);
+            filter->data3 = (fa_ptr_t)(((size_t)filter->data3) + bytes);
+        }
+    } else {
+        unsigned char buf[7200]; // allocate on stack
+        int bytes = lame_encode_flush(gfp, buf, sizeof(buf));
+        if (bytes < 0) {
+            fa_fail(fa_format("lame_encode_flush returned %d", bytes));
+        } else {
+            fwrite(&buf, bytes, 1, file);
+            filter->data3 = (fa_ptr_t)(((size_t)filter->data3) + bytes);
+        }
+        fa_inform(fa_format_integral("Closing mp3 file after writing %d bytes", (int)filter->data3));
+        fclose(file);
+        filter->data1 = NULL;
+    }
+}
+FILTER_IMPLEMENTATION(write_mp3_filter);
+#endif
 
 // ------------------------------------------------------------------------------------------
 
@@ -805,6 +886,8 @@ static fa_io_sink_t io_write_file(fa_string_t path, const char* mode) {
     } else {
         fa_fail(fa_string_dappend(fa_string("Could not open file for writing: "), fa_copy(path)));
         fa_fail(fa_string_format_integral("  errno: %d", errno));
+        return (fa_io_sink_t) fa_error_create_simple(error,
+            fa_string_from_utf8(strerror(errno)), fa_string("Doremir.IO"));
     }
     
     return (fa_io_sink_t) x;
@@ -846,6 +929,9 @@ fa_io_sink_t fa_io_write_audio_file(fa_string_t path, size_t channels, size_t sa
         char err[100];
         snprintf(err, 100, "Could not write audio file '%s' (%s)", cpath, sf_strerror(file));
         fa_fail(fa_string_from_utf8(err));
+        fa_free(cpath);
+        return (fa_io_sink_t) fa_error_create_simple(error,
+            fa_string_from_utf8(err), fa_string("Doremir.IO"));
     } else {
         x->data1 = file;
         x->data2 = fa_copy(path);
@@ -853,6 +939,79 @@ fa_io_sink_t fa_io_write_audio_file(fa_string_t path, size_t channels, size_t sa
     fa_free(cpath);
     return (fa_io_sink_t) x;
 }
+
+static void set_id3_tag(lame_global_flags *gfp, fa_string_t key, fa_map_t id3) {
+    fa_string_t value = fa_map_get(key, id3);
+    if (value) {
+        char *keystr = fa_string_to_utf8(key);
+        if (strlen(keystr) > 4 && strncmp(keystr, "id3:", 4) == 0) {
+            unsigned short *valstr = fa_string_to_utf16_with_bom(value);
+            int result = id3tag_set_textinfo_utf16(gfp, keystr+4, valstr);
+            if (result) fa_fail(fa_format("Could not set id3 tag: %d", result));
+            fa_free(valstr);
+        }
+        fa_free(keystr);
+    }
+}
+
+#if FA_MP3_EXPORT
+fa_io_sink_t fa_io_write_mp3_file(fa_string_t path, size_t channels, size_t sample_rate, int bitrate, fa_map_t id3)
+{
+    struct filter_base *x = fa_new_struct(filter_base);
+    x->impl = &write_mp3_filter_impl;
+    x->data1 = NULL;  // file handle
+    x->data2 = NULL;  // lame_global_flags
+    x->data3 = 0;     // number of bytes written
+    x->data4 = (fa_ptr_t) channels;
+
+    lame_global_flags *gfp = lame_init();
+
+    if (!gfp) {
+        fa_fail(fa_string("lame_init() returned NULL!"));
+        return (fa_io_sink_t) fa_error_create_simple(error, fa_string("Lame error"), fa_string("Doremir.IO"));
+    }
+
+    lame_set_num_channels(gfp, channels);
+    lame_set_in_samplerate(gfp, sample_rate);
+    lame_set_brate(gfp, bitrate);
+    lame_set_mode(gfp, (channels == 2 ? 1 : 3)); // 1=jstereo, 3=mono
+    lame_set_quality(gfp, 2);   /* 2=high  5 = medium  7=low */ 
+    lame_set_bWriteVbrTag(gfp, 0); // Writing vbr tag requires rewinding of the output stream, so disable it
+
+    if (id3) {
+        fa_list_t keys = fa_map_get_keys(id3);
+        fa_for_each(key, keys) {
+            set_id3_tag(gfp, key, id3);
+        }
+        fa_destroy(keys);
+    }
+
+    int ret_code = lame_init_params(gfp);
+    if (ret_code < 0) {
+        fa_fail(fa_string_dappend(fa_string("Lame error: "), fa_string_dshow(fa_i32(ret_code))));
+        printf("sample_rate: %ld, channels: %ld, ret_code = %d\n", sample_rate, channels, ret_code);
+        lame_close(gfp);
+        return (fa_io_sink_t) fa_error_create_simple(error, fa_string("Lame error"), fa_string("Doremir.IO"));
+    }
+
+    char* cpath = fa_unstring(path);
+    FILE *fp = fa_fopen(cpath, "wb");
+    fa_free(cpath);
+
+    if (fp) {
+        x->data1 = fp;
+    } else {
+        fa_fail(fa_string_dappend(fa_string("Could not open file for writing: "), fa_copy(path)));
+        fa_fail(fa_string_format_integral("  errno: %d", errno));
+        lame_close(gfp);
+        return (fa_io_sink_t) fa_error_create_simple(error,
+            fa_string_from_utf8(strerror(errno)), fa_string("Doremir.IO"));
+    }
+    x->data2 = gfp;
+
+    return (fa_io_sink_t) x;
+}
+#endif
 
 fa_io_source_t fa_io_read_file_between(fa_string_t path, fa_ptr_t start, fa_ptr_t end)
 {

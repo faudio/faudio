@@ -14,11 +14,13 @@ find_path (LAME_INCLUDE_DIR
   NAMES lame/lame.h
   PATH_SUFFIXES include
   PATHS ${CMAKE_SOURCE_DIR}/external/lame/result
+  NO_DEFAULT_PATH NO_SYSTEM_ENVIRONMENT_PATH
   )
 find_library (LAME_LIBRARY
   NAMES mp3lame
   PATH_SUFFIXES lib
   PATHS ${CMAKE_SOURCE_DIR}/external/lame/result
+  NO_DEFAULT_PATH NO_SYSTEM_ENVIRONMENT_PATH
   )
 endletmany (CMAKE_FIND_LIBRARY_SUFFIXES) 
 

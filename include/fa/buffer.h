@@ -7,6 +7,7 @@
 #include <fa/pair.h>
 #include <fa/string.h>
 #include <fa/map.h>
+#include <config.h>
 
 /** @addtogroup FaBuffer
  

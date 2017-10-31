@@ -745,6 +745,11 @@ void buffer_set_meta(fa_ptr_t obj, fa_ptr_t key, fa_ptr_t value)
     fa_buffer_set_meta(obj, key, value);
 }
 
+fa_map_t buffer_meta_map(fa_ptr_t obj)
+{
+    return fa_buffer_meta(obj);
+}
+
 fa_dynamic_type_repr_t buffer_get_type(fa_ptr_t a)
 {
     return buffer_type_repr;
@@ -756,7 +761,7 @@ fa_ptr_t buffer_impl(fa_id_t interface)
     static fa_copy_t buffer_copy_impl = { buffer_copy, buffer_deep_copy };
     static fa_destroy_t buffer_destroy_impl = { buffer_destroy, buffer_deep_destroy };
     static fa_reference_count_t buffer_reference_count_impl = { buffer_take_reference, buffer_release_reference };
-    static fa_meta_data_t buffer_meta_data_impl = { buffer_get_meta, buffer_set_meta };
+    static fa_meta_data_t buffer_meta_data_impl = { buffer_get_meta, buffer_set_meta, buffer_meta_map };
     static fa_dynamic_t buffer_dynamic_impl = { buffer_get_type };
 
     switch (interface) {

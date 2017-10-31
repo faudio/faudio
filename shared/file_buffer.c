@@ -708,6 +708,11 @@ static void file_buffer_set_meta(fa_ptr_t obj, fa_ptr_t key, fa_ptr_t value)
     return fa_file_buffer_set_meta(obj, key, value);
 }
 
+static fa_map_t file_buffer_meta_map(fa_ptr_t obj)
+{
+    return fa_file_buffer_meta(obj);
+}
+
 fa_dynamic_type_repr_t file_buffer_get_type(fa_ptr_t a)
 {
     return file_buffer_type_repr;
@@ -718,7 +723,7 @@ fa_ptr_t file_buffer_impl(fa_id_t interface)
     static fa_string_show_t file_buffer_show_impl = { file_buffer_show };
     static fa_destroy_t file_buffer_destroy_impl = { file_buffer_destroy, file_buffer_deep_destroy };
     static fa_reference_count_t file_buffer_reference_count_impl = { file_buffer_take_reference, file_buffer_release_reference };
-    static fa_meta_data_t file_buffer_meta_data_impl = { file_buffer_get_meta, file_buffer_set_meta };
+    static fa_meta_data_t file_buffer_meta_data_impl = { file_buffer_get_meta, file_buffer_set_meta, file_buffer_meta_map };
     static fa_dynamic_t file_buffer_dynamic_impl = { file_buffer_get_type };
 
     switch (interface) {

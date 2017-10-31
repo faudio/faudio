@@ -171,13 +171,25 @@ fa_char8_t* fa_string_to_utf8(fa_string_t string);
 */
 fa_char8_t* fa_string_to_cp1252(fa_string_t string);
 
-/** Encode the given string as UTF-16.
+/** Encode the given string as UTF-16LE, i.e. little-endian without a BOM marker.
 
     @param  str String to encode.
     @return
         A heap-allocated encoded string.
 */
 fa_char16_t* fa_string_to_utf16(fa_string_t string);
+
+/** Encode the given string as UTF-16 with a BOM marker.
+    
+    NOTE: Endianness is not guaranteed by iconv, but all Intel
+          systems are little-endian. (Of course the BOM marker
+          matches the actual endianness of the string)
+
+    @param  str String to encode.
+    @return
+        A heap-allocated encoded string.
+*/
+fa_char16_t* fa_string_to_utf16_with_bom(fa_string_t string);
 
 /** Convert a string to a the string representation used by the platform.
 

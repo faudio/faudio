@@ -377,6 +377,39 @@ fa_char16_t* fa_string_to_utf16(fa_string_t str)
     return (fa_char16_t*) cstr;
 }
 
+
+fa_char16_t* fa_string_to_utf16_with_bom(fa_string_t str)
+{
+    size_t inSize, outSize, cstrSize;
+    char *in, *out, *cstr;
+
+    inSize  = str->size;
+    outSize = str->size * 2 + 4;       // worst case, we shrink after iconv (UTF-16 can take max twice as much space as UTF-8)
+    in      = (char *) str->data;
+    out     = fa_malloc(outSize);
+    cstr    = out;
+    
+    {
+        iconv_t conv   = iconv_open("UTF-16", "UTF-8");
+        size_t  status = iconv(conv, &in, &inSize, &out, &outSize);
+        iconv_close(conv);
+
+        if (status == ((size_t) - 1)) {
+            iconv_fail();
+            fa_free(cstr);
+            return NULL;
+        }
+    }
+
+    cstrSize = out - cstr;
+    cstr     = fa_realloc(cstr, cstrSize + 2);
+
+    cstr[cstrSize] = 0;                // add null-terminator, first byte
+    cstr[cstrSize+1] = 0;              // second byte
+    return (fa_char16_t*) cstr;
+}
+
+
 fa_string_t fa_string_from_utf8(const fa_char8_t* cstr)
 {
     size_t inSize, outSize, strSize;
