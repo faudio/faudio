@@ -1,0 +1,20 @@
+#!/bin/bash
+git submodule init   external/lame/source;
+git submodule update external/lame/source;
+
+pushd external/lame;
+
+mkdir -p result/lib
+mkdir -p result/include/lame
+
+cp source/include/lame.h result/include/lame/lame.h
+
+echo ">>"
+echo ">> LAME cannot be built with MSYS, so"
+echo ">> libmp3lame.dll has to be downloaded separately"
+echo ">> and placed in external/lame/result/lib"
+echo ">>"
+exit 1;
+
+popd;
+
