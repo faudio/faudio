@@ -96,6 +96,7 @@ define_handler(playback_start);
 define_handler(playback_stop);
 define_handler(playback_autostop);
 define_handler(playback_status);
+define_handler(playback_flush);
 
 define_handler(time);
 define_handler(ping);
@@ -131,6 +132,7 @@ define_handler(stop_recording);
 define_handler(choose_device);
 
 define_handler(proxy);
+define_handler(net);
 
 define_handler(sleep);
 
@@ -269,6 +271,10 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/set/proxy/https",        "sss",  proxy_handler, (void*)1);
     lo_server_add_method(server, "/set/proxy/https",        "s",  proxy_handler, (void*)1);
     lo_server_add_method(server, "/set/proxy/https",        "N",  proxy_handler, (void*)1);
+    lo_server_add_method(server, "/net/get",                "iss",  net_handler, server);  // id url cookies
+    lo_server_add_method(server, "/net/get",                "isN",  net_handler, server);
+    lo_server_add_method(server, "/net/post",               "isss",  net_handler, server); // id url cookies data
+    lo_server_add_method(server, "/net/post",               "isNs",  net_handler, server);
     //lo_server_add_method(server, "/set/schedule-delay",     "i",  settings_handler, "schedule-delay"); // not implemented
 
       
@@ -2311,3 +2317,81 @@ int sleep_handler(const char *path, const char *types, lo_arg ** argv, int argc,
 //     send_osc(message, user_data, "/work");
 //     return 0;
 // }
+
+
+
+int net_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    oid_t id = argv[0]->i;
+    bool post = (strcmp(path, "/net/post") == 0);
+    char *url = &argv[1]->s;
+    // bool https = string_begins_with(url, "http:");
+    char *cookies = types[2] == 's' ? &argv[2]->s : NULL;
+    char *data = NULL;
+    if (post) data = &argv[3]->s;
+
+    CURL *curl = curl_easy_init();
+    if (!curl) {
+        if (verbose) fa_slog_error("CURL init failed");
+        send_osc(message, user_data, path, "iFs", id, "CURL init failed");
+        return 0;
+    }
+
+    if (verbose) curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+
+    // Set url
+    printf("Uploading to %s ", url);
+    curl_easy_setopt(curl, CURLOPT_URL, url); // url is copied by curl
+    // Set cookies
+    if (cookies) curl_easy_setopt(curl, CURLOPT_COOKIE, cookies); // as is cookies
+    // Set proxy
+    if (string_begins_with(url, "http:") && http_proxy) {
+        if (verbose) printf("via http proxy %s\n", http_proxy);
+        curl_easy_setopt(curl, CURLOPT_PROXY, http_proxy);
+        if (http_proxy_userpwd) curl_easy_setopt(curl, CURLOPT_PROXYUSERPWD, http_proxy_userpwd);
+    } else if (string_begins_with(url, "https:") && https_proxy) {
+        if (verbose) printf("via https proxy %s\n", https_proxy);
+        curl_easy_setopt(curl, CURLOPT_PROXY, https_proxy);
+        if (https_proxy_userpwd) curl_easy_setopt(curl, CURLOPT_PROXYUSERPWD, https_proxy_userpwd);
+    } else {
+        if (verbose) printf("(no proxy)\n");
+    }
+    if (post) {
+        // if (data) printf("Data is set\n"); else printf("Data is null\n");
+        // curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, strlen(data));
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
+    }
+
+    char errbuf[CURL_ERROR_SIZE];
+    curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errbuf);
+    errbuf[0] = 0;
+
+    CURLcode res = curl_easy_perform(curl);
+
+    if (res == CURLE_OK) {
+        fa_inform(fa_string("  Upload ok!"));
+        long response_code;
+        long request_size;
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+        curl_easy_getinfo(curl, CURLINFO_REQUEST_SIZE, &request_size);
+        if (verbose) printf("Request was %ld bytes\n", request_size);
+        send_osc(message, user_data, path, "iiN", id, response_code);
+    } else {
+         // Print and generic error message, and send it back via OSC
+         const char *errstr = curl_easy_strerror(res); // points to a string literal that should not be freed
+         fa_fail(fa_dappend(fa_format_integral("CURL error %d: ", res), fa_string_from_utf8(errstr)));
+         send_osc(message, user_data, path, "iFs", id, errstr);
+         // Also print specific error message if available
+         size_t len = strlen(errbuf);
+         if (len) {
+             if (errbuf[len - 1] == '\n') errbuf[len - 1] = 0;      // remove trailing newline
+             fa_fail(fa_dappend(fa_string("    "), fa_string_from_utf8(errbuf)));
+         }
+    }
+
+    curl_easy_cleanup(curl);
+
+    return 0;
+}
+
+
