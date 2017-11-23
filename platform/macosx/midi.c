@@ -35,7 +35,7 @@
 
     * Implementation in terms of CoreMIDI
 
-      CoreMIDI requires a deticated thread+CFRunLoop to work properly, usually the main
+      CoreMIDI requires a dedicated thread+CFRunLoop to work properly, usually the main
       thread is used. This is not an option here, so instead we launch a *global* MIDI
       thread at initialization time. All CoreMIDI interaction must happen on this thread,
       and both status and MIDI callbacks are executed here.
@@ -775,9 +775,13 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
     // require an extra step to with the stream clock.
     fa_time_t time = fa_clock_time(stream->clock);
 
-    for (int i = 0; i < packetList->numPackets; ++i) {
-        const MIDIPacket *packet = &(packetList->packet[i]); // THIS IS FLAWED!!! Check documentation on MIDIPacketList!
 
+    // From the CoreMIDI documentation:
+    // Note that the packets in the list, while defined as an array,
+    // may not be accessed as an array, since they are variable-length.
+    // To iterate through the packets in a packet list, use [...] MIDIPacketNext
+    const MIDIPacket *packet = &packetList->packet[0];
+    for (int i = 0; i < packetList->numPackets; ++i) {
         char status = 0, data1 = 0, data2 = 0;
         enum {
             init,
@@ -839,7 +843,7 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
 
             }
 
-            fa_mark_used(stream);
+            packet = MIDIPacketNext(packet);
         }
     }
 
