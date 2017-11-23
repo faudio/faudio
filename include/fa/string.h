@@ -155,11 +155,22 @@ fa_string_t fa_string_to_json(fa_ptr_t ptr);
 */
 fa_ptr_t fa_string_from_json(fa_string_t string);
 
+/** Get a read-only UTF-8 encoded null-terminated string.
+    Fast, no allocation is done.
+
+    @param  str String to peek.
+    @return
+        A pointer to the internal representation of the string.
+
+    NOTE: The returned string must not be modified!
+*/
+const fa_char8_t* fa_string_peek_utf8(fa_string_t string);
+
 /** Encode the given string as UTF-8.
 
     @param  str String to encode.
     @return
-    qA new encoded string.
+        A new encoded string.
 */
 fa_char8_t* fa_string_to_utf8(fa_string_t string);
 

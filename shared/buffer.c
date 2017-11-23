@@ -481,9 +481,7 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
 
 fa_buffer_t fa_buffer_read_raw_max_size(fa_string_t path, size_t max_size)
 {
-    char* path2 = fa_string_to_utf8(path);
-    FILE* file = fa_fopen(path2, "rb");
-    fa_free(path2);
+    FILE* file = fa_fopen(fa_string_peek_utf8(path), "rb");
     
     if (!file) {
         fa_warn(fa_dappend(fa_string("Could not open "), fa_copy(path)));
@@ -514,9 +512,7 @@ fa_buffer_t fa_buffer_read_raw(fa_string_t path)
 
 bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer)
 {
-    char* path2 = fa_string_to_utf8(path);
-    FILE* file = fa_fopen(path2, "wb");
-    fa_free(path2);
+    FILE* file = fa_fopen(fa_string_peek_utf8(path), "wb");
     if (file) {
         fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, file);
         fclose(file);
@@ -572,7 +568,7 @@ fa_buffer_t fa_buffer_read_mp3_max_size(fa_string_t path, size_t max_size, bool 
 	int channels = 0;
 	int encoding = 0;
 	long sample_rate = 0;
-    char *cpath = fa_string_to_utf8(path);
+    char *cpath = fa_string_to_utf8(path); // TODO: does mpg123_open want utf8 on Windows??
     if (mpg123_open(mp3, cpath) || mpg123_getformat(mp3, &sample_rate, &channels, &encoding)) {
         fa_free(cpath);
         return mpg123_error(mp3);

@@ -1505,7 +1505,7 @@ int save_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
         assert(false && "Unknown target format");
     }
     if (fa_check(sink)) {
-        send_osc(message, user_data, path, "iFs", id, fa_string_to_utf8(fa_error_message((fa_error_t)sink)));
+        send_osc(message, user_data, path, "iFs", id, fa_string_peek_utf8(fa_error_message((fa_error_t)sink)));
     } else {
         fa_io_run(source, sink);
         send_osc(message, user_data, path, "iT", id);

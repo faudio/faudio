@@ -261,9 +261,8 @@ void test_string()
 
         {
             fa_string_t temp = fa_string_from_utf16(kChineseSampleTextUTF16);
-            char* chinese8 = fa_string_to_utf8(temp);
+            char* chinese8 = fa_string_peek_utf8(temp);
             printf("utf-8 <-> utf-16: %s\n", strcmp((char*)kChineseSampleTextUTF8, chinese8) ? "not ok" : "ok");
-            fa_free(chinese8);
             fa_destroy(temp);
         }
 

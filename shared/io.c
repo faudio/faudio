@@ -474,7 +474,7 @@ void read_audio_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_
     SF_INFO info;
     info.format = 0;
     #if _WIN32
-    wchar_t *cpath   = fa_string_to_utf16(path);
+    wchar_t *cpath   = fa_string_to_wstr(path);
     SNDFILE *sndfile = sf_wchar_open(cpath, SFM_READ, &info);
     #else
     char *cpath      = fa_string_to_utf8(path);
@@ -918,7 +918,7 @@ fa_io_sink_t fa_io_write_audio_file(fa_string_t path, size_t channels, size_t sa
     info.format     = format;
 
     #if _WIN32
-    wchar_t *cpath  = fa_string_to_utf16(path);
+    wchar_t *cpath  = fa_string_to_wstr(path);
     SNDFILE *file   = sf_wchar_open(cpath, SFM_WRITE, &info);
     #else
     char *cpath     = fa_string_to_utf8(path);
@@ -943,14 +943,13 @@ fa_io_sink_t fa_io_write_audio_file(fa_string_t path, size_t channels, size_t sa
 static void set_id3_tag(lame_global_flags *gfp, fa_string_t key, fa_map_t id3) {
     fa_string_t value = fa_map_get(key, id3);
     if (value) {
-        char *keystr = fa_string_to_utf8(key);
+        const char *keystr = fa_string_peek_utf8(key);
         if (strlen(keystr) > 4 && strncmp(keystr, "id3:", 4) == 0) {
             unsigned short *valstr = fa_string_to_utf16_with_bom(value);
             int result = id3tag_set_textinfo_utf16(gfp, keystr+4, valstr);
             if (result) fa_fail(fa_format("Could not set id3 tag: %d", result));
             fa_free(valstr);
         }
-        fa_free(keystr);
     }
 }
 
