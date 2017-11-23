@@ -271,10 +271,10 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/set/proxy/https",        "sss",  proxy_handler, (void*)1);
     lo_server_add_method(server, "/set/proxy/https",        "s",  proxy_handler, (void*)1);
     lo_server_add_method(server, "/set/proxy/https",        "N",  proxy_handler, (void*)1);
-    lo_server_add_method(server, "/net/get",                "iss",  net_handler, server);  // id url cookies
-    lo_server_add_method(server, "/net/get",                "isN",  net_handler, server);
-    lo_server_add_method(server, "/net/post",               "isss",  net_handler, server); // id url cookies data
-    lo_server_add_method(server, "/net/post",               "isNs",  net_handler, server);
+    lo_server_add_method(server, "/net/get",                "is",   net_handler, server);
+    lo_server_add_method(server, "/net/get",                "iss",  net_handler, server);  // id url [headers] [cookies]
+    lo_server_add_method(server, "/net/get",                "isss",  net_handler, server);
+    lo_server_add_method(server, "/net/post",               "issss",  net_handler, server); // id url headers cookies data
     //lo_server_add_method(server, "/set/schedule-delay",     "i",  settings_handler, "schedule-delay"); // not implemented
 
       
@@ -2325,10 +2325,17 @@ int net_handler(const char *path, const char *types, lo_arg ** argv, int argc, l
     oid_t id = argv[0]->i;
     bool post = (strcmp(path, "/net/post") == 0);
     char *url = &argv[1]->s;
-    // bool https = string_begins_with(url, "http:");
-    char *cookies = types[2] == 's' ? &argv[2]->s : NULL;
-    char *data = NULL;
-    if (post) data = &argv[3]->s;
+    char *headers = argc > 2 ? &argv[2]->s : NULL;
+    char *cookies = argc > 3 ? &argv[3]->s : NULL;
+    char *data    = post && argc > 4 ? &argv[4]->s : NULL;
+
+    // Copy headers unless it is empty (since strtok is destructive)
+    if (headers && *headers) {
+        headers = strdup(headers);
+    } else {
+        headers = NULL;
+    }
+    struct curl_slist *headers_list = NULL;
 
     CURL *curl = curl_easy_init();
     if (!curl) {
@@ -2340,10 +2347,24 @@ int net_handler(const char *path, const char *types, lo_arg ** argv, int argc, l
     if (verbose) curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
     // Set url
-    printf("Uploading to %s ", url);
     curl_easy_setopt(curl, CURLOPT_URL, url); // url is copied by curl
+
+    // Set headers
+    if (headers) {
+        char *p = strtok(headers, "\n");
+        while (p) {
+            headers_list = curl_slist_append(headers_list, p);
+            p = strtok (NULL, "\n");
+        }
+        CURLcode res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers_list);
+        if (res != CURLE_OK) {
+            fa_slog_warning("CURL: unknown option");
+        }
+    }
+
     // Set cookies
-    if (cookies) curl_easy_setopt(curl, CURLOPT_COOKIE, cookies); // as is cookies
+    if (cookies && *cookies) curl_easy_setopt(curl, CURLOPT_COOKIE, cookies); // cookie string is copied by curl
+
     // Set proxy
     if (string_begins_with(url, "http:") && http_proxy) {
         if (verbose) printf("via http proxy %s\n", http_proxy);
@@ -2356,20 +2377,22 @@ int net_handler(const char *path, const char *types, lo_arg ** argv, int argc, l
     } else {
         if (verbose) printf("(no proxy)\n");
     }
+
+    // Set POST data
     if (post) {
-        // if (data) printf("Data is set\n"); else printf("Data is null\n");
-        // curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, strlen(data));
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
     }
 
+    // Setup a buffer for error message
     char errbuf[CURL_ERROR_SIZE];
     curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errbuf);
     errbuf[0] = 0;
 
+    // Go go go!
     CURLcode res = curl_easy_perform(curl);
 
     if (res == CURLE_OK) {
-        fa_inform(fa_string("  Upload ok!"));
+        fa_inform(fa_string("  Request ok!"));
         long response_code;
         long request_size;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
@@ -2389,6 +2412,9 @@ int net_handler(const char *path, const char *types, lo_arg ** argv, int argc, l
          }
     }
 
+    // Cleanup
+    if (headers_list) curl_slist_free_all(headers_list);
+    if (headers) free(headers);
     curl_easy_cleanup(curl);
 
     return 0;
