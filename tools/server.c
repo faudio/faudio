@@ -155,9 +155,7 @@ int main(int argc, char const *argv[])
     fa_with_options(option_declaration, argc, argv, options, args) {
         sprintf(port, "%d", fa_map_get_int32(fa_string("port"), options));
         audio_buffer_signals = fa_map_get_int32(fa_string("audio-slots"), options);
-        #ifdef _WIN32
         soundfont_path = fa_map_dget(fa_string("soundfont"), options);
-        #endif
         verbose = fa_map_get_int32(fa_string("verbose"), options);
         noaudio = fa_map_get_int32(fa_string("noaudio"), options);
         default_audio_host = fa_map_dget(fa_string("default-host"), options);
