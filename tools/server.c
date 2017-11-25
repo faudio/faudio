@@ -42,9 +42,7 @@
 // #endif
 
 fa_option_t option_declaration[] = {
-    #ifdef _WIN32
-    { "s", "soundfont",    "Soundfont path",                  fa_option_native_string,   "FluidR3_GM.sf2" },
-    #endif
+    { "s", "soundfont",    "Soundfont path",                   fa_option_native_string,   "FluidR3_GM.sf2" },
     { "p", "port",         "Port number",                      fa_option_integral, "7770" },
     { "a", "audio-slots",  "Max simultaneous audio sources",   fa_option_integral, "8"},
     { "h", "default-host", "Default audio host",               fa_option_string, kDefaultAudioHost },
@@ -191,9 +189,7 @@ int main(int argc, char const *argv[])
     if (verbose) printf("Using %d audio slots\n", audio_buffer_signals);
     
     if (verbose) printf("port = %s\n", port);
-    #ifdef _WIN32
     fa_slog_info("Soundfont path: ", soundfont_path);
-    #endif
 
     // Init curl. This MUST be called before any other threads are spawned, even
     // if they are not using libcurl (according to the libcurl documentation).
