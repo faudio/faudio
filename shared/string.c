@@ -441,7 +441,7 @@ fa_string_t fa_string_from_utf8(const fa_char8_t* cstr)
             return NULL;
         }
     }
-    
+    str[strSize] = 0;
     return new_string(strSize, str);
 
     // Simpler implementation, but it doesn't check validity of the input
@@ -483,7 +483,7 @@ fa_string_t fa_string_from_cp1252(const fa_char8_t* cstr)
 
     strSize = out - str;
     str     = fa_realloc(str, strSize + 1);
-
+    str[strSize] = 0;
     return new_string(strSize, str);
 }
 
@@ -512,7 +512,7 @@ fa_string_t fa_string_from_mac_roman(const fa_char8_t* cstr)
 
     strSize = out - str;
     str     = fa_realloc(str, strSize + 1);
-
+    str[strSize] = 0;
     return new_string(strSize, str);
 }
 
@@ -546,8 +546,8 @@ fa_string_t fa_string_from_utf16(const fa_char16_t* cstr)
     }
 
     strSize = out - str;
-    str     = fa_realloc(str, strSize);
-    
+    str     = fa_realloc(str, strSize + 1);
+    str[strSize] = 0;
     return new_string(strSize, str);
 }
 
