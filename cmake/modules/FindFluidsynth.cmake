@@ -9,7 +9,7 @@
 include (DynamicLet)
 include (FindPackageHandleStandardArgs)
 
-letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a") 
+letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib") 
 find_path (FLUIDSYNTH_INCLUDE_DIR 
   NAMES fluidsynth.h
   PATH_SUFFIXES include
