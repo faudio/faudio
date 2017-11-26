@@ -7,6 +7,8 @@
 
  */
 
+#include <config.h>
+
 #if FA_HAS_FLUIDSYNTH
 
 #include <fa/signal.h>
