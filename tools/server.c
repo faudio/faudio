@@ -42,7 +42,11 @@
 // #endif
 
 fa_option_t option_declaration[] = {
+#if WIN32
     { "s", "soundfont",    "Soundfont path",                   fa_option_native_string,   "FluidR3_GM.sf2" },
+#else
+    { "s", "soundfont",    "Soundfont path",                   fa_option_native_string,   "" },
+#endif
     { "p", "port",         "Port number",                      fa_option_integral, "7770" },
     { "a", "audio-slots",  "Max simultaneous audio sources",   fa_option_integral, "8"},
     { "h", "default-host", "Default audio host",               fa_option_string, kDefaultAudioHost },
@@ -156,6 +160,7 @@ int main(int argc, char const *argv[])
         sprintf(port, "%d", fa_map_get_int32(fa_string("port"), options));
         audio_buffer_signals = fa_map_get_int32(fa_string("audio-slots"), options);
         soundfont_path = fa_map_dget(fa_string("soundfont"), options);
+        if (soundfont_path && fa_string_length(soundfont_path) == 0) soundfont_path = NULL;
         verbose = fa_map_get_int32(fa_string("verbose"), options);
         noaudio = fa_map_get_int32(fa_string("noaudio"), options);
         default_audio_host = fa_map_dget(fa_string("default-host"), options);
