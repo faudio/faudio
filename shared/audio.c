@@ -754,9 +754,8 @@ void fa_audio_set_parameter(fa_string_t name,
                             fa_ptr_t value,
                             session_t session)
 {
-    char* param = fa_unstring(name);
+    const char* param = fa_string_peek_utf8(name);
     set_parameter(param, value, session);
-    fa_free(param);
     fa_destroy(name);
     fa_destroy(value);
 }
