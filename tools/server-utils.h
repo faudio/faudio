@@ -475,24 +475,21 @@ fa_signal_t low_pass(fa_signal_t sig) {
 fa_list_t construct_signal_tree() {
     
     // Synth
-    #ifdef _WIN32
     //fa_pair_t synth = fa_signal_synth(synth_name, soundfont_path);
+#ifdef _WIN32
     fa_pair_t fa_signal_fluid(fa_string_t name, fluid_synth_t *synth);
     fa_pair_t synth = fluid_synth ? fa_signal_fluid(synth_name, fluid_synth) : NULL;
+#else
+    #if FA_HAS_FLUIDSYNTH
+    fa_pair_t fa_signal_fluid(fa_string_t name, fluid_synth_t *synth);
+    fa_pair_t synth = fluid_synth ? fa_signal_fluid(synth_name, fluid_synth) : fa_signal_dls(synth_name);
     #else
     fa_pair_t synth = fa_signal_dls(synth_name);
     #endif
+#endif
     
     if (!synth) {
-        #ifdef _WIN32
-        if (fluid_synth) {
-            fa_slog_error("Could not create synth signal!");
-        } else {
-            fa_slog_warning("Synth not loaded");
-        }
-        #else
-        fa_slog_error("Could not create synth!");
-        #endif
+        fa_slog_error("Could not create synth signal!");
         synth = pair(fa_signal_constant(0), fa_signal_constant(0));
     }
 
@@ -1052,8 +1049,8 @@ void start_sessions() {
     fa_audio_add_status_callback(_audio_status_callback, current_audio_session, current_audio_session);
     fa_midi_add_status_callback(_midi_status_callback, current_midi_session, current_midi_session);
 
-#ifdef _WIN32
-    {
+#if FA_HAS_FLUIDSYNTH
+    if (soundfont_path) {
         fluid_settings_t *settings = new_fluid_settings();
         fluid_settings_setnum(settings, "synth.gain", 0.6);
         fluid_settings_setint(settings, "synth.threadsafe-api", 0);
@@ -1061,6 +1058,8 @@ void start_sessions() {
         fa_inform(fa_string("Creating FluidSynth instance"));
         fluid_synth = new_fluid_synth(settings);
         fa_inform(fa_string_dappend(fa_string("    Loading sound font "), fa_copy(soundfont_path)));
+
+        #ifdef _WIN32        
         // Because fluidsynth uses fopen instead of _wfopen, we convert the filename to 8.3
         char *cpath = get_short_cpath(soundfont_path);
         if (!cpath) {
@@ -1072,8 +1071,14 @@ void start_sessions() {
         }
         fa_inform(fa_string_dappend(fa_string("    using short path:  "), fa_string_from_utf8(cpath)));
         ////
+        #else
+        char *cpath = fa_string_to_utf8(soundfont_path);
+        #endif
         if (FLUID_FAILED == fluid_synth_sfload(fluid_synth, cpath, true)) {
             fa_fail(fa_string("    Fluidsynth: Could not load sound font"));
+            #ifndef _WIN32
+            fa_inform(fa_string("    Falling back to DLS synth"));
+            #endif
             fluid_settings_t *settings = fluid_synth_get_settings(fluid_synth);
             delete_fluid_synth(fluid_synth);
             delete_fluid_settings(settings);
@@ -1089,7 +1094,7 @@ void stop_sessions() {
     current_audio_session = NULL;
     fa_midi_end_session(current_midi_session);
     current_midi_session = NULL;
-#ifdef _WIN32
+    #if FA_HAS_FLUIDSYNTH
     if (fluid_synth) {
         fa_inform(fa_string("Destroying FluidSynth instance"));
         fluid_settings_t *settings = fluid_synth_get_settings(fluid_synth);
@@ -1097,7 +1102,7 @@ void stop_sessions() {
         delete_fluid_settings(settings);
         fluid_synth = NULL;
     }
-#endif
+    #endif
 }
 
 void add_playback_semaphore(oid_t id, fa_string_t signal_name, int slot) {

@@ -459,10 +459,7 @@ void fa_print(char *f, fa_ptr_t a)
 {
     if (a) {
         fa_string_t str = fa_string_to_string(a);
-        char *cstr = fa_string_to_utf8(str);
-        printf(f, cstr);
-        fa_free(cstr);
-        fa_destroy(str);
+        printf(f, fa_string_peek_utf8(str));
     } else {
         printf("%s", f);
     }
@@ -470,9 +467,7 @@ void fa_print(char *f, fa_ptr_t a)
 
 void fa_puts(fa_string_t string)
 {
-    char *cstr = fa_string_to_utf8(string);
-    puts(cstr);
-    fa_free(cstr);
+    puts(fa_string_peek_utf8(string));
 }
 
 void fa_dprint(char *f, fa_ptr_t a)

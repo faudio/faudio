@@ -448,9 +448,7 @@ static sf_count_t mp3_seek_(fa_file_buffer_t file_buffer, size_t offset) {
 
 fa_file_buffer_t fa_file_buffer_create(fa_string_t path, size_t buffer_size)
 {
-    char *cpath = fa_string_to_utf8(path);
-    FILE *file  = fa_fopen(cpath, "rb");
-    fa_free(cpath);
+    FILE *file  = fa_fopen(fa_string_peek_utf8(path), "rb");
     
     if (!file) {
         fa_string_t err = fa_string_dappend(fa_string("Could not read file "), fa_copy(path));
@@ -485,7 +483,7 @@ fa_file_buffer_t fa_file_buffer_read_audio(fa_string_t path, size_t buffer_size,
 
     {
         #if _WIN32
-        wchar_t *cpath  = fa_string_to_utf16(path);
+        wchar_t *cpath  = fa_string_to_wstr(path);
         file            = sf_wchar_open(cpath, SFM_READ, &info);
         #else
         char *cpath     = fa_string_to_utf8(path);
@@ -590,7 +588,7 @@ fa_file_buffer_t fa_file_buffer_read_mp3(fa_string_t path, size_t buffer_size, f
 	int channels = 0;
 	int encoding = 0;
 	long sample_rate = 0;
-    char *cpath = fa_string_to_utf8(path);
+    char *cpath = fa_string_to_utf8(path); // TODO: is this correct on Windows?
     if (mpg123_open(mp3, cpath) || mpg123_getformat(mp3, &sample_rate, &channels, &encoding)) {
         fa_free(cpath);
         return mpg123_error(mp3);

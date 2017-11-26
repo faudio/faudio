@@ -1,6 +1,6 @@
 #include <fa/fa.h>
 
-#ifdef _WIN32
+#if FA_HAS_FLUIDSYNTH
 #include <fluidsynth.h>
 #endif
 
@@ -36,9 +36,7 @@ fa_string_t synth_name = NULL;
 fa_string_t audio_name = NULL;
 fa_string_t record_left_name  = NULL;
 fa_string_t record_right_name = NULL;
-#ifdef _WIN32
 fa_string_t soundfont_path = NULL;
-#endif
 fa_string_t default_audio_host = NULL;
 float default_ogg_quality = 1.0f;
 int default_mp3_bitrate = 128;
@@ -82,7 +80,7 @@ fa_map_t host_input_latency  = NULL;
 fa_map_t host_output_latency = NULL;
 fa_map_t host_vector_size    = NULL;
 
-#ifdef _WIN32
+#if FA_HAS_FLUIDSYNTH
 fluid_synth_t *fluid_synth   = NULL;
 #endif
 

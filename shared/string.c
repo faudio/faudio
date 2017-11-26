@@ -82,7 +82,7 @@ fa_string_t new_string(size_t size, char *data)
     str->data = (char*)data;
     str->count = 1;
     str->alloc = kSaHeap;
-    
+
     gStringCount++;
     return str;
 }
@@ -97,15 +97,18 @@ void delete_string(fa_string_t str)
 
 fa_string_t fa_string_empty()
 {
-    return new_string(0, NULL);
+    fa_string_t str = new_string(0, "");
+    str->alloc = kSaLiteral;
+    return str;
 }
 
 fa_string_t fa_string_single(fa_char8_t chr)
 {
     if (chr > 127) return NULL; // Only ASCII supported
     fa_string_t str = new_string(1, NULL);
-    str->data = fa_malloc(1);
+    str->data = fa_malloc(2);
     str->data[0] = chr;
+    str->data[1] = 0;
 
     return str;
 }
@@ -123,10 +126,11 @@ fa_string_t fa_string_repeat(int times, fa_char8_t chr)
     }*/
 
     // Less elegant, but much faster
-    fa_string_t s = new_string(times, fa_malloc(times));
+    fa_string_t s = new_string(times, fa_malloc(times + 1));
     for (int i = 0; i < times; ++i) {
         s->data[i] = chr;
     }
+    s->data[times] = 0;
 
     return s;
 }
@@ -140,9 +144,8 @@ fa_string_t fa_string_copy(fa_string_t str)
 fa_string_t fa_string_deep_copy(fa_string_t str)
 {
     fa_string_t pst = new_string(str->size, NULL);
-    pst->data = fa_malloc(str->size);
-
-    memcpy(pst->data, str->data, str->size);
+    pst->data = fa_malloc(str->size + 1);
+    memcpy(pst->data, str->data, str->size + 1);
 
     return pst;
 }
@@ -151,10 +154,10 @@ fa_string_t fa_string_append(fa_string_t str1,
                              fa_string_t str2)
 {
     fa_string_t cs = new_string(str1->size + str2->size, NULL);
-    cs->data = fa_malloc(cs->size);
+    cs->data = fa_malloc(cs->size + 1);
 
     memcpy(cs->data, str1->data, str1->size);
-    memcpy(cs->data + str1->size, str2->data, str2->size);
+    memcpy(cs->data + str1->size, str2->data, str2->size + 1); // Include null termination byte
 
     return cs;
 }
@@ -172,11 +175,12 @@ fa_string_t fa_string_dappend(fa_string_t str1,
     
     // Destructive variant
     size_t oldSize = str1->size;
-
-    str1->size = str1->size + str2->size;
-    str1->data = fa_realloc(str1->data, str1->size);
+    size_t newSize = str1->size + str2->size;
+    str1->size = newSize;
+    str1->data = fa_realloc(str1->data, newSize + 1);
 
     memcpy(str1->data + oldSize, str2->data, str2->size);
+    str1->data[newSize] = 0;
 
     fa_string_destroy(str2);
     return str1;
@@ -306,12 +310,16 @@ void iconv_fail()
 }
 
 
+const fa_char8_t* fa_string_peek_utf8(fa_string_t str)
+{
+    return str->data;
+}
+
 fa_char8_t* fa_string_to_utf8(fa_string_t str)
 {
     size_t size = str->size;
     fa_char8_t *cstr = fa_malloc(size + 1);
-    memcpy(cstr, str->data, str->size);
-    cstr[size] = 0;
+    memcpy(cstr, str->data, str->size + 1);
     return cstr;
 }
 
@@ -419,7 +427,7 @@ fa_string_t fa_string_from_utf8(const fa_char8_t* cstr)
     outSize = inSize;
     strSize = inSize;
     in      = (char*) cstr;
-    out     = fa_malloc(outSize);
+    out     = fa_malloc(outSize + 1);
     str     = out;
 
     {
@@ -433,7 +441,7 @@ fa_string_t fa_string_from_utf8(const fa_char8_t* cstr)
             return NULL;
         }
     }
-    
+    str[strSize] = 0;
     return new_string(strSize, str);
 
     // Simpler implementation, but it doesn't check validity of the input
@@ -458,7 +466,7 @@ fa_string_t fa_string_from_cp1252(const fa_char8_t* cstr)
     inSize  = strlen(cstr);
     outSize = inSize * 2;          // worst case, we shrink after iconv (TODO: check that worst case can never be > twice)
     in      = (char*) cstr;
-    out     = fa_malloc(outSize);
+    out     = fa_malloc(outSize + 1);
     str     = out;
 
     {
@@ -474,8 +482,8 @@ fa_string_t fa_string_from_cp1252(const fa_char8_t* cstr)
     }
 
     strSize = out - str;
-    str     = fa_realloc(str, strSize);
-
+    str     = fa_realloc(str, strSize + 1);
+    str[strSize] = 0;
     return new_string(strSize, str);
 }
 
@@ -487,7 +495,7 @@ fa_string_t fa_string_from_mac_roman(const fa_char8_t* cstr)
     inSize  = strlen(cstr);
     outSize = inSize * 2;          // worst case, we shrink after iconv (TODO: check that worst case can never be > twice)
     in      = (char*) cstr;
-    out     = fa_malloc(outSize);
+    out     = fa_malloc(outSize + 1);
     str     = out;
 
     {
@@ -503,8 +511,8 @@ fa_string_t fa_string_from_mac_roman(const fa_char8_t* cstr)
     }
 
     strSize = out - str;
-    str     = fa_realloc(str, strSize);
-
+    str     = fa_realloc(str, strSize + 1);
+    str[strSize] = 0;
     return new_string(strSize, str);
 }
 
@@ -538,8 +546,8 @@ fa_string_t fa_string_from_utf16(const fa_char16_t* cstr)
     }
 
     strSize = out - str;
-    str     = fa_realloc(str, strSize);
-    
+    str     = fa_realloc(str, strSize + 1);
+    str[strSize] = 0;
     return new_string(strSize, str);
 }
 

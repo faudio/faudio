@@ -443,14 +443,12 @@ fa_buffer_t fa_buffer_read_audio_max_size(fa_string_t path, size_t max_size, boo
 fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
                                fa_buffer_t  buffer)
 {
-    double         *ptr   = fa_buffer_unsafe_address(buffer);
-    size_t         size   = fa_buffer_size(buffer) / sizeof(double);
-
     SF_INFO        info;
 
     info.samplerate = fa_peek_int32(fa_buffer_get_meta(buffer, fa_string("sample-rate")));
     info.channels   = fa_peek_int32(fa_buffer_get_meta(buffer, fa_string("channels")));
-    info.format     = fa_peek_int32(fa_buffer_get_meta(buffer, fa_string("format")));
+    //info.format     = fa_peek_int32(fa_buffer_get_meta(buffer, fa_string("format")));
+    info.format     = SF_FORMAT_AIFF | SF_FORMAT_PCM_16;
 
     #if _WIN32
     wchar_t *cpath  = fa_string_to_utf16(path);
@@ -463,10 +461,16 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
     if (sf_error(file)) {
         char err[100];
         snprintf(err, 100, "Could not write audio file '%s' (%s)", cpath, sf_strerror(file));
+        fa_free(cpath);
         return fa_error_create_simple(error, fa_string_from_utf8(err), fa_string("Doremir.Buffer"));
     }
 
-    sf_count_t written = sf_write_double(file, ptr, size);
+    fa_free(cpath);
+
+    double         *ptr   = fa_buffer_unsafe_address(buffer);
+    size_t         size   = fa_buffer_size(buffer) / (sizeof(double) * info.channels);
+
+    sf_count_t written = sf_writef_double(file, ptr, size);
 
     if (written != size) {
         return fa_error_create_simple(error, fa_string("To few bytes written"), fa_string("Doremir.Buffer"));
@@ -481,9 +485,7 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
 
 fa_buffer_t fa_buffer_read_raw_max_size(fa_string_t path, size_t max_size)
 {
-    char* path2 = fa_string_to_utf8(path);
-    FILE* file = fa_fopen(path2, "rb");
-    fa_free(path2);
+    FILE* file = fa_fopen(fa_string_peek_utf8(path), "rb");
     
     if (!file) {
         fa_warn(fa_dappend(fa_string("Could not open "), fa_copy(path)));
@@ -514,9 +516,7 @@ fa_buffer_t fa_buffer_read_raw(fa_string_t path)
 
 bool fa_buffer_write_raw(fa_string_t path, fa_buffer_t buffer)
 {
-    char* path2 = fa_string_to_utf8(path);
-    FILE* file = fa_fopen(path2, "wb");
-    fa_free(path2);
+    FILE* file = fa_fopen(fa_string_peek_utf8(path), "wb");
     if (file) {
         fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, file);
         fclose(file);
@@ -572,6 +572,8 @@ fa_buffer_t fa_buffer_read_mp3_max_size(fa_string_t path, size_t max_size, bool 
 	int channels = 0;
 	int encoding = 0;
 	long sample_rate = 0;
+    // NOTE: mpg123_open should work with utf8 strings on Windows, but only if mpg123 is
+    //       compiled with unicode support (WANT_WIN32_UNICODE is defined)
     char *cpath = fa_string_to_utf8(path);
     if (mpg123_open(mp3, cpath) || mpg123_getformat(mp3, &sample_rate, &channels, &encoding)) {
         fa_free(cpath);

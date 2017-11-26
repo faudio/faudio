@@ -32,6 +32,9 @@ list(APPEND SRCS
   ratio.c
   set.c
   signal.c
+  signal/fluidsynth.c
+  signal/vst.c
+  signal/play_buffer.c
   string.c
   string/trex.c
   string/parson.c

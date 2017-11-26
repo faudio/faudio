@@ -280,19 +280,15 @@ static inline void stdlog(fa_ptr_t data, fa_time_system_t t, fa_error_t e)
 
 void fa_set_log_file(fa_string_t path)
 {
-    char *cpath = fa_string_to_utf8(path);
-    gLogData  = fa_fopen(cpath, "a");
+    gLogData  = fa_fopen(fa_string_peek_utf8(path), "a");
     gLogFunc  = stdlog;
-    fa_free(cpath);
 }
 
 void fa_set_log_file_and_stdout(fa_string_t path)
 {
-    char *cpath = fa_string_to_utf8(path);
-    gLogData      = fa_fopen(cpath, "a");
+    gLogData      = fa_fopen(fa_string_peek_utf8(path), "a");
     gLogFunc      = stdlog;
     gLogDupStdout = true;
-    fa_free(cpath);
 }
 
 void fa_set_log_std()

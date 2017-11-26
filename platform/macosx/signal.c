@@ -17,11 +17,6 @@
 #include "au.h"
 #include "../shared/signal.h"
 
-fa_pair_t fa_signal_synth(fa_string_t name, fa_string_t path)
-{
-    assert(false && "Not available on this platform");
-}
-
 fa_ptr_t before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     au_context_t context = x;

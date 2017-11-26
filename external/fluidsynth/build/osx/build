@@ -10,6 +10,7 @@ cmake ..                                           \
         -DCMAKE_BUILD_TYPE=Release                 \
         -DCMAKE_OSX_ARCHITECTURES="x86_64"         \
         -DCMAKE_INSTALL_PREFIX="../../result"      \
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=10.7         \
         -Denable-aufile=OFF                        \
         -Denable-coreaudio=OFF                     \
         -Denable-coremidi=OFF                      \
@@ -27,7 +28,7 @@ cmake ..                                           \
         -Denable-floats=OFF                        \
         -Denable-trap-on-fpe=OFF                   \
         -Denable-framework=OFF                     \
-        -DBUILD_SHARED_LIBS=False                  \
+        -DBUILD_SHARED_LIBS=True                   \
         -DFRAMEWORK_INSTALL_DIR="Frameworks"       \
     && make \
     && make install;
