@@ -53,7 +53,8 @@ fa_option_t option_declaration[] = {
     { "l", "log-file",     "Log file path",                    fa_option_native_string, "" },
     { "v", "verbose",      "Verbose (0 or 1)",                 fa_option_integral, "0" },
     { "n", "noaudio",      "No audio (mainly for debugging)",  fa_option_integral, "0"},
-    { "o", "ogg-quality",  "Ogg quality (1-10, default is 9)", fa_option_integral, "9"}
+    { "o", "ogg-quality",  "Ogg quality (1-10, default is 9)", fa_option_integral, "9"},
+    { "f", "force-owner",  "Quit if process owner ID is not the specified number", fa_option_integral, "0"}
 };
 
 #define define_handler(name) \
@@ -148,12 +149,39 @@ void ctrlc(int sig)
     done = 1;
 }
 
+fa_ptr_t check_process_owner(fa_ptr_t context)
+{
+    size_t parent_id = (size_t)context;
+#ifdef WIN32
+    HANDLE parent_process = OpenProcess(SYNCHRONIZE, FALSE, parent_id);
+    while(1) {
+        if(WaitForSingleObject(parent_process, 0) != WAIT_TIMEOUT) {
+            fa_inform(fa_format("Process parent (%zu) seems to have terminated, quitting", parent_id));
+            done = 1;
+            break;
+        }
+    }
+    CloseHandle(processHandle); 
+#else
+    while(1) {
+        int ppid = getppid();
+        if (ppid != parent_id) {
+            fa_inform(fa_format("Process parent id is not %zu but %d, quitting", parent_id, ppid));
+            done = 1;
+            return NULL;
+        }
+        fa_thread_sleep(5000);
+    }
+#endif
+}
+
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
     
     bool help_only = true;
     fa_string_t log_path = NULL;
+    size_t force_owner = 0;
     
     char port[14]; // enough to hold all int32 numbers
     fa_with_options(option_declaration, argc, argv, options, args) {
@@ -163,6 +191,7 @@ int main(int argc, char const *argv[])
         if (soundfont_path && fa_string_length(soundfont_path) == 0) soundfont_path = NULL;
         verbose = fa_map_get_int32(fa_string("verbose"), options);
         noaudio = fa_map_get_int32(fa_string("noaudio"), options);
+        force_owner = fa_map_get_int32(fa_string("force-owner"), options);
         default_audio_host = fa_map_dget(fa_string("default-host"), options);
         int integer_ogg_quality = fa_map_get_int32(fa_string("ogg-quality"), options);
         if (integer_ogg_quality < 1 || integer_ogg_quality > 10) {
@@ -198,6 +227,13 @@ int main(int argc, char const *argv[])
     // if they are not using libcurl (according to the libcurl documentation).
     if (verbose) printf("Initializing curl\n");
     curl_global_init(CURL_GLOBAL_DEFAULT);
+
+    // Start thread for checking if parent process is alive
+    if (force_owner) {
+        fa_thread_t thread = fa_thread_create(check_process_owner, (fa_ptr_t)force_owner, fa_string("PPID check"));
+        fa_thread_detach(thread);
+        signal(SIGPIPE, SIG_IGN);
+    }
   
     /* start a new server  */
     if (verbose) printf("Starting OSC listener thread...\n");
