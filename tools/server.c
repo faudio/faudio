@@ -154,14 +154,19 @@ fa_ptr_t check_process_owner(fa_ptr_t context)
     size_t parent_id = (size_t)context;
 #ifdef WIN32
     HANDLE parent_process = OpenProcess(SYNCHRONIZE, FALSE, parent_id);
+    if (!parent_process) {
+        fa_fail(fa_format("Could not get process: %d", GetLastError()));
+        return NULL;
+    }
     while(1) {
         if(WaitForSingleObject(parent_process, 0) != WAIT_TIMEOUT) {
             fa_inform(fa_format("Process parent (%zu) seems to have terminated, quitting", parent_id));
             done = 1;
             break;
         }
+        fa_thread_sleep(5000);
     }
-    CloseHandle(processHandle); 
+    CloseHandle(parent_process); 
 #else
     while(1) {
         int ppid = getppid();
@@ -232,7 +237,9 @@ int main(int argc, char const *argv[])
     if (force_owner) {
         fa_thread_t thread = fa_thread_create(check_process_owner, (fa_ptr_t)force_owner, fa_string("PPID check"));
         fa_thread_detach(thread);
+        #ifndef WIN32
         signal(SIGPIPE, SIG_IGN);
+        #endif
     }
   
     /* start a new server  */
