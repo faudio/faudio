@@ -1497,7 +1497,7 @@ int save_audio_file_handler(const char *path, const char *types, lo_arg ** argv,
             fa_string_t file_path = fa_get_meta(buffer, fa_string("file_path"));
             if (file_path) {
                 file_path = fa_copy(file_path);
-                fa_slog_info(" file path is ", file_path);
+                fa_slog_info(" source file path is ", file_path);
             } else {
                 fa_fail(fa_format_integral("Audio file %zu has no path", id));
                 break;

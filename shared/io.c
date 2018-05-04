@@ -218,7 +218,7 @@ void write_filter_destroy(fa_ptr_t x)
     if (filter->data1) {
         fa_slog_warning("File still open when destroying write filter, closing it now");
         fa_slog_info("    file: ", filter->data2);
-        fa_inform(fa_format_integral("    bytes written: %d", (int)filter->data3));
+        fa_inform(fa_format_integral("    bytes written: %zu", (size_t)filter->data3));
         fclose(filter->data1);
         filter->data1 = NULL;
     }
@@ -244,10 +244,13 @@ void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 
     if (buffer) {
         size_t bytes = fa_buffer_size(buffer);
-        fwrite(fa_buffer_unsafe_address(buffer), bytes, 1, fp);
-        filter->data3 = (fa_ptr_t)(((int)filter->data3) + bytes);
+        size_t written = fwrite(fa_buffer_unsafe_address(buffer), 1, bytes, fp);
+        if (bytes != written) {
+            printf("Warning: %zu bytes to write, only %zu bytes written\n", bytes, written);
+        }
+        filter->data3 = (fa_ptr_t)(((size_t)filter->data3) + bytes);
     } else {
-        fa_inform(fa_format_integral("Closing file after writing %d bytes", (int)filter->data3));
+        fa_inform(fa_format_integral("Closing file after writing %zu bytes", (size_t)filter->data3));
         fclose(fp);
         filter->data1 = NULL;
     }
@@ -604,33 +607,56 @@ void read_mp3_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t 
             mpg123_seek(mp3, start_frames, SEEK_SET); // NB: samples in the mpg123 documentation, but it is really frames
         }
         
-        size_t buffer_frames = 1024;
-        byte_t *raw_source = fa_malloc(buffer_frames * source_sample_size * channels);
-        byte_t *raw_target = fa_malloc(buffer_frames * target_sample_size * channels);
+        size_t source_buffer_size = mpg123_outblock(mp3);
+        size_t target_buffer_size = source_buffer_size * (target_sample_size / source_sample_size);
+        byte_t *source_buffer = fa_malloc(source_buffer_size);
+        byte_t *target_buffer = fa_malloc(target_buffer_size);
+
         size_t frames_left = end_frames - start_frames;
+
+        // printf("source buffer size: %zu\n", source_buffer_size);
+        // printf("target buffer size: %zu\n", target_buffer_size);
+        // printf("Frames to read: %zu\n", frames_left);
         
-        while (frames_left) {
+        size_t total_bytes_read = 0;
+        bool done = false;
+        do {
             size_t bytes_read;
-            size_t frames_to_read = (frames_left < buffer_frames) ? frames_left : buffer_frames;
-            error = mpg123_read(mp3, raw_source, frames_to_read * channels * source_sample_size, &bytes_read);
-            size_t frames_read = bytes_read / (source_sample_size * channels);
+            error = mpg123_read(mp3, source_buffer, source_buffer_size, &bytes_read);
+            size_t samples_read = bytes_read / source_sample_size;
+            size_t frames_read = samples_read / channels;
+            total_bytes_read += bytes_read;
             
             if (source_sample_size == target_sample_size) {
-                memcpy(raw_target, raw_source, buffer_frames * source_sample_size);
+                memcpy(target_buffer, source_buffer, source_buffer_size);
             } else if (target_sample_type == double_sample_type && encoding == MPG123_ENC_FLOAT_32) {
-                for (int i = 0; i < frames_read * channels; i++) {
-                    ((double*)raw_target)[i] = ((float*)raw_source)[i];
+                for (int i = 0; i < samples_read; i++) {
+                    ((double*)target_buffer)[i] = ((float*)source_buffer)[i];
                 }
+            } else {
+                fa_fail(fa_string("This combination of source/target sample format is not implemented!"));
+                break;
             }
             
-            fa_buffer_t buffer = fa_buffer_wrap(&raw_target, frames_read * channels * target_sample_size, NULL, NULL);
+            fa_buffer_t buffer = fa_buffer_wrap(target_buffer, target_buffer_size, NULL, NULL);
             callback(data, buffer);
             fa_destroy(buffer);
             frames_left -= frames_read;
-        }
+
+            switch (error) {
+                case MPG123_NEW_FORMAT: fa_warn(fa_format("new format, bytes_read: %zu", bytes_read)); break;
+                case MPG123_DONE:       done=1;break;
+                case MPG123_OK:         break;
+                default: {
+                    fa_fail(fa_format("mpg123 error: %s", mpg123_strerror(mp3)));
+                    done = 1;
+                    break;
+                }
+            }
+        } while (!done);
         
-        fa_free(raw_source);
-        fa_free(raw_target);
+        fa_free(source_buffer);
+        fa_free(target_buffer);
     }
 
     callback(data, NULL);
