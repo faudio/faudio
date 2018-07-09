@@ -632,7 +632,9 @@ void resolve_devices() {
             current_audio_input_device = fa_audio_default_input(current_audio_session);
         } else {
             fa_for_each(device, audio_devices) {
-                if (audio_device_matches(device, selected_audio_input_device)) current_audio_input_device = device;
+                if (audio_device_matches(device, selected_audio_input_device) && fa_audio_has_input(device)) {
+                    current_audio_input_device = device;
+                }
             }
             // Use default input if there was no match
             if (!current_audio_input_device) current_audio_input_device = fa_audio_default_input(current_audio_session);
@@ -646,7 +648,9 @@ void resolve_devices() {
             current_audio_output_device = fa_audio_default_output(current_audio_session);
         } else {
             fa_for_each(device, audio_devices) {
-                if (audio_device_matches(device, selected_audio_output_device)) current_audio_output_device = device;
+                if (audio_device_matches(device, selected_audio_output_device) && fa_audio_has_output(device)) {
+                    current_audio_output_device = device;
+                }
             }
             // Use default output if there was no match
             if (!current_audio_output_device) current_audio_output_device = fa_audio_default_output(current_audio_session);
