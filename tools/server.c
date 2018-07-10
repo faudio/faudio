@@ -1953,6 +1953,7 @@ fa_ptr_t _stop_recording(fa_ptr_t context) {
     oid_t id = peek_oid(context);
     if (remove_recording_semaphore(id)) {
         fa_slog_info("_stop_recording: successfully removed semaphore");
+        fa_atomic_ring_buffer_close(recording_ring_buffer); // Make sure ring buffer is disconnected
         // Don't send osc here, the recording may not be entirely finished
         //send_osc_async("/recording/stopped", "is", peek_oid(context), "auto"); //, timetag_from_time(now));
     } else {
@@ -2106,6 +2107,7 @@ int stop_recording_handler(const char *path, const char *types, lo_arg ** argv, 
             fa_action_t action = fa_action_many(list(
                 pair(fa_action_send(record_left_name, NULL), fa_now()),
                 pair(fa_action_send(record_right_name, NULL), fa_now())));
+            fa_atomic_ring_buffer_close(recording_ring_buffer); // Make sure ring buffer is disconnected
             schedule_now(action, current_audio_stream);
             //send_osc_async("/recording/stopped", "is", id, "stopped"); // May be too early!!
         } else {
