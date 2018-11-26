@@ -882,9 +882,14 @@ int stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, 
     
     if (remove_playback_semaphore(argv[0]->i)) {
         // printf("Stopping play id %d\n", argv[0]->i);
-        fa_time_t now = fa_clock_time(current_clock);
-        send_osc(message, user_data, "/playback/stopped", "itF", argv[0]->i, timetag_from_time(now));
-        fa_destroy(now);
+        if (current_clock) {
+            fa_time_t now = fa_clock_time(current_clock);
+            send_osc(message, user_data, "/playback/stopped", "itF", argv[0]->i, timetag_from_time(now));
+            fa_destroy(now);
+        } else {
+            printf("current_clock is NULL in stop_handler!\n");
+            send_osc(message, user_data, "/playback/stopped", "itF", argv[0]->i, timetag_from_double(0));
+        }
         //printf("calling stop_time_echo from stop_handler (%d)\n", argv[0]->i);
         stop_time_echo();
         if (current_midi_playback_stream) {

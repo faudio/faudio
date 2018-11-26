@@ -526,9 +526,14 @@ void playback_stop(oid_t id, lo_message message, void *user_data)
     
     if (remove_playback_semaphore(id)) {
         printf("Stopping playback %d\n", id);
-        fa_time_t now = fa_clock_time(current_clock);
-        send_osc(message, user_data, "/playback/stopped", "itF", id, timetag_from_time(now));
-        fa_destroy(now);
+        if (current_clock) {
+            fa_time_t now = fa_clock_time(current_clock);
+            send_osc(message, user_data, "/playback/stopped", "itF", id, timetag_from_time(now));
+            fa_destroy(now);
+        } else {
+            printf("current_clock is NULL in playback_stop!\n");
+            send_osc(message, user_data, "/playback/stopped", "itF", id, timetag_from_double(0));
+        }
         stop_time_echo();
         // Stop MIDI
         if (current_midi_playback_stream) {
