@@ -11,6 +11,7 @@
 #include <fa/string.h>
 #include <fa/dynamic.h>
 #include <fa/util.h>
+#include <fa/atomic.h>
 
 /*
     ## Notes
@@ -33,7 +34,7 @@
  */
 
 struct node {
-    size_t          count;      //  Number of references
+    int32_t         count;      //  Number of references
     struct node    *next;       //  Next node or null
     fa_ptr_t        value;      //  The value
 };
@@ -68,7 +69,7 @@ inline static node_t new_node(fa_ptr_t value, node_t next)
 inline static node_t take_node(node_t node)
 {
     if (node) {
-        node->count++;
+        fa_atomic_native_increment_int32(&node->count);
     }
 
     return node;
@@ -80,8 +81,7 @@ inline static node_t take_node(node_t node)
 inline static void release_node(node_t node)
 {
     while (node) {
-        node->count--;
-        if (node->count == 0) {
+        if (fa_atomic_native_decrement_int32(&node->count) == 0) {
             node_t next = node->next;
             fa_delete(node);
             gNodeCount--;
@@ -1021,7 +1021,7 @@ void print_list_debug(fa_list_t xs) {
     node_t node = xs->node;
     printf("---------\n");
     while (node) {
-        printf("%zu  %lld\n", node->count, fa_peek_integer(node->value));
+        printf("%d  %lld\n", node->count, fa_peek_integer(node->value));
         node = node->next;
     }
 }
