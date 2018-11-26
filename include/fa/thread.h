@@ -87,6 +87,8 @@ void fa_thread_sleep(fa_time_milliseconds_t milliseconds);
 */
 fa_thread_mutex_t fa_thread_create_mutex();
 
+fa_thread_mutex_t fa_thread_create_named_mutex(const char *name);
+
 /** Destroy a mutex.
 */
 void fa_thread_destroy_mutex(fa_thread_mutex_t mutex);

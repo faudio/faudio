@@ -22,6 +22,7 @@ struct _fa_thread_t {
 struct _fa_thread_mutex_t {
     fa_impl_t                  impl;       //  Interface dispatcher
     pthread_mutex_t         native;
+    const char*             name;
 };
 
 static pthread_t main_thread_g = NULL;
@@ -117,10 +118,15 @@ fa_thread_t fa_thread_current()
 
 // --------------------------------------------------------------------------------
 
-fa_thread_mutex_t fa_thread_create_mutex()
+fa_thread_mutex_t fa_thread_create_mutex() {
+    return fa_thread_create_named_mutex(NULL);
+}
+
+fa_thread_mutex_t fa_thread_create_named_mutex(const char* name)
 {
     fa_thread_mutex_t mutex = fa_new(thread_mutex);
     mutex->impl = &mutex_impl;
+    mutex->name = name;
 
     int result = pthread_mutex_init(&mutex->native, NULL);
 
@@ -146,9 +152,10 @@ bool fa_thread_lock(fa_thread_mutex_t mutex)
     int result = pthread_mutex_lock(&mutex->native);
 
     if (result == 0) {
+        if (mutex->name) printf("Locked %s\n", mutex->name);
         return true;
     } else {
-        fa_thread_fatal("unlock", result);
+        fa_thread_fatal("lock", result);
         assert(false && "Not reached");
     }
 }
@@ -159,9 +166,11 @@ bool fa_thread_try_lock(fa_thread_mutex_t mutex)
 
     switch (result) {
     case 0:
+        if (mutex->name) printf("Locked %s\n", mutex->name);
         return true;
 
     case EBUSY:
+        if (mutex->name) printf("Failed to lock %s\n", mutex->name);
         return false;
 
     default:
@@ -175,6 +184,7 @@ bool fa_thread_unlock(fa_thread_mutex_t mutex)
     int result = pthread_mutex_unlock(&mutex->native);
 
     if (result == 0) {
+        if (mutex->name) printf("Unlocked %s\n", mutex->name);
         return true;
     } else {
         fa_thread_fatal("unlock", result);
