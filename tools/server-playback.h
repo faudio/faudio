@@ -86,17 +86,24 @@ fa_ptr_t _playback_started2(fa_ptr_t context, fa_time_t time, fa_time_t now)
 {
     playback_data_t playback = context;
     oid_t id;
+    bool started = false;
     fa_with_lock(playback_data_mutex) {
-        playback->status = PLAYBACK_RUNNING;
-        playback->start_time = fa_time_to_double(time);
-        if (verbose) printf("_playback_started2  %f\n", playback->start_time);
-        id = playback->id;
-        flush_playback_actions(playback, playback->start_time);
+        if (playback->status == PLAYBACK_STOPPING) {
+            delete_playback_data(playback);
+            printf("In _playback_started2 and status was PLAYBACK_STOPPING\n");
+        } else {
+            playback->status = PLAYBACK_RUNNING;
+            playback->start_time = fa_time_to_double(time);
+            if (verbose) printf("_playback_started2  %f\n", playback->start_time);
+            id = playback->id;
+            flush_playback_actions(playback, playback->start_time);
+            started = true;
+        }
     }
     // fa_for_each(slave, playback->slaves) {
     //
     // }
-    _playback_started(wrap_oid(id), time, now);
+    if (started) _playback_started(wrap_oid(id), time, now);
     return NULL;
 }
 
@@ -118,7 +125,12 @@ fa_ptr_t _playback_stopped2(fa_ptr_t context, fa_time_t time, fa_time_t now)
         
         // Cleanup
         playback_data = fa_map_dremove(wrap_oid(id), playback_data);
-        delete_playback_data(playback); // This also releases buffer references
+        if (playback->status == PLAYBACK_STARTING) {
+            playback->status = PLAYBACK_STOPPING;
+            printf(">>>> _playback_stopped2 called while playback was PLAYBACK_STARTING, setting to PLAYBACK_STOPPING\n");
+        } else {
+            delete_playback_data(playback); // This also releases buffer references
+        }
     }
     return NULL;
 }
@@ -554,7 +566,12 @@ void playback_stop(oid_t id, lo_message message, void *user_data)
         }
         // Cleanup
         playback_data = fa_map_dremove(wrap_oid(id), playback_data);
-        delete_playback_data(playback); // This also releases buffer references
+        if (playback->status == PLAYBACK_STARTING) {
+            playback->status = PLAYBACK_STOPPING;
+            printf(">>>> playback_stop called while playback was PLAYBACK_STARTING, setting to PLAYBACK_STOPPING\n");
+        } else {
+            delete_playback_data(playback); // This also releases buffer references
+        }
     } else {
         fa_fail(fa_format("Playback %d was present, but semaphore could not be removed!", id));
     }
