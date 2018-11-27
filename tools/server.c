@@ -153,9 +153,12 @@ fa_ptr_t check_process_owner(fa_ptr_t context)
 {
     size_t parent_id = (size_t)context;
 #ifdef WIN32
+    // Is this guaranteed to work?
+    // See https://stackoverflow.com/questions/4988082/openprocess-error-87-invalid-parameter
+    // But it may not apply, since the parent process is still running
     HANDLE parent_process = OpenProcess(SYNCHRONIZE, FALSE, parent_id);
     if (!parent_process) {
-        fa_fail(fa_format("Could not get process: %d", GetLastError()));
+        fa_fail(fa_format("Could not get process %zu, error %d", parent_id, GetLastError()));
         return NULL;
     }
     while(1) {
