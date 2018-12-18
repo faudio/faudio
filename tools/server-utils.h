@@ -42,16 +42,18 @@
 
 uint8_t min_uint8(uint8_t a, uint8_t b) { return a < b ? a : b; }
 
-#define send_osc(m, s, ...)  fa_with_lock(osc_mutex) { \
-    int r = lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, __VA_ARGS__); \
-    if (r < 0) fa_slog_error("Could not send osc message: ", fa_i16(lo_address_errno(lo_message_get_source(m)))); \
+#define send_osc(m, s, p, ...)  fa_with_lock(osc_mutex) { \
+    fa_with_lock(osc_mutex) { \
+        int r = lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, p, __VA_ARGS__); \
+        if (r < 0) fa_fail(fa_format("Could not send osc message %s: %d", p, lo_address_errno(lo_message_get_source(m)))); \
+    } \
   }
 
-#define send_osc_async(...) if (last_address) { \
+#define send_osc_async(p, ...) if (last_address) { \
     fa_with_lock(osc_mutex) { \
-        int r = lo_send_from(last_address, server, LO_TT_IMMEDIATE, __VA_ARGS__); \
+        int r = lo_send_from(last_address, server, LO_TT_IMMEDIATE, p, __VA_ARGS__); \
         if (r < 0) { \
-          fa_slog_error("Could not send async osc message: ", fa_i16(lo_address_errno(last_address))); \
+          fa_fail(fa_format("Could not send async osc message %s: %d", p, lo_address_errno(last_address))); \
       } \
     } \
   }
