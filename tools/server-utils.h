@@ -848,6 +848,10 @@ void start_streams() {
     
 
     assert(selected_audio_stream_type != NO_STREAM);
+    if (verbose) {
+        fa_slog_info("current_audio_input_device:  ", current_audio_input_device);
+        fa_slog_info("current_audio_output_device: ", current_audio_output_device);
+    }
     fa_audio_device_t audio_input_device  = selected_audio_stream_type != OUTPUT_ONLY ? current_audio_input_device : NULL;
     fa_audio_device_t audio_output_device = selected_audio_stream_type != INPUT_ONLY ? current_audio_output_device : NULL;
     
