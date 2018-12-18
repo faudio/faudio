@@ -479,7 +479,14 @@ int playback_start_handler(const char *path, const char *types, lo_arg ** argv, 
         send_osc(message, user_data, "/error", "is", id, "audio-disabled");
         return 0;
     }
-    
+
+    // No audio stream
+    if (!current_audio_stream || current_sample_rate == 0) {
+        fa_slog_warning("No audio stream, ignoring playback start");
+        send_osc(message, user_data, "/error", "is", id, "no-audio-stream");
+        return 0;
+    }
+        
     if (strcmp(path, "/playback/start") == 0) {
         if (argc > 1) time = argv[1]->f;
         repeat = false;
@@ -488,7 +495,7 @@ int playback_start_handler(const char *path, const char *types, lo_arg ** argv, 
         if (argc > 2) time = argv[2]->f;
         repeat = true;
     } else {
-        send_osc(message, user_data, "/error", "Nss", "not-implemented", path);
+        send_osc(message, user_data, "/error", "iss", id, "not-implemented", path);
         return 0;
     }
     
