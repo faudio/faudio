@@ -35,7 +35,7 @@
 #include "server-types.h"
 #include "server-globals.h"
 #include "server-utils.h"
-#include "server-playback.h"
+#include "server-sequence.h"
 
 // #ifndef _WIN32
 // #include "server-sleep-mac.h"

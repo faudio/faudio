@@ -1,8 +1,8 @@
 #include "fa/fa.h"
 #include "fa/alloc.h"
 
-#ifndef __SERVER_PLAYBACK
-#define __SERVER_PLAYBACK
+#ifndef __SERVER_SEQUENCE
+#define __SERVER_SEQUENCE
 
 #include "server-utils.h"
 #include "server-types.h"
@@ -579,7 +579,7 @@ int sequence_start_handler(const char *path, const char *types, lo_arg ** argv, 
         
         sequence->repeat = repeat_interval;
         
-        printf("Starting sequence %d%s\n", id, repeat ? " (repeat)" : "");
+        if (verbose) printf("Starting sequence %d%s\n", id, repeat ? " (repeat)" : "");
         
         // Schedule!
         flush_sequence_actions(sequence, time);
@@ -600,7 +600,7 @@ void sequence_stop(oid_t id, lo_message message, void *user_data)
     }
     
     if (remove_playback_semaphore(id)) {
-        printf("Stopping sequence %d\n", id);
+        if (verbose) printf("Stopping sequence %d\n", id);
         if (current_clock) {
             fa_time_t now = fa_clock_time(current_clock);
             send_osc(message, user_data, "/playback/stopped", "itF", id, timetag_from_time(now));
@@ -631,7 +631,7 @@ void sequence_stop(oid_t id, lo_message message, void *user_data)
         sequences = fa_map_dremove(wrap_oid(id), sequences);
         if (sequence->status == SEQUENCE_STARTING) {
             sequence->status = SEQUENCE_STOPPING;
-            printf(">>>> playback_stop called while playback was SEQUENCE_STARTING, setting to SEQUENCE_STOPPING\n");
+            if (verbose) printf(">>>> playback_stop called while playback was SEQUENCE_STARTING, setting to SEQUENCE_STOPPING\n");
         } else {
             delete_sequence(sequence); // This also releases buffer references
         }
