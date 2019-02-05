@@ -36,10 +36,11 @@ fa_ptr_t _playback_stopped(fa_ptr_t context, fa_time_t time, fa_time_t now)
     return NULL;
 }
 
-typedef struct _playback_data_t * playback_data_t;
-struct _playback_data_t {
+typedef struct _sequence_t * sequence_t;
+struct _sequence_t {
     oid_t id;
-    playback_status_t status;
+    sequence_status_t status;
+    bool buffered;
     fa_list_t midi_actions;     // list of pairs
     fa_list_t audio_actions;    // list of pairs
     fa_list_t audio_buffers;    // references to added audio buffers (pairs of (buffer, slot))
@@ -47,14 +48,15 @@ struct _playback_data_t {
     float max_time;             // maximum relative time; i.e. the "combined duration" of the contained events
     double repeat;              // repeat interval (set when started)
     bool auto_stop;             // stop automatically after last event is played (i.e. at start_time + max_time)
-    playback_data_t master;     //
+    sequence_t master;     //
     fa_list_t slaves;           //
-} _playback_data_t;
+} _sequence_t;
 
-static inline playback_data_t new_playback_data(oid_t id, playback_status_t status) {
-    playback_data_t result = fa_malloc(sizeof(struct _playback_data_t));
+static inline sequence_t new_sequence(oid_t id, sequence_status_t status, bool buffered) {
+    sequence_t result = fa_malloc(sizeof(struct _sequence_t));
     result->id = id;
     result->status = status;
+    result->buffered = buffered;
     result->midi_actions = fa_list_empty();
     result->audio_actions = fa_list_empty();
     result->audio_buffers = fa_list_empty();
@@ -66,83 +68,100 @@ static inline playback_data_t new_playback_data(oid_t id, playback_status_t stat
     return result;
 }
 
-static inline void delete_playback_data(playback_data_t playback) {
-    fa_destroy(playback->midi_actions);
-    fa_destroy(playback->audio_actions);
-    fa_for_each(buffer_slot, playback->audio_buffers) {
+static inline void delete_sequence(sequence_t sequence) {
+    fa_destroy(sequence->midi_actions);
+    fa_destroy(sequence->audio_actions);
+    fa_for_each(buffer_slot, sequence->audio_buffers) {
         fa_buffer_t buffer = fa_pair_first((fa_pair_t)buffer_slot);
         fa_release_reference(buffer);
         fa_destroy(fa_pair_second((fa_pair_t)buffer_slot));
         fa_destroy(buffer_slot);
     }
-    fa_destroy(playback->audio_buffers);
-    fa_destroy(playback->slaves);
-    fa_free(playback);
+    fa_destroy(sequence->audio_buffers);
+    fa_destroy(sequence->slaves);
+    sequence->midi_actions = NULL;
+    sequence->audio_actions = NULL;
+    fa_free(sequence);
 }
 
-static void flush_playback_actions(playback_data_t playback, double time);
+static void flush_sequence_actions(sequence_t sequence, double time);
 
-fa_ptr_t _playback_started2(fa_ptr_t context, fa_time_t time, fa_time_t now)
+fa_ptr_t _sequence_started(fa_ptr_t context, fa_time_t time, fa_time_t now)
 {
-    playback_data_t playback = context;
+    sequence_t sequence = context;
     oid_t id;
     bool started = false;
-    fa_with_lock(playback_data_mutex) {
-        if (playback->status == PLAYBACK_STOPPING) {
-            delete_playback_data(playback);
-            printf("In _playback_started2 and status was PLAYBACK_STOPPING\n");
+    fa_with_lock(sequences_mutex) {
+        if (sequence->status == SEQUENCE_STOPPING) {
+            delete_sequence(sequence);
+            printf("In _sequence_started and status was SEQUENCE_STOPPING\n");
         } else {
-            playback->status = PLAYBACK_RUNNING;
-            playback->start_time = fa_time_to_double(time);
-            if (verbose) printf("_playback_started2  %f\n", playback->start_time);
-            id = playback->id;
-            flush_playback_actions(playback, playback->start_time);
+            sequence->status = SEQUENCE_RUNNING;
+            sequence->start_time = fa_time_to_double(time);
+            if (verbose) printf("_sequence_started  %f\n", sequence->start_time);
+            id = sequence->id;
+            flush_sequence_actions(sequence, sequence->start_time);
             started = true;
         }
     }
-    // fa_for_each(slave, playback->slaves) {
+    // fa_for_each(slave, sequence->slaves) {
     //
     // }
     if (started) _playback_started(wrap_oid(id), time, now);
     return NULL;
 }
 
-fa_ptr_t _playback_stopped2(fa_ptr_t context, fa_time_t time, fa_time_t now)
+fa_ptr_t _sequence_stopped(fa_ptr_t context, fa_time_t time, fa_time_t now)
 {
-    playback_data_t playback = context;
+    sequence_t sequence = context;
     oid_t id;
     bool ok;
-    fa_with_lock(playback_data_mutex) {
-        id = playback->id;
-        ok = (playback->status == PLAYBACK_STOPPING) ||
-            (playback->auto_stop && fa_time_to_double(time) > (playback->start_time + playback->max_time));
+    fa_with_lock(sequences_mutex) {
+        id = sequence->id;
+        ok = (sequence->status == SEQUENCE_STOPPING) ||
+            (sequence->auto_stop && fa_time_to_double(time) > (sequence->start_time + sequence->max_time));
         if (verbose) {
-            printf("_playback_stopped2 ok = %d  %f %f\n", ok, fa_time_to_double(time),(playback->start_time + playback->max_time));
+            printf("_sequence_stopped ok = %d  %f %f\n", ok, fa_time_to_double(time),(sequence->start_time + sequence->max_time));
         }
         if (!ok) continue;
         _playback_stopped(wrap_oid(id), time, now);
-        //playback->status = PLAYBACK_FINISHED;
+        //sequence->status = SEQUENCE_FINISHED;
         
         // Cleanup
-        playback_data = fa_map_dremove(wrap_oid(id), playback_data);
-        if (playback->status == PLAYBACK_STARTING) {
-            playback->status = PLAYBACK_STOPPING;
-            printf(">>>> _playback_stopped2 called while playback was PLAYBACK_STARTING, setting to PLAYBACK_STOPPING\n");
+        sequences = fa_map_dremove(wrap_oid(id), sequences);
+        if (sequence->status == SEQUENCE_STARTING) {
+            sequence->status = SEQUENCE_STOPPING;
+            printf(">>>> _sequence_stopped called while sequence status was SEQUENCE_STARTING, setting to SEQUENCE_STOPPING\n");
         } else {
-            delete_playback_data(playback); // This also releases buffer references
+            delete_sequence(sequence); // This also releases buffer references
         }
     }
     return NULL;
 }
  
-int playback_new_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+int sequence_new_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id = argv[0]->i;
+
+    // if (noaudio) {
+    //     if (verbose) fa_slog_info("Audio disabled, ignoring playback_new");
+    //     send_osc(message, user_data, "/error", "is", id, "audio-disabled");
+    //     return 0;
+    // }
+
+    bool buffered = strcmp(path, "/playback/new/buffered") == 0;
+    if (buffered) {
+        fa_warn(fa_string("Buffered playback not implemented yet!"));
+        // The problem is that we cannot schedule an action_many with start time in the past,
+        // even if that is compensated by large relative times in the action_many,
+        // because the whole action will be discarded by the scheduler
+        buffered = false;
+    }
     if (id > last_used_playback_id) {
-        fa_with_lock(playback_data_mutex) {
+        fa_with_lock(sequences_mutex) {
             last_used_playback_id = id;
-            fa_ptr_t value = new_playback_data(id, 0);
-            playback_data = fa_map_dset(wrap_oid(id), value, playback_data);
+            fa_ptr_t value = new_sequence(id, 0, buffered);
+            sequences = fa_map_dset(wrap_oid(id), value, sequences);
         }
         send_osc(message, user_data, "/playback/status", "iii", id, 0, 0); // 0 = stopped
     } else {
@@ -152,14 +171,14 @@ int playback_new_handler(const char *path, const char *types, lo_arg ** argv, in
     return 0;
 }
 
-static void add_midi(playback_data_t playback, float time, uint8_t cmd, uint8_t ch, uint8_t data1, uint8_t data2, float f0)
+static void add_midi(sequence_t sequence, float time, uint8_t cmd, uint8_t ch, uint8_t data1, uint8_t data2, float f0)
 {
     if (time < 0) {
         fa_warn(fa_string("Cannot add midi with time < 0"));
         return;
     }
     
-    oid_t id = playback->id;
+    oid_t id = sequence->id;
 
     fa_action_t a;
 
@@ -173,44 +192,49 @@ static void add_midi(playback_data_t playback, float time, uint8_t cmd, uint8_t 
     }
     a = fa_action_if(check_playback_semaphore, wrap_oid(id), a); // This is only necessary for repeated actions, but we don't know yet
     
-    switch (playback->status) {
-        case PLAYBACK_RUNNING: {
-            fa_time_t time_now = fa_clock_time(current_clock);
-            double now = fa_time_to_double(time_now);
-            fa_destroy(time_now);
-            double offset = 0;
-            if (playback->repeat > 0) {
-                time = fmod(time, playback->repeat); // Modulo. Or should we discard events too far into the future??
-                a = fa_action_repeat(fa_time_from_double(playback->repeat), 0, a);
-                a = fa_action_while(check_playback_semaphore, wrap_oid(id), a);
-                offset = playback->repeat * trunc((now - playback->start_time) / playback->repeat);
-                if (playback->start_time + offset + time < now) offset += playback->repeat;
-            } else {
-                // don't schedule events that should already have been played
-                if (playback->start_time + time < now) {
-                    fa_deep_destroy_always(a);
-                    break;
+    switch (sequence->status) {
+        case SEQUENCE_RUNNING: {
+            if (!sequence->buffered) {
+                fa_time_t time_now = fa_clock_time(current_clock);
+                double now = fa_time_to_double(time_now);
+                fa_destroy(time_now);
+                double offset = 0;
+                if (sequence->repeat > 0) {
+                    time = fmod(time, sequence->repeat); // Modulo. Or should we discard events too far into the future??
+                    a = fa_action_repeat(fa_time_from_double(sequence->repeat), 0, a);
+                    a = fa_action_while(check_playback_semaphore, wrap_oid(id), a);
+                    offset = sequence->repeat * trunc((now - sequence->start_time) / sequence->repeat);
+                    if (sequence->start_time + offset + time < now) offset += sequence->repeat;
+                } else {
+                    // don't schedule events that should already have been played
+                    if (sequence->start_time + time < now) {
+                        fa_deep_destroy_always(a);
+                        break;
+                    }
                 }
+                schedule(fa_time_from_double(sequence->start_time + offset + time), a, current_midi_playback_stream);
+                if (time > sequence->max_time) {
+                    sequence->max_time = time;
+                    if (sequence->repeat == 0) {
+                        fa_action_t stop = fa_action_do_with_time(_sequence_stopped, sequence);
+                        stop = fa_action_if(check_playback_semaphore, wrap_oid(id), stop);
+                        double stop_time = sequence->start_time + sequence->max_time + auto_stop_margin;
+                        schedule(fa_time_from_double(stop_time), stop, current_midi_playback_stream);
+                    }
+                }
+                break; // only from switch
             }
-            schedule(fa_time_from_double(playback->start_time + offset + time), a, current_midi_playback_stream);
-            playback->max_time = MAX(time, playback->max_time);
-            if (playback->repeat == 0) {
-                fa_action_t stop = fa_action_do_with_time(_playback_stopped2, playback);
-                stop = fa_action_if(check_playback_semaphore, wrap_oid(id), stop);
-                double stop_time = playback->start_time + playback->max_time + auto_stop_margin;
-                schedule(fa_time_from_double(stop_time), stop, current_midi_playback_stream);
-            }
-            break; // only from switch
+            // NB: intentionally fall through to next case if buffered
         }
-        case PLAYBACK_STOPPED:
-        case PLAYBACK_STARTING: {
-            fa_push_list(pair(a, fa_time_from_double(time)), playback->midi_actions);
-            playback->max_time = MAX(time, playback->max_time);
+        case SEQUENCE_STOPPED:
+        case SEQUENCE_STARTING: {
+            fa_push_list(pair(a, fa_time_from_double(time)), sequence->midi_actions);
+            sequence->max_time = MAX(time, sequence->max_time);
             break;
         }
         default: {
             fa_deep_destroy_always(a);
-            if (verbose) fa_inform(fa_string("Discarding MIDI message sent to stopped playback"));
+            if (verbose) fa_inform(fa_string("Discarding MIDI message sent to stopped sequence"));
             break;
         }
         
@@ -218,7 +242,7 @@ static void add_midi(playback_data_t playback, float time, uint8_t cmd, uint8_t 
 }
 
 //    /playback/add/midi  id  time  cmd  ch  data1  [data2]
-int playback_add_midi_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+int sequence_add_midi_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id = argv[0]->i;
     float time    = argv[1]->f;
@@ -231,19 +255,19 @@ int playback_add_midi_handler(const char *path, const char *types, lo_arg ** arg
         return 0;
     }
 
-    fa_with_lock(playback_data_mutex) {
-        playback_data_t playback = fa_map_dget(wrap_oid(id), playback_data);
-        if (!playback) {
+    fa_with_lock(sequences_mutex) {
+        sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
+        if (!sequence) {
             send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
             continue; // don't return or break, that wouldn't release the lock
         }
-        add_midi(playback, time, cmd, ch, data1, data2, argv[4]->f);
+        add_midi(sequence, time, cmd, ch, data1, data2, argv[4]->f);
     }
     return 0;
 }
 
 //    /playback/add/note  id  time  ch  pitch  vel  dur
-int playback_add_note_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+int sequence_add_note_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id    = argv[0]->i;
     float time  = argv[1]->f;
@@ -258,20 +282,20 @@ int playback_add_note_handler(const char *path, const char *types, lo_arg ** arg
     
     if (!vel || !dur) return 0;
     
-    fa_with_lock(playback_data_mutex) {
-        playback_data_t playback = fa_map_dget(wrap_oid(id), playback_data);
-        if (!playback) {
+    fa_with_lock(sequences_mutex) {
+        sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
+        if (!sequence) {
             send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
             continue; // don't return or break, that wouldn't release the lock
         }
-        add_midi(playback, time, 0x90, ch, pitch, vel, pitch);
-        add_midi(playback, time+dur, 0x80, ch, pitch, 0, pitch);
+        add_midi(sequence, time, 0x90, ch, pitch, vel, pitch);
+        add_midi(sequence, time+dur, 0x80, ch, pitch, 0, pitch);
     }
     return 0;
 }
 
 //    /playback/add/audio  id  time  audio_id  slot  [skip]  [duration]
-int playback_add_audio_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+int sequence_add_audio_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id       = argv[0]->i;
     float time     = argv[1]->f; // not supported yet
@@ -306,15 +330,15 @@ int playback_add_audio_handler(const char *path, const char *types, lo_arg ** ar
         return 0;
     }
     
-    fa_with_lock(playback_data_mutex) {
-        playback_data_t playback = fa_map_dget(wrap_oid(id), playback_data);
-        if (!playback) {
+    fa_with_lock(sequences_mutex) {
+        sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
+        if (!sequence) {
             fa_release_reference(buffer);
             send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
             continue; // don't return or break, that wouldn't release the lock
         }
         
-        fa_push_list(pair(buffer, fa_i8(slot)), playback->audio_buffers);
+        fa_push_list(pair(buffer, fa_i8(slot)), sequence->audio_buffers);
         
         double buffer_duration;
         {
@@ -348,42 +372,44 @@ int playback_add_audio_handler(const char *path, const char *types, lo_arg ** ar
         
         fa_action_t a = fa_action_many(actions);
         
-        switch (playback->status) {
-            case PLAYBACK_RUNNING: {
+        switch (sequence->status) {
+            case SEQUENCE_RUNNING: {
                 fa_time_t time_now = fa_clock_time(current_clock);
                 double now = fa_time_to_double(time_now);
                 fa_destroy(time_now);
                 double offset = 0;
-                if (playback->repeat > 0) {
-                    time = fmod(time, playback->repeat); // Modulo. Or should we discard events too far into the future??
-                    a = fa_action_repeat(fa_time_from_double(playback->repeat), 0, a);
+                if (sequence->repeat > 0) {
+                    time = fmod(time, sequence->repeat); // Modulo. Or should we discard events too far into the future??
+                    a = fa_action_repeat(fa_time_from_double(sequence->repeat), 0, a);
                     a = fa_action_while(check_playback_semaphore, wrap_oid(id), a);
-                    offset = playback->repeat * trunc((now - playback->start_time) / playback->repeat);
-                    if (playback->start_time + offset + time < now) offset += playback->repeat;
+                    offset = sequence->repeat * trunc((now - sequence->start_time) / sequence->repeat);
+                    if (sequence->start_time + offset + time < now) offset += sequence->repeat;
                 } else {
                     // don't schedule events that should already have been played
-                    if (playback->start_time + time < now) {
+                    if (sequence->start_time + time < now) {
                         printf(">> Discarding audio action\n");
                         fa_deep_destroy_always(a);
                         break;
                     }
                 }
-                schedule(fa_time_from_double(playback->start_time + offset + time), a, current_audio_stream);
+                schedule(fa_time_from_double(sequence->start_time + offset + time), a, current_audio_stream);
                 double max_time = time + (duration > 0 ? duration : buffer_duration - skip);
-                playback->max_time = MAX(max_time, playback->max_time);
-                if (playback->repeat == 0) {
-                    fa_action_t stop = fa_action_do_with_time(_playback_stopped2, playback);
-                    stop = fa_action_if(check_playback_semaphore, wrap_oid(id), stop);
-                    double stop_time = playback->start_time + playback->max_time + auto_stop_margin;
-                    schedule(fa_time_from_double(stop_time), stop, current_audio_stream);
+                if (max_time > sequence->max_time) {
+                    sequence->max_time = max_time;
+                    if (sequence->repeat == 0) {
+                        fa_action_t stop = fa_action_do_with_time(_sequence_stopped, sequence);
+                        stop = fa_action_if(check_playback_semaphore, wrap_oid(id), stop);
+                        double stop_time = sequence->start_time + sequence->max_time + auto_stop_margin;
+                        schedule(fa_time_from_double(stop_time), stop, current_audio_stream);
+                    }
                 }
                 break; // only from switch
             }
-            case PLAYBACK_STOPPED:
-            case PLAYBACK_STARTING: {
-                fa_push_list(pair(a, fa_time_from_double(time)), playback->audio_actions);
+            case SEQUENCE_STOPPED:
+            case SEQUENCE_STARTING: {
+                fa_push_list(pair(a, fa_time_from_double(time)), sequence->audio_actions);
                 double max_time = time + (duration > 0 ? duration : buffer_duration - skip);
-                playback->max_time = MAX(max_time, playback->max_time);
+                sequence->max_time = MAX(max_time, sequence->max_time);
                 break;
             }
             default: {
@@ -397,26 +423,49 @@ int playback_add_audio_handler(const char *path, const char *types, lo_arg ** ar
     return 0;
 }
 
+//    /playback/flush  id
+int sequence_flush_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    oid_t id = argv[0]->i;
+    fa_with_lock(sequences_mutex) {
+        sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
+        if (!sequence) {
+            send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
+            continue; // don't return or break, that wouldn't release the lock
+        }
+        if (!sequence->buffered) {
+            fa_warn(fa_string("Playback not buffered, flush ignored"));
+            continue; // don't return or break, that wouldn't release the lock
+        }
+        if (sequence->status == SEQUENCE_STOPPED) {
+            fa_fail(fa_string("Cannot flush stopped sequence"));
+            send_osc(message, user_data, "/error", "Nsi", "playback-stopped", id);
+            continue; // don't return or break, that wouldn't release the lock
+        }
+        flush_sequence_actions(sequence, sequence->start_time);
+    }
+    return 0;
+}
 
-static void schedule_playback_actions(fa_list_t time_actions, fa_ptr_t stream, playback_data_t playback, bool master, double time) {
+static void schedule_sequence_actions(fa_list_t time_actions, fa_ptr_t stream, sequence_t sequence, bool master, double time) {
     
     if (!master && fa_list_is_empty(time_actions)) {
         fa_destroy(time_actions);
         return;
     }
     
-    bool repeat = (playback->repeat > 0);
-    oid_t id = playback->id;
+    bool repeat = (sequence->repeat > 0);
+    oid_t id = sequence->id;
     
     // Add _playback_started and _playback_stopped actions
     // Easiest to do before sorting the list
     if (master && !repeat) {
-        if (playback->status == PLAYBACK_STOPPED) {
+        if (sequence->status == SEQUENCE_STOPPED) {
             fa_time_t start_time = fa_now();
-            fa_push_list(pair(fa_action_do_with_time(_playback_started2, playback), start_time), time_actions);
+            fa_push_list(pair(fa_action_do_with_time(_sequence_started, sequence), start_time), time_actions);
         }
-        fa_time_t stop_time = fa_time_from_double(playback->max_time + auto_stop_margin);
-        fa_push_list(pair(fa_action_do_with_time(_playback_stopped2, playback), stop_time), time_actions);
+        fa_time_t stop_time = fa_time_from_double(sequence->max_time + auto_stop_margin);
+        fa_push_list(pair(fa_action_do_with_time(_sequence_stopped, sequence), stop_time), time_actions);
     }
 
     // Convert absolute times to relative times
@@ -426,9 +475,9 @@ static void schedule_playback_actions(fa_list_t time_actions, fa_ptr_t stream, p
     fa_action_t main_action;
     if (repeat) {
         fa_list_t action_list = list(pair(fa_action_while(check_playback_semaphore, wrap_oid(id),
-                    fa_action_repeat(fa_time_from_double(playback->repeat), 0, fa_action_many(time_actions))), fa_now()));
-        if (master && playback->status == PLAYBACK_STOPPED) {
-            fa_push_list(pair(fa_action_do_with_time(_playback_started2, playback), fa_now()), action_list);
+                    fa_action_repeat(fa_time_from_double(sequence->repeat), 0, fa_action_many(time_actions))), fa_now()));
+        if (master && sequence->status == SEQUENCE_STOPPED) {
+            fa_push_list(pair(fa_action_do_with_time(_sequence_started, sequence), fa_now()), action_list);
         }
         main_action = fa_action_many(action_list);
     } else {
@@ -445,28 +494,34 @@ static void schedule_playback_actions(fa_list_t time_actions, fa_ptr_t stream, p
     }
 }
 
-static void flush_playback_actions(playback_data_t playback, double time) {
-    bool master_is_audio = (current_audio_stream && fa_list_is_empty(playback->audio_actions));
+static void flush_sequence_actions(sequence_t sequence, double time) {
+    bool master_is_audio = (current_audio_stream && fa_list_is_empty(sequence->midi_actions));
     
+    // TODO: if the sequence playback is wrapped in a bundle, we get
+    //       a crash in schedule_relative since we can currently only
+    //       schedule to one stream at a time
+
     if (current_midi_playback_stream) {
-        schedule_playback_actions(playback->midi_actions, current_midi_playback_stream, playback, !master_is_audio, time);
+        // if (verbose) fa_slog_info("MIDI events: ", sequence->midi_actions);
+        schedule_sequence_actions(sequence->midi_actions, current_midi_playback_stream, sequence, !master_is_audio, time);
     } else {
-        fa_deep_destroy_always(playback->midi_actions);
+        fa_deep_destroy_always(sequence->midi_actions);
     }
     if (current_audio_stream) {
-        schedule_playback_actions(playback->audio_actions, current_audio_stream, playback, master_is_audio, time);
+        // if (verbose) fa_slog_info("Audio events: ", sequence->audio_actions);
+        schedule_sequence_actions(sequence->audio_actions, current_audio_stream, sequence, master_is_audio, time);
     } else {
-        fa_deep_destroy_always(playback->audio_actions);
+        fa_deep_destroy_always(sequence->audio_actions);
     }
-    playback->midi_actions = fa_list_empty();
-    playback->audio_actions = fa_list_empty();
+    sequence->midi_actions = fa_list_empty();
+    sequence->audio_actions = fa_list_empty();
 }
 
 //    /playback/start         id  [start-time]
 //    /playback/start/from    id  skip  [start-time]
 //    /playback/repeat        id  [interval]  [start-time]
 //    /playback/repeat/from   id  skip interval  [start-time]
-int playback_start_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+int sequence_start_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id   = argv[0]->i;
     float time = 0;
@@ -475,14 +530,15 @@ int playback_start_handler(const char *path, const char *types, lo_arg ** argv, 
     // float skip = 0; // not implemented yet
 
     if (noaudio) {
-        if (verbose) fa_slog_info("Audio disabled, ignoring playback_start");
+        if (verbose) fa_slog_info("Audio disabled, ignoring sequence_start");
         send_osc(message, user_data, "/error", "is", id, "audio-disabled");
         return 0;
     }
 
     // No audio stream
+    // TODO: this makes it impossible to use playback with MIDI only!
     if (!current_audio_stream || current_sample_rate == 0) {
-        fa_slog_warning("No audio stream, ignoring playback start");
+        fa_slog_warning("No audio stream, ignoring sequence_start");
         send_osc(message, user_data, "/error", "is", id, "no-audio-stream");
         return 0;
     }
@@ -499,52 +555,52 @@ int playback_start_handler(const char *path, const char *types, lo_arg ** argv, 
         return 0;
     }
     
-    fa_with_lock(playback_data_mutex) {
-        playback_data_t playback = fa_map_dget(wrap_oid(id), playback_data);
-        if (!playback) {
+    fa_with_lock(sequences_mutex) {
+        sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
+        if (!sequence) {
             send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
             continue; // don't return or break, that wouldn't release the lock
         }
-        if (playback->status != PLAYBACK_STOPPED) {
+        if (sequence->status != SEQUENCE_STOPPED) {
             send_osc(message, user_data, "/error", "Nsi", "playback-already-started", id);
             continue; // don't return or break, that wouldn't release the lock
         }
         
         // Auto repeat
         if (repeat && repeat_interval == 0) {
-            repeat_interval = playback->max_time;
+            repeat_interval = sequence->max_time;
         }
         
-        if (repeat && playback->auto_stop) {
-            fa_warn(fa_string("Ignoring auto_stop for repeating playback"));
+        if (repeat && sequence->auto_stop) {
+            fa_warn(fa_string("Ignoring auto_stop for repeating sequence"));
         }
         
         add_playback_semaphore(id, NULL, 0);
         
-        playback->repeat = repeat_interval;
+        sequence->repeat = repeat_interval;
         
-        printf("Starting playback %d%s\n", id, repeat ? " (repeat)" : "");
+        printf("Starting sequence %d%s\n", id, repeat ? " (repeat)" : "");
         
         // Schedule!
-        flush_playback_actions(playback, time);
+        flush_sequence_actions(sequence, time);
         
-        playback->status = PLAYBACK_STARTING;
+        sequence->status = SEQUENCE_STARTING;
     }
     start_time_echo();
     return 0;
 }
 
-// NB: must be called inside a playback_data_mutex lock!
-void playback_stop(oid_t id, lo_message message, void *user_data)
+// NB: must be called inside a sequences_mutex lock!
+void sequence_stop(oid_t id, lo_message message, void *user_data)
 {
-    playback_data_t playback = fa_map_dget(wrap_oid(id), playback_data);
-    if (!playback) {
-        fa_warn(fa_format("Couldn't stop playback %d, it doesn't exist", id));
+    sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
+    if (!sequence) {
+        fa_warn(fa_format("Couldn't stop sequence %d, it doesn't exist", id));
         return;
     }
     
     if (remove_playback_semaphore(id)) {
-        printf("Stopping playback %d\n", id);
+        printf("Stopping sequence %d\n", id);
         if (current_clock) {
             fa_time_t now = fa_clock_time(current_clock);
             send_osc(message, user_data, "/playback/stopped", "itF", id, timetag_from_time(now));
@@ -566,60 +622,60 @@ void playback_stop(oid_t id, lo_message message, void *user_data)
         if (current_audio_stream) {
             // Send stop message to every slot listed in playback->audio_buffers
             // (a slot may be listed more than once, but it doesn't matter)
-            fa_for_each(buffer_slot, playback->audio_buffers) {
+            fa_for_each(buffer_slot, sequence->audio_buffers) {
                 int8_t slot = fa_peek_int8(fa_pair_second((fa_pair_t)buffer_slot));
                 do_schedule_now(fa_action_send(audio_name, pair(fa_i16(slot), fa_string("stop"))), current_audio_stream);
             }
         }
         // Cleanup
-        playback_data = fa_map_dremove(wrap_oid(id), playback_data);
-        if (playback->status == PLAYBACK_STARTING) {
-            playback->status = PLAYBACK_STOPPING;
-            printf(">>>> playback_stop called while playback was PLAYBACK_STARTING, setting to PLAYBACK_STOPPING\n");
+        sequences = fa_map_dremove(wrap_oid(id), sequences);
+        if (sequence->status == SEQUENCE_STARTING) {
+            sequence->status = SEQUENCE_STOPPING;
+            printf(">>>> playback_stop called while playback was SEQUENCE_STARTING, setting to SEQUENCE_STOPPING\n");
         } else {
-            delete_playback_data(playback); // This also releases buffer references
+            delete_sequence(sequence); // This also releases buffer references
         }
     } else {
-        fa_fail(fa_format("Playback %d was present, but semaphore could not be removed!", id));
+        fa_fail(fa_format("Sequence %d was present, but semaphore could not be removed!", id));
     }
 }
 
-int playback_stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+int sequence_stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id = argv[0]->i;
-    fa_with_lock(playback_data_mutex) {
-        playback_stop(id, message, user_data);
-    }
-    return 0;
-}
-
-int playback_autostop_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
-{
-    oid_t id = argv[0]->i;
-    fa_with_lock(playback_data_mutex) {
-        playback_data_t playback = fa_map_dget(wrap_oid(id), playback_data);
-        if (!playback) {
-            send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
-            continue; // don't return or break, that wouldn't release the lock
-        }
-        playback->auto_stop = types[1] == 'T';
+    fa_with_lock(sequences_mutex) {
+        sequence_stop(id, message, user_data);
     }
     return 0;
 }
 
-int playback_status_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+int sequence_autostop_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id = argv[0]->i;
-    fa_with_lock(playback_data_mutex) {
-        playback_data_t playback = fa_map_dget(wrap_oid(id), playback_data);
-        if (!playback) {
+    fa_with_lock(sequences_mutex) {
+        sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
+        if (!sequence) {
             send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
             continue; // don't return or break, that wouldn't release the lock
         }
-        playback_status_t status = playback->status;
-        size_t midi_length = fa_list_length(playback->midi_actions);
-        size_t audio_length = fa_list_length(playback->audio_actions);
-        fa_inform(fa_format("Playback ID %d  status: %d  midi: %zu  audio: %zu", id, status, midi_length, audio_length));
+        sequence->auto_stop = types[1] == 'T';
+    }
+    return 0;
+}
+
+int sequence_status_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    oid_t id = argv[0]->i;
+    fa_with_lock(sequences_mutex) {
+        sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
+        if (!sequence) {
+            send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
+            continue; // don't return or break, that wouldn't release the lock
+        }
+        sequence_status_t status = sequence->status;
+        size_t midi_length = fa_list_length(sequence->midi_actions);
+        size_t audio_length = fa_list_length(sequence->audio_actions);
+        fa_inform(fa_format("Sequence ID %d  status: %d  midi: %zu  audio: %zu", id, status, midi_length, audio_length));
         send_osc(message, user_data, "/playback/status", "iiii", id, status, midi_length, audio_length);
     }
     return 0;

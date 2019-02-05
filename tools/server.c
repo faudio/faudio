@@ -332,29 +332,31 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/current/devices", "", current_devices_handler, server);
     lo_server_add_method(server, "/stream/info", "", stream_info_handler, server);
     
-    /* Playback */
-    lo_server_add_method(server, "/playback/new", "i", playback_new_handler, server); // playback id (plid)
-    lo_server_add_method(server, "/playback/add/midi", "ifiif", playback_add_midi_handler, server); // plid, time, cmd, ch, data1
-    lo_server_add_method(server, "/playback/add/midi", "ifiifi", playback_add_midi_handler, server); // plid, time, cmd, ch, d1, d2
-    lo_server_add_method(server, "/playback/add/note", "ififif", playback_add_note_handler, server); // plid, time, ch, pitch, vel, dur
-    lo_server_add_method(server, "/playback/add/audio", "ifii", playback_add_audio_handler, server); // plid, time, auid, sl
-    lo_server_add_method(server, "/playback/add/audio", "ifiif", playback_add_audio_handler, server); // plid, time, auid, sl, skip
-    lo_server_add_method(server, "/playback/add/audio", "ifiiff", playback_add_audio_handler, server); // plid, time, auid, sl, sk, dur
-    lo_server_add_method(server, "/playback/status", "i", playback_status_handler, server); // plid
+    /* Sequences */
+    lo_server_add_method(server, "/playback/new", "i", sequence_new_handler, server); // playback id (plid)
+    lo_server_add_method(server, "/playback/new/buffered", "i", sequence_new_handler, server); // playback id (plid)
+    lo_server_add_method(server, "/playback/add/midi", "ifiif", sequence_add_midi_handler, server); // plid, time, cmd, ch, data1
+    lo_server_add_method(server, "/playback/add/midi", "ifiifi", sequence_add_midi_handler, server); // plid, time, cmd, ch, d1, d2
+    lo_server_add_method(server, "/playback/add/note", "ififif", sequence_add_note_handler, server); // plid, time, ch, pitch, vel, dur
+    lo_server_add_method(server, "/playback/add/audio", "ifii", sequence_add_audio_handler, server); // plid, time, auid, sl
+    lo_server_add_method(server, "/playback/add/audio", "ifiif", sequence_add_audio_handler, server); // plid, time, auid, sl, skip
+    lo_server_add_method(server, "/playback/add/audio", "ifiiff", sequence_add_audio_handler, server); // plid, time, auid, sl, sk, dur
+    lo_server_add_method(server, "/playback/status", "i", sequence_status_handler, server); // plid
     
-    lo_server_add_method(server, "/playback/start", "i", playback_start_handler, server);  // plid (start immediately)
-    lo_server_add_method(server, "/playback/start", "if", playback_start_handler, server); // plid, time
-    lo_server_add_method(server, "/playback/start/from", "if", playback_start_handler, server); // plid, skip (s)
-    lo_server_add_method(server, "/playback/start/from", "iff", playback_start_handler, server); // plid, skip (s), time
-    lo_server_add_method(server, "/playback/repeat", "i", playback_start_handler, server); // plid (immediately, auto length)
-    lo_server_add_method(server, "/playback/repeat", "if", playback_start_handler, server); // plid, interval (0 = auto) (immediately)
-    lo_server_add_method(server, "/playback/repeat", "iff", playback_start_handler, server); // plid, interval (0 = auto), time
-    lo_server_add_method(server, "/playback/repeat/from", "iff", playback_start_handler, server); // plid, skip (s), interval, 
-    lo_server_add_method(server, "/playback/repeat/from", "ifff", playback_start_handler, server); // plid, skip (s) interval, time
-    lo_server_add_method(server, "/playback/stop", "i", playback_stop_handler, server); // plid (stop immediately)
-    lo_server_add_method(server, "/playback/stop", "if", playback_stop_handler, server); // plid, time
-    lo_server_add_method(server, "/playback/auto-stop", "iT", playback_autostop_handler, server); // plid
-    lo_server_add_method(server, "/playback/auto-stop", "iF", playback_autostop_handler, server); // plid
+    lo_server_add_method(server, "/playback/start", "i", sequence_start_handler, server);  // plid (start immediately)
+    lo_server_add_method(server, "/playback/start", "if", sequence_start_handler, server); // plid, time
+    lo_server_add_method(server, "/playback/start/from", "if", sequence_start_handler, server); // plid, skip (s)
+    lo_server_add_method(server, "/playback/start/from", "iff", sequence_start_handler, server); // plid, skip (s), time
+    lo_server_add_method(server, "/playback/repeat", "i", sequence_start_handler, server); // plid (immediately, auto length)
+    lo_server_add_method(server, "/playback/repeat", "if", sequence_start_handler, server); // plid, interval (0 = auto) (immediately)
+    lo_server_add_method(server, "/playback/repeat", "iff", sequence_start_handler, server); // plid, interval (0 = auto), time
+    lo_server_add_method(server, "/playback/repeat/from", "iff", sequence_start_handler, server); // plid, skip (s), interval, 
+    lo_server_add_method(server, "/playback/repeat/from", "ifff", sequence_start_handler, server); // plid, skip (s) interval, time
+    lo_server_add_method(server, "/playback/stop", "i", sequence_stop_handler, server); // plid (stop immediately)
+    lo_server_add_method(server, "/playback/stop", "if", sequence_stop_handler, server); // plid, time
+    lo_server_add_method(server, "/playback/auto-stop", "iT", sequence_autostop_handler, server); // plid
+    lo_server_add_method(server, "/playback/auto-stop", "iF", sequence_autostop_handler, server); // plid
+    lo_server_add_method(server, "/playback/flush", "i", sequence_flush_handler, server); // plid
     
     /* Deprecated */
     //  /play/audio  id,  audio id,  slot,  skip (ms),  start-time (ms),  repeat-interval (ms)
@@ -546,6 +548,7 @@ void liblo_error(int num, const char *msg, const char *path)
 }
 
 int bundle_start_handler(lo_timetag time, void *user_data) {
+    // if (verbose) printf("bundle_start_handler\n");
     if (in_bundle) {
         fa_warn(fa_string("Cannot currently handle nested bundles, sent bundles will be flattened"));
     }
@@ -556,6 +559,7 @@ int bundle_start_handler(lo_timetag time, void *user_data) {
 }
 
 int bundle_end_handler(void *user_data) {
+    // if (verbose) printf("bundle_end_handler\n");
     assert(in_bundle);
     in_bundle--;
     if (in_bundle == 0) {
@@ -871,13 +875,13 @@ int play_midi_handler(const char *path, const char *types, lo_arg ** argv, int a
 int stop_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data) {
     //fa_slog_info("stop_handler");
     
-    // Delegate to the playback_stop_handler if there is a matching playback id
+    // Delegate to the sequence_stop_handler if there is a matching sequence id
     // Not very elegant perhaps, but it lets the uses call /stop with any id
     bool done = false;
-    fa_with_lock(playback_data_mutex) {
-        playback_data_t playback = fa_map_dget(wrap_oid(argv[0]->i), playback_data);
-        if (playback) {
-            playback_stop(argv[0]->i, message, user_data);
+    fa_with_lock(sequences_mutex) {
+        sequence_t sequence = fa_map_dget(wrap_oid(argv[0]->i), sequences);
+        if (sequence) {
+            sequence_stop(argv[0]->i, message, user_data);
             done = true; // Can't return here, lock wouldn't be released
         }
     }
@@ -994,7 +998,7 @@ int time_handler(const char *path, const char *types, lo_arg ** argv, int argc, 
 }
 
 /***************************
-*   /time
+*   /ping
 */
 
 int ping_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
@@ -1596,12 +1600,12 @@ int audio_file_curve_handler(const char *path, const char *types, lo_arg ** argv
             //printf("audio_file_curve_handler curve_size: %zu", curve_size);
             if (curve_size <= 16384) {
                 lo_blob blob = lo_blob_from_buffer(curve);
-                //printf("audio_file_curve_handler curve_size <= 16384, blob: %p", blob);
+                if (verbose) fa_slog_info("audio_file_curve_handler curve_size <= 16384");
                 send_osc(message, user_data, "/audio-file/curve", "ib", id, blob);
                 lo_blob_free(blob);
             } else {
                 fa_list_t segments = fa_buffer_split(curve, 16384, false);
-                //fa_slog_info("audio_file_curve_handler curve_size > 16384, segments: segments", segments);
+                if (verbose) fa_inform(fa_format("audio_file_curve_handler curve_size > 16384, segments: %d", fa_list_length(segments)));
                 size_t offset = 0;
                 fa_for_each (segment, segments) {
                     //fa_slog_info("segments: ", segment);
