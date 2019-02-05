@@ -42,12 +42,11 @@
 
 uint8_t min_uint8(uint8_t a, uint8_t b) { return a < b ? a : b; }
 
-#define send_osc(m, s, p, ...)  fa_with_lock(osc_mutex) { \
+#define send_osc(m, s, p, ...) \
     fa_with_lock(osc_mutex) { \
         int r = lo_send_from(lo_message_get_source(m), (lo_server)s, LO_TT_IMMEDIATE, p, __VA_ARGS__); \
         if (r < 0) fa_fail(fa_format("Could not send osc message %s: %d", p, lo_address_errno(lo_message_get_source(m)))); \
     } \
-  }
 
 #define send_osc_async(p, ...) if (last_address) { \
     fa_with_lock(osc_mutex) { \
