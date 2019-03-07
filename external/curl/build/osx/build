@@ -11,8 +11,10 @@ CXXFLAGS="-arch x86_64" \
 LDFLAGS="-arch x86_64" \
 ./configure \
     --with-darwinssl \
+    --disable-ldap \
+    --disable-ldaps \
     --prefix=`pwd`/../result \
-    && MACOSX_DEPLOYMENT_TARGET="10.7" make \
+    && MACOSX_DEPLOYMENT_TARGET="10.8" make \
     && make install
 
 popd;
