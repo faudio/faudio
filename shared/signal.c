@@ -8,6 +8,7 @@
  */
 
 #include <fa/signal.h>
+#include <fa/error.h>
 #include <fa/pair/left.h>
 #include <fa/priority_queue.h>
 #include <fa/action.h>
@@ -17,7 +18,9 @@
 #include <fa/dynamic.h>
 #include <fa/util.h>
 #include <fa/midi/message.h>
+#include <fa/io.h>
 #include <pthread.h> // temp
+#include <sndfile.h>
 
 #include "signal.h"
 #include "signal_internal.h"
@@ -1318,7 +1321,8 @@ fa_priority_queue_t list_to_queue(fa_list_t controls_)
 {
     fa_priority_queue_t controls = fa_priority_queue();
     fa_for_each(x, controls_) {
-        fa_priority_queue_insert(fa_pair_left_from_pair(x), controls);
+        // fa_priority_queue_insert(fa_pair_left_from_pair(x), controls);
+        fa_priority_queue_insert(fa_pair_left_create(fa_pair_second(x), fa_pair_first(x)), controls);
     }
     return controls;
 }
@@ -1354,73 +1358,156 @@ fa_map_t build_proc_map(fa_list_t procs)
     return proc_map;
 }
 
-void fa_signal_run(int count, fa_list_t controls_, fa_signal_t a, double *output)
+void fa_signal_run(size_t frames, fa_list_t controls_, fa_list_t signals, double sample_rate,
+    fa_signal_audio_callback_t callback, fa_ptr_t callback_data)
 {
+    state_t state = new_state(sample_rate);
+    fa_priority_queue_t controls = list_to_queue(controls_);
+    size_t channels = fa_list_length(signals);
+
+    fa_signal_t merged_signal = fa_signal_constant(0);
     {
-        state_t             state    = new_state(kDefSampleRate); // TODO other sample rates
-        fa_priority_queue_t controls = list_to_queue(controls_);
-
-        fa_list_t procs = fa_signal_get_procs(a);
-        fa_map_t  proc_map = build_proc_map(procs);
-        fa_for_each(x, procs) {
-            add_custom_proc(x, state);
+        int c = 0;
+        fa_for_each(signal, signals) {
+            fa_signal_t withOutput = fa_signal_output(0, kOutputOffset + c, signal);
+            merged_signal = fa_signal_former(merged_signal, withOutput); // Could use any combinator here
+            c++;
         }
-
-        // XXX Before this, replace "local" buses with "global" (for custom procs)
-        a = fa_signal_simplify(a);
-
-        fa_inform(fa_string_dappend(fa_string("    Signal Tree 1: \n"), fa_string_show(a)));
-        a = fa_signal_route_processors(proc_map, a);
-
-        fa_inform(fa_string_dappend(fa_string("    Signal Tree 2: \n"), fa_string_show(a)));
-        a = fa_signal_doptimize(a);
-        a = fa_signal_dverify(a);
-
-        {
-            run_custom_procs(custom_proc_before, 0, state);
-
-            for (int i = 0; i < count; ++ i) {
-                fa_time_t now = fa_milliseconds((double) state->count / (double) state->rate * 1000.0);
-                run_actions(controls, now, run_simple_action_, state);
-
-                run_custom_procs(custom_proc_render, 1, state);
-                output[i] = step(a, state);
-                inc_state1(state);
-                fa_destroy(now);
-            }
-
-            run_custom_procs(custom_proc_after, 0, state);
-        }
-        delete_state(state);
     }
+
+    fa_list_t procs = fa_signal_get_procs(merged_signal);
+    fa_inform(fa_string_format_integral("    Custom processors: %d", fa_list_length(procs)));
+    fa_map_t proc_map = build_proc_map(procs);
+    fa_inform(fa_dappend(fa_string("        Allocated channel offsets: "), fa_string_show(proc_map)));
+    fa_for_each(proc, procs) {
+        add_custom_proc(proc, state);
+    }
+    merged_signal = fa_signal_simplify(merged_signal);
+    merged_signal = fa_signal_route_processors(proc_map, merged_signal);
+    merged_signal = fa_signal_doptimize(merged_signal);
+    merged_signal = fa_signal_dverify(merged_signal);
+
+    run_custom_procs(custom_proc_before, 0, state);
+
+    //
+    // Render audio
+    //
+    size_t buffer_frames = 256;
+    size_t buffer_size = buffer_frames * sizeof(double) * channels;
+    double *audio_buffer = fa_malloc(buffer_size);
+
+    int offset = 0;
+    while (offset < frames) {
+        size_t frames_to_render = buffer_frames < frames - offset ? buffer_frames : frames - offset;
+        for (int i = 0; i < frames_to_render; ++i) {
+            fa_time_t now = fa_milliseconds((double) state->count / sample_rate * 1000.0);
+            run_actions(controls, now, run_simple_action_, state, 0);
+            run_custom_procs(custom_proc_render, 1, state);
+            step(merged_signal, state);
+            for (int c = 0; c < channels; ++c) {
+                audio_buffer[i * channels + c] = state->inputs[(c + kOutputOffset) * kMaxVectorSize];
+            }
+            inc_state1(state);
+            fa_destroy(now);
+        }
+        fa_buffer_t buffer = fa_buffer_wrap(audio_buffer, buffer_size, NULL, NULL);
+        // bool ok = callback(callback_data, buffer);
+        callback(callback_data, buffer);
+        fa_destroy(buffer);
+        // if (!ok) {
+        //     fa_fail(fa_string("Error when rendering in fa_signal_run"));
+        //     break;
+        // }
+        offset += frames_to_render;
+    }
+
+    callback(callback_data, NULL);
+
+    //
+    // Cleanup
+    //
+    fa_free(audio_buffer);
+    run_custom_procs(custom_proc_after, 0, state);
+    run_custom_procs(custom_proc_destroy, 0, state);
+    delete_state(state);
 }
 
-fa_buffer_t fa_signal_run_buffer(int n, fa_list_t controls, fa_signal_t a)
+fa_buffer_t fa_signal_run_buffer(int n, fa_list_t controls, fa_signal_t a, int sample_rate)
 {
-    fa_buffer_t b = fa_buffer_create(n * sizeof(double));
-    fa_signal_run(n, controls, a, fa_buffer_unsafe_address(b));
-    return b;
+    assert(false && "Not implemented");
+    // fa_buffer_t b = fa_buffer_create(n * sizeof(double));
+    // fa_set_meta(b, fa_string("sample-rate"), fa_from_int32(sample_rate));
+    // fa_set_meta(b, fa_string("channels"), fa_from_int32(1));
+    // fa_signal_run(n, controls, a, sample_rate, fa_buffer_unsafe_address(b));
+    // return b;
 }
 
 void fa_signal_print(int n, fa_list_t controls, fa_signal_t a)
 {
-    fa_buffer_t b = fa_signal_run_buffer(n, controls, a);
+    assert(false && "Not implemented");
+    // fa_buffer_t b = fa_signal_run_buffer(n, controls, a);
 
-    for (size_t i = 0; (i * sizeof(double)) < fa_buffer_size(b); ++i) {
-        double x = fa_buffer_get_double(b, i);
-        printf("%3ld: %4f\n", (long) i, x);
-    }
+    // for (size_t i = 0; (i * sizeof(double)) < fa_buffer_size(b); ++i) {
+    //     double x = fa_buffer_get_double(b, i);
+    //     printf("%3ld: %4f\n", (long) i, x);
+    // }
 
-    fa_destroy(b);
+    // fa_destroy(b);
 }
 
-fa_ptr_t fa_signal_run_file(int n, fa_list_t controls, fa_signal_t a, fa_string_t path)
+// static bool _write_buffer(fa_ptr_t data, fa_buffer_t buffer) {
+
+//     SF_INFO *info = (SF_INFO*) fa_pair_first(data);
+//     SNDFILE *file = (SNDFILE*) fa_pair_second(data);
+//     double *ptr   = fa_buffer_unsafe_address(buffer);
+//     size_t size   = fa_buffer_size(buffer) / (sizeof(double) * info->channels);
+//     sf_count_t written = sf_writef_double(file, ptr, size);
+//     return written == size;
+// }
+
+fa_ptr_t fa_signal_run_file(size_t frames, fa_list_t controls, fa_list_t signals, int sample_rate, fa_string_t path)
 {
-    fa_buffer_t b = fa_signal_run_buffer(n, controls, a);
-    fa_ptr_t res = fa_buffer_write_audio(path, b); // TODO number of channels
-    fa_destroy(b);
-    return res;
+    fa_io_sink_t sink = fa_io_write_audio_file(path, fa_list_length(signals), sample_rate, SF_FORMAT_AIFF | SF_FORMAT_PCM_16);
+    fa_signal_run(frames, controls, signals, sample_rate, (fa_signal_audio_callback_t)&fa_io_push, sink);
+    return NULL;
 }
+
+
+// fa_ptr_t fa_signal_run_file(size_t frames, fa_list_t controls, fa_list_t signals, int sample_rate, fa_string_t path)
+// {
+//     SF_INFO        info;
+
+//     info.samplerate = sample_rate;
+//     info.channels   = fa_list_length(signals);
+//     info.format     = SF_FORMAT_AIFF | SF_FORMAT_PCM_16;
+
+//     #if _WIN32
+//     wchar_t *cpath  = fa_string_to_utf16(path);
+//     SNDFILE *file   = sf_wchar_open(cpath, SFM_WRITE, &info);
+//     #else
+//     char *cpath     = fa_string_to_utf8(path);
+//     SNDFILE *file   = sf_open(cpath, SFM_WRITE, &info);
+//     #endif
+
+//     if (sf_error(file)) {
+//         char err[100];
+//         snprintf(err, 100, "Could not write audio file '%s' (%s)", cpath, sf_strerror(file));
+//         fa_free(cpath);
+//         return fa_error_create_simple(error, fa_string_from_utf8(err), fa_string("Doremir.Signal"));
+//     }
+
+//     fa_free(cpath);
+
+//     fa_pair_t callback_data = fa_pair_create(&info, file);
+//     fa_signal_run(frames, controls, signals, sample_rate, _write_buffer, callback_data);
+//     fa_destroy(callback_data);
+
+//     if (sf_close(file)) {
+//         return fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Signal"));
+//     }
+
+//     return NULL;
+// }
 
 
 
@@ -1645,6 +1732,9 @@ static fa_ptr_t record_external_receive_(fa_ptr_t x, fa_signal_name_t n, fa_sign
     if (fa_equal(ext->name, n)) {
         if (ext->buffer) {
             // fa_warn(fa_string_format_integral("Bytes written: %zu", ext->bytes_written));
+            if (msg) {
+                fa_warn(fa_string("ext->buffer was not nil!"));
+            }
             fa_atomic_ring_buffer_close(ext->buffer);
         }
 

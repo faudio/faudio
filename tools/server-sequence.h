@@ -12,6 +12,7 @@
 #include <string.h>
 
 double auto_stop_margin = 0.010; // 10 ms
+double export_margin = 0.5; // 0.5 s
 
 
 // Note: sends nominal (scheduled) time!
@@ -681,7 +682,93 @@ int sequence_status_handler(const char *path, const char *types, lo_arg ** argv,
     return 0;
 }
 
+int sequence_save_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    oid_t id        = argv[0]->i;
+    oid_t seq_id    = argv[1]->i;
+    int sample_rate = argv[3]->i;
+    size_t channels = 2; // Hardcoded to stereo
 
+    if (verbose) fa_inform(fa_dappend(fa_string("sequence_save_handler "), fa_string_from_utf8(path)));
+
+    if (sample_rate < 11025 || sample_rate > 192000) {
+        if (verbose) fa_fail(fa_format("Bad sample rate %d", sample_rate));
+        send_osc(message, user_data, path, "iFs", id, "bad-sample-rate");
+        return 0;
+    }
+    
+    fa_with_lock(sequences_mutex) {
+        sequence_t sequence = fa_map_dget(wrap_oid(seq_id), sequences);
+        if (!sequence) {
+            if (verbose) fa_fail(fa_format("No sequence with id %d", seq_id));
+            send_osc(message, user_data, "/error", "iFs", id, "no-such-sequence");
+            continue; // don't return or break, that wouldn't release the lock
+        }
+        if (sequence->status != SEQUENCE_STOPPED) {
+            if (verbose) fa_fail(fa_format("Sequence not stopped (%d)", sequence->status));
+            send_osc(message, user_data, "/error", "iFs", id, "sequence-not-stopped");
+            continue; // don't return or break, that wouldn't release the lock
+        }
+
+        fa_string_t target_path = fa_string_from_utf8(&argv[2]->s);
+        fa_io_sink_t sink = NULL;
+        if (strcmp(path, "/playback/save/aiff") == 0) {
+            sink = fa_io_write_audio_file(target_path, channels, sample_rate, SF_FORMAT_AIFF | SF_FORMAT_PCM_16);
+        } else if (strcmp(path, "/playback/save/wav") == 0) {
+            sink = fa_io_write_audio_file(target_path, channels, sample_rate, SF_FORMAT_WAV | SF_FORMAT_PCM_16);
+        } else if (strcmp(path, "/playback/save/ogg") == 0) {
+            assert(false && "ogg export not implemented");
+            // float ogg_quality = (argc >= 5) ? argv[4]->f : default_ogg_quality;
+            // if (verbose) fa_inform(fa_format("Exporting with ogg quality %f\n", ogg_quality));
+            // source = fa_io_apply(source, fa_io_create_ogg_encoder(sample_rate, channels, ogg_quality));
+            // sink = fa_io_write_file(target_path);
+        } else if (strcmp(path, "/playback/save/mp3") == 0) {
+            int mp3_bitrate = (argc >= 5) ? argv[4]->i : default_mp3_bitrate;
+            if (verbose) fa_inform(fa_format("Exporting with mp3 bitrate %d\n", mp3_bitrate));
+            // fa_map_t id3 = fa_map_empty();
+            // id3 = fa_map_dset(fa_string("TIT2"), fa_string("En titel med åäö i"), id3);
+            // id3 = fa_map_dset(fa_string("artist"), fa_string("En artiståäöaerr"), id3);
+            fa_map_t id3 = NULL;
+            sink = fa_io_write_mp3_file(target_path, channels, sample_rate, mp3_bitrate, id3);
+            // fa_destroy(map);
+        } else if (strcmp(path, "/audio-file/save/raw") == 0) {
+            sink = fa_io_write_file(target_path);
+        } else {
+            assert(false && "Unknown target format");
+        }
+        if (fa_check(sink)) {
+            if (verbose) fa_fail(fa_format("Sink error: %s", fa_string_peek_utf8(fa_error_message((fa_error_t)sink))));
+            send_osc(message, user_data, path, "iFs", id, fa_string_peek_utf8(fa_error_message((fa_error_t)sink)));
+            fa_destroy(sink);
+            sink = NULL;
+        }
+
+        if (sink) {
+            fa_list_t setup_actions = list(pair(fa_action_set(kSynthLeft, synth_volume), fa_now()),
+                                           pair(fa_action_set(kSynthRight, synth_volume), fa_now()),
+                                           pair(fa_action_set(kAudioLeft, audio_volume), fa_now()),
+                                           pair(fa_action_set(kAudioRight, audio_volume), fa_now()));
+            setup_actions = list(pair(fa_action_many(setup_actions), fa_now()));
+
+            fa_list_t controls = fa_list_append(sequence->midi_actions, sequence->audio_actions);
+            controls = fa_list_dappend(setup_actions, controls);
+
+            fa_list_t signals = construct_signal_tree(false, true);
+            size_t frames = sample_rate * channels * (sequence->max_time + export_margin);
+            add_playback_semaphore(seq_id, NULL, 0);
+            fa_signal_run(frames, controls, signals, sample_rate, (fa_signal_audio_callback_t)&fa_io_push, sink);
+            remove_playback_semaphore(seq_id);
+            send_osc(message, user_data, "/sequence/save", "iTi", id, frames);
+            fa_destroy(sink);
+
+            sequences = fa_map_dremove(wrap_oid(seq_id), sequences);
+            delete_sequence(sequence);
+        }
+        fa_destroy(target_path);
+    }
+
+    return 0;
+}
 
 
 #endif

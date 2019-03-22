@@ -5,6 +5,7 @@
 #include <fa/util/arch.h>
 #include <fa/util/alignof.h>
 #include <fa/util/minmax.h>
+#include <fa/util/safepeek.h>
 #include <fa/util/literals.h>
 #include <fa/util/macros.h>
 #include <fa/util/apply.h>

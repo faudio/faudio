@@ -445,10 +445,12 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
 {
     SF_INFO        info;
 
-    info.samplerate = fa_peek_int32(fa_buffer_get_meta(buffer, fa_string("sample-rate")));
-    info.channels   = fa_peek_int32(fa_buffer_get_meta(buffer, fa_string("channels")));
+    info.samplerate = safe_peek_i32(fa_buffer_get_meta(buffer, fa_string("sample-rate")));
+    info.channels   = safe_peek_i32(fa_buffer_get_meta(buffer, fa_string("channels")));
     //info.format     = fa_peek_int32(fa_buffer_get_meta(buffer, fa_string("format")));
     info.format     = SF_FORMAT_AIFF | SF_FORMAT_PCM_16;
+
+    // printf("samplerate = %d, channels = %d\n", info.samplerate, info.channels);
 
     #if _WIN32
     wchar_t *cpath  = fa_string_to_utf16(path);

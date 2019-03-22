@@ -965,7 +965,8 @@ fa_ptr_t midi_stream_callback(fa_ptr_t x)
     run_actions(stream->controls,
                 now,
                 forward_action_to_midi,
-                stream
+                stream,
+                kScheduleLookahead
                );
     fa_destroy(now);
 

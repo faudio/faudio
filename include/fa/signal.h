@@ -151,6 +151,10 @@ typedef void (* fa_signal_message_callback_t)(fa_ptr_t,
                                               fa_signal_name_t,
                                               fa_signal_message_t);
 
+/** A callback to receive audio buffers.
+*/
+typedef void (* fa_signal_audio_callback_t)(fa_ptr_t, fa_buffer_t);
+
 
 typedef struct {
             fa_ptr_t (* before)(fa_ptr_t, int, fa_signal_state_t *);
@@ -273,13 +277,17 @@ void fa_signal_print(int int_, fa_list_t list, fa_signal_t signal);
         Optionally, a null pointer is interpreted as the empty list.
     @param signal
         Signal to run.
+    @param sample_rate
+        Sample rate.
     @param buffer
         Buffer to receive result.
 */
-void fa_signal_run(int int_,
+void fa_signal_run(size_t frames,
                    fa_list_t list,
-                   fa_signal_t signal,
-                   double *);
+                   fa_list_t signals,
+                   double sample_rate,
+                   fa_signal_audio_callback_t callback,
+                   fa_ptr_t callback_data);
 
 /** Run the given signal, writing the results to a freshly created @ref buffer_t.
     The resulting buffer must be freed by the caller.
@@ -291,10 +299,13 @@ void fa_signal_run(int int_,
         Optionally, a null pointer is interpreted as the empty list.
     @param signal
         Signal to run.
+    @param sample_rate
+        Sample rate.
 */
 fa_buffer_t fa_signal_run_buffer(int int_,
                                  fa_list_t list,
-                                 fa_signal_t signal);
+                                 fa_signal_t signal,
+                                 int sample_rate);
 
 /** Run the given signal, writing the results to the given file.
 
@@ -308,9 +319,10 @@ fa_buffer_t fa_signal_run_buffer(int int_,
     @param path
         Name of file to write.
 */
-fa_ptr_t fa_signal_run_file(int int_,
-                            fa_list_t list,
-                            fa_signal_t signal,
+fa_ptr_t fa_signal_run_file(size_t frames,
+                            fa_list_t controls,
+                            fa_list_t signals,
+                            int sample_rate,
                             fa_string_t string);
 
 

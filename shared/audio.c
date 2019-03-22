@@ -1491,7 +1491,8 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
             run_actions(stream->controls,
                         now,
                         forward_action_to_audio_thread,
-                        stream
+                        stream,
+                        kScheduleLookahead
                        );
             fa_destroy(now);
 
@@ -1595,10 +1596,10 @@ void after_failed_processing(stream_t stream)
     delete_state(stream->state);
 }
 
-fa_ptr_t run_simple_action2(fa_ptr_t x, fa_ptr_t a)
-{
-    return run_simple_action(x, a);
-}
+// fa_ptr_t run_simple_action2(fa_ptr_t x, fa_ptr_t a)
+// {
+//     return run_simple_action(x, a);
+// }
 void handle_outgoing_message(fa_ptr_t x, fa_string_t name, fa_ptr_t value)
 {
     stream_t stream = x;
@@ -1619,17 +1620,17 @@ void during_processing(stream_t stream, unsigned count, double time, float **inp
     //     fa_ptr_t action;
     //
     //     while ((action = fa_atomic_queue_read(stream->in_controls))) {
-    //         run_simple_action2(stream->state, action);
+    //         run_simple_action(stream->state, action);
     //     }
     // }
     {
         fa_ptr_t action;
 
         while ((action = fa_atomic_queue_read(stream->short_controls))) {
-            run_simple_action2(stream->state, action);
+            run_simple_action(stream->state, action);
         }
     }
-
+    
     // Outgoing controls
     {
         custom_procs_receive((state_t) state, handle_outgoing_message, stream);
@@ -1650,7 +1651,7 @@ void during_processing(stream_t stream, unsigned count, double time, float **inp
                     //}
                     if (next_action && fa_action_timestamp(next_action) <= frame_time) { //state->count) {
                         next_action = fa_atomic_queue_read(stream->in_controls);
-                        run_simple_action2(stream->state, next_action);
+                        run_simple_action(stream->state, next_action);
                     } else {
                         break;
                     }

@@ -16,16 +16,6 @@
 #include <fa/func_ref.h>
 #include <pthread.h>
 
-// Scheduled events are forwarded to the audio thread in advance. This is the
-// threshold value in milliseconds. A too low value may cause actions to be
-// executed too late, if the scheduler is busy or for some other reason cannot
-// forward the actions in time. A higher value minimizes that risk, but actions
-// that have been forwarded to the audio thread cannot be cancelled, so a very
-// high value will make e.g. stop playback appear sluggish. Also, action_do
-// (and action_do_with_time) is executed in the audio control thread rather
-// than the audio thread, which means that they will be executed (more) too early.
-#define kScheduleLookahead 80
-
 // Actions 
 #define kScheduleMaxAge    5000
 
@@ -1060,8 +1050,8 @@ fa_action_t fa_action_until(fa_pred_t pred, fa_ptr_t data, fa_action_t action)
 }
 
 
-static inline bool is_due (fa_time_t time, fa_time_t now) {
-    return fa_time_to_milliseconds(now) > (fa_time_to_milliseconds(time) - kScheduleLookahead);
+static inline bool is_due (fa_time_t time, fa_time_t now, size_t lookahead) {
+    return fa_time_to_milliseconds(now) > (fa_time_to_milliseconds(time) - lookahead);
 }
 
 static inline bool is_too_old (fa_time_t time, fa_time_t now) {
@@ -1076,7 +1066,7 @@ static inline bool is_too_old (fa_time_t time, fa_time_t now) {
         resched A list to which a (time, action) values is pushed for each rescheduled action.
         state   State to run action on.
  */
-void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_list_t *resched, fa_binary_t function, fa_ptr_t data)
+void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_list_t *resched, fa_binary_t function, fa_ptr_t data, size_t lookahead)
 {
     //fa_slog_info("run_and_resched_action ", time);
     //fa_slog_info("run_and_resched   in thread:   ", fa_string_format_integral("%p", (long) pthread_self()));
@@ -1093,7 +1083,7 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
         //fa_slog_info("run_and_resched ", fa_string_format_integral("%p", (long) fa_thread_current()));
 
         if (first) {
-            run_and_resched_action(first, fa_copy(time), now, resched, function, data);
+            run_and_resched_action(first, fa_copy(time), now, resched, function, data, lookahead);
         }
 
         if (rest && interval) {
@@ -1104,9 +1094,9 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
                 // Discard
                 fa_slog_info("Too old, discarding", future, now);
                 fa_deep_destroy_always(rest);
-            } else if (is_due(future, now)) {
+            } else if (is_due(future, now, lookahead)) {
                 // Run directly
-                run_and_resched_action(rest, future, now, resched, function, data);
+                run_and_resched_action(rest, future, now, resched, function, data, lookahead);
             } else {
                 // Reschedule
                 //fa_slog_info("   rescheduling ", rest);
@@ -1159,7 +1149,7 @@ void run_and_resched_action(action_t action, fa_time_t time, fa_time_t now, fa_l
         now         Current time (not destroyed).
         function    Function to which due actions are passed.
  */
-void run_actions(fa_priority_queue_t controls, fa_time_t now, fa_binary_t function, fa_ptr_t data)
+void run_actions(fa_priority_queue_t controls, fa_time_t now, fa_binary_t function, fa_ptr_t data, size_t lookahead)
 {
     //printf("run_actions %lld\n", (int64_t) fa_time_to_milliseconds(now));    
     while (1) {
@@ -1174,7 +1164,7 @@ void run_actions(fa_priority_queue_t controls, fa_time_t now, fa_binary_t functi
         action_t action = fa_pair_second(x);
 
         // Assure the next action is due
-        if (is_due(time, now)) {
+        if (is_due(time, now, lookahead)) {
             fa_priority_queue_pop(controls);
             fa_destroy(x);
             
@@ -1195,7 +1185,7 @@ void run_actions(fa_priority_queue_t controls, fa_time_t now, fa_binary_t functi
             fa_list_t resched = fa_list_empty();
 
             // Run action, generating list of actions to reschedule
-            run_and_resched_action(action, time, now, &resched, function, data); // TODO
+            run_and_resched_action(action, time, now, &resched, function, data, lookahead); // TODO
 
             if (fa_list_is_empty(resched)) {
                 //fa_destroy(time);

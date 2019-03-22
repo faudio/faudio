@@ -7,6 +7,16 @@
 #include <fa/list.h>
 #include <fa/signal.h>
 
+// Scheduled events are forwarded to the audio thread in advance. This is the
+// threshold value in milliseconds. A too low value may cause actions to be
+// executed too late, if the scheduler is busy or for some other reason cannot
+// forward the actions in time. A higher value minimizes that risk, but actions
+// that have been forwarded to the audio thread cannot be cancelled, so a very
+// high value will make e.g. stop playback appear sluggish. Also, action_do
+// (and action_do_with_time) is executed in the audio control thread rather
+// than the audio thread, which means that they will be executed (more) too early.
+#define kScheduleLookahead 80
+
 /** @addtogroup FaAction
  
     Scheduling actions.

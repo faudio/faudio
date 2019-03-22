@@ -85,7 +85,8 @@ void helper_function()
                                fa_pair_create(fa_hms(0, 0, 0), fa_action_send(fa_string("DLS"), fa_string("hello!")))
 
                            ),
-                           r,
+                           fa_list_single(r),
+                           44100,
                            fa_string("test.wav"));
     }
 }

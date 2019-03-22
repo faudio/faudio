@@ -357,6 +357,13 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/playback/auto-stop", "iT", sequence_autostop_handler, server); // plid
     lo_server_add_method(server, "/playback/auto-stop", "iF", sequence_autostop_handler, server); // plid
     lo_server_add_method(server, "/playback/flush", "i", sequence_flush_handler, server); // plid
+    lo_server_add_method(server, "/playback/save/wav",  "iisi", sequence_save_handler, server);  // id, plid, path, sr
+    lo_server_add_method(server, "/playback/save/aiff", "iisi", sequence_save_handler, server);  // id, plid, path, sr
+    lo_server_add_method(server, "/playback/save/ogg",  "iisi", sequence_save_handler, server);  // id, plid, path, sr
+    lo_server_add_method(server, "/playback/save/ogg",  "iisif", sequence_save_handler, server);  // id, plid, path, sr, quality
+    lo_server_add_method(server, "/playback/save/mp3",  "iisi", sequence_save_handler, server);  // id, plid, path, sr
+    lo_server_add_method(server, "/playback/save/mp3",  "iisii", sequence_save_handler, server);  // id, plid, path, sr, bitrate
+
     
     /* Deprecated */
     //  /play/audio  id,  audio id,  slot,  skip (ms),  start-time (ms),  repeat-interval (ms)

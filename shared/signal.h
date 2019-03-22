@@ -32,10 +32,6 @@ typedef struct _state_base_t *state_base_t;
  */
 #define kMaxVectorSize                  1024
 
-/** Maximal allowed vector size.
- */
-#define kMaxVectorSize                  1024
-
 /** Default vector size.
  */
 #define kDefVectorSize                  64

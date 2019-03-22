@@ -10,8 +10,7 @@
  */
 
 
-#define RT 1
-#define kThisPlugOffset 32 // TODO
+#define RT 0
 
 static bool should_click = false;
 
@@ -48,7 +47,7 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     return x;
 }
 
-fa_pair_t fa_signal_clicks()
+fa_list_t fa_signal_clicks()
 {
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = before_;
@@ -59,7 +58,7 @@ fa_pair_t fa_signal_clicks()
     proc->destroy = NULL;
     proc->data    = NULL;
 
-    return fa_pair_create(fa_signal_custom(proc, fa_signal_input_with_custom(proc, 0)), fa_signal_input_with_custom(proc, 1));
+    return list(fa_signal_custom(proc, fa_signal_input_with_custom(proc, 0)), fa_signal_input_with_custom(proc, 1));
 }
 
 void run_clicks()
@@ -68,7 +67,7 @@ void run_clicks()
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        fa_list_t out           = fa_pair_to_list(fa_signal_clicks());
+        fa_list_t out           = fa_signal_clicks();
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
@@ -106,7 +105,7 @@ void run_clicks()
         fa_destroy(st);
         fa_destroy(s);
     } else {
-        fa_signal_run_file(44100 * 60, list(
+        fa_signal_run_file(44100 * 10, list(
                                fa_pair_create(
                                    fa_hms(0, 0, 0),
                                    fa_action_send(fa_string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((0 % 12) * 3), 90))
@@ -121,7 +120,8 @@ void run_clicks()
                                )
 
                            ),
-                           fa_pair_first(fa_signal_clicks()),
+                           fa_signal_clicks(),
+                           44100,
                            fa_string("test.wav"));
     }
 
