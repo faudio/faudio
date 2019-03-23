@@ -150,7 +150,7 @@ int sequence_new_handler(const char *path, const char *types, lo_arg ** argv, in
     //     return 0;
     // }
 
-    bool buffered = strcmp(path, "/playback/new/buffered") == 0;
+    bool buffered = strcmp(path, "/sequence/new/buffered") == 0;
     if (buffered) {
         fa_warn(fa_string("Buffered playback not implemented yet!"));
         // The problem is that we cannot schedule an action_many with start time in the past,
@@ -164,7 +164,7 @@ int sequence_new_handler(const char *path, const char *types, lo_arg ** argv, in
             fa_ptr_t value = new_sequence(id, 0, buffered);
             sequences = fa_map_dset(wrap_oid(id), value, sequences);
         }
-        send_osc(message, user_data, "/playback/status", "iii", id, 0, 0); // 0 = stopped
+        send_osc(message, user_data, "/sequence/status", "iii", id, 0, 0); // 0 = stopped
     } else {
         fa_fail(fa_string_format("Playback ID %hu is lower than last used ID (%hu)", id, last_used_playback_id));
         send_osc(message, user_data, "/error", "Nsi", "bad-playback-id", id);
@@ -242,7 +242,7 @@ static void add_midi(sequence_t sequence, float time, uint8_t cmd, uint8_t ch, u
     }
 }
 
-//    /playback/add/midi  id  time  cmd  ch  data1  [data2]
+//    /sequence/add/midi  id  time  cmd  ch  data1  [data2]
 int sequence_add_midi_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id = argv[0]->i;
@@ -267,7 +267,7 @@ int sequence_add_midi_handler(const char *path, const char *types, lo_arg ** arg
     return 0;
 }
 
-//    /playback/add/note  id  time  ch  pitch  vel  dur
+//    /sequence/add/note  id  time  ch  pitch  vel  dur
 int sequence_add_note_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id    = argv[0]->i;
@@ -295,7 +295,7 @@ int sequence_add_note_handler(const char *path, const char *types, lo_arg ** arg
     return 0;
 }
 
-//    /playback/add/audio  id  time  audio_id  slot  [skip]  [duration]
+//    /sequence/add/audio  id  time  audio_id  slot  [skip]  [duration]
 int sequence_add_audio_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id       = argv[0]->i;
@@ -424,7 +424,7 @@ int sequence_add_audio_handler(const char *path, const char *types, lo_arg ** ar
     return 0;
 }
 
-//    /playback/flush  id
+//    /sequence/flush  id
 int sequence_flush_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id = argv[0]->i;
@@ -518,10 +518,10 @@ static void flush_sequence_actions(sequence_t sequence, double time) {
     sequence->audio_actions = fa_list_empty();
 }
 
-//    /playback/start         id  [start-time]
-//    /playback/start/from    id  skip  [start-time]
-//    /playback/repeat        id  [interval]  [start-time]
-//    /playback/repeat/from   id  skip interval  [start-time]
+//    /sequence/start         id  [start-time]
+//    /sequence/start/from    id  skip  [start-time]
+//    /sequence/repeat        id  [interval]  [start-time]
+//    /sequence/repeat/from   id  skip interval  [start-time]
 int sequence_start_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
 {
     oid_t id   = argv[0]->i;
@@ -544,10 +544,10 @@ int sequence_start_handler(const char *path, const char *types, lo_arg ** argv, 
         return 0;
     }
         
-    if (strcmp(path, "/playback/start") == 0) {
+    if (strcmp(path, "/sequence/start") == 0) {
         if (argc > 1) time = argv[1]->f;
         repeat = false;
-    } else if (strcmp(path, "/playback/repeat") == 0) {
+    } else if (strcmp(path, "/sequence/repeat") == 0) {
         if (argc > 1) repeat_interval = argv[1]->f;
         if (argc > 2) time = argv[2]->f;
         repeat = true;
@@ -677,7 +677,7 @@ int sequence_status_handler(const char *path, const char *types, lo_arg ** argv,
         size_t midi_length = fa_list_length(sequence->midi_actions);
         size_t audio_length = fa_list_length(sequence->audio_actions);
         fa_inform(fa_format("Sequence ID %d  status: %d  midi: %zu  audio: %zu", id, status, midi_length, audio_length));
-        send_osc(message, user_data, "/playback/status", "iiii", id, status, midi_length, audio_length);
+        send_osc(message, user_data, "/sequence/status", "iiii", id, status, midi_length, audio_length);
     }
     return 0;
 }
@@ -712,17 +712,17 @@ int sequence_save_handler(const char *path, const char *types, lo_arg ** argv, i
 
         fa_string_t target_path = fa_string_from_utf8(&argv[2]->s);
         fa_io_sink_t sink = NULL;
-        if (strcmp(path, "/playback/save/aiff") == 0) {
+        if (strcmp(path, "/sequence/save/aiff") == 0) {
             sink = fa_io_write_audio_file(target_path, channels, sample_rate, SF_FORMAT_AIFF | SF_FORMAT_PCM_16);
-        } else if (strcmp(path, "/playback/save/wav") == 0) {
+        } else if (strcmp(path, "/sequence/save/wav") == 0) {
             sink = fa_io_write_audio_file(target_path, channels, sample_rate, SF_FORMAT_WAV | SF_FORMAT_PCM_16);
-        } else if (strcmp(path, "/playback/save/ogg") == 0) {
+        } else if (strcmp(path, "/sequence/save/ogg") == 0) {
             assert(false && "ogg export not implemented");
             // float ogg_quality = (argc >= 5) ? argv[4]->f : default_ogg_quality;
             // if (verbose) fa_inform(fa_format("Exporting with ogg quality %f\n", ogg_quality));
             // source = fa_io_apply(source, fa_io_create_ogg_encoder(sample_rate, channels, ogg_quality));
             // sink = fa_io_write_file(target_path);
-        } else if (strcmp(path, "/playback/save/mp3") == 0) {
+        } else if (strcmp(path, "/sequence/save/mp3") == 0) {
             int mp3_bitrate = (argc >= 5) ? argv[4]->i : default_mp3_bitrate;
             if (verbose) fa_inform(fa_format("Exporting with mp3 bitrate %d\n", mp3_bitrate));
             fa_map_t id3 = NULL;
@@ -734,7 +734,7 @@ int sequence_save_handler(const char *path, const char *types, lo_arg ** argv, i
             }
             sink = fa_io_write_mp3_file(target_path, channels, sample_rate, mp3_bitrate, id3);
             if (id3) fa_destroy(id3);
-        } else if (strcmp(path, "/playback/save/mp3/id3") == 0) {
+        } else if (strcmp(path, "/sequence/save/mp3/id3") == 0) {
             int mp3_bitrate = argv[4]->i;
             if (verbose) fa_inform(fa_format("Exporting with mp3 bitrate %d\n", mp3_bitrate));
             fa_map_t id3 = fa_map_empty();

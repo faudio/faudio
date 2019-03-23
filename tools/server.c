@@ -335,38 +335,38 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/stream/info", "", stream_info_handler, server);
     
     /* Sequences */
-    lo_server_add_method(server, "/playback/new", "i", sequence_new_handler, server); // playback id (plid)
-    lo_server_add_method(server, "/playback/new/buffered", "i", sequence_new_handler, server); // playback id (plid)
-    lo_server_add_method(server, "/playback/add/midi", "ifiif", sequence_add_midi_handler, server); // plid, time, cmd, ch, data1
-    lo_server_add_method(server, "/playback/add/midi", "ifiifi", sequence_add_midi_handler, server); // plid, time, cmd, ch, d1, d2
-    lo_server_add_method(server, "/playback/add/note", "ififif", sequence_add_note_handler, server); // plid, time, ch, pitch, vel, dur
-    lo_server_add_method(server, "/playback/add/audio", "ifii", sequence_add_audio_handler, server); // plid, time, auid, sl
-    lo_server_add_method(server, "/playback/add/audio", "ifiif", sequence_add_audio_handler, server); // plid, time, auid, sl, skip
-    lo_server_add_method(server, "/playback/add/audio", "ifiiff", sequence_add_audio_handler, server); // plid, time, auid, sl, sk, dur
-    lo_server_add_method(server, "/playback/status", "i", sequence_status_handler, server); // plid
+    lo_server_add_method(server, "/sequence/new", "i", sequence_new_handler, server); // playback id (plid)
+    lo_server_add_method(server, "/sequence/new/buffered", "i", sequence_new_handler, server); // playback id (plid)
+    lo_server_add_method(server, "/sequence/add/midi", "ifiif", sequence_add_midi_handler, server); // plid, time, cmd, ch, data1
+    lo_server_add_method(server, "/sequence/add/midi", "ifiifi", sequence_add_midi_handler, server); // plid, time, cmd, ch, d1, d2
+    lo_server_add_method(server, "/sequence/add/note", "ififif", sequence_add_note_handler, server); // plid, time, ch, pitch, vel, dur
+    lo_server_add_method(server, "/sequence/add/audio", "ifii", sequence_add_audio_handler, server); // plid, time, auid, sl
+    lo_server_add_method(server, "/sequence/add/audio", "ifiif", sequence_add_audio_handler, server); // plid, time, auid, sl, skip
+    lo_server_add_method(server, "/sequence/add/audio", "ifiiff", sequence_add_audio_handler, server); // plid, time, auid, sl, sk, dur
+    lo_server_add_method(server, "/sequence/status", "i", sequence_status_handler, server); // plid
     
-    lo_server_add_method(server, "/playback/start", "i", sequence_start_handler, server);  // plid (start immediately)
-    lo_server_add_method(server, "/playback/start", "if", sequence_start_handler, server); // plid, time
-    lo_server_add_method(server, "/playback/start/from", "if", sequence_start_handler, server); // plid, skip (s)
-    lo_server_add_method(server, "/playback/start/from", "iff", sequence_start_handler, server); // plid, skip (s), time
-    lo_server_add_method(server, "/playback/repeat", "i", sequence_start_handler, server); // plid (immediately, auto length)
-    lo_server_add_method(server, "/playback/repeat", "if", sequence_start_handler, server); // plid, interval (0 = auto) (immediately)
-    lo_server_add_method(server, "/playback/repeat", "iff", sequence_start_handler, server); // plid, interval (0 = auto), time
-    lo_server_add_method(server, "/playback/repeat/from", "iff", sequence_start_handler, server); // plid, skip (s), interval, 
-    lo_server_add_method(server, "/playback/repeat/from", "ifff", sequence_start_handler, server); // plid, skip (s) interval, time
-    lo_server_add_method(server, "/playback/stop", "i", sequence_stop_handler, server); // plid (stop immediately)
-    lo_server_add_method(server, "/playback/stop", "if", sequence_stop_handler, server); // plid, time
-    lo_server_add_method(server, "/playback/auto-stop", "iT", sequence_autostop_handler, server); // plid
-    lo_server_add_method(server, "/playback/auto-stop", "iF", sequence_autostop_handler, server); // plid
-    lo_server_add_method(server, "/playback/flush", "i", sequence_flush_handler, server); // plid
-    lo_server_add_method(server, "/playback/save/wav",  "iisi", sequence_save_handler, server);  // id, plid, path, sr
-    lo_server_add_method(server, "/playback/save/aiff", "iisi", sequence_save_handler, server);  // id, plid, path, sr
-    lo_server_add_method(server, "/playback/save/ogg",  "iisi", sequence_save_handler, server);  // id, plid, path, sr
-    lo_server_add_method(server, "/playback/save/ogg",  "iisif", sequence_save_handler, server);  // id, plid, path, sr, quality
-    lo_server_add_method(server, "/playback/save/mp3",  "iisi", sequence_save_handler, server);  // id, plid, path, sr
-    lo_server_add_method(server, "/playback/save/mp3",  "iisii", sequence_save_handler, server);  // id, plid, path, sr, bitrate
-    lo_server_add_method(server, "/playback/save/mp3",  "iisiisss", sequence_save_handler, server);  // id, plid, path, sr, bitrate, title, artist, album
-    lo_server_add_method(server, "/playback/save/mp3/id3",  NULL, sequence_save_mp3_handler, server);  // id, plid, path, sr, bitrate, (key, value)*
+    lo_server_add_method(server, "/sequence/start", "i", sequence_start_handler, server);  // plid (start immediately)
+    lo_server_add_method(server, "/sequence/start", "if", sequence_start_handler, server); // plid, time
+    lo_server_add_method(server, "/sequence/start/from", "if", sequence_start_handler, server); // plid, skip (s)
+    lo_server_add_method(server, "/sequence/start/from", "iff", sequence_start_handler, server); // plid, skip (s), time
+    lo_server_add_method(server, "/sequence/repeat", "i", sequence_start_handler, server); // plid (immediately, auto length)
+    lo_server_add_method(server, "/sequence/repeat", "if", sequence_start_handler, server); // plid, interval (0 = auto) (immediately)
+    lo_server_add_method(server, "/sequence/repeat", "iff", sequence_start_handler, server); // plid, interval (0 = auto), time
+    lo_server_add_method(server, "/sequence/repeat/from", "iff", sequence_start_handler, server); // plid, skip (s), interval, 
+    lo_server_add_method(server, "/sequence/repeat/from", "ifff", sequence_start_handler, server); // plid, skip (s) interval, time
+    lo_server_add_method(server, "/sequence/stop", "i", sequence_stop_handler, server); // plid (stop immediately)
+    lo_server_add_method(server, "/sequence/stop", "if", sequence_stop_handler, server); // plid, time
+    lo_server_add_method(server, "/sequence/auto-stop", "iT", sequence_autostop_handler, server); // plid
+    lo_server_add_method(server, "/sequence/auto-stop", "iF", sequence_autostop_handler, server); // plid
+    lo_server_add_method(server, "/sequence/flush", "i", sequence_flush_handler, server); // plid
+    lo_server_add_method(server, "/sequence/save/wav",  "iisi", sequence_save_handler, server);  // id, plid, path, sr
+    lo_server_add_method(server, "/sequence/save/aiff", "iisi", sequence_save_handler, server);  // id, plid, path, sr
+    lo_server_add_method(server, "/sequence/save/ogg",  "iisi", sequence_save_handler, server);  // id, plid, path, sr
+    lo_server_add_method(server, "/sequence/save/ogg",  "iisif", sequence_save_handler, server);  // id, plid, path, sr, quality
+    lo_server_add_method(server, "/sequence/save/mp3",  "iisi", sequence_save_handler, server);  // id, plid, path, sr
+    lo_server_add_method(server, "/sequence/save/mp3",  "iisii", sequence_save_handler, server);  // id, plid, path, sr, bitrate
+    lo_server_add_method(server, "/sequence/save/mp3",  "iisiisss", sequence_save_handler, server);  // id, plid, path, sr, bitrate, title, artist, album
+    lo_server_add_method(server, "/sequence/save/mp3/id3",  NULL, sequence_save_mp3_handler, server);  // id, plid, path, sr, bitrate, (key, value)*
 
     
     /* Deprecated */
