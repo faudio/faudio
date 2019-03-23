@@ -772,7 +772,7 @@ int sequence_save_handler(const char *path, const char *types, lo_arg ** argv, i
             controls = fa_list_dappend(setup_actions, controls);
 
             fa_list_t signals = construct_signal_tree(false, true);
-            size_t frames = sample_rate * channels * (sequence->max_time + export_margin);
+            size_t frames = sample_rate * (sequence->max_time + export_margin);
             add_playback_semaphore(seq_id, NULL, 0);
             fa_signal_run(frames, controls, signals, sample_rate, (fa_signal_audio_callback_t)&fa_io_push, sink);
             remove_playback_semaphore(seq_id);
