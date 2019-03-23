@@ -725,12 +725,30 @@ int sequence_save_handler(const char *path, const char *types, lo_arg ** argv, i
         } else if (strcmp(path, "/playback/save/mp3") == 0) {
             int mp3_bitrate = (argc >= 5) ? argv[4]->i : default_mp3_bitrate;
             if (verbose) fa_inform(fa_format("Exporting with mp3 bitrate %d\n", mp3_bitrate));
-            // fa_map_t id3 = fa_map_empty();
-            // id3 = fa_map_dset(fa_string("TIT2"), fa_string("En titel med åäö i"), id3);
-            // id3 = fa_map_dset(fa_string("artist"), fa_string("En artiståäöaerr"), id3);
             fa_map_t id3 = NULL;
+            if (argc >= 8) {
+                id3 = fa_map_empty();
+                id3 = fa_map_dset(fa_string("id3:TIT2"), fa_string_from_utf8(&argv[5]->s), id3);
+                id3 = fa_map_dset(fa_string("id3:TPE1"), fa_string_from_utf8(&argv[6]->s), id3);
+                id3 = fa_map_dset(fa_string("id3:TALB"), fa_string_from_utf8(&argv[7]->s), id3);
+            }
             sink = fa_io_write_mp3_file(target_path, channels, sample_rate, mp3_bitrate, id3);
-            // fa_destroy(map);
+            if (id3) fa_destroy(id3);
+        } else if (strcmp(path, "/playback/save/mp3/id3") == 0) {
+            int mp3_bitrate = argv[4]->i;
+            if (verbose) fa_inform(fa_format("Exporting with mp3 bitrate %d\n", mp3_bitrate));
+            fa_map_t id3 = fa_map_empty();
+            for (int i = 5; i < argc; i += 2) {
+                if (types[i] == 's' && types[i+1] == 's') {
+                    fa_string_t key = fa_string_dappend(fa_string("id3:"), fa_string_from_utf8(&argv[i]->s));
+                    fa_string_t val = fa_string_from_utf8(&argv[i+1]->s);
+                    id3 = fa_map_dset(key, val, id3);
+                } else {
+                    fa_warn(fa_format("Argument %d/%d are not strings, ignoring", i, i+1));
+                }
+            }
+            sink = fa_io_write_mp3_file(target_path, channels, sample_rate, mp3_bitrate, id3);
+            fa_destroy(id3);
         } else if (strcmp(path, "/audio-file/save/raw") == 0) {
             sink = fa_io_write_file(target_path);
         } else {
@@ -768,6 +786,20 @@ int sequence_save_handler(const char *path, const char *types, lo_arg ** argv, i
     }
 
     return 0;
+}
+
+int sequence_save_mp3_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    if (argc < 5 || strncmp("iisii", types, 5) != 0) {
+        fa_fail(fa_string("Bad types for mp3/id3 handler"));
+        return 0;
+    }
+    if ((argc - 5) % 2) {
+        fa_fail(fa_string("Odd number of arguments!"));
+        return 0;
+    }
+    // TODO: check that remaining arguments are all strings
+    return sequence_save_handler(path, types, argv, argc, message, user_data);
 }
 
 

@@ -91,15 +91,17 @@ define_handler(play_audio);
 define_handler(mix_audio);
 define_handler(stop);
 
-define_handler(playback_new);
-define_handler(playback_add_midi);
-define_handler(playback_add_note);
-define_handler(playback_add_audio);
-define_handler(playback_start);
-define_handler(playback_stop);
-define_handler(playback_autostop);
-define_handler(playback_status);
-define_handler(playback_flush);
+define_handler(sequence_new);
+define_handler(sequence_add_midi);
+define_handler(sequence_add_note);
+define_handler(sequence_add_audio);
+define_handler(sequence_start);
+define_handler(sequence_stop);
+define_handler(sequence_autostop);
+define_handler(sequence_status);
+define_handler(sequence_flush);
+define_handler(sequence_save);
+define_handler(sequence_save_mp3);
 
 define_handler(time);
 define_handler(ping);
@@ -363,6 +365,8 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/playback/save/ogg",  "iisif", sequence_save_handler, server);  // id, plid, path, sr, quality
     lo_server_add_method(server, "/playback/save/mp3",  "iisi", sequence_save_handler, server);  // id, plid, path, sr
     lo_server_add_method(server, "/playback/save/mp3",  "iisii", sequence_save_handler, server);  // id, plid, path, sr, bitrate
+    lo_server_add_method(server, "/playback/save/mp3",  "iisiisss", sequence_save_handler, server);  // id, plid, path, sr, bitrate, title, artist, album
+    lo_server_add_method(server, "/playback/save/mp3/id3",  NULL, sequence_save_mp3_handler, server);  // id, plid, path, sr, bitrate, (key, value)*
 
     
     /* Deprecated */
