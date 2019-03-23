@@ -717,11 +717,11 @@ int sequence_save_handler(const char *path, const char *types, lo_arg ** argv, i
         } else if (strcmp(path, "/sequence/save/wav") == 0) {
             sink = fa_io_write_audio_file(target_path, channels, sample_rate, SF_FORMAT_WAV | SF_FORMAT_PCM_16);
         } else if (strcmp(path, "/sequence/save/ogg") == 0) {
-            assert(false && "ogg export not implemented");
-            // float ogg_quality = (argc >= 5) ? argv[4]->f : default_ogg_quality;
-            // if (verbose) fa_inform(fa_format("Exporting with ogg quality %f\n", ogg_quality));
+            // assert(false && "ogg export not implemented");
+            float ogg_quality = (argc >= 5) ? argv[4]->f : default_ogg_quality;
+            if (verbose) fa_inform(fa_format("Exporting with ogg quality %f\n", ogg_quality));
             // source = fa_io_apply(source, fa_io_create_ogg_encoder(sample_rate, channels, ogg_quality));
-            // sink = fa_io_write_file(target_path);
+            sink = fa_io_coapply(fa_io_create_ogg_encoder(sample_rate, channels, ogg_quality), fa_io_write_file(target_path));
         } else if (strcmp(path, "/sequence/save/mp3") == 0) {
             int mp3_bitrate = (argc >= 5) ? argv[4]->i : default_mp3_bitrate;
             if (verbose) fa_inform(fa_format("Exporting with mp3 bitrate %d\n", mp3_bitrate));

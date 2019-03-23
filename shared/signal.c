@@ -1392,7 +1392,7 @@ void fa_signal_run(size_t frames, fa_list_t controls_, fa_list_t signals, double
     //
     // Render audio
     //
-    size_t buffer_frames = 256;
+    size_t buffer_frames = 512;
     size_t buffer_size = buffer_frames * sizeof(double) * channels;
     double *audio_buffer = fa_malloc(buffer_size);
 

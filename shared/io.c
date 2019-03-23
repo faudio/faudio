@@ -42,7 +42,7 @@ struct filter_base {
 // #define io_printf printf
 #define io_printf(fmt, ...) // do nothing
 
-fa_io_filter_t fa_io_ref_filter(fa_ptr_t r);
+fa_io_filter_t fa_io_ref_filter(fa_ptr_t r, fa_ptr_t r2);
 
 void fa_io_pull(fa_io_source_t source,
                 fa_io_callback_t bufferCallback,
@@ -127,7 +127,12 @@ static inline void _split_pull(fa_ptr_t x, fa_buffer_t buffer)
 void split_filter_pull(fa_ptr_t x, fa_io_source_t source, fa_io_callback_t callback, fa_ptr_t data)
 {
     fa_io_sink_t sink2 = ((struct filter_base *) x)->data1;
-    fa_io_pull(source, _split_pull, fa_pair_create(sink2, fa_pair_create(callback, data)));
+    fa_with_temp(closure, fa_pair_create(callback, data)) {
+        fa_with_temp(cbData, fa_pair_create(sink2, closure)) {
+            fa_io_pull(source, _split_pull, cbData);
+        }
+    }
+    // fa_io_pull(source, _split_pull, fa_pair_create(sink2, fa_pair_create(callback, data)));
 }
 void split_filter_push(fa_ptr_t x, fa_io_sink_t sink, fa_buffer_t buffer)
 {
@@ -676,7 +681,7 @@ FILTER_IMPLEMENTATION(read_mp3_filter);
 
 void ref_filter_destroy(fa_ptr_t x)
 {
-    fa_warn(fa_string("Unimplemented IO destroy (ref_filter)"));
+    fa_free(x);
 }
 
 fa_string_t ref_filter_show(fa_ptr_t x)
@@ -690,9 +695,10 @@ void ref_filter_pull(fa_ptr_t x, fa_io_source_t _, fa_io_callback_t callback, fa
     callback(data, *r);
 }
 void ref_filter_push(fa_ptr_t x, fa_io_sink_t _, fa_buffer_t buffer)
-{
-    fa_buffer_t *r = ((struct filter_base *) x)->data1;
-    *r = buffer;
+{   
+    fa_io_filter_t filter = ((struct filter_base *) x)->data1;
+    fa_io_sink_t sink = ((struct filter_base *) x)->data2;
+    fa_io_push_through(filter, sink, buffer);
 }
 FILTER_IMPLEMENTATION(ref_filter);
 
@@ -745,7 +751,9 @@ static inline void _composed_pull2(fa_ptr_t x, fa_buffer_t buffer)
 static inline void _composed_pull(fa_ptr_t x, fa_buffer_t buffer)
 {
     fa_unpair(x, f2, closure) {
-        fa_io_pull_through(f2, (fa_io_source_t) fa_io_ref_filter(&buffer), _composed_pull2, closure);
+        fa_with_temp(ref, fa_io_ref_filter(&buffer, NULL)) {
+            fa_io_pull_through(f2, (fa_io_source_t) ref, _composed_pull2, closure);
+        }
     }
 }
 
@@ -760,18 +768,15 @@ void composed_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t 
         }
     }
 }
+
 void composed_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
     fa_io_filter_t f1 = ((struct filter_base *) x)->data1;
     fa_io_filter_t f2 = ((struct filter_base *) x)->data2;
 
-    fa_buffer_t buffer2;
-//     fa_io_push_through((fa_io_sink_t) fa_io_ref_filter(&buffer2), f1, buffer);
-//     fa_slog_info("buffer2 is now ", buffer2);
-//     fa_io_push_through(f2, downstream, buffer2);
-    
-    fa_io_push_through(f1, (fa_io_sink_t) fa_io_ref_filter(&buffer2), buffer);
-    fa_io_push_through(f2, downstream, buffer2);
+    fa_with_temp(ref, fa_io_ref_filter(f2, downstream)) {
+        fa_io_push_through(f1, (fa_io_sink_t) ref, buffer);
+    }
 }
 FILTER_IMPLEMENTATION(composed_filter);
 
@@ -780,7 +785,6 @@ FILTER_IMPLEMENTATION(composed_filter);
 
 void simple_filter_destroy(fa_ptr_t x)
 {
-    //fa_inform(fa_string("simple filter destroy"));
     fa_nullary_t destructor = ((struct filter_base *) x)->data4;
     if (destructor) {
         destructor(((struct filter_base *) x)->data3);
@@ -811,7 +815,12 @@ void _simple_filter_pull1(fa_ptr_t y, fa_buffer_t buffer)
 void simple_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, fa_ptr_t data)
 {
     if (upstream) {
-        fa_io_pull(upstream, _simple_filter_pull1, fa_pair_create(x, fa_pair_create(callback, data)));
+        fa_with_temp(closure, fa_pair_create(callback, data)) {
+           fa_with_temp(cbData, fa_pair_create(x, closure)) {
+                fa_io_pull(upstream, _simple_filter_pull1, cbData);
+            }
+        }
+        // fa_io_pull(upstream, _simple_filter_pull1, fa_pair_create(x, fa_pair_create(callback, data)));
     } else {
         fa_io_read_callback_t simple_pull = ((struct filter_base *) x)->data2;
         fa_ptr_t                   cbData = ((struct filter_base *) x)->data3;
@@ -867,11 +876,12 @@ fa_io_sink_t fa_io_coapply(fa_io_filter_t f1, fa_io_sink_t f2)
 }
 
 
-fa_io_filter_t fa_io_ref_filter(fa_ptr_t r)
+fa_io_filter_t fa_io_ref_filter(fa_ptr_t r, fa_ptr_t r2)
 {
     struct filter_base *x = fa_new_struct(filter_base);
     x->impl = &ref_filter_impl;
     x->data1 = r;
+    x->data2 = r2;
     return (fa_io_filter_t) x;
 }
 
@@ -996,12 +1006,16 @@ fa_io_sink_t fa_io_write_mp3_file(fa_string_t path, size_t channels, size_t samp
         return (fa_io_sink_t) fa_error_create_simple(error, fa_string("Lame error"), fa_string("Doremir.IO"));
     }
 
+    if (bitrate < 32) bitrate = 32;
+    if (bitrate > 320) bitrate = 320;
+
     lame_set_num_channels(gfp, channels);
     lame_set_in_samplerate(gfp, sample_rate);
-    lame_set_brate(gfp, bitrate);
+    //lame_set_brate(gfp, bitrate); // Set constant bitrate
+    lame_set_preset(gfp, bitrate);  // Set ABR bitrate
     lame_set_mode(gfp, (channels == 2 ? 1 : 3)); // 1=jstereo, 3=mono
     lame_set_quality(gfp, 2);   /* 2=high  5 = medium  7=low */ 
-    lame_set_bWriteVbrTag(gfp, 0); // Writing vbr tag requires rewinding of the output stream, so disable it
+    lame_set_bWriteVbrTag(gfp, 1); // NB: Writing vbr tag requires rewinding of the output stream
 
     if (id3) {
         fa_list_t keys = fa_map_get_keys(id3);
