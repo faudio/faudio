@@ -700,6 +700,7 @@ static inline void set_parameter(const char *name, fa_ptr_t value, session_t ses
             break;
 
         default: {
+                printf("Wrong type for set_parameter vector-size-exclusive\n");
                 fa_string_t type_name = fa_type_name_of(value);
                 fa_slog_warning("Wrong type for set_parameter vector-size-exclusive: ", value, type_name);
                 fa_destroy(type_name);
@@ -747,7 +748,14 @@ static inline void set_parameter(const char *name, fa_ptr_t value, session_t ses
 
         return;
     }
-    fa_warn(fa_dappend(fa_string("Unknown setting: "), fa_string_from_utf8(name)));
+    printf("Unknown setting!\n");
+    if (name) {
+        printf("name is not null\n");
+        printf("strlen: %zu\n", strlen(name));
+    } else {
+        printf("name is null\n");
+    }
+    fa_warn(fa_format("Unknown setting %s", name));
 }
 
 void fa_audio_set_parameter(fa_string_t name,
