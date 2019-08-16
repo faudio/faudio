@@ -593,7 +593,8 @@ fa_ptr_t stream_thread_callback(fa_ptr_t x)
             run_actions(stream->controls,
                         now,
                         send_midi_action,
-                        stream
+                        stream,
+                        kScheduleLookahead
                        );
             fa_destroy(now); // was mark_used
         }
