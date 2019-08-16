@@ -55,25 +55,32 @@ bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t pold, fa_ptr_t pnew)
 
 // --------------------------------------------------------------------------------
 
+#ifdef __MINGW32__
+
 int32_t fa_atomic_native_get_int32(volatile int32_t *theValue)
 {
-    return InterlockedCompareExchange(theValue, 0L, 0L);
+    return InterlockedCompareExchange((long*)theValue, 0L, 0L);
 }
 
 int32_t fa_atomic_native_add_int32(volatile int32_t *theValue, int32_t amount)
 {
-    return InterlockedExchangeAdd(theValue, amount) + amount;
+    return InterlockedExchangeAdd((long*)theValue, (long)amount) + amount;
 }
 
 int32_t fa_atomic_native_increment_int32(volatile int32_t *theValue)
 {
-    return InterlockedExchangeAdd(theValue) + 1;
+    return InterlockedExchangeAdd((long*)theValue, 1L) + 1;
 }
 
 int32_t fa_atomic_native_decrement_int32(volatile int32_t *theValue)
 {
-    return InterlockedExchangeAdd(theValue) - 1;
+    return InterlockedExchangeAdd((long*)theValue, -1L) - 1;
 }
+
+#else
+#error "only 32 bit supported, needs MINGW64"
+
+#endif
 
 // --------------------------------------------------------------------------------
 
@@ -91,7 +98,7 @@ void fa_atomic_add(fa_atomic_t a, int32_t v)
 void *fa_atomic_get(fa_atomic_t a)
 {
 #ifdef __MINGW32__
-    return InterlockedCompareExchange((LONG *)&a->value, 0L, 0L);
+    return (void*)InterlockedCompareExchange((LONG *)&a->value, 0L, 0L);
 #else
 #error "only 32 bit supported needs MINGW64"
     // InterlockedCompareExchange64((LONGLONG*)&a->value, 0LL, 0LL);
