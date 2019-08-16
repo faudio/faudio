@@ -762,6 +762,17 @@ int sequence_save_handler(const char *path, const char *types, lo_arg ** argv, i
         }
 
         if (sink) {
+
+            bool streams_were_running = current_audio_stream || current_midi_playback_stream;
+            if (streams_were_running) {
+                fa_slog_info("Streams are running, stopping streams before saving sequence");
+                recording_state = NOT_RECORDING;
+                stop_streams();
+                remove_all_playback_semaphores();
+                remove_all_recording_semaphores();
+                recording_state = NOT_RECORDING; // no lock needed here (?)
+            }
+
             fa_list_t setup_actions = list(pair(fa_action_set(kSynthLeft, synth_volume), fa_now()),
                                            pair(fa_action_set(kSynthRight, synth_volume), fa_now()),
                                            pair(fa_action_set(kAudioLeft, audio_volume), fa_now()),
@@ -774,13 +785,22 @@ int sequence_save_handler(const char *path, const char *types, lo_arg ** argv, i
             fa_list_t signals = construct_signal_tree(false, true);
             size_t frames = sample_rate * (sequence->max_time + export_margin);
             add_playback_semaphore(seq_id, NULL, 0);
+            if (verbose) fa_slog_info("Before calling fa_signal_run");
             fa_signal_run(frames, controls, signals, sample_rate, (fa_signal_audio_callback_t)&fa_io_push, sink);
+            if (verbose) fa_slog_info("After fa_signal_run");
             remove_playback_semaphore(seq_id);
             send_osc(message, user_data, "/sequence/save", "iTi", id, frames);
             fa_destroy(sink);
 
             sequences = fa_map_dremove(wrap_oid(seq_id), sequences);
             delete_sequence(sequence);
+
+            if (streams_were_running) {
+                fa_slog_info("Restarting streams after saving sequence");
+                start_streams();
+                void send_stream_info(lo_message message, void *user_data); // Hack: this function is defined in server.c
+                send_stream_info(message, user_data);
+            }
         }
         fa_destroy(target_path);
     }
