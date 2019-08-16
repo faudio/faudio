@@ -147,7 +147,7 @@ struct _fa_midi_stream_t {
     The mutex is needed to prevent races in start/stop and assure that at most one session
     is active at a time.
  */
-static fa_thread_mutex_t                      gMidiMutex;
+static fa_thread_mutex_t            gMidiMutex;
 
 static bool                         gMidiActive;
 static bool                         gMidiTerminating;
@@ -156,6 +156,8 @@ static session_t                    gPendingSession;
 static session_t                    gMidiCurrentSession;
 static fa_thread_t                  gMidiThread;
 static CFRunLoopRef                 gMidiThreadRunLoop;
+static native_session_t             gMidiClient = 0;
+
 
 fa_error_t midi_device_error(fa_string_t msg);
 fa_error_t midi_device_error_with(fa_string_t msg, native_fa_error_t error);
@@ -182,6 +184,7 @@ inline static session_t new_session()
 {
     session_t session   = fa_new(midi_session);
     session->impl       = &midi_session_impl;
+    session->native     = 0;
 
     session->callbacks.count = 0;
     session->timer_callbacks.count = 0;
@@ -333,7 +336,8 @@ inline static void delete_stream(stream_t stream)
 
 void status_listener(const MIDINotification *message, fa_ptr_t data)
 {
-    session_t session = data;
+    session_t session = gMidiCurrentSession; //data;
+    if (!session) return;
     MIDINotificationMessageID id = message->messageID;
 
     // printf("Called status_listener (if you see this, please report it as a bug)\n");
@@ -371,15 +375,20 @@ static void midi_timer(CFRunLoopTimerRef timer, void *data)
 
 fa_ptr_t midi_thread(fa_ptr_t x)
 {
-    native_fa_error_t  result  = 0;
-    session_t       session = NULL;
+    session_t session = NULL;
 
-    MIDIRestart();
+    // MIDIRestart(); // Commented out 2019-04-10
 
     // Save the loop so we can stop it from outside
     gMidiThreadRunLoop = CFRunLoopGetCurrent();
 
     fa_inform(fa_string("    CoreMIDI interaction thread active"));
+
+    int result = MIDIClientCreate(fa_string_to_native(fa_string("faudio")), status_listener, NULL, &gMidiClient);
+    if (result) {
+        fa_fail(fa_string_format_integral("Could not start CoreMIDI", result));
+        assert(false);
+    }
 
     // Until faudio is terminated, this thread will repeatedly wait for instructions
     // to start a session, and act as its run loop.
@@ -397,23 +406,8 @@ fa_ptr_t midi_thread(fa_ptr_t x)
         }
 
         {
-            result  = 0;
             session = new_session(); // Still have to set native and devices
-
-            // MIDIRestart();
-
-            // This sets native
-            result = MIDIClientCreate(
-                         fa_string_to_native(fa_string("faudio")),
-                         status_listener,
-                         session,
-                         &session->native
-                     );
-
-            if (result) {
-                fa_warn(fa_string_format_integral("Could not start CoreMIDI, MIDIClientCreate failed with %d", result));
-                assert(false);
-            }
+            session->native = gMidiClient;
 
             // This sets devices
             session_init_devices(session);
@@ -449,20 +443,16 @@ fa_ptr_t midi_thread(fa_ptr_t x)
             CFRelease(timer);
         }
 
-        {
-            result = 0;
-            result = MIDIClientDispose(session->native);
-
-            if (result) {
-                fa_warn(fa_string_format_integral("Could not start CoreMIDI, MIDIClientDispose failed with %d", result));
-                assert(false);
-            } else {
-                fa_inform(fa_string("(disposed client)"));
-            }
-
-            gMidiActive = false;
-        }
+        gMidiActive = false;
     }
+
+    result = MIDIClientDispose(gMidiClient);
+    if (result) {
+        fa_warn(fa_string_format_integral("Could not stop CoreMIDI, MIDIClientDispose failed with %d", result));
+    } else {
+        fa_inform(fa_string("(disposed client)"));
+    }
+    gMidiClient = 0;
 
     fa_inform(fa_string("Disposing CoreMIDI interaction thread"));
 
@@ -472,15 +462,6 @@ fa_ptr_t midi_thread(fa_ptr_t x)
 
 void fa_midi_initialize()
 {
-    // If MIDIRestart is called here:
-    //  * CoreMIDI constants are correctly set in RELEASE build (if not called, they are all zero)
-    //  * Hot-plugging stops working in DEBUG build
-    // Why?
-
-    // printf("MAIN: %d\n", kMIDIPropertyName);
-
-    // MIDIRestart();
-
     gMidiMutex          = fa_thread_create_mutex();
 
     gMidiActive         = false;
@@ -488,9 +469,8 @@ void fa_midi_initialize()
 
     gPendingSession     = kNoSession;
     gMidiCurrentSession = NULL;
-
     gMidiThreadRunLoop  = NULL;
-    // MIDIRestart();
+    gMidiClient         = 0;
 
     gMidiThread         = fa_thread_create(midi_thread, NULL, fa_string("MIDI Controller Thread"));
 

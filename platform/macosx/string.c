@@ -16,7 +16,7 @@
 
 void *fa_string_to_native(fa_string_t str)
 {
-    const char *cstr    = fa_string_peek_utf8(str);
+    const char *cstr    = fa_string_to_utf8(str);
     CFStringRef cfstr   = CFStringCreateWithCString(kCFAllocatorDefault, cstr, kCFStringEncodingUTF8);
 
     return (void *) cfstr;
