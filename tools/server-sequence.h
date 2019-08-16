@@ -750,7 +750,7 @@ int sequence_save_handler(const char *path, const char *types, lo_arg ** argv, i
                         fa_string_t val = fa_string_from_utf8(v);
                         id3 = fa_map_dset(key, val, id3);
                     } else {
-                        if (verbose) fa_slog_info("Skipping empty id3 field ", key);
+                        if (verbose) fa_inform(fa_format("Skipping empty id3 field %s", &argv[i]->s));
                     }
                 } else {
                     fa_warn(fa_format("Argument %d/%d are not strings, ignoring", i, i+1));
