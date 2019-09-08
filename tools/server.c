@@ -54,7 +54,10 @@ fa_option_t option_declaration[] = {
     { "v", "verbose",      "Verbose (0 or 1)",                 fa_option_integral, "0" },
     { "n", "noaudio",      "No audio (mainly for debugging)",  fa_option_integral, "0"},
     { "o", "ogg-quality",  "Ogg quality (1-10, default is 9)", fa_option_integral, "9"},
-    { "f", "force-owner",  "Quit if process owner ID is not the specified number", fa_option_integral, "0"}
+#if WIN32
+    { NULL, "process-priority", "Process Priority (0-3)",      fa_option_integral, "0"},
+#endif
+    { "f", "force-owner",  "Quit if process owner ID is not the specified number", fa_option_integral, "0"},
 };
 
 #define define_handler(name) \
@@ -192,6 +195,9 @@ int main(int argc, char const *argv[])
     bool help_only = true;
     fa_string_t log_path = NULL;
     size_t force_owner = 0;
+    #if WIN32
+    int process_priority;
+    #endif
     
     char port[14]; // enough to hold all int32 numbers
     fa_with_options(option_declaration, argc, argv, options, args) {
@@ -220,6 +226,12 @@ int main(int argc, char const *argv[])
             printf("No log file set\n");
         }
         help_only = false;
+
+        #if win32
+        process_priority = fa_map_get_int32(fa_string("process-priority"), options);
+        audio_thread_priority = fa_map_get_int32(fa_string("audio-thread-priority"), options);
+        scheduler_priority = fa_map_get_int32(fa_string("scheduler-priority"), options);
+        #endif
     }
     
     if (help_only) exit(0);
@@ -246,6 +258,28 @@ int main(int argc, char const *argv[])
         signal(SIGPIPE, SIG_IGN);
         #endif
     }
+
+    // Set process priority on Windows
+    #if WIN32
+    if (process_priority > 0) {
+        int prio_class = 0;
+        switch (process_priority) {
+            1: prio_class = ABOVE_NORMAL_PRIORITY_CLASS; break;
+            2: prio_class = HIGH_PRIORITY_CLASS; break;
+            3: prio_class = REALTIME_PRIORITY_CLASS; break;
+            default: fa_fail(fa_string_format("Bad priority %d (should be 0-3). Ignoring", process_priority));
+        }
+        if (prio_class) {
+            if (process_priority != GetPriorityClass(GetCurrentProcess())) {
+                bool result = SetPriorityClass(GetCurrentProcess(), prio_class);
+                if (!result) {
+                    DWORD error = GetLastError();
+                    fa_fail(fa_string_format("Could not set process priority (error %d)"), error);
+                }
+            }
+        }
+    }
+    #endif
   
     /* start a new server  */
     if (verbose) printf("Starting OSC listener thread...\n");
