@@ -1423,6 +1423,7 @@ fa_map_t fa_audio_stream_get_info(fa_audio_stream_t stream)
     map = fa_map_dadd(fa_string("sampleRate"), fa_from_double(streamInfo->sampleRate), map);
     map = fa_map_dadd(fa_string("roundtripLatency"), fa_from_double(stream->roundtrip_latency), map);
     map = fa_map_dadd(fa_string("exclusive"), fa_from_bool(stream->exclusive_mode), map);
+    map = fa_map_dadd(fa_string("maxBufferSize"), fa_from_int32(stream->max_buffer_size), map);
     return map;
 }
 
@@ -1742,6 +1743,7 @@ int native_audio_callback(const void                       *input,
         
         during_processing(stream, count, time_info->outputBufferDacTime, (float **) input, (float **) output);
         stream->pa_flags |= flags;
+        if (count > stream->max_buffer_size) stream->max_buffer_size = count;
     }
 
     return paContinue;
