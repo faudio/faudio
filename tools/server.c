@@ -404,7 +404,7 @@ int main(int argc, char const *argv[])
 
     
     /* Deprecated */
-    //  /play/audio  id,  audio id,  slot,  skip (ms),  start-time (ms),  repeat-interval (ms)
+    //  /play/audio  id,  audio id,  slot,  start (ms),  stop (ms),  start-time (ms),  repeat-interval (ms)
     //  /play/midi   id,  data,  start-time (ms),  repeat-interval (ms)
     //  /stop        id
     lo_server_add_method(server, "/play/audio", "ii", play_audio_handler, server);
@@ -412,6 +412,7 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/play/audio", "iiif", play_audio_handler, server);
     lo_server_add_method(server, "/play/audio", "iiiff", play_audio_handler, server);
     lo_server_add_method(server, "/play/audio", "iiifff", play_audio_handler, server);
+    lo_server_add_method(server, "/play/audio", "iiiffff", play_audio_handler, server);
     lo_server_add_method(server, "/play/midi", "ib", play_midi_handler, server);
     lo_server_add_method(server, "/play/midi", "ibf", play_midi_handler, server);
     lo_server_add_method(server, "/play/midi", "ibff", play_midi_handler, server);
@@ -703,9 +704,10 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
     oid_t id               = argv[0]->i;
     oid_t audio_id         = argv[1]->i;
     int slot               = argc >= 3 ? argv[2]->i : 0;
-    double skip            = argc >= 4 ? (argv[3]->f / 1000.0) : 0.0; // convert from ms to s
-    double time            = argc >= 5 ? (argv[4]->f / 1000.0) : 0.0;
-    double repeat_interval = argc >= 6 ? (argv[5]->f / 1000.0) : 0.0;
+    double start           = argc >= 4 ? (argv[3]->f / 1000.0) : 0.0; // convert from ms to s
+    double stop            = argc >= 5 ? (argv[4]->f / 1000.0) : 0.0;
+    double time            = argc >= 6 ? (argv[5]->f / 1000.0) : 0.0;
+    double repeat_interval = argc >= 7 ? (argv[6]->f / 1000.0) : 0.0;
     check_id(id, message, user_data);
 
     if (noaudio) {
@@ -735,8 +737,15 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
         double sample_rate = fa_peek_number(fa_get_meta(buffer, fa_string("sample-rate")));
         size_t frames = fa_peek_integer(fa_get_meta(buffer, fa_string("frames")));
         double max_time = (double) frames / sample_rate; // seconds
-        max_time -= skip;
-        skip *= sample_rate;
+        max_time -= start;
+        if (stop > 0) {
+            stop -= start;
+            if (stop > max_time) stop = max_time;
+            max_time = stop;
+        } else if (stop < 0) {
+            max_time += stop;
+        }
+        start *= sample_rate;
         
         if (max_time <= 0) {
             send_osc(message, user_data, "/error", "isi", id, "skipping-past-end", audio_id);
@@ -745,8 +754,11 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
         
         // Schedule
         fa_push_list(pair(fa_action_send_retain(audio_name, pair(fa_i16(slot), buffer)), fa_milliseconds(0)), actions);
-        fa_push_list(pair(fa_action_send(audio_name, pair(fa_i16(slot), fa_from_int64(skip))), fa_milliseconds(0)), actions);
+        fa_push_list(pair(fa_action_send(audio_name, pair(fa_i16(slot), fa_from_int64(start))), fa_milliseconds(0)), actions);
         fa_push_list(pair(fa_action_send(audio_name, pair(fa_i16(slot), fa_string("play"))), fa_milliseconds(0)), actions);
+        if (stop > 0) {
+            fa_push_list(pair(fa_action_send(audio_name, pair(fa_i16(slot), fa_string("stop"))), fa_time_from_double(stop)), actions);
+        }
         if (repeat_interval == 0) {
             fa_push_list(pair(fa_action_do_with_time(_playback_started, wrap_oid(id)), fa_milliseconds(0)), actions);
             fa_push_list(pair(fa_action_do_with_time(_playback_stopped, wrap_oid(id)), fa_time_from_double(max_time + 0.010)), actions);
@@ -766,10 +778,10 @@ int play_audio_handler(const char *path, const char *types, lo_arg ** argv, int 
         }
         
         if (time == 0 && !in_bundle) {
-            buffer_hint(buffer, skip);
+            buffer_hint(buffer, start);
             schedule_relative(sched_delay, main_action, current_audio_stream);
         } else if (time < 0 || (time == 0 && in_bundle)) {
-            buffer_hint(buffer, skip);
+            buffer_hint(buffer, start);
             schedule_relative(fa_milliseconds(0), main_action, current_audio_stream);
         } else {
             // TODO: send hint as action
