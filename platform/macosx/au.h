@@ -17,6 +17,7 @@ void au_send_midi(au_context_t context, int status, int data1, int data2);
 void au_send_note_start(au_context_t context, int status, int data1, int data2, int data3);
 void au_send_note_stop(au_context_t context, int status, int data1, int data2, int data3);
 void au_send_all_notes_off(au_context_t context, int channel);
+void au_set_master_tuning(au_context_t context, double pitch);
 void au_render(au_context_t context, double time, int count, double *output);
 void au_cleanup(au_context_t context);
 

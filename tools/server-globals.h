@@ -94,6 +94,8 @@ double synth_volume   = 3.0;
 double audio_volume   = 1.0;
 double monitor_volume = 0.0;
 
+float reference_pitch = 440.0;
+
 #define with_mutex(type, var) type var = 0; fa_thread_mutex_t var ## _mutex = NULL
 
 with_mutex(recording_state_t, recording_state);

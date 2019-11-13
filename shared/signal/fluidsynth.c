@@ -99,6 +99,10 @@ static fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *st
     return NULL;
 }
 
+static double freq_to_f0(freq) {
+    return 9 + 12 * log2(freq / 13.75);
+}
+
 static fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     fluid_context *context = x;
@@ -120,6 +124,22 @@ static fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg
     // so we don't log it.
 
     if (fa_equal(n, context->name)) {
+
+        // If we get a number, treat it as a frequency to use as master tuning
+        if (fa_is_number(msg)) {
+            double pitch = fa_peek_number(msg);
+            double diff = (freq_to_f0(pitch) - 69);
+            int semitones = diff / 100;
+            double cents = (diff % 100) * 100;
+            fluid_synth_set_gen(synth, 0, GEN_COURSETUNE, semitones);
+            fluid_synth_set_gen(synth, 0, GEN_FINETUNE, cents);
+            return x;
+        }
+
+        // Unknown message
+        if (fa_dynamic_get_type(msg) != midi_message_type_repr) {
+            return x;
+        }
 
         if (!fa_midi_message_is_simple(msg)) {
             fa_warn(fa_string("SYSEX message to Fluidsynth"));

@@ -21,7 +21,7 @@
 #include "au.h"
 
 #define kMaxChannels   16
-#define kMaxMicrotones 32
+#define kMaxMicrotones 128
 
 typedef struct {
     NoteInstanceID id;
@@ -403,4 +403,14 @@ void au_send_all_notes_off(au_context_t context, int ch)
     }
 }
 
+static double freq_to_f0(freq) {
+    return 9 + 12 * log2(freq / 13.75);
+}
+
+void au_set_master_tuning(au_context_t context, double pitch)
+{
+    double cents = (freq_to_f0(pitch) - 69) * 100;
+    AudioComponentInstance instance = context->Instance;
+    OSStatus err = AudioUnitSetParameter(instance, kMusicDeviceParam_Tuning, kAudioUnitScope_Global, 0, cents, 0);
+}
 

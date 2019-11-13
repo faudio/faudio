@@ -82,6 +82,7 @@ define_handler(settings);
 define_handler(host_settings);
 define_handler(wasapi_hack);
 define_handler(stream_direction);
+define_handler(reference_pitch);
 
 define_handler(echo);
 define_handler(test);
@@ -352,6 +353,7 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/set/proxy/https",        "sss",  proxy_handler, (void*)1);
     lo_server_add_method(server, "/set/proxy/https",        "s",  proxy_handler, (void*)1);
     lo_server_add_method(server, "/set/proxy/https",        "N",  proxy_handler, (void*)1);
+    lo_server_add_method(server, "/set/reference-pitch",    "f",  reference_pitch_handler, server);
     lo_server_add_method(server, "/net/get",                "is",   net_handler, server);
     lo_server_add_method(server, "/net/get",                "iss",  net_handler, server);  // id url [headers] [cookies]
     lo_server_add_method(server, "/net/get",                "isss",  net_handler, server);
@@ -2375,6 +2377,16 @@ int stream_direction_handler(const char *path, const char *types, lo_arg ** argv
         return 0;
     }
     set_stream_direction(direction);
+    return 0;
+}
+
+int reference_pitch_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    float freq = argv[0]->f;
+    reference_pitch = freq;
+    if (current_midi_playback_stream) {
+        do_schedule_now(fa_action_send(synth_name, fa_from_float(reference_pitch)), current_midi_playback_stream);
+    }
     return 0;
 }
 

@@ -993,6 +993,10 @@ void start_streams() {
             do_schedule_now(fa_action_send(synth_name, msg), current_midi_echo_stream);
         }
     }
+
+    if (current_midi_playback_stream) {
+        do_schedule_now(fa_action_send(synth_name, fa_from_float(reference_pitch)), current_midi_playback_stream);
+    }
 }
 
 void set_stream_direction(stream_type_t direction) {

@@ -12,6 +12,7 @@
 #include <fa/action.h>
 #include <fa/midi/message.h>
 #include <fa/util.h>
+#include <fa/dynamic.h>
 #include <pthread.h>
 
 #include "au.h"
@@ -70,7 +71,18 @@ fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *state)
 fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     au_context_t context = x;
-        
+    
+    // If we get a number, treat it as a frequency to use as master tuning
+    if (fa_is_number(msg)) {
+        au_set_master_tuning(context, fa_peek_number(msg));
+        return x;
+    }
+
+    // Unknown message
+    if (fa_dynamic_get_type(msg) != midi_message_type_repr) {
+        return x;
+    }
+
     if (fa_equal(n, context->name)) {
         if (!fa_midi_message_is_simple(msg)) {
             fa_warn(fa_string("SYSEX message to DLS, ignoring"));
