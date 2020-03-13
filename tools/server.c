@@ -192,6 +192,11 @@ fa_ptr_t check_process_owner(fa_ptr_t context)
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
+
+    if (argc == 2 && strcmp(argv[1], "--version") == 0) {
+        printf("faudio-server %s\n", fa_unstring(fa_version_string()));
+        exit(0);
+    }
     
     bool help_only = true;
     fa_string_t log_path = NULL;
