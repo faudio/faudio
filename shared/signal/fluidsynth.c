@@ -129,9 +129,9 @@ static fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg
         if (fa_is_number(msg)) {
             double pitch = fa_peek_number(msg);
             double diff = (freq_to_f0(pitch) - 69);
-            int semitones = diff / 100;
-            double cents = (diff % 100) * 100;
-            fluid_synth_set_gen(synth, 0, GEN_COURSETUNE, semitones);
+            int semitones = trunc(diff);
+            double cents = (diff - semitones) * 100;
+            fluid_synth_set_gen(synth, 0, GEN_COARSETUNE, semitones);
             fluid_synth_set_gen(synth, 0, GEN_FINETUNE, cents);
             return x;
         }
