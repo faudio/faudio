@@ -308,9 +308,13 @@ void send_fa_value_osc(lo_message message, void *user_data, char *path, char *ke
         }
         break;
     case i8_type_repr:
+        send_osc(message, user_data, path, "si", key, fa_peek_int8(value)); // can't use peek_integer as it returns 64 bit
+        break;
     case i16_type_repr:
+        send_osc(message, user_data, path, "si", key, fa_peek_int16(value));
+        break;
     case i32_type_repr:
-        send_osc(message, user_data, path, "si", key, fa_peek_integer(value));
+        send_osc(message, user_data, path, "si", key, fa_peek_int32(value));
         break;
     default:
         fa_slog_warning("Don't know how to send value via osc: ", value);
