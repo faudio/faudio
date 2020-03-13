@@ -55,7 +55,7 @@ fa_option_t option_declaration[] = {
     { "n", "noaudio",      "No audio (mainly for debugging)",  fa_option_integral, "0"},
     { "o", "ogg-quality",  "Ogg quality (1-10, default is 9)", fa_option_integral, "9"},
 #if WIN32
-    { NULL, "process-priority", "Process Priority (0-3)",      fa_option_integral, "0"},
+    { "x", "process-priority", "Process Priority (0-3)",      fa_option_integral, "0"},
     { NULL, "audio-thread-priority", "Audio thread priority (-15 - 15)",  fa_option_integral, "-100"},
     { NULL, "scheduler-priority", "Scheduler priority (-15 - 15", fa_option_integral, "-100"},
 #endif
@@ -203,7 +203,7 @@ int main(int argc, char const *argv[])
     bool help_only = true;
     fa_string_t log_path = NULL;
     size_t force_owner = 0;
-    #if WIN32
+    #ifdef WIN32
     int process_priority;
     #endif
     
@@ -235,10 +235,10 @@ int main(int argc, char const *argv[])
         }
         help_only = false;
 
-        #if win32
+        #ifdef WIN32
         process_priority = fa_map_get_int32(fa_string("process-priority"), options);
-        audio_thread_priority = fa_map_get_int32(fa_string("audio-thread-priority"), options);
-        scheduler_priority = fa_map_get_int32(fa_string("scheduler-priority"), options);
+        // audio_thread_priority = fa_map_get_int32(fa_string("audio-thread-priority"), options);
+        // scheduler_priority = fa_map_get_int32(fa_string("scheduler-priority"), options);
         #endif
     }
     
@@ -268,21 +268,23 @@ int main(int argc, char const *argv[])
     }
 
     // Set process priority on Windows
-    #if WIN32
+    #ifdef WIN32
     if (process_priority > 0) {
         int prio_class = 0;
         switch (process_priority) {
-            1: prio_class = ABOVE_NORMAL_PRIORITY_CLASS; break;
-            2: prio_class = HIGH_PRIORITY_CLASS; break;
-            3: prio_class = REALTIME_PRIORITY_CLASS; break;
+            case 1: prio_class = ABOVE_NORMAL_PRIORITY_CLASS; break;
+            case 2: prio_class = HIGH_PRIORITY_CLASS; break;
+            case 3: prio_class = REALTIME_PRIORITY_CLASS; break;
             default: fa_fail(fa_string_format("Bad priority %d (should be 0-3). Ignoring", process_priority));
         }
         if (prio_class) {
             if (process_priority != GetPriorityClass(GetCurrentProcess())) {
                 bool result = SetPriorityClass(GetCurrentProcess(), prio_class);
-                if (!result) {
+                if (result) {
+                    if (verbose) fa_inform(fa_format("New process priority: %d", prio_class));
+                } else {
                     DWORD error = GetLastError();
-                    fa_fail(fa_string_format("Could not set process priority (error %d)"), error);
+                    fa_fail(fa_string_format("Could not set process priority (error %d)", error));
                 }
             }
         }
