@@ -56,8 +56,9 @@ fa_option_t option_declaration[] = {
     { "o", "ogg-quality",  "Ogg quality (1-10, default is 9)", fa_option_integral, "9"},
 #if WIN32
     { "x", "process-priority", "Process Priority (0-3)",      fa_option_integral, "0"},
-    { NULL, "audio-thread-priority", "Audio thread priority (-15 - 15)",  fa_option_integral, "-100"},
-    { NULL, "scheduler-priority", "Scheduler priority (-15 - 15", fa_option_integral, "-100"},
+    // Commenting out the following (currently unused) preferences - causes crash when short form is NULL
+    //{ NULL, "audio-thread-priority", "Audio thread priority (-15 - 15)",  fa_option_integral, "-100"},
+    //{ NULL, "scheduler-priority", "Scheduler priority (-15 - 15", fa_option_integral, "-100"},
 #endif
     { "f", "force-owner",  "Quit if process owner ID is not the specified number", fa_option_integral, "0"},
 };
