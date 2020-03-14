@@ -999,7 +999,16 @@ void start_streams() {
     }
 
     if (current_midi_playback_stream) {
-        do_schedule_now(fa_action_send(synth_name, fa_from_float(reference_pitch)), current_midi_playback_stream);
+        if (reference_pitch > 0) {
+            #ifdef WIN32
+            fa_inform(fa_format("Would have sent reference pitch %f", reference_pitch));
+            #else
+            if (verbose) fa_inform(fa_format("Sending reference pitch %f", reference_pitch));
+            do_schedule_now(fa_action_send(synth_name, fa_from_float(reference_pitch)), current_midi_playback_stream);
+            #endif
+        } else {
+            if (verbose) fa_slog_info("Reference pitch not set");
+        }
     }
 }
 
