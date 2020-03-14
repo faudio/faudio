@@ -2395,12 +2395,8 @@ int reference_pitch_handler(const char *path, const char *types, lo_arg ** argv,
     float freq = argv[0]->f;
     reference_pitch = freq;
     if (current_midi_playback_stream && reference_pitch > 0) {
-        #ifdef WIN32
-        fa_inform(fa_format("Would have sent reference pitch %f", reference_pitch));
-        #else
         if (verbose) fa_inform(fa_format("Sending reference pitch %f", reference_pitch));
         do_schedule_now(fa_action_send(synth_name, fa_from_float(reference_pitch)), current_midi_playback_stream);
-        #endif
     }
     return 0;
 }

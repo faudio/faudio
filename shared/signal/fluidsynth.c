@@ -99,7 +99,7 @@ static fa_ptr_t render_(fa_ptr_t x, int offset, int count, fa_signal_state_t *st
     return NULL;
 }
 
-static double freq_to_f0(freq) {
+static double freq_to_f0(double freq) {
     return 9 + 12 * log2(freq / 13.75);
 }
 
@@ -131,6 +131,7 @@ static fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg
             double diff = (freq_to_f0(pitch) - 69);
             int semitones = trunc(diff);
             double cents = (diff - semitones) * 100;
+            // fa_inform(fa_format("New tuning, pitch: %f diff: %f semitones: %d cents: %f", pitch, diff, semitones, cents));
             fluid_synth_set_gen(synth, 0, GEN_COARSETUNE, semitones);
             fluid_synth_set_gen(synth, 0, GEN_FINETUNE, cents);
             return x;
