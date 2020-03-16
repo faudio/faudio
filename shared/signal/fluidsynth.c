@@ -132,8 +132,11 @@ static fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg
             int semitones = trunc(diff);
             double cents = (diff - semitones) * 100;
             // fa_inform(fa_format("New tuning, pitch: %f diff: %f semitones: %d cents: %f", pitch, diff, semitones, cents));
-            fluid_synth_set_gen(synth, 0, GEN_COARSETUNE, semitones);
-            fluid_synth_set_gen(synth, 0, GEN_FINETUNE, cents);
+            // Set for all channels
+            for (int ch = 0; ch < 16; ch++) {
+                fluid_synth_set_gen(synth, ch, GEN_COARSETUNE, semitones);
+                fluid_synth_set_gen(synth, ch, GEN_FINETUNE, cents);
+            }
             return x;
         }
 
