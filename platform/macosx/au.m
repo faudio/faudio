@@ -412,5 +412,6 @@ void au_set_master_tuning(au_context_t context, double pitch)
     double cents = (freq_to_f0(pitch) - 69) * 100;
     AudioComponentInstance instance = context->Instance;
     OSStatus err = AudioUnitSetParameter(instance, kMusicDeviceParam_Tuning, kAudioUnitScope_Global, 0, cents, 0);
+    fa_mark_used(err);
 }
 

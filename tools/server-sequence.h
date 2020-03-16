@@ -49,7 +49,8 @@ struct _sequence_t {
     float max_time;             // maximum relative time; i.e. the "combined duration" of the contained events
     double repeat;              // repeat interval (set when started)
     bool auto_stop;             // stop automatically after last event is played (i.e. at start_time + max_time)
-    sequence_t master;     //
+    float reference_pitch;      // reference pitch for A in hz (normally 440)
+    sequence_t master;          //
     fa_list_t slaves;           //
 } _sequence_t;
 
@@ -64,6 +65,7 @@ static inline sequence_t new_sequence(oid_t id, sequence_status_t status, bool b
     result->start_time = 0;
     result->max_time = 0;
     result->auto_stop = true;
+    result->reference_pitch = 0; // default = don't send explicitly to synth
     result->master = NULL;
     result->slaves = fa_list_empty();
     return result;
@@ -259,7 +261,7 @@ int sequence_add_midi_handler(const char *path, const char *types, lo_arg ** arg
     fa_with_lock(sequences_mutex) {
         sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
         if (!sequence) {
-            send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
+            send_osc(message, user_data, "/error", "Nsi", "no-such-sequence", id);
             continue; // don't return or break, that wouldn't release the lock
         }
         add_midi(sequence, time, cmd, ch, data1, data2, argv[4]->f);
@@ -286,7 +288,7 @@ int sequence_add_note_handler(const char *path, const char *types, lo_arg ** arg
     fa_with_lock(sequences_mutex) {
         sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
         if (!sequence) {
-            send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
+            send_osc(message, user_data, "/error", "Nsi", "no-such-sequence", id);
             continue; // don't return or break, that wouldn't release the lock
         }
         add_midi(sequence, time, 0x90, ch, pitch, vel, pitch);
@@ -335,7 +337,7 @@ int sequence_add_audio_handler(const char *path, const char *types, lo_arg ** ar
         sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
         if (!sequence) {
             fa_release_reference(buffer);
-            send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
+            send_osc(message, user_data, "/error", "Nsi", "no-such-sequence", id);
             continue; // don't return or break, that wouldn't release the lock
         }
         
@@ -431,7 +433,7 @@ int sequence_flush_handler(const char *path, const char *types, lo_arg ** argv, 
     fa_with_lock(sequences_mutex) {
         sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
         if (!sequence) {
-            send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
+            send_osc(message, user_data, "/error", "Nsi", "no-such-sequence", id);
             continue; // don't return or break, that wouldn't release the lock
         }
         if (!sequence->buffered) {
@@ -559,7 +561,7 @@ int sequence_start_handler(const char *path, const char *types, lo_arg ** argv, 
     fa_with_lock(sequences_mutex) {
         sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
         if (!sequence) {
-            send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
+            send_osc(message, user_data, "/error", "Nsi", "no-such-sequence", id);
             continue; // don't return or break, that wouldn't release the lock
         }
         if (sequence->status != SEQUENCE_STOPPED) {
@@ -656,7 +658,7 @@ int sequence_autostop_handler(const char *path, const char *types, lo_arg ** arg
     fa_with_lock(sequences_mutex) {
         sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
         if (!sequence) {
-            send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
+            send_osc(message, user_data, "/error", "Nsi", "no-such-sequence", id);
             continue; // don't return or break, that wouldn't release the lock
         }
         sequence->auto_stop = types[1] == 'T';
@@ -670,7 +672,7 @@ int sequence_status_handler(const char *path, const char *types, lo_arg ** argv,
     fa_with_lock(sequences_mutex) {
         sequence_t sequence = fa_map_dget(wrap_oid(id), sequences);
         if (!sequence) {
-            send_osc(message, user_data, "/error", "Nsi", "no-such-playback", id);
+            send_osc(message, user_data, "/error", "Nsi", "no-such-sequence", id);
             continue; // don't return or break, that wouldn't release the lock
         }
         sequence_status_t status = sequence->status;
@@ -773,6 +775,7 @@ int sequence_save_handler(const char *path, const char *types, lo_arg ** argv, i
         if (sink) {
 
             bool streams_were_running = current_audio_stream || current_midi_playback_stream;
+            float ref_pitch = sequence->reference_pitch > 0 ? sequence->reference_pitch : reference_pitch;
             if (streams_were_running) {
                 fa_slog_info("Streams are running, stopping streams before saving sequence");
                 recording_state = NOT_RECORDING;
@@ -786,7 +789,10 @@ int sequence_save_handler(const char *path, const char *types, lo_arg ** argv, i
                                            pair(fa_action_set(kSynthRight, synth_volume), fa_now()),
                                            pair(fa_action_set(kAudioLeft, audio_volume), fa_now()),
                                            pair(fa_action_set(kAudioRight, audio_volume), fa_now()));
-            setup_actions = list(pair(fa_action_many(setup_actions), fa_now()));
+            if (verbose) fa_inform(fa_format("ref_pitch is %f", ref_pitch));
+            if (ref_pitch > 0) {
+                setup_actions = fa_list_dappend(setup_actions, list(pair(fa_action_send(synth_name, fa_from_float(ref_pitch)), fa_now())));
+            }
 
             fa_list_t controls = fa_list_append(sequence->midi_actions, sequence->audio_actions);
             controls = fa_list_dappend(setup_actions, controls);
@@ -835,6 +841,22 @@ int sequence_save_mp3_handler(const char *path, const char *types, lo_arg ** arg
     }
     // TODO: check that remaining arguments are all strings
     return sequence_save_handler(path, types, argv, argc, message, user_data);
+}
+
+int sequence_reference_pitch_handler(const char *path, const char *types, lo_arg ** argv, int argc, lo_message message, void *user_data)
+{
+    oid_t seq_id = argv[0]->i;
+    float pitch  = argv[1]->f;
+    fa_with_lock(sequences_mutex) {
+        sequence_t sequence = fa_map_dget(wrap_oid(seq_id), sequences);
+        if (!sequence) {
+            send_osc(message, user_data, "/error", "Nsi", "no-such-sequence", seq_id);
+            continue; // don't return or break, that wouldn't release the lock
+        }
+        sequence->reference_pitch = pitch;
+        send_osc(message, user_data, "/sequence/set/reference-pitch", "iT", seq_id);
+    }
+    return 0;
 }
 
 

@@ -363,7 +363,7 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/set/proxy/https",        "sss",  proxy_handler, (void*)1);
     lo_server_add_method(server, "/set/proxy/https",        "s",  proxy_handler, (void*)1);
     lo_server_add_method(server, "/set/proxy/https",        "N",  proxy_handler, (void*)1);
-    lo_server_add_method(server, "/set/reference-pitch",    "f",  reference_pitch_handler, server);
+    lo_server_add_method(server, "/set/reference-pitch",    "f",  reference_pitch_handler, server); // pitch (hz)
     lo_server_add_method(server, "/net/get",                "is",   net_handler, server);
     lo_server_add_method(server, "/net/get",                "iss",  net_handler, server);  // id url [headers] [cookies]
     lo_server_add_method(server, "/net/get",                "isss",  net_handler, server);
@@ -389,6 +389,8 @@ int main(int argc, char const *argv[])
     lo_server_add_method(server, "/sequence/add/audio", "ifii", sequence_add_audio_handler, server); // plid, time, auid, sl
     lo_server_add_method(server, "/sequence/add/audio", "ifiif", sequence_add_audio_handler, server); // plid, time, auid, sl, skip
     lo_server_add_method(server, "/sequence/add/audio", "ifiiff", sequence_add_audio_handler, server); // plid, time, auid, sl, sk, dur
+    lo_server_add_method(server, "/sequence/set/reference-pitch", "if", sequence_reference_pitch_handler, server); // plid, pitch (hz)
+
     lo_server_add_method(server, "/sequence/status", "i", sequence_status_handler, server); // plid
     
     lo_server_add_method(server, "/sequence/start", "i", sequence_start_handler, server);  // plid (start immediately)
